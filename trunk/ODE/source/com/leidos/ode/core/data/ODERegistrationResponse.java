@@ -1,4 +1,4 @@
-package com.leidos.ode.agent.data;
+package com.leidos.ode.core.data;
 
 public class ODERegistrationResponse {
 

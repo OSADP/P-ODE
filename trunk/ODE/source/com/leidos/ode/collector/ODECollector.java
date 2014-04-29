@@ -16,7 +16,8 @@ public class ODECollector implements CollectorDataSourceListener{
 	}
 	
 	private void startCollector(){
-		// collector starts data source 
+		// start up agent
+		// start data source 
 	}
 	
 	@Override

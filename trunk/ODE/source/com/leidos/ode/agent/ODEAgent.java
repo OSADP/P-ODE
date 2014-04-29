@@ -1,13 +1,15 @@
 package com.leidos.ode.agent;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
-import com.leidos.ode.agent.data.ODERegistrationResponse;
 import com.leidos.ode.agent.datatarget.ODEDataTarget;
 import com.leidos.ode.agent.parser.ODEDataParser;
 import com.leidos.ode.agent.parser.ODEParseException;
 import com.leidos.ode.agent.registration.ODERegistration;
 import com.leidos.ode.agent.sanitizer.ODESanitizer;
 import com.leidos.ode.agent.sanitizer.ODESanitizerException;
+import com.leidos.ode.core.data.ODERegistrationResponse;
+import com.leidos.ode.core.data.RegistrationInformation;
+
 
 public abstract class ODEAgent {
 
@@ -15,22 +17,17 @@ public abstract class ODEAgent {
 	protected ODEDataParser parser;
 	protected ODESanitizer sanitizer;
 	protected ODEDataTarget dataTarget;
+	protected RegistrationInformation regInfo;
 	
 	
+	public abstract void startUp();
 	
-	public void startUp(){
-	}
-	
-	public ODERegistrationResponse performRegistration(){
-		// Once registered, must store registration info in the dataTarget so it 
-		//knows where to send the data.
-		return null;
-	}
 	
 	public void processMessage(byte[] messageBytes){
 		try{
 			ODEAgentMessage parsedMessage = parser.parseMessage(messageBytes);
 			parsedMessage = sanitizer.sanitizeMessage(parsedMessage);
+			dataTarget.sendMessage(parsedMessage);
 		}catch(ODEParseException e){
 			//TODO: log message and throw to collector
 			e.printStackTrace();
@@ -40,22 +37,6 @@ public abstract class ODEAgent {
 		}
 		
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	public ODERegistration getRegistration() {
@@ -82,5 +63,16 @@ public abstract class ODEAgent {
 	public void setDataTarget(ODEDataTarget dataTarget) {
 		this.dataTarget = dataTarget;
 	}
+
+
+	public RegistrationInformation getRegInfo() {
+		return regInfo;
+	}
+
+
+	public void setRegInfo(RegistrationInformation regInfo) {
+		this.regInfo = regInfo;
+	}
+
 	
 }
