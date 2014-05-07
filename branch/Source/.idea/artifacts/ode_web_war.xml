@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="ode-web:war">
+    <output-path>$PROJECT_DIR$/ode-web/target</output-path>
+    <root id="archive" name="ode-web.war">
+      <element id="artifact" artifact-name="ode-web:war exploded" />
+    </root>
+  </artifact>
+</component>

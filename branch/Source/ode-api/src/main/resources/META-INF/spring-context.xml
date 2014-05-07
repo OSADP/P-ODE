@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+    <!-- Activate annotation configured components -->
+    <context:annotation-config/>
+
+    <!-- Scan components for annotations within the configured package -->
+    <context:component-scan base-package="com.leidos.ode">
+        <context:exclude-filter type="annotation" expression="org.springframework.context.annotation.Configuration"/>
+    </context:component-scan>
+
+    <bean id="abstractDataController" class="com.leidos.ode.core.DataController" abstract="true">
+    </bean>
+
+    <bean id="distributeDataController" class="com.leidos.ode.core.distribute.DistributeDataController"
+          parent="abstractDataController">
+    </bean>
+
+    <bean id="publishDataController" class="com.leidos.ode.core.publish.PublishDataController"
+          parent="abstractDataController">
+        <property name="storeDataController" ref="storeDataController"/>
+        <property name="distributeDataController" ref="distributeDataController"/>
+    </bean>
+
+    <bean id="retrieveDataController" class="com.leidos.ode.core.retrievedata.RetrieveDataController"
+          parent="abstractDataController">
+        <property name="distributeDataController" ref="distributeDataController"/>
+        <property name="rdeRetrieveAgent" ref="rdeRetrieveAgent"/>
+    </bean>
+
+    <bean id="storeDataController" class="com.leidos.ode.core.storedata.StoreDataController"
+          parent="abstractDataController">
+        <property name="rdePublishAgent" ref="rdePublishAgent"/>
+    </bean>
+
+    <bean id="rdeRetrieveAgent" class="com.leidos.ode.core.rde.agent.RDERetrieveAgentImpl">
+    </bean>
+
+    <bean id="rdePublishAgent" class="com.leidos.ode.core.rde.agent.RDEStoreAgentImpl">
+    </bean>
+
+    <bean id="morphia" class="org.mongodb.morphia.Morphia">
+    </bean>
+
+    <bean id="mongo" class="com.mongodb.Mongo">
+        <constructor-arg index="0" value="localhost"/>
+        <constructor-arg index="1" value="27017"/>
+    </bean>
+
+    <bean id="logDAO" class="com.leidos.ode.core.dao.LogDAOImpl">
+        <constructor-arg index="0" ref="mongo"/>
+        <constructor-arg index="1" ref="morphia"/>
+    </bean>
+</beans>
