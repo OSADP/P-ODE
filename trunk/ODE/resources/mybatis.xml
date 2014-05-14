@@ -5,6 +5,8 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 <configuration>
     <typeAliases>
             <typeAlias alias="RDEArchiveInfo" type="com.leidos.ode.core.data.RDEArchiveInfo" />
+            <typeAlias alias="RegistrationInformation" type="com.leidos.ode.core.data.RegistrationInformation" />
+            <typeAlias alias="QueueInfo" type="com.leidos.ode.core.data.QueueInfo" />
             
     </typeAliases>	
 	

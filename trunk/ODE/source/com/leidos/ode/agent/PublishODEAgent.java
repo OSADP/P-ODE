@@ -1,5 +1,7 @@
 package com.leidos.ode.agent;
 
+import javax.jms.JMSException;
+
 import com.leidos.ode.core.data.ODERegistrationResponse;
 
 
@@ -13,9 +15,12 @@ public class PublishODEAgent extends ODEAgent{
 	@Override
 	public void startUp() {
 		ODERegistrationResponse regResponse = performRegistration();
-		dataTarget.configure(regResponse);
-		
-		
+		try {
+			dataTarget.configure(regResponse);
+		} catch (JMSException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	

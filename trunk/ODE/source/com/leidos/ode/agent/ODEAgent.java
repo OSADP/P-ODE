@@ -1,5 +1,7 @@
 package com.leidos.ode.agent;
 
+import javax.jms.JMSException;
+
 import com.leidos.ode.agent.data.ODEAgentMessage;
 import com.leidos.ode.agent.datatarget.ODEDataTarget;
 import com.leidos.ode.agent.parser.ODEDataParser;
@@ -7,7 +9,6 @@ import com.leidos.ode.agent.parser.ODEParseException;
 import com.leidos.ode.agent.registration.ODERegistration;
 import com.leidos.ode.agent.sanitizer.ODESanitizer;
 import com.leidos.ode.agent.sanitizer.ODESanitizerException;
-import com.leidos.ode.core.data.ODERegistrationResponse;
 import com.leidos.ode.core.data.RegistrationInformation;
 
 
@@ -32,6 +33,9 @@ public abstract class ODEAgent {
 			//TODO: log message and throw to collector
 			e.printStackTrace();
 		} catch (ODESanitizerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JMSException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
