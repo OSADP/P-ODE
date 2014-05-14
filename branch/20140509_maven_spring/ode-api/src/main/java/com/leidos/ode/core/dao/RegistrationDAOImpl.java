@@ -1,5 +1,6 @@
 package com.leidos.ode.core.dao;
 
+import com.leidos.ode.core.data.QueueInfo;
 import com.leidos.ode.core.registration.RegistrationInformation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -41,7 +42,7 @@ public class RegistrationDAOImpl implements RegistrationDAO{
     }
 
     @Override
-    public String getQueueForRegistration(RegistrationInformation regInfo) {
+    public QueueInfo getQueueForRegistration(RegistrationInformation regInfo) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

@@ -8,6 +8,7 @@ import com.leidos.ode.agent.registration.ODERegistration;
 import com.leidos.ode.agent.sanitizer.ODESanitizer;
 import com.leidos.ode.agent.sanitizer.ODESanitizerException;
 import com.leidos.ode.core.registration.RegistrationInformation;
+import javax.jms.JMSException;
 
 public abstract class ODEAgent {
 
@@ -28,6 +29,9 @@ public abstract class ODEAgent {
             //TODO: log message and throw to collector
             e.printStackTrace();
         } catch (ODESanitizerException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (JMSException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }

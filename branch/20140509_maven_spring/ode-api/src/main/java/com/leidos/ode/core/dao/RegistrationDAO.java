@@ -1,5 +1,6 @@
 package com.leidos.ode.core.dao;
 
+import com.leidos.ode.core.data.QueueInfo;
 import com.leidos.ode.core.registration.RegistrationInformation;
 
 import java.util.List;
@@ -14,6 +15,6 @@ public interface RegistrationDAO {
 	
 	public List<RegistrationInformation> getAllRegistrationForAgent(String agentId);
 	
-	public String getQueueForRegistration(RegistrationInformation regInfo);
+	public QueueInfo getQueueForRegistration(RegistrationInformation regInfo);
 
 }

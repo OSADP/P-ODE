@@ -1,29 +1,41 @@
 package com.leidos.ode.collector;
 
+import java.net.SocketException;
+import java.net.UnknownHostException;
+
 import com.leidos.ode.agent.ODEAgent;
 import com.leidos.ode.collector.datasource.CollectorDataSource;
+import com.leidos.ode.collector.datasource.DataSourceException;
 
 public class ODECollector implements CollectorDataSourceListener{
 
+	
 	private CollectorDataSource dataSource;
+	
 	private ODEAgent agent;
 	
-	public void startUp(){
-		
+	
+	public void startUp() throws DataSourceException {
+		startCollector();
 	}
 	
-	private void startCollector(){
-		// start up agent
-		// start data source 
+	private void startCollector() throws DataSourceException {
+		agent.startUp();
+		dataSource.startDataSource();
 	}
+	
+	
 	
 	@Override
 	public void dataReceived(byte[] receivedData) {
-		//When data is received by the source it will be passed to this method.
-		// passes any data from datasource to agent.
+		agent.processMessage(receivedData);
 	}
+	
+	
+	
+	
 
-    public CollectorDataSource getDataSource() {
+	public CollectorDataSource getDataSource() {
 		return dataSource;
 	}
 
@@ -39,4 +51,11 @@ public class ODECollector implements CollectorDataSourceListener{
 		this.agent = agent;
 	}
 
+
+	
+	
+	
+	
+	
+	
 }
