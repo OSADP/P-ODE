@@ -11,16 +11,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * Publish data listens to the JMS queues for data.
- * Once data is pulled from it queue it is routed to Distribute data
- * and store data.
- * @author cassadyja
+ * Class representing the Publish Data controller. Responsible for retrieving data from the Publisher ODE
+ * Agents and verifying the data published is in accordance with publication registrations. Verified data
+ * is sent to the Store Data component and made available to subscribers via the Distribute Data component.
+ *
+ * @author cassadyja, lamde
  *
  */
 @Controller
 public class PublishDataController   {
 
+    @Autowired
     private StoreDataController storeDataController;
+    @Autowired
     private DistributeDataController distributeDataController;
 
     public PublishDataController() {
@@ -28,8 +31,7 @@ public class PublishDataController   {
     }
 
     @RequestMapping(value = "publish", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity publishData(@RequestBody RDEData rdeData) {
+    public @ResponseBody ResponseEntity publishData(@RequestBody RDEData rdeData) {
         return null;
     }
 
@@ -37,16 +39,8 @@ public class PublishDataController   {
         return storeDataController;
     }
 
-    public void setStoreDataController(StoreDataController storeDataController) {
-        this.storeDataController = storeDataController;
-    }
-
     public DistributeDataController getDistributeDataController() {
         return distributeDataController;
-    }
-
-    public void setDistributeDataController(DistributeDataController distributeDataController) {
-        this.distributeDataController = distributeDataController;
     }
 
 }

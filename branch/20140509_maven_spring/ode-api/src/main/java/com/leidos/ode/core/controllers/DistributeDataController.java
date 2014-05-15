@@ -16,8 +16,8 @@ public class DistributeDataController {
     }
 
     @RequestMapping(value = "distribute", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity distributeData(@RequestBody RDEData rdeData) {
+
+    public @ResponseBody ResponseEntity distributeData(@RequestBody RDEData rdeData) {
         return null;
     }
 }

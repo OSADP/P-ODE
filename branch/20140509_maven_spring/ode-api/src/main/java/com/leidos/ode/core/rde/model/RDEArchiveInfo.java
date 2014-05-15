@@ -16,7 +16,7 @@ public class RDEArchiveInfo {
 	private Date archiveDate;
 
     public RDEArchiveInfo(){
-        this.id = "test";
+        this.id = id;
     }
 
 	public String getId() {

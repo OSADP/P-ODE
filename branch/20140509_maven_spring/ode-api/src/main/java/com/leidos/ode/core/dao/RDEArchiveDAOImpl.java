@@ -8,11 +8,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: LAMDE
- * Date: 5/7/14
- * Time: 3:07 PM
- * To change this template use File | Settings | File Templates.
+ * Class to handle the RDE archive information access to the database.
+ *
+ * @author lamde
  */
 @Component
 public class RDEArchiveDAOImpl implements RDEArchiveDAO {
@@ -26,7 +24,7 @@ public class RDEArchiveDAOImpl implements RDEArchiveDAO {
 
     @Override
     public void storeRDEArchiveInfo(RDEArchiveInfo archiveInfo) {
-        mongoTemplate.save(archiveInfo);
+        getMongoTemplate().save(archiveInfo);
     }
 
     @Override
@@ -34,4 +32,7 @@ public class RDEArchiveDAOImpl implements RDEArchiveDAO {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    private MongoTemplate getMongoTemplate(){
+        return mongoTemplate;
+    }
 }

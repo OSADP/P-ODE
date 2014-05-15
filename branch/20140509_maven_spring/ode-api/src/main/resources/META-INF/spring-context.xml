@@ -11,21 +11,7 @@
     <context:annotation-config/>
 
     <!-- Scan components for annotations within the configured package -->
-    <context:component-scan base-package="com.leidos.ode">
-        <context:exclude-filter type="annotation" expression="org.springframework.context.annotation.Configuration"/>
-    </context:component-scan>
-
-    <bean id="logDAO" class="com.leidos.ode.core.dao.LogDAOImpl">
-    </bean>
-
-    <bean id="rdeArchiveDAO" class="com.leidos.ode.core.dao.RDEArchiveDAOImpl">
-    </bean>
-
-    <bean id="rdeStoreAgent" class="com.leidos.ode.core.rde.agent.RDEStoreAgentImpl" >
-    </bean>
-
-    <bean id="rdeRetrieveAgent" class="com.leidos.ode.core.rde.agent.RDERetrieveAgentImpl">
-    </bean>
+    <context:component-scan base-package="com.leidos.ode"/>
 
     <bean id="mongo" class="com.mongodb.Mongo">
         <constructor-arg name="host" value="127.0.0.1" />
@@ -35,7 +21,7 @@
     <!-- Define the MongoTemplate which handles connectivity with MongoDB -->
     <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
         <constructor-arg name="mongo" ref="mongo"/>
-        <constructor-arg name="databaseName" value="odeDB"/>
+        <constructor-arg name="databaseName" value="ode"/>
     </bean>
 
 </beans>

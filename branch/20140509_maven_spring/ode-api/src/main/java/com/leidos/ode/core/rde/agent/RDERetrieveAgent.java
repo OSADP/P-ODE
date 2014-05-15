@@ -2,7 +2,7 @@ package com.leidos.ode.core.rde.agent;
 
 import com.leidos.ode.core.rde.model.RDEData;
 import com.leidos.ode.core.rde.model.RDERetrieveResponse;
-import com.leidos.ode.core.controllers.RDERetrieveException;
+import com.leidos.ode.core.rde.model.RDERetrieveException;
 
 /**
  * Created with IntelliJ IDEA.

@@ -1,15 +1,16 @@
 package com.leidos.ode.core.rde.agent;
 
 import com.leidos.ode.core.rde.model.RDEData;
+import com.leidos.ode.core.rde.model.RDEStoreException;
 import com.leidos.ode.core.rde.model.RDEStoreResponse;
+import org.springframework.stereotype.Component;
 
 /**
- * Created with IntelliJ IDEA.
- * User: LAMDE
- * Date: 5/6/14
- * Time: 12:29 PM
- * To change this template use File | Settings | File Templates.
+ * Class representing the RDE data storage agent. Responsible for connecting to the RDE and storing RDE data.
+ *
+ * @author lamde
  */
+@Component
 public class RDEStoreAgentImpl implements RDEStoreAgent {
 
     public RDEStoreAgentImpl(){
@@ -17,9 +18,9 @@ public class RDEStoreAgentImpl implements RDEStoreAgent {
     }
 
     @Override
-    public RDEStoreResponse store(RDEData rdeData) {
-        //Connect to RDE and store data. Build a response object from the data.
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public RDEStoreResponse store(RDEData rdeData) throws RDEStoreException{
+        //Format the data feed for the RDE. Connect to RDE and store the formatted data. Build a response object from the data.
+        return new RDEStoreResponse("Successfully stored data: " + rdeData.getName());
     }
 
 }

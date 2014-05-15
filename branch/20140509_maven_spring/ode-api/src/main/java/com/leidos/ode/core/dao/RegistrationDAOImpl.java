@@ -9,11 +9,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: LAMDE
- * Date: 5/7/14
- * Time: 3:09 PM
- * To change this template use File | Settings | File Templates.
+ * Class to handle the registration information access to the database.
+ *
+ * @author lamde
  */
 @Component
 public class RegistrationDAOImpl implements RegistrationDAO{

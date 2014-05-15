@@ -7,33 +7,30 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
-    <context:component-scan base-package="com.leidos.ode.core.controllers"/>
-    <context:component-scan base-package="com.leidos.ode.core.rde"/>
-    <context:component-scan base-package="com.leidos.ode.core.dao"/>
+    <context:component-scan base-package="com.leidos.ode"/>
 
     <mvc:annotation-driven/>
 
-    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="prefix">
-            <value>WEB-INF/jsp/</value>
-        </property>
-        <property name="suffix">
-            <value>.jsp</value>
-        </property>
-    </bean>
+    <!--<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
+        <!--<property name="prefix">-->
+            <!--<value>WEB-INF/jsp/</value>-->
+        <!--</property>-->
+        <!--<property name="suffix">-->
+            <!--<value>.jsp</value>-->
+        <!--</property>-->
+    <!--</bean>-->
 
-    <bean id="distributeDataController" class="com.leidos.ode.core.controllers.DistributeDataController">
-    </bean>
+    <!--&lt;!&ndash; Configure to plugin JSON as request and response in method handler &ndash;&gt;-->
+    <!--<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">-->
+        <!--<property name="messageConverters">-->
+            <!--<list>-->
+                <!--<ref bean="jsonMessageConverter"/>-->
+            <!--</list>-->
+        <!--</property>-->
+    <!--</bean>-->
 
-    <bean id="publishDataController" class="com.leidos.ode.core.controllers.PublishDataController">
-    </bean>
-
-    <bean id="retrieveDataController" class="com.leidos.ode.core.controllers.RetrieveDataController">
-    </bean>
-
-    <bean id="storeDataController" class="com.leidos.ode.core.controllers.StoreDataController">
-        <property name="rdeStoreAgent" ref="rdeStoreAgent"/>
-        <property name="rdeArchiveDAO" ref="rdeArchiveDAO"/>
-    </bean>
+    <!--&lt;!&ndash; Configure bean to convert JSON to POJO and vice versa &ndash;&gt;-->
+    <!--<bean id="jsonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">-->
+    <!--</bean>-->
 
 </beans>

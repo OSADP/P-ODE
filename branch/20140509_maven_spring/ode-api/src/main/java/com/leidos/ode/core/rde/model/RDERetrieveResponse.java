@@ -1,28 +1,23 @@
 package com.leidos.ode.core.rde.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
- * Created with IntelliJ IDEA.
- * User: LAMDE
- * Date: 5/6/14
- * Time: 12:31 PM
- * To change this template use File | Settings | File Templates.
+ * Class representing the response received from the RDE upon retrieving data.
+ *
+ * @author lamde
  */
 public class RDERetrieveResponse {
 
+    @JsonProperty("message")
     private String message;
-    private RDEData rdeData;
 
-    public RDERetrieveResponse(String message, RDEData rdeData){
+    public RDERetrieveResponse(String message){
         this.message = message;
-        this.rdeData = rdeData;
     }
 
     public String getMessage(){
         return message;
-    }
-
-    public RDEData getRdeData() {
-        return rdeData;
     }
 
 }

@@ -6,11 +6,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
 
 /**
- * Created with IntelliJ IDEA.
- * User: LAMDE
- * Date: 4/22/14
- * Time: 1:42 PM
- * To change this template use File | Settings | File Templates.
+ * Class representing a log document in Mongo.
+ *
+ * @author lamde
  */
 
 @Document(collection = "logs")
