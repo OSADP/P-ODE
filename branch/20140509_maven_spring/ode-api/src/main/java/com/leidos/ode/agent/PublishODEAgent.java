@@ -13,20 +13,15 @@ import com.leidos.ode.core.data.ODERegistrationResponse;
 public class PublishODEAgent extends ODEAgent{
 
 	@Override
-	public void startUp() {
-		ODERegistrationResponse regResponse = performRegistration();
-		try {
-			dataTarget.configure(regResponse);
-		} catch (JMSException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void startUp() throws JMSException{
+            ODERegistrationResponse regResponse = performRegistration();
+            dataTarget.configure(regResponse);
 	}
 
 	
 	private ODERegistrationResponse performRegistration() {
-		ODERegistrationResponse regResponse = registration.register(regInfo);
-		return regResponse;
+            ODERegistrationResponse regResponse = registration.register(regInfo);
+            return regResponse;
 	}
 
 }

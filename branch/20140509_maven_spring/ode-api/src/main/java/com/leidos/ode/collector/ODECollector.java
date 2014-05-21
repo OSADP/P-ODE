@@ -6,6 +6,7 @@ import java.net.UnknownHostException;
 import com.leidos.ode.agent.ODEAgent;
 import com.leidos.ode.collector.datasource.CollectorDataSource;
 import com.leidos.ode.collector.datasource.DataSourceException;
+import javax.jms.JMSException;
 
 public class ODECollector implements CollectorDataSourceListener{
 
@@ -15,11 +16,11 @@ public class ODECollector implements CollectorDataSourceListener{
 	private ODEAgent agent;
 	
 	
-	public void startUp() throws DataSourceException {
+	public void startUp() throws DataSourceException, JMSException {
 		startCollector();
 	}
 	
-	private void startCollector() throws DataSourceException {
+	private void startCollector() throws DataSourceException, JMSException {
 		agent.startUp();
 		dataSource.startDataSource();
 	}

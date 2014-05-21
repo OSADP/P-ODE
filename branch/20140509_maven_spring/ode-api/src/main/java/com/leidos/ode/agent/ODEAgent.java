@@ -18,25 +18,61 @@ public abstract class ODEAgent {
     protected ODEDataTarget dataTarget;
     protected RegistrationInformation regInfo;
 
-    public abstract void startUp();
+    private int threadCount = 0;
+    private final Byte mutex = new Byte("1");
+    
+    public abstract void startUp() throws JMSException;
 
-    public void processMessage(byte[] messageBytes) {
-        try {
-            ODEAgentMessage parsedMessage = parser.parseMessage(messageBytes);
-            parsedMessage = sanitizer.sanitizeMessage(parsedMessage);
-            dataTarget.sendMessage(parsedMessage);
-        } catch (ODEParseException e) {
-            //TODO: log message and throw to collector
-            e.printStackTrace();
-        } catch (ODESanitizerException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (JMSException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+    private class MessageProcessor implements Runnable{
+        
+        private byte[] messageBytes;
+        
+        protected MessageProcessor(byte[] message){
+            messageBytes = message;
         }
+
+        public void run() {
+            try {
+                ODEAgentMessage parsedMessage = parser.parseMessage(messageBytes);
+                parsedMessage = sanitizer.sanitizeMessage(parsedMessage);
+                dataTarget.sendMessage(parsedMessage);
+                ODEAgent.this.decreaseCount();
+            } catch (ODEParseException e) {
+                //TODO: log message and throw to collector
+                e.printStackTrace();
+            } catch (ODESanitizerException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (JMSException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }           
+        }
+        
+    }
+    
+    public void processMessage(byte[] messageBytes) {
+        MessageProcessor mp = new MessageProcessor(messageBytes);
+        new Thread(mp).start();
+        increaseCount();
     }
 
+    private void increaseCount(){
+        synchronized(mutex){
+            threadCount++;
+        }
+    }
+    
+    private void decreaseCount(){
+        synchronized(mutex){
+            threadCount--;
+        }
+    }
+    
+    protected int getThreadCount(){
+        return threadCount;
+    }
+    
     public ODERegistration getRegistration() {
         return registration;
     }
