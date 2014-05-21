@@ -13,6 +13,7 @@
     <name>ode-api</name>
 
     <dependencies>
+     
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
@@ -52,6 +53,11 @@
             <groupId>quartz</groupId>
             <artifactId>quartz</artifactId>
             <version>1.5.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.appclient</groupId>
+            <artifactId>gf-client-module</artifactId>
+            <version>4.0</version>
         </dependency>
         <dependency>
             <groupId>javax</groupId>
