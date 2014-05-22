@@ -1,12 +1,12 @@
 package com.leidos.ode.collector;
 
-import java.net.SocketException;
-import java.net.UnknownHostException;
+
 
 import com.leidos.ode.agent.ODEAgent;
 import com.leidos.ode.collector.datasource.CollectorDataSource;
 import com.leidos.ode.collector.datasource.DataSourceException;
 import javax.jms.JMSException;
+import javax.naming.NamingException;
 
 public class ODECollector implements CollectorDataSourceListener{
 
@@ -16,11 +16,11 @@ public class ODECollector implements CollectorDataSourceListener{
 	private ODEAgent agent;
 	
 	
-	public void startUp() throws DataSourceException, JMSException {
+	public void startUp() throws DataSourceException, JMSException,NamingException {
 		startCollector();
 	}
 	
-	private void startCollector() throws DataSourceException, JMSException {
+	private void startCollector() throws DataSourceException, JMSException,NamingException {
 		agent.startUp();
 		dataSource.startDataSource();
 	}

@@ -3,6 +3,7 @@ package com.leidos.ode.agent;
 import javax.jms.JMSException;
 
 import com.leidos.ode.core.data.ODERegistrationResponse;
+import javax.naming.NamingException;
 
 
 /**
@@ -13,7 +14,7 @@ import com.leidos.ode.core.data.ODERegistrationResponse;
 public class PublishODEAgent extends ODEAgent{
 
 	@Override
-	public void startUp() throws JMSException{
+	public void startUp() throws JMSException,NamingException{
             ODERegistrationResponse regResponse = performRegistration();
             dataTarget.configure(regResponse);
 	}

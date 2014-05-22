@@ -9,6 +9,7 @@ import com.leidos.ode.agent.sanitizer.ODESanitizer;
 import com.leidos.ode.agent.sanitizer.ODESanitizerException;
 import com.leidos.ode.core.registration.RegistrationInformation;
 import javax.jms.JMSException;
+import javax.naming.NamingException;
 
 public abstract class ODEAgent {
 
@@ -21,7 +22,7 @@ public abstract class ODEAgent {
     private int threadCount = 0;
     private final Byte mutex = new Byte("1");
     
-    public abstract void startUp() throws JMSException;
+    public abstract void startUp() throws JMSException,NamingException;
 
     private class MessageProcessor implements Runnable{
         

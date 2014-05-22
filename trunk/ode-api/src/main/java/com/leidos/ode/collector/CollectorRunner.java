@@ -4,6 +4,7 @@ import com.leidos.ode.collector.datasource.DataSourceException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.jms.JMSException;
+import javax.naming.NamingException;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
@@ -18,7 +19,7 @@ public class CollectorRunner extends QuartzJobBean{
 	
     public String collectorName;
 	
-    public static void main(String[] args) throws DataSourceException, JMSException {
+    public static void main(String[] args) throws DataSourceException, JMSException,NamingException {
         if(args != null && args.length == 1){
                 CollectorRunner runner = new CollectorRunner();
                 runner.setCollectorName(args[0]);
@@ -37,10 +38,12 @@ public class CollectorRunner extends QuartzJobBean{
             Logger.getLogger(CollectorRunner.class.getName()).log(Level.SEVERE, null, ex);
         } catch (JMSException ex) {
             Logger.getLogger(CollectorRunner.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NamingException ex) {
+            Logger.getLogger(CollectorRunner.class.getName()).log(Level.SEVERE, null, ex);
         }
     }        
 	
-    public void runCollector() throws DataSourceException, JMSException {
+    public void runCollector() throws DataSourceException, JMSException,NamingException {
         ApplicationContext ctx = new ClassPathXmlApplicationContext("ODE-Context.xml");
         ODECollector collector = (ODECollector)ctx.getBean(collectorName);
         collector.startUp();
