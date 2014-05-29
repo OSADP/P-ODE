@@ -7,6 +7,9 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import javax.ejb.Stateless;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 
 /**
  * Class to handle the registration information access to the database.
@@ -14,14 +17,22 @@ import java.util.List;
  * @author lamde
  */
 @Component
-public class RegistrationDAOImpl implements RegistrationDAO{
+@Stateless
+public class RegistrationDAOImpl implements RegistrationDAO {
 
     @Autowired
     private MongoTemplate mongoTemplate;
 
     @Override
     public RegistrationInformation storeRegistration(RegistrationInformation regInfo) {
-        return null;
+        SqlSessionFactory sqlMapper = DBSessionManager.getSqlSessionFactory();
+        SqlSession session = sqlMapper.openSession(true);
+        try {
+            session.insert("com.leidos.ode.RegistrationMapper.insertRegistration", regInfo);
+        } finally {
+            session.close();
+        }
+        return regInfo;
     }
 
     @Override
@@ -41,6 +52,14 @@ public class RegistrationDAOImpl implements RegistrationDAO{
 
     @Override
     public QueueInfo getQueueForRegistration(RegistrationInformation regInfo) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        SqlSessionFactory sqlMapper = DBSessionManager.getSqlSessionFactory();
+        SqlSession session = sqlMapper.openSession(true);
+        QueueInfo info = null;
+        try {
+            session.selectOne("com.leidos.ode.RegistrationMapper.selectQueueForRegistration", regInfo);
+        } finally {
+            session.close();
+        }
+        return info;
     }
 }

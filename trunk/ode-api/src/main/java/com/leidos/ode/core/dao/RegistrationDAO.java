@@ -4,7 +4,9 @@ import com.leidos.ode.core.data.QueueInfo;
 import com.leidos.ode.core.registration.RegistrationInformation;
 
 import java.util.List;
+import javax.ejb.Local;
 
+@Local
 public interface RegistrationDAO {
 	
 	public RegistrationInformation storeRegistration(RegistrationInformation regInfo);

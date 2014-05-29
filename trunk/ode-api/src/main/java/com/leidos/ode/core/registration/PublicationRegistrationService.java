@@ -8,11 +8,13 @@ import javax.ws.rs.Produces;
 import com.leidos.ode.core.dao.RegistrationDAO;
 import com.leidos.ode.core.data.ODERegistrationResponse;
 import com.leidos.ode.core.data.QueueInfo;
+import javax.ejb.EJB;
 
 @Stateless
 @Path("publicationReg")
 public class PublicationRegistrationService {
 
+    @EJB
     private RegistrationDAO regDao;
 
     @GET
@@ -39,8 +41,8 @@ public class PublicationRegistrationService {
 
         resp.setQueueConnFact(qInfo.getQueueConnectionFactory());
         resp.setQueueName(qInfo.getQueueName());
-        resp.setTargetAddress(qInfo.getTargetAddress());
-        resp.setTargetPort(qInfo.getTargetPort());
+        resp.setQueueHostURL(qInfo.getTargetAddress());
+        resp.setQueueHostPort(qInfo.getTargetPort());
         return resp;
     }
 
