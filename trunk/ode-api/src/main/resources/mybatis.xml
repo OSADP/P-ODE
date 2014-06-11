@@ -4,8 +4,8 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <typeAliases>
-            <typeAlias alias="RDEArchiveInfo" type="com.leidos.ode.core.data.RDEArchiveInfo" />
-            <typeAlias alias="RegistrationInformation" type="com.leidos.ode.core.data.RegistrationInformation" />
+            <typeAlias alias="RDEArchiveInfo" type="com.leidos.ode.core.rde.model.RDEArchiveInfo" />
+            <typeAlias alias="RegistrationInformation" type="com.leidos.ode.core.registration.RegistrationInformation" />
             <typeAlias alias="QueueInfo" type="com.leidos.ode.core.data.QueueInfo" />
             
     </typeAliases>	
@@ -33,6 +33,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 
 	<mappers>
 		<mapper resource="RDEArchiveMapper.xml" />
+                <mapper resource="RegistrationMapper.xml" />
 		
 	</mappers>
 </configuration>

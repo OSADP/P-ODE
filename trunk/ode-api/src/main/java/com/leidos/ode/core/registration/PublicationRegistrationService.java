@@ -1,25 +1,26 @@
 package com.leidos.ode.core.registration;
 
-import javax.ejb.Stateless;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+
 
 import com.leidos.ode.core.dao.RegistrationDAO;
 import com.leidos.ode.core.data.ODERegistrationResponse;
 import com.leidos.ode.core.data.QueueInfo;
-import javax.ejb.EJB;
 
-@Stateless
-@Path("publicationReg")
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+@Controller
 public class PublicationRegistrationService {
 
-    @EJB
+    @Autowired
     private RegistrationDAO regDao;
 
-    @GET
-    @Produces({"application/xml", "application/json"})
-    public ODERegistrationResponse registerPublicationIntent(RegistrationInformation regInfo) {
+    @RequestMapping(value = "registerPublish", method = RequestMethod.POST)
+    public @ResponseBody ODERegistrationResponse registerPublicationIntent(@RequestBody RegistrationInformation regInfo) {
         ODERegistrationResponse response = null;
         QueueInfo qInfo = getQueueNameForRegistration(regInfo);
         if (qInfo != null) {

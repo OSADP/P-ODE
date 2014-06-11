@@ -20,22 +20,22 @@ import junit.framework.TestCase;
 public class TestODEQueueTarget extends TestCase{
     
     public void testQueueTargetConnect(){
-        ODEQueueTarget target = new ODEQueueTarget();
-        ODERegistrationResponse regResponse = new ODERegistrationResponse();
-        regResponse.setQueueConnFact("ODEQueueConnFact");
-        regResponse.setQueueName("BSMR1Queue");
-        regResponse.setQueueHostURL("localhost");
-        regResponse.setQueueHostPort(7676);
-        
         try {
+            ODEQueueTarget target = new ODEQueueTarget();
+            ODERegistrationResponse regResponse = new ODERegistrationResponse();
+            regResponse.setQueueConnFact("ODEQueueConnFact");
+            regResponse.setQueueName("BSMR1Queue");
+            regResponse.setQueueHostURL("localhost");
+            regResponse.setQueueHostPort(7676);
+            
+            
             target.configure(regResponse);
             target.close();
-        } catch (JMSException ex) {
+        } catch (DataTargetException ex) {
             Logger.getLogger(TestODEQueueTarget.class.getName()).log(Level.SEVERE, null, ex);
             fail();
-        } catch (NamingException ex) {
-            Logger.getLogger(TestODEQueueTarget.class.getName()).log(Level.SEVERE, null, ex);
         }
+       
     }
     
 }

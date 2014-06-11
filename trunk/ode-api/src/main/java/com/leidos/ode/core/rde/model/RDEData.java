@@ -2,12 +2,14 @@ package com.leidos.ode.core.rde.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Class representing the RDE data set.
  *
  * @author lamde
  */
+@XmlRootElement
 public class RDEData {
 
     @JsonProperty("name")

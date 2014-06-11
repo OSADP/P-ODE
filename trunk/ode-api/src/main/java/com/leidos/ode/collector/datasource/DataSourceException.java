@@ -16,5 +16,8 @@ public class DataSourceException extends Exception{
         super(string);
     }
     
+    DataSourceException(String string, Throwable e) {
+        super(string,e);
+    }
     
 }

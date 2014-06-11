@@ -1,15 +1,19 @@
 package com.leidos.ode.agent;
 
+import com.leidos.ode.agent.data.AgentInfo;
 import com.leidos.ode.agent.data.ODEAgentMessage;
+import com.leidos.ode.agent.datatarget.DataTargetException;
 import com.leidos.ode.agent.datatarget.ODEDataTarget;
 import com.leidos.ode.agent.parser.ODEDataParser;
 import com.leidos.ode.agent.parser.ODEParseException;
 import com.leidos.ode.agent.registration.ODERegistration;
 import com.leidos.ode.agent.sanitizer.ODESanitizer;
 import com.leidos.ode.agent.sanitizer.ODESanitizerException;
+import com.leidos.ode.core.data.ODERegistrationResponse;
 import com.leidos.ode.core.registration.RegistrationInformation;
-import javax.jms.JMSException;
-import javax.naming.NamingException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public abstract class ODEAgent {
 
@@ -18,11 +22,27 @@ public abstract class ODEAgent {
     protected ODESanitizer sanitizer;
     protected ODEDataTarget dataTarget;
     protected RegistrationInformation regInfo;
-
+    protected AgentInfo agentInfo;
+    
+    
     private int threadCount = 0;
     private final Byte mutex = new Byte("1");
     
-    public abstract void startUp() throws JMSException,NamingException;
+    public abstract void startUp() throws DataTargetException;
+
+    /**
+     * @return the agentInfo
+     */
+    public AgentInfo getAgentInfo() {
+        return agentInfo;
+    }
+
+    /**
+     * @param agentInfo the agentInfo to set
+     */
+    public void setAgentInfo(AgentInfo agentInfo) {
+        this.agentInfo = agentInfo;
+    }
 
     private class MessageProcessor implements Runnable{
         
@@ -36,6 +56,7 @@ public abstract class ODEAgent {
             try {
                 ODEAgentMessage parsedMessage = parser.parseMessage(messageBytes);
                 parsedMessage = sanitizer.sanitizeMessage(parsedMessage);
+                parsedMessage.setAgentInfo(agentInfo);
                 dataTarget.sendMessage(parsedMessage);
                 ODEAgent.this.decreaseCount();
             } catch (ODEParseException e) {
@@ -44,9 +65,8 @@ public abstract class ODEAgent {
             } catch (ODESanitizerException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
-            } catch (JMSException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+}           catch (DataTargetException ex) {           
+                Logger.getLogger(ODEAgent.class.getName()).log(Level.SEVERE, null, ex);
             }           
         }
         
@@ -73,6 +93,18 @@ public abstract class ODEAgent {
     protected int getThreadCount(){
         return threadCount;
     }
+    
+    
+    protected void createAgentInfo(ODERegistrationResponse regResponse){
+        AgentInfo info = new AgentInfo();
+        info.setAgentId(regResponse.getAgentId());
+        info.setMessageType(regResponse.getMessageType());
+        info.setRegion(regResponse.getRegion());
+        info.setRegistrationId(regResponse.getRegistrationId());
+        setAgentInfo(info);
+    }
+    
+    
     
     public ODERegistration getRegistration() {
         return registration;

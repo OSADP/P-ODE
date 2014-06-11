@@ -33,18 +33,27 @@ public class ODEQueueTarget implements ODEDataTarget {
     private ODERegistrationResponse regInfo;
 
     @Override
-    public void configure(ODERegistrationResponse regInfo) throws JMSException,NamingException {
-        this.regInfo = regInfo;
-        connect();
-        createProducer();
+    public void configure(ODERegistrationResponse regInfo) throws DataTargetException {
+        try {
+            this.regInfo = regInfo;
+            connect();
+            createProducer();
+        } catch (NamingException ex) {
+            throw new DataTargetException("Error connecting to queue", ex);
+        } catch (JMSException ex) {
+            throw new DataTargetException("Error connecting to queue", ex);
+        }
     }
 
     @Override
-    public void sendMessage(ODEAgentMessage message) throws JMSException {
-        BytesMessage bytesMessage = session.createBytesMessage();
+    public void sendMessage(ODEAgentMessage message) throws DataTargetException {
+        try{
+            BytesMessage bytesMessage = session.createBytesMessage();
 //		message.writeBytes(message.get);
-        messageProducer.send(bytesMessage);
-
+            messageProducer.send(bytesMessage);
+        }catch(JMSException e){
+            throw new DataTargetException("Error sending data", e);
+        }
     }
 
     private void createProducer() throws JMSException {
@@ -53,7 +62,7 @@ public class ODEQueueTarget implements ODEDataTarget {
 
     }
 
-    private void connect() throws NamingException, JMSException {
+    private void connect() throws NamingException, JMSException  {
         Properties env = new Properties();
         env.put(Context.SECURITY_PRINCIPAL, "admin");
         env.put(Context.SECURITY_CREDENTIALS, "admin");
@@ -81,7 +90,7 @@ public class ODEQueueTarget implements ODEDataTarget {
 
     }
 
-    void close() {
+    public void close() {
         try {
             logger.info("Closing queue connection");
             messageProducer.close();

@@ -1,22 +1,23 @@
 package com.leidos.ode.core.registration;
 
-import javax.ejb.Stateless;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 
 import com.leidos.ode.core.dao.RegistrationDAO;
 import com.leidos.ode.core.data.ODERegistrationResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-@Stateless
-@Path("subscriptionReg")
+@Controller
 public class SubscriptionRegistrationService {
 
+    @Autowired
     private RegistrationDAO regDao;
 
-    @GET
-    @Produces({"application/xml", "application/json"})
-    public ODERegistrationResponse registerSubscriptionIntent(RegistrationInformation regInfo) {
+    @RequestMapping(value = "registerSubscribe", method = RequestMethod.POST)
+    public @ResponseBody ODERegistrationResponse registerSubscriptionIntent(@RequestBody RegistrationInformation regInfo) {
         ODERegistrationResponse response = null;
 
         regInfo = regDao.storeRegistration(regInfo);

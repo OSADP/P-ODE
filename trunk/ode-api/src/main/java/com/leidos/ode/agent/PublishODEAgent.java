@@ -1,9 +1,7 @@
 package com.leidos.ode.agent;
 
-import javax.jms.JMSException;
-
+import com.leidos.ode.agent.datatarget.DataTargetException;
 import com.leidos.ode.core.data.ODERegistrationResponse;
-import javax.naming.NamingException;
 
 
 /**
@@ -14,12 +12,14 @@ import javax.naming.NamingException;
 public class PublishODEAgent extends ODEAgent{
 
 	@Override
-	public void startUp() throws JMSException,NamingException{
+	public void startUp() throws DataTargetException {
             ODERegistrationResponse regResponse = performRegistration();
             dataTarget.configure(regResponse);
+            createAgentInfo(regResponse);
 	}
 
 	
+        
 	private ODERegistrationResponse performRegistration() {
             ODERegistrationResponse regResponse = registration.register(regInfo);
             return regResponse;

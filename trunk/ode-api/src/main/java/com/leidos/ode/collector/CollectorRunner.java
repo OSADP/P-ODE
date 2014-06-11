@@ -1,5 +1,6 @@
 package com.leidos.ode.collector;
 
+import com.leidos.ode.agent.datatarget.DataTargetException;
 import com.leidos.ode.collector.datasource.DataSourceException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,7 +20,7 @@ public class CollectorRunner extends QuartzJobBean{
 	
     public String collectorName;
 	
-    public static void main(String[] args) throws DataSourceException, JMSException,NamingException {
+    public static void main(String[] args) throws DataSourceException, DataTargetException {
         if(args != null && args.length == 1){
                 CollectorRunner runner = new CollectorRunner();
                 runner.setCollectorName(args[0]);
@@ -36,14 +37,12 @@ public class CollectorRunner extends QuartzJobBean{
             runCollector();
         } catch (DataSourceException ex) {
             Logger.getLogger(CollectorRunner.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JMSException ex) {
-            Logger.getLogger(CollectorRunner.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NamingException ex) {
+        } catch (DataTargetException ex) {
             Logger.getLogger(CollectorRunner.class.getName()).log(Level.SEVERE, null, ex);
         }
     }        
 	
-    public void runCollector() throws DataSourceException, JMSException,NamingException {
+    public void runCollector() throws DataSourceException, DataTargetException {
         ApplicationContext ctx = new ClassPathXmlApplicationContext("ODE-Context.xml");
         ODECollector collector = (ODECollector)ctx.getBean(collectorName);
         collector.startUp();

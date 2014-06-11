@@ -17,7 +17,6 @@ import org.apache.ibatis.session.SqlSessionFactory;
  * @author lamde
  */
 @Component
-@Stateless
 public class RegistrationDAOImpl implements RegistrationDAO {
 
     @Autowired
@@ -56,7 +55,7 @@ public class RegistrationDAOImpl implements RegistrationDAO {
         SqlSession session = sqlMapper.openSession(true);
         QueueInfo info = null;
         try {
-            session.selectOne("com.leidos.ode.RegistrationMapper.selectQueueForRegistration", regInfo);
+            info = session.selectOne("com.leidos.ode.RegistrationMapper.selectQueueForRegistration", regInfo);
         } finally {
             session.close();
         }

@@ -1,5 +1,6 @@
 package com.leidos.ode.core.controllers;
 
+import com.leidos.ode.agent.data.ODEAgentMessage;
 import com.leidos.ode.core.rde.model.RDEData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,14 +25,16 @@ public class PublishDataController   {
     private StoreDataController storeDataController;
     @Autowired
     private DistributeDataController distributeDataController;
-
+    private int i = 0;
+    
     public PublishDataController() {
 
     }
 
     @RequestMapping(value = "publish", method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity publishData(@RequestBody RDEData rdeData) {
-        return null;
+    public @ResponseBody String publishData(@RequestBody ODEAgentMessage rdeData) {
+        System.out.println("~~~~~~~Received message ."+ ++i);
+        return "OK";
     }
 
     public StoreDataController getStoreDataController() {

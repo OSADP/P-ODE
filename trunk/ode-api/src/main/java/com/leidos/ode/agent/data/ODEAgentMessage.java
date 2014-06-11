@@ -1,24 +1,43 @@
 package com.leidos.ode.agent.data;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class ODEAgentMessage {
-	
-	private byte[] messagePayload;
-	private Object formattedMessage;
-	
-	public byte[] getMessagePayload() {
-		return messagePayload;
-	}
+    private AgentInfo agentInfo;
 
-	public void setMessagePayload(byte[] messagePayload) {
-		this.messagePayload = messagePayload;
-	}
+    private byte[] messagePayload;
+    private Object formattedMessage;
 
-	public Object getFormattedMessage() {
-		return formattedMessage;
-	}
+    public byte[] getMessagePayload() {
+            return messagePayload;
+    }
 
-	public void setFormattedMessage(Object formattedMessage) {
-		this.formattedMessage = formattedMessage;
-	}
+    public void setMessagePayload(byte[] messagePayload) {
+            this.messagePayload = messagePayload;
+    }
 
+    public Object getFormattedMessage() {
+            return formattedMessage;
+    }
+
+    public void setFormattedMessage(Object formattedMessage) {
+            this.formattedMessage = formattedMessage;
+    }
+
+    /**
+     * @return the agentInfo
+     */
+    public AgentInfo getAgentInfo() {
+        return agentInfo;
+    }
+
+    /**
+     * @param agentInfo the agentInfo to set
+     */
+    public void setAgentInfo(AgentInfo agentInfo) {
+        this.agentInfo = agentInfo;
+    }
+
+        
 }

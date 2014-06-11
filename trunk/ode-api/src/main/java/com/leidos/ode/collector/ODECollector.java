@@ -3,10 +3,10 @@ package com.leidos.ode.collector;
 
 
 import com.leidos.ode.agent.ODEAgent;
+import com.leidos.ode.agent.datatarget.DataTargetException;
 import com.leidos.ode.collector.datasource.CollectorDataSource;
 import com.leidos.ode.collector.datasource.DataSourceException;
-import javax.jms.JMSException;
-import javax.naming.NamingException;
+
 
 public class ODECollector implements CollectorDataSourceListener{
 
@@ -16,11 +16,11 @@ public class ODECollector implements CollectorDataSourceListener{
 	private ODEAgent agent;
 	
 	
-	public void startUp() throws DataSourceException, JMSException,NamingException {
+	public void startUp() throws DataSourceException, DataTargetException {
 		startCollector();
 	}
 	
-	private void startCollector() throws DataSourceException, JMSException,NamingException {
+	private void startCollector() throws DataSourceException, DataTargetException {
 		agent.startUp();
 		dataSource.startDataSource();
 	}
