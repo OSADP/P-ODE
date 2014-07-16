@@ -1,6 +1,6 @@
 package com.leidos.ode.core.controllers;
 
-import com.leidos.ode.core.rde.model.RDEData;
+import com.leidos.ode.core.rde.data.RDEData;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +16,6 @@ public class DistributeDataController {
     }
 
     @RequestMapping(value = "distribute", method = RequestMethod.POST)
-
     public @ResponseBody ResponseEntity distributeData(@RequestBody RDEData rdeData) {
         return null;
     }

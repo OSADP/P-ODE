@@ -1,11 +1,11 @@
 package com.leidos.ode.core.controllers;
 
 import com.leidos.ode.core.dao.RDEArchiveDAO;
-import com.leidos.ode.core.rde.agent.RDEStoreAgent;
-import com.leidos.ode.core.rde.model.RDEArchiveInfo;
-import com.leidos.ode.core.rde.model.RDEData;
-import com.leidos.ode.core.rde.model.RDEStoreException;
-import com.leidos.ode.core.rde.model.RDEStoreResponse;
+import com.leidos.ode.core.rde.controllers.RDEStoreController;
+import com.leidos.ode.core.rde.data.RDEArchiveInfo;
+import com.leidos.ode.core.rde.data.RDEData;
+import com.leidos.ode.core.rde.data.RDEStoreException;
+import com.leidos.ode.core.rde.data.RDEStoreResponse;
 import com.leidos.ode.logging.ODELogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,12 +29,11 @@ public class StoreDataController {
     @Autowired
     private ODELogger odeLogger;
     @Autowired
-    private RDEStoreAgent rdeStoreAgent;
+    private RDEStoreController rdeStoreAgent;
     @Autowired
     private RDEArchiveDAO rdeArchiveDAO;
 
     public StoreDataController() {
-
     }
 
     @RequestMapping(value = "store", method = RequestMethod.POST)
@@ -42,9 +41,10 @@ public class StoreDataController {
         getOdeLogger().odeLogEvent("StoreData", "Request received for: " + rdeData.getName());
 
         RDEStoreResponse rdeStoreResponse;
-        //Store the data in the archive for playback
-        getRdeArchiveDAO().storeRDEArchiveInfo(new RDEArchiveInfo());
+
         try {
+            //Store the data in the archive for playback
+            getRdeArchiveDAO().storeRDEArchiveInfo(new RDEArchiveInfo());
             //Transfer data to the RDE
             rdeStoreResponse = getRdeStoreAgent().store(rdeData);
         } catch (RDEStoreException e) {
@@ -53,7 +53,7 @@ public class StoreDataController {
         return rdeStoreResponse;
     }
 
-    public RDEStoreAgent getRdeStoreAgent() {
+    public RDEStoreController getRdeStoreAgent() {
         return rdeStoreAgent;
     }
 

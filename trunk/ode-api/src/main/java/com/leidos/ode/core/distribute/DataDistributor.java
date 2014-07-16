@@ -40,9 +40,6 @@ public abstract class DataDistributor implements Runnable {
     private Connection connection;
     private Topic topic;
     private MessageConsumer consumer;
-
-    
-    
     
     public void run() {
         try {

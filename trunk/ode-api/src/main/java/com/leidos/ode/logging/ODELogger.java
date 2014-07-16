@@ -1,7 +1,6 @@
 package com.leidos.ode.logging;
 
 import com.leidos.ode.core.dao.LogDAO;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,10 +19,9 @@ public class ODELogger{
 
     @Autowired
     private LogDAO logDAO;
-    private Logger logger;
 
     public ODELogger(){
-        logger = Logger.getLogger(TAG);
+
     }
 
     /**
@@ -33,14 +31,6 @@ public class ODELogger{
      */
     public void odeLogEvent(String component, String message) {
         getLogDAO().storeLogBean(new LogBean(new Date(), component, message));
-    }
-
-    /**
-     * Returns a Log4J logger instance.
-     * @return
-     */
-    public Logger getLogger(){
-        return logger;
     }
 
     private LogDAO getLogDAO() {

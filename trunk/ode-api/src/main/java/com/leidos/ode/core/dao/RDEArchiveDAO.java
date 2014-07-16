@@ -1,6 +1,6 @@
 package com.leidos.ode.core.dao;
 
-import com.leidos.ode.core.rde.model.RDEArchiveInfo;
+import com.leidos.ode.core.rde.data.RDEArchiveInfo;
 import java.util.List;
 
 public interface RDEArchiveDAO {

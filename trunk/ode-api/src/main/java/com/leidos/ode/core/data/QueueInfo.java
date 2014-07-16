@@ -2,7 +2,6 @@ package com.leidos.ode.core.data;
 
 public class QueueInfo {
 
-	
 	private int id;
 	private String messageType;
 	private String region;
@@ -10,7 +9,6 @@ public class QueueInfo {
 	private String queueConnectionFactory;
 	private String targetAddress;
 	private int targetPort;
-	
 	
 	public int getId() {
 		return id;
@@ -54,7 +52,5 @@ public class QueueInfo {
 	public void setTargetPort(int targetPort) {
 		this.targetPort = targetPort;
 	}
-	
-	
-	
+
 }

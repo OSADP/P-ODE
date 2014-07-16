@@ -8,42 +8,41 @@ package com.leidos.ode.agent.datatarget;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
 import com.leidos.ode.core.data.ODERegistrationResponse;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
+import org.apache.log4j.Logger;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+import java.net.HttpURLConnection;
 
 /**
- *
  * @author cassadyja
  */
-public class ODERestTarget implements ODEDataTarget{
+public class ODERestTarget implements ODEDataTarget {
 
-    
-    
+    private final String TAG = getClass().getSimpleName();
+    private Logger logger = Logger.getLogger(TAG);
+
+
     private HttpURLConnection conn;
-    private WebResource webResource;
+    private WebTarget webTarget;
+
     public void configure(ODERegistrationResponse regInfo) throws DataTargetException {
-        String address = "http://"+regInfo.getQueueHostURL()+":"+regInfo.getQueueHostPort()+"/"+regInfo.getQueueName();
-        ClientConfig config = new DefaultClientConfig();
-        Client client = Client.create(config);
-        webResource = client.resource(UriBuilder.fromUri(address).build());
-        
-        
+        String hostURL = regInfo.getQueueHostURL();
+        int hostPort = regInfo.getQueueHostPort();
+        String queueName = regInfo.getQueueName();
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("http://").append(hostURL).append(":").append(hostPort).append("/").append(queueName);
+        String address = stringBuilder.toString();
+        logger.debug(TAG + "- Configuring ODERegistrationResponse with endpoint address: " + address);
+
+        Client client = ClientBuilder.newClient();
+        webTarget = client.target(UriBuilder.fromUri(address));
+
+
 //        try {
 //            URL url = new URL(hostURL);
 //            conn = (HttpURLConnection) url.openConnection();
@@ -61,15 +60,13 @@ public class ODERestTarget implements ODEDataTarget{
     }
 
     public void sendMessage(ODEAgentMessage message) throws DataTargetException {
-        ClientResponse response = webResource.post(ClientResponse.class, message);
-//        ClientResponse response = webResource.path("http://localhost:9090/ode-web").path("publish")
+        Response response = webTarget.request().get();
+        String responseString = response.getEntity().toString();
+        System.out.println("Test " + responseString);
+//        ClientResponse response = webTarget.path("http://localhost:9090/ode-web").path("publish")
 //                                .type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
 //                                    .post(ClientResponse.class, message);
-        String s = response.getEntity(String.class);
-        System.out.println("Test "+s);
-        System.out.println("Response " + response.getEntity(String.class));
 
-        
         response.close();
 //        OutputStream os = null;
 //        try {
@@ -99,7 +96,7 @@ public class ODERestTarget implements ODEDataTarget{
     }
 
     public void close() {
-        
+
     }
-    
+
 }

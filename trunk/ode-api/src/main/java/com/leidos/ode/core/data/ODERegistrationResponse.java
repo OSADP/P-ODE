@@ -16,8 +16,7 @@ public class ODERegistrationResponse {
 	private int queueHostPort;
 	private String targetAddress;
 	private int targetPort;
-	
-	
+
 	public int getRegistrationId() {
 		return registrationId;
 	}
@@ -84,7 +83,5 @@ public class ODERegistrationResponse {
 	public void setQueueHostPort(int queueHostPort) {
 		this.queueHostPort = queueHostPort;
 	}
-	
-	
 
 }

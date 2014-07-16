@@ -7,11 +7,10 @@ import javax.naming.NamingException;
 
 public interface ODEDataTarget {
 	
-	
 	public void configure(ODERegistrationResponse regInfo)throws DataTargetException;
 	
 	public void sendMessage(ODEAgentMessage message) throws DataTargetException;
         
-        public void close();
+    public void close();
 	
 }

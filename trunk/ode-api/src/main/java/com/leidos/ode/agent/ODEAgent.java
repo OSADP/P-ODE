@@ -17,6 +17,9 @@ import java.util.logging.Logger;
 
 public abstract class ODEAgent {
 
+    private final String TAG = getClass().getSimpleName();
+    private final Logger logger = Logger.getLogger(TAG);
+
     protected ODERegistration registration;
     protected ODEDataParser parser;
     protected ODESanitizer sanitizer;
@@ -66,7 +69,7 @@ public abstract class ODEAgent {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
 }           catch (DataTargetException ex) {           
-                Logger.getLogger(ODEAgent.class.getName()).log(Level.SEVERE, null, ex);
+                logger.log(Level.SEVERE, null, ex);
             }           
         }
         

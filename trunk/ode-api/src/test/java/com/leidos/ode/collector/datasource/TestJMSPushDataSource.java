@@ -9,14 +9,17 @@ package com.leidos.ode.collector.datasource;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import junit.framework.TestCase;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  *
  * @author cassadyja
  */
 public class TestJMSPushDataSource extends TestCase{
-    
-    public void testConenct(){
+
+
+    public void testConnect(){
         JMSPushDataSource ds = new JMSPushDataSource();
         ds.setHostURL("jms1.ritis.org");
         ds.setHostPort("61617");
@@ -32,5 +35,7 @@ public class TestJMSPushDataSource extends TestCase{
             fail();
         }
     }
+
+
     
 }

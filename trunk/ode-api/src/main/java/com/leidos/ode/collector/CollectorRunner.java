@@ -2,22 +2,16 @@ package com.leidos.ode.collector;
 
 import com.leidos.ode.agent.datatarget.DataTargetException;
 import com.leidos.ode.collector.datasource.DataSourceException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.jms.JMSException;
-import javax.naming.NamingException;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.scheduling.quartz.QuartzJobBean;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CollectorRunner extends QuartzJobBean{
 
-	
     public String collectorName;
 	
     public static void main(String[] args) throws DataSourceException, DataTargetException {
@@ -56,7 +50,4 @@ public class CollectorRunner extends QuartzJobBean{
         this.collectorName = collectorName;
     }
 
-
-	
-	
 }

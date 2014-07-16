@@ -1,17 +1,9 @@
 package com.leidos.ode.collector.datasource;
 
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.Inet6Address;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
-import java.util.Arrays;
-import javax.jms.JMSException;
-
 import org.apache.log4j.Logger;
+import java.io.IOException;
+import java.net.*;
+import java.util.Arrays;
 
 public class UDPPushDataSource extends PushDataSource {
 

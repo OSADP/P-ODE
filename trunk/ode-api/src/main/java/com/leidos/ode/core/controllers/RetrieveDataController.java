@@ -1,9 +1,9 @@
 package com.leidos.ode.core.controllers;
 
-import com.leidos.ode.core.rde.agent.RDERetrieveAgent;
-import com.leidos.ode.core.rde.model.RDEData;
-import com.leidos.ode.core.rde.model.RDERetrieveException;
-import com.leidos.ode.core.rde.model.RDERetrieveResponse;
+import com.leidos.ode.core.rde.controllers.RDERetrieveController;
+import com.leidos.ode.core.rde.data.RDEData;
+import com.leidos.ode.core.rde.data.RDERetrieveException;
+import com.leidos.ode.core.rde.data.RDERetrieveResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +28,7 @@ public class RetrieveDataController {
     @Autowired
     private DistributeDataController distributeDataController;
     @Autowired
-    private RDERetrieveAgent rdeRetrieveAgent;
+    private RDERetrieveController rdeRetrieveAgent;
 
     public RetrieveDataController() {
 
@@ -50,7 +50,7 @@ public class RetrieveDataController {
         return distributeDataController;
     }
 
-    public RDERetrieveAgent getRdeRetrieveAgent() {
+    public RDERetrieveController getRdeRetrieveAgent() {
         return rdeRetrieveAgent;
     }
 

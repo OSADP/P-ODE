@@ -63,8 +63,6 @@
 		<property name="startDate" value="${leidos.ode.reg.test.pub.startDate}"/>
 		<property name="endDate" value="${leidos.ode.reg.test.pub.endDate}"/>
 	</bean>
-	
-	
 
 	<bean id="TestPubAgent" class="com.leidos.ode.agent.PublishODEAgent">
 		<property name="registration" ref="BasicPubRegistration"/>
@@ -72,8 +70,14 @@
 		<property name="sanitizer" ref="PassthroughSanitizer"/>
 		<property name="dataTarget" ref="QueueTarget"/>
 		<property name="regInfo" ref="TestRegistrationInfo"/>
-
 	</bean>
-	
-	
+
+    <bean id="RITISDataSource" class="com.leidos.ode.collector.datasource.JMSPushDataSource">
+        <property name="queueName" value="Clients.leidos.ATIS.Events"/>
+        <property name="hostURL" value="jms1.ritis.org"/>
+        <property name="hostPort" value="61617"/>
+        <property name="user" value="leidos"/>
+        <property name="pass" value="H3SvjshHnNBX"/>
+    </bean>
+
 </beans>

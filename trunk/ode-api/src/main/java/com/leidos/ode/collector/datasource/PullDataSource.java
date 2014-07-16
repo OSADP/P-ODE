@@ -6,7 +6,7 @@ import com.leidos.ode.collector.CollectorDataSourceListener;
  * This collector will go out and retrieve the data from the source.
  * This collector must be configured with all necessary connection information.
  * 
- * Sources following this model should extend this class.
+ * Sources following this data should extend this class.
  * 
  * @author cassadyja
  *

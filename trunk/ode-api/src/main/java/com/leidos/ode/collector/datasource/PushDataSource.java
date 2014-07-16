@@ -7,7 +7,7 @@ import com.leidos.ode.collector.CollectorDataSourceListener;
  * The collector will provide a way for the data to be sent, that could be a UDP port or some other method.
  * Once the data has been received it will send it back to the Collector listener.
  * 
- * Sources following this model should extend this class.
+ * Sources following this data should extend this class.
  * @author cassadyja
  *
  */

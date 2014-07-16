@@ -3,7 +3,7 @@ package com.leidos.ode.agent;
 import com.leidos.ode.core.data.ODERegistrationResponse;
 
 /**
- * This agent is used when a collector will only subscribe to data feeds.
+ * This controllers is used when a collector will only subscribe to data feeds.
  * @author cassadyja
  *
  */
