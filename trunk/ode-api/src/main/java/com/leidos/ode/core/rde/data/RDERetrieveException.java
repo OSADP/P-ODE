@@ -1,4 +1,4 @@
-package com.leidos.ode.core.rde.model;
+package com.leidos.ode.core.rde.data;
 
 /**
  * Exception thrown when attempting to retrieve data in the RDE.

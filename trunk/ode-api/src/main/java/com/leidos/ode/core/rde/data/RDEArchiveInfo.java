@@ -1,4 +1,4 @@
-package com.leidos.ode.core.rde.model;
+package com.leidos.ode.core.rde.data;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

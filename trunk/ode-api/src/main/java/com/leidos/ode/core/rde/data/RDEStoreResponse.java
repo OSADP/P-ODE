@@ -1,4 +1,4 @@
-package com.leidos.ode.core.rde.model;
+package com.leidos.ode.core.rde.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

@@ -1,8 +1,8 @@
-package com.leidos.ode.core.rde.agent;
+package com.leidos.ode.core.rde.controllers;
 
-import com.leidos.ode.core.rde.model.RDEData;
-import com.leidos.ode.core.rde.model.RDERetrieveException;
-import com.leidos.ode.core.rde.model.RDERetrieveResponse;
+import com.leidos.ode.core.rde.data.RDEData;
+import com.leidos.ode.core.rde.data.RDERetrieveException;
+import com.leidos.ode.core.rde.data.RDERetrieveResponse;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,9 +11,9 @@ import org.springframework.stereotype.Component;
  * @author lamde
  */
 @Component
-public class RDERetrieveAgentImpl implements RDERetrieveAgent {
+public class RDERetrieveControllerImpl implements RDERetrieveController {
 
-    public RDERetrieveAgentImpl(){
+    public RDERetrieveControllerImpl(){
 
     }
 

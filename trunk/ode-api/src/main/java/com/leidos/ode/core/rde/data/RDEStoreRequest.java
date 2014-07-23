@@ -1,4 +1,4 @@
-package com.leidos.ode.core.rde.model;
+package com.leidos.ode.core.rde.data;
 
 /**
  * Class representing the request for storing data in the RDE.
