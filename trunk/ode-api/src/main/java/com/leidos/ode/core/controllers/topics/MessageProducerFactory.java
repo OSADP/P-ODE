@@ -59,7 +59,7 @@ public class MessageProducerFactory {
     
     public MessageProducer getMessageProducer(AgentInfo agentInfo){
         //determine which topic the message should go to based on
-        //the data in controllers info.
+        //the vdotdata in controllers info.
         //This will include: message type, and region.
         //Then create a message producer for that topic.
         

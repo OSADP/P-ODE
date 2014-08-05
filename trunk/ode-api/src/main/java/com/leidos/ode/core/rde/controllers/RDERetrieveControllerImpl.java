@@ -6,7 +6,7 @@ import com.leidos.ode.core.rde.data.RDERetrieveResponse;
 import org.springframework.stereotype.Component;
 
 /**
- * Class representing the RDE data retrieve agent. Responsible for connecting to the RDE and retrieving RDE data.
+ * Class representing the RDE vdotdata retrieve agent. Responsible for connecting to the RDE and retrieving RDE vdotdata.
  *
  * @author lamde
  */
@@ -19,7 +19,7 @@ public class RDERetrieveControllerImpl implements RDERetrieveController {
 
     @Override
     public RDERetrieveResponse retrieve(RDEData rdeData) throws RDERetrieveException {
-        //Connect to RDE and retrieve data. Build a response object from the data.
-        return new RDERetrieveResponse("Successfully retrieved data: " + rdeData.getName());
+        //Connect to RDE and retrieve vdotdata. Build a response object from the vdotdata.
+        return new RDERetrieveResponse("Successfully retrieved vdotdata: " + rdeData.getName());
     }
 }

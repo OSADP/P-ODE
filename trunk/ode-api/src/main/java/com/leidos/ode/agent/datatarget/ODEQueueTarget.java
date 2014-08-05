@@ -52,7 +52,7 @@ public class ODEQueueTarget implements ODEDataTarget {
 //		message.writeBytes(message.get);
             messageProducer.send(bytesMessage);
         }catch(JMSException e){
-            throw new DataTargetException("Error sending data", e);
+            throw new DataTargetException("Error sending vdotdata", e);
         }
     }
 

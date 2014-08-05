@@ -22,7 +22,7 @@ public class TestVDOTRestPullDataSource {
     @BeforeClass
     public static void setup(){
         restPullDataSource = new RestPullDataSource();
-        restPullDataSource.setSourceAddress("www.vdotdatasharing.org");
+        restPullDataSource.setSourceAddress("http://www.vdotdatasharing.org");
         restPullDataSource.setUser("leidos");
         restPullDataSource.setPass("ijeret58");
     }
@@ -47,7 +47,7 @@ public class TestVDOTRestPullDataSource {
         try {
             restPullDataSource.startDataSource();
             byte[] data = restPullDataSource.getDataFromSource();
-            System.out.println("Received data of length: " + data.length);
+            System.out.println("Received vdotdata of length: " + data.length);
         } catch (DataSourceException e) {
             logger.equals(e.getLocalizedMessage());
         }

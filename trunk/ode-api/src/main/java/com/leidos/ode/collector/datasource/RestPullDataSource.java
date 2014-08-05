@@ -27,9 +27,9 @@ public class RestPullDataSource extends PullDataSource {
     @Override
     public void startDataSource() throws DataSourceException {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("http://").append(getSourceAddress()).append("/").append(getRequestURI());
+        stringBuilder.append(getSourceAddress()).append("/").append(getRequestURI());
         String address = stringBuilder.toString();
-        logger.debug(TAG + "- Starting data source with endpoint address: " + address);
+        logger.debug(TAG + "- Starting vdotdata source with endpoint address: " + address);
 
         Client client = ClientBuilder.newClient();
         //TODO Determine best authentication mode. Basic DOES NOT WORK for VDOT, but Digest and Universal do.

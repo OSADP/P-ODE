@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * Class representing the Store Data controller. Responsible for sending published data received by the ODE to the RDE,
+ * Class representing the Store Data controller. Responsible for sending published vdotdata received by the ODE to the RDE,
  * and recording that transfer to the Pub/Sub registration. Contains an RDE Interface sub-component, which is responsible
- * for formatting the data feed to the RDE as well as the metadata document that will accompany the data feed. Once data
- * is transferred to the RDE, Store Data will use the Pub/Sub registration interface sub-component to the log the data
+ * for formatting the vdotdata feed to the RDE as well as the metadata document that will accompany the vdotdata feed. Once vdotdata
+ * is transferred to the RDE, Store Data will use the Pub/Sub registration interface sub-component to the log the vdotdata
  * transfer so it can be discovered later for playback.
  *
  * @author lamde
@@ -43,9 +43,9 @@ public class StoreDataController {
         RDEStoreResponse rdeStoreResponse;
 
         try {
-            //Store the data in the archive for playback
+            //Store the vdotdata in the archive for playback
             getRdeArchiveDAO().storeRDEArchiveInfo(new RDEArchiveInfo());
-            //Transfer data to the RDE
+            //Transfer vdotdata to the RDE
             rdeStoreResponse = getRdeStoreAgent().store(rdeData);
         } catch (RDEStoreException e) {
            return new RDEStoreResponse(e.getLocalizedMessage());

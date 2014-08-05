@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Class representing the Retrieve Data controller. Responsible for interacting with the RDE to retrieve
- * data that has been stored there by the ODE. When a subscription for historical data is received by
+ * vdotdata that has been stored there by the ODE. When a subscription for historical vdotdata is received by
  * the Pub/Sub Registration component, it will make a request to the Retrieve Data component to pull that
- * data from the RDE. The metadata for the request will be passed to this component at that time. The
- * Retrieve Data component uses the metadata to construct a request for data and send it to the RDE. Any
- * retrieved data will then be sent back to the Distribute Data component.
+ * vdotdata from the RDE. The metadata for the request will be passed to this component at that time. The
+ * Retrieve Data component uses the metadata to construct a request for vdotdata and send it to the RDE. Any
+ * retrieved vdotdata will then be sent back to the Distribute Data component.
  *
  * @author lamde
  *

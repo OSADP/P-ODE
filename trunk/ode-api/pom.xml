@@ -111,5 +111,21 @@
 
     <build>
         <finalName>ode-api</finalName>
+
+        <plugins><plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>jaxb2-maven-plugin</artifactId>
+            <version>1.6</version>
+            <executions>
+                <execution>
+                    <id>hhhhhhhhhhhh</id>
+                    <goals>
+                        <goal>xjc</goal>
+                    </goals>
+                    <phase>generate-sources</phase>
+                </execution>
+            </executions>
+        </plugin></plugins>
+
     </build>
 </project>

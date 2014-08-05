@@ -19,14 +19,30 @@ import org.springframework.beans.factory.annotation.Qualifier;
 public class TestJMSPushDataSource extends TestCase{
 
 
-    public void testConnect(){
+//    public void testConnect(){
+//        JMSPushDataSource ds = new JMSPushDataSource();
+//        ds.setHostURL("jms1.ritis.org");
+//        ds.setHostPort("61617");
+//        ds.setUser("leidos");
+//        ds.setPass("H3SvjshHnNBX");
+//        ds.setQueueName("Clients.leidos.ATIS.Events");
+//
+//        try {
+//            ds.startDataSource();
+//        } catch (DataSourceException ex) {
+//            Logger.getLogger(TestJMSPushDataSource.class.getName()).log(Level.SEVERE, null, ex);
+//            ex.printStackTrace();
+//            fail();
+//        }
+//    }
+
+    public void testConnectTunnel(){
         JMSPushDataSource ds = new JMSPushDataSource();
-        ds.setHostURL("jms1.ritis.org");
-        ds.setHostPort("61617");
+        ds.setHostURL("localhost");
+        ds.setHostPort("7847");
         ds.setUser("leidos");
         ds.setPass("H3SvjshHnNBX");
         ds.setQueueName("Clients.leidos.ATIS.Events");
-        
         try {
             ds.startDataSource();
         } catch (DataSourceException ex) {
@@ -37,5 +53,4 @@ public class TestJMSPushDataSource extends TestCase{
     }
 
 
-    
 }

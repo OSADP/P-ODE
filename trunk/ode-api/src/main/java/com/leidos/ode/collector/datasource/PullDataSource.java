@@ -3,10 +3,10 @@ package com.leidos.ode.collector.datasource;
 import com.leidos.ode.collector.CollectorDataSourceListener;
 
 /**
- * This collector will go out and retrieve the data from the source.
+ * This collector will go out and retrieve the vdotdata from the source.
  * This collector must be configured with all necessary connection information.
  * 
- * Sources following this data should extend this class.
+ * Sources following this vdotdata should extend this class.
  * 
  * @author cassadyja
  *
