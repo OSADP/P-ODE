@@ -1,6 +1,7 @@
 package com.leidos.ode.agent.parser;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
+import net.sourceforge.exist.ns.exist.ObjectFactory;
 import net.sourceforge.exist.ns.exist.Result;
 import org.apache.log4j.Logger;
 
@@ -28,6 +29,7 @@ public class ODEVDOTParser implements ODEDataParser {
             ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
             Result result = (Result) objectInputStream.readObject();
             parsedMessage.setFormattedMessage(result);
+
         } catch (IOException e) {
             logger.error("Error parsing message. " + e.getLocalizedMessage());
         } catch (ClassNotFoundException e) {
