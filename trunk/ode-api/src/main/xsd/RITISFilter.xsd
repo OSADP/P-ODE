@@ -195,7 +195,7 @@
 	<xs:element name="state" type="rf:string-type" substitutionGroup="rf:location"/>
 	<xs:element name="county" type="rf:string-type" substitutionGroup="rf:location"/>
 	<xs:element name="city" type="rf:string-type" substitutionGroup="rf:location"/>
-	
+
 	<xs:complexType name="string-type">
 		<xs:simpleContent>
 			<xs:extension base="xs:string">

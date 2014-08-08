@@ -21,15 +21,16 @@ public class RestPullDataSource extends PullDataSource {
     private final String TAG = getClass().getSimpleName();
     private Logger logger = Logger.getLogger(TAG);
 
-    protected String requestURI;
+    private String requestURI;
+    private String wfsRequest;
     private WebTarget webTarget;
 
     @Override
     public void startDataSource() throws DataSourceException {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(getSourceAddress()).append("/").append(getRequestURI());
+        stringBuilder.append(getSourceAddress()).append(getRequestURI()).append(getWfsRequest());
         String address = stringBuilder.toString();
-        logger.debug(TAG + "- Starting vdotdata source with endpoint address: " + address);
+        logger.debug(TAG + "- Starting source with endpoint address: " + address);
 
         Client client = ClientBuilder.newClient();
         //TODO Determine best authentication mode. Basic DOES NOT WORK for VDOT, but Digest and Universal do.
@@ -57,4 +58,23 @@ public class RestPullDataSource extends PullDataSource {
     public void setRequestURI(String requestURI) {
         this.requestURI = requestURI;
     }
+
+    public String getWfsRequest() {
+        return wfsRequest;
+    }
+
+    public void setWfsRequest(String... wfsRequest) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("/?");
+        int index = 0;
+        for (String param : wfsRequest) {
+            stringBuilder.append(param);
+            if (index < wfsRequest.length - 1) {
+                stringBuilder.append("&");
+            }
+            index++;
+        }
+        this.wfsRequest = stringBuilder.toString();
+    }
 }
+

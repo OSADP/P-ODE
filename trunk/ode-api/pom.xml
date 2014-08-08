@@ -118,7 +118,6 @@
             <version>1.6</version>
             <executions>
                 <execution>
-                    <id>hhhhhhhhhhhh</id>
                     <goals>
                         <goal>xjc</goal>
                     </goals>

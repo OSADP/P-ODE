@@ -3,101 +3,82 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-	<!-- Load Properties file -->
-	<bean id="properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean" scope="prototype">
-            <property name="ignoreResourceNotFound" value="true"/>
-            <!--
-            Allow for the (optional) override of these properties
-            -->
-            <property name="locations">
-                <list>
-                    <value>classpath:META-INF/ODEContext-Dev.properties</value>
-                </list>
-            </property>
-	</bean>
+    <!-- Load Properties file -->
+    <bean id="properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean" scope="prototype">
+        <property name="ignoreResourceNotFound" value="true"/>
+        <!--
+        Allow for the (optional) override of these properties
+        -->
+        <property name="locations">
+            <list>
+                <value>classpath:META-INF/ODEContext-Dev.properties</value>
+            </list>
+        </property>
+    </bean>
 
-	<bean id="propertyPlaceholderConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-            <property name="properties" ref="properties"/>
-            <!-- This means don't blow up if a property is not set -->
-            <property name="ignoreUnresolvablePlaceholders" value="true"/>
-            <!--
-            This means that any system properties set on the command line will take precedence over those set locally or in a properties file.
-            -->
-            <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
-	</bean>
+    <bean id="propertyPlaceholderConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="properties" ref="properties"/>
+        <!-- This means don't blow up if a property is not set -->
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <!--
+        This means that any system properties set on the command line will take precedence over those set locally or in a properties file.
+        -->
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+    </bean>
 
-	
-	<bean id="BasicSubRegistration" class="com.leidos.ode.agent.registration.SubscriberRegistration">
-		<property name="regServiceAddress" value="${leidos.ode.regaddress}"/>
-	</bean>
-	
-	<bean id="BasicPubRegistration" class="com.leidos.ode.agent.registration.PublisherRegistration">
-		<property name="regServiceAddress" value="${leidos.ode.regaddress}"/>
-	</bean>
-	
-	<bean id="BSMParser" class="com.leidos.ode.agent.parser.ODEBSMParser"/>
-	
-	<bean id="QueueTarget" class="com.leidos.ode.agent.datatarget.ODEQueueTarget"/>
+
+    <bean id="BasicSubRegistration" class="com.leidos.ode.agent.registration.SubscriberRegistration">
+        <property name="regServiceAddress" value="${leidos.ode.regaddress}"/>
+    </bean>
+
+    <bean id="BasicPubRegistration" class="com.leidos.ode.agent.registration.PublisherRegistration">
+        <property name="regServiceAddress" value="${leidos.ode.regaddress}"/>
+    </bean>
+
+    <bean id="BSMParser" class="com.leidos.ode.agent.parser.ODEBSMParser"/>
+
+    <bean id="QueueTarget" class="com.leidos.ode.agent.datatarget.ODEQueueTarget"/>
 
     <bean id="VDOTParser" class="com.leidos.ode.agent.parser.ODEVDOTParser"/>
-	
-	<bean id="PassthroughSanitizer" class="com.leidos.ode.agent.sanitizer.PassthroughSanitizer">
-	</bean>
-	
-	<bean id="TestRegistrationInfo" class="com.leidos.ode.core.registration.RegistrationInformation">
-		<property name="messageType" value="${leidos.ode.reg.test.pub.messageType}"/>
-		<property name="region" value="${leidos.ode.reg.test.pub.region}"/>
-		<property name="registrationType" value="${leidos.ode.reg.test.pub.registrationType}"/>
-		<property name="agentId" value="${leidos.ode.reg.test.pub.agentId}"/>
-		<property name="startDate" value="${leidos.ode.reg.test.pub.startDate}"/>
-		<property name="endDate" value="${leidos.ode.reg.test.pub.endDate}"/>
-	</bean>
 
-	<bean id="TestPubAgent" class="com.leidos.ode.agent.PublishODEAgent">
-		<property name="registration" ref="BasicPubRegistration"/>
-		<property name="parser" ref="BSMParser"/>
-		<property name="sanitizer" ref="PassthroughSanitizer"/>
-		<property name="dataTarget" ref="QueueTarget"/>
-		<property name="regInfo" ref="TestRegistrationInfo"/>
-	</bean>
-
-    <bean id="RITISDataSource" class="com.leidos.ode.collector.datasource.JMSPushDataSource">
-        <property name="queueName" value="Clients.leidos.ATIS.Events"/>
-        <property name="hostURL" value="jms1.ritis.org"/>
-        <property name="hostPort" value="61617"/>
-        <property name="user" value="leidos"/>
-        <property name="pass" value="H3SvjshHnNBX"/>
+    <bean id="PassthroughSanitizer" class="com.leidos.ode.agent.sanitizer.PassthroughSanitizer">
     </bean>
 
-    <bean id="VDOTDataSource" class="com.leidos.ode.collector.datasource.RestPullDataSource">
-        <property name="sourceAddress"  value="${leidos.ode.collector.vdot.address}"/>
-        <property name="user" value="${leidos.ode.collector.vdot.username}"/>
-        <property name="pass" value="${leidos.ode.collector.vdot.password}"/>
+    <bean id="TestRegistrationInfo" class="com.leidos.ode.core.registration.RegistrationInformation">
+        <property name="messageType" value="${leidos.ode.reg.test.pub.messageType}"/>
+        <property name="region" value="${leidos.ode.reg.test.pub.region}"/>
+        <property name="registrationType" value="${leidos.ode.reg.test.pub.registrationType}"/>
+        <property name="agentId" value="${leidos.ode.reg.test.pub.agentId}"/>
+        <property name="startDate" value="${leidos.ode.reg.test.pub.startDate}"/>
+        <property name="endDate" value="${leidos.ode.reg.test.pub.endDate}"/>
     </bean>
 
-    <bean id="TestVDOTTSSDetectorStatus" parent="VDOTDataSource">
-        <property name="requestURI" value="xmldb/TssDetectorStatus/"/>
-    </bean>
-
-    <bean id="TestVDOTTravelTimeData" parent="VDOTDataSource">
-        <property name="requestURI" value="xmldb/TravelTimeData/"/>
-    </bean>
-
-    <bean id="TestVDOTESSMessage" parent="VDOTDataSource">
-        <property name="requestURI" value="xmldb/ESSMessage/"/>
-    </bean>
-
-    <bean id="TestPubAgentVDOT" class="com.leidos.ode.agent.PublishODEAgent">
+    <bean id="TestPubAgent" class="com.leidos.ode.agent.PublishODEAgent">
         <property name="registration" ref="BasicPubRegistration"/>
-        <property name="parser" ref="VDOTParser"/>
+        <property name="parser" ref="BSMParser"/>
         <property name="sanitizer" ref="PassthroughSanitizer"/>
         <property name="dataTarget" ref="QueueTarget"/>
         <property name="regInfo" ref="TestRegistrationInfo"/>
     </bean>
+    
+    <bean id="RITISFilterDataSource" class="com.leidos.ode.collector.datasource.RestPullDataSource">
+        <property name="sourceAddress" value="${leidos.ode.ritisfilter.baseurl}"/>
+        <property name="requestURI" value="${leidos.ode.ritisfilter.incidentevent.url}"/>
+        <property name="user" value="${leidos.ode.ritisfilter.username}"/>
+        <property name="pass" value="${leidos.ode.ritisfilter.password}"/>
+    </bean>
 
-    <bean id="VDOTCollector" class="com.leidos.ode.collector.ODECollector">
-        <property name="agent" ref="TestPubAgentVDOT"/>
-        <property name="dataSource" ref="TestVDOTTravelTimeData"/>
+    <bean id="RITISFilterAgent" class="com.leidos.ode.agent.PublishODEAgent">
+        <property name="registration" ref="BasicPubRegistration"/>
+        <property name="parser" ref="VDOTParser"/>
+        <property name="sanitizer" ref="PassthroughSanitizer"/>
+        <property name="dataTarget" ref="QueueTarget"/>
+    </bean>
+
+    <bean id="RITISFilterCollector" class="com.leidos.ode.collector.ODECollector">
+        <property name="agent" ref="RITISFilterAgent"/>
+        <property name="dataSource" ref="RITISFilterDataSource"/>
     </bean>
 
 </beans>
