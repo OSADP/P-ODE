@@ -10,11 +10,17 @@ public class ODERegistrationResponse {
 	private String region;
 	private String agentId;
 	private String registrationType;
+
+        private String publishWebServiceAddress;
+        
+        //Queue/Topic information, messages are placed on here when received.
 	private String queueName;
 	private String queueConnFact;
 	private String queueHostURL;
 	private int queueHostPort;
-	private String targetAddress;
+	
+        //Used in subscription
+        private String targetAddress;
 	private int targetPort;
 
 	public int getRegistrationId() {
@@ -83,5 +89,21 @@ public class ODERegistrationResponse {
 	public void setQueueHostPort(int queueHostPort) {
 		this.queueHostPort = queueHostPort;
 	}
+
+    /**
+     * @return the publishWebServiceAddress
+     */
+    public String getPublishWebServiceAddress() {
+        return publishWebServiceAddress;
+    }
+
+    /**
+     * @param publishWebServiceAddress the publishWebServiceAddress to set
+     */
+    public void setPublishWebServiceAddress(String publishWebServiceAddress) {
+        this.publishWebServiceAddress = publishWebServiceAddress;
+    }
+        
+        
 
 }

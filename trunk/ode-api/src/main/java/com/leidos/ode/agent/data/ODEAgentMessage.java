@@ -1,10 +1,11 @@
 package com.leidos.ode.agent.data;
 
+import java.io.Serializable;
 import java.util.Date;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class ODEAgentMessage {
+public class ODEAgentMessage implements Serializable{
     private AgentInfo agentInfo;
     
     private Date messageReceivedDate;

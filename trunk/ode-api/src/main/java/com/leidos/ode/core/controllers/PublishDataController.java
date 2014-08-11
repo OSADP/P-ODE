@@ -1,6 +1,7 @@
 package com.leidos.ode.core.controllers;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
+import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,6 +42,11 @@ public class PublishDataController   {
 
     public DistributeDataController getDistributeDataController() {
         return distributeDataController;
+    }
+    
+    @PostConstruct
+    public void initTopicConnection(){
+        
     }
 
 }

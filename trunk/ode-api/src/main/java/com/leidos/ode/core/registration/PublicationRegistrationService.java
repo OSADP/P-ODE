@@ -2,6 +2,8 @@ package com.leidos.ode.core.registration;
 
 
 
+import com.leidos.ode.core.controllers.DistributeDataController;
+import com.leidos.ode.core.controllers.StoreDataController;
 import com.leidos.ode.core.dao.RegistrationDAO;
 import com.leidos.ode.core.data.ODERegistrationResponse;
 import com.leidos.ode.core.data.QueueInfo;
@@ -15,7 +17,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class PublicationRegistrationService {
-
+    @Autowired
+    private StoreDataController storeDataController;
+    @Autowired
+    private DistributeDataController distributeDataController;
+    
     @Autowired
     private RegistrationDAO regDao;
 
@@ -31,6 +37,7 @@ public class PublicationRegistrationService {
 
         return response;
     }
+    
 
     private ODERegistrationResponse createRegResponse(RegistrationInformation regInfo, QueueInfo qInfo) {
         ODERegistrationResponse resp = new ODERegistrationResponse();
@@ -58,5 +65,35 @@ public class PublicationRegistrationService {
     public void setRegDao(RegistrationDAO regDao) {
         this.regDao = regDao;
     }
+
+    /**
+     * @return the storeDataController
+     */
+    public StoreDataController getStoreDataController() {
+        return storeDataController;
+    }
+
+    /**
+     * @param storeDataController the storeDataController to set
+     */
+    public void setStoreDataController(StoreDataController storeDataController) {
+        this.storeDataController = storeDataController;
+    }
+
+    /**
+     * @return the distributeDataController
+     */
+    public DistributeDataController getDistributeDataController() {
+        return distributeDataController;
+    }
+
+    /**
+     * @param distributeDataController the distributeDataController to set
+     */
+    public void setDistributeDataController(DistributeDataController distributeDataController) {
+        this.distributeDataController = distributeDataController;
+    }
+    
+    
 
 }
