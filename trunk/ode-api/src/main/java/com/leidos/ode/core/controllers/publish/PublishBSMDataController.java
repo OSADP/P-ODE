@@ -3,7 +3,6 @@ package com.leidos.ode.core.controllers.publish;
 import com.leidos.ode.core.controllers.*;
 import com.leidos.ode.agent.data.ODEAgentMessage;
 import java.util.Properties;
-import java.util.logging.Level;
 import javax.annotation.PostConstruct;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -46,10 +45,10 @@ public class PublishBSMDataController   {
     private Connection connection;
     private Session session;
     private MessageProducer messageProducer = null;
-    private String hostURL;
-    private int hostPort;
-    private String connectionFactName;
-    private String topicName;
+    private String hostURL = "cassadyja2";
+    private int hostPort = 7676;
+    private String connectionFactName = "ODETopicConnFact";
+    private String topicName = "BSMR1Topic";
     
     
     public PublishBSMDataController() {
@@ -58,7 +57,7 @@ public class PublishBSMDataController   {
 
     @RequestMapping(value = "publishBSM", method = RequestMethod.POST)
     public @ResponseBody String publishData(@RequestBody ODEAgentMessage odeAgentMessage) {
-        System.out.println("~~~~~~~Received message ."+ ++i);
+        logger.info("~~~~~~~Received message ."+ ++i);
         try {
             if(messageProducer == null){
                 messageProducer = getMessageProducer();
@@ -74,18 +73,25 @@ public class PublishBSMDataController   {
     private void sendMessage(ODEAgentMessage odeAgentMessage){
         try {
             //puts the message on the topic.
+            logger.info("Preparing message for topic");
             ObjectMessage msg = session.createObjectMessage();
             msg.setObject(odeAgentMessage);
+            logger.info("Placing message on topic");
             messageProducer.send(msg);
+            
         } catch (JMSException ex) {
             logger.error("Error creating message.", ex);
+        } catch(Exception e){
+            logger.error("Error creating message.", e);
         }
         
         
     }
     
     private MessageProducer getMessageProducer() throws JMSException{
+        logger.info("Getting session");
         session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        logger.info("getting producer");
         return session.createProducer(topic);
     }
     

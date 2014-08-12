@@ -51,6 +51,7 @@ public class PublicationRegistrationService {
         resp.setQueueName(qInfo.getQueueName());
         resp.setQueueHostURL(qInfo.getTargetAddress());
         resp.setQueueHostPort(qInfo.getTargetPort());
+        resp.setPublishWebServiceAddress(qInfo.getWsURL());
         return resp;
     }
 

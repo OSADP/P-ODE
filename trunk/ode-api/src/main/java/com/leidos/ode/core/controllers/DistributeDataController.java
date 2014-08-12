@@ -5,7 +5,9 @@ import com.leidos.ode.core.distribute.DataDistributor;
 import com.leidos.ode.core.distribute.UDPDataDistributor;
 import com.leidos.ode.core.rde.data.RDEData;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import javax.annotation.PreDestroy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,6 +43,15 @@ public class DistributeDataController {
     public void stopSubscription(@RequestBody String agentId){
         distributors.get(agentId).setInterrupted(true);
         distributors.remove(agentId);
+    }
+    
+    @PreDestroy
+    public void cleanup(){
+        Iterator<String> it = distributors.keySet().iterator();
+        while(it.hasNext()){
+            String key = it.next();
+            distributors.get(key).setInterrupted(true);
+        }
     }
     
 }

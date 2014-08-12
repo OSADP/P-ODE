@@ -25,6 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="queueConnectionFactory" column="QUEUE_CONN_FACT"/>
 		<result property="targetAddress" column="TARGET_ADDRESS"/>
 		<result property="targetPort" column="TARGET_PORT"/>
+                <result property="wsURL" column="WS_URL"/>
 	</resultMap>
 
 
@@ -47,7 +48,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	
 	<select id="selectQueueForRegistration"  parameterType="RegistrationInformation" resultMap="QueueInfoMapper">
-		select ID, MSG_TYPE, REGION, QUEUE_NAME, QUEUE_CONN_FACT, TARGET_ADDRESS, TARGET_PORT
+		select ID, MSG_TYPE, REGION, QUEUE_NAME, QUEUE_CONN_FACT, TARGET_ADDRESS, TARGET_PORT,WS_URL
 		from MSG_QUEUE
 		where MSG_TYPE = #{messageType}
 		and REGION = #{region}

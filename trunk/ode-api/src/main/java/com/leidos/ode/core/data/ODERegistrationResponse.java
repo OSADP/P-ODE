@@ -22,6 +22,8 @@ public class ODERegistrationResponse {
         //Used in subscription
         private String targetAddress;
 	private int targetPort;
+        
+        
 
 	public int getRegistrationId() {
 		return registrationId;

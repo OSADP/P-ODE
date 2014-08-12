@@ -9,6 +9,7 @@ public class QueueInfo {
 	private String queueConnectionFactory;
 	private String targetAddress;
 	private int targetPort;
+        private String wsURL;
 	
 	public int getId() {
 		return id;
@@ -52,5 +53,20 @@ public class QueueInfo {
 	public void setTargetPort(int targetPort) {
 		this.targetPort = targetPort;
 	}
+
+    /**
+     * @return the wsURL
+     */
+    public String getWsURL() {
+        return wsURL;
+    }
+
+    /**
+     * @param wsURL the wsURL to set
+     */
+    public void setWsURL(String wsURL) {
+        this.wsURL = wsURL;
+    }
+        
 
 }

@@ -43,14 +43,17 @@ public abstract class DataDistributor implements Runnable {
     
     public void run() {
         try {
+            logger.info("Starting Data Distributor");
             connectTopic();
             connectTarget();
             while (!isInterrupted()) {
                 Message message = consumer.receive(10000);
+                
                 if(message != null){
                     if(message instanceof TextMessage){
                         logger.debug("Distribute found TextMessage, ignoring. "+ message);
                     }else{
+                        logger.info("Distributor received message: "+message);
                         sendData(message);
                     }
                 }
@@ -75,6 +78,7 @@ public abstract class DataDistributor implements Runnable {
             } catch (JMSException ex) {
                 java.util.logging.Logger.getLogger(DataDistributor.class.getName()).log(Level.SEVERE, null, ex);
             }
+            logger.info("Distributor Stopped.");
             setStopped(true);
         }
     }
@@ -106,6 +110,7 @@ public abstract class DataDistributor implements Runnable {
         connection = cf.createConnection();
         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
         consumer = session.createConsumer(topic);
+        connection.start();
     }
 
     protected abstract void connectTarget() throws DistributeException;

@@ -1,7 +1,8 @@
 package com.leidos.ode.core.registration;
 
-import java.sql.Date;
 
+
+import java.util.Date;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
