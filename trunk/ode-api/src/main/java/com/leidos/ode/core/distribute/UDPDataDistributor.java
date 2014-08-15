@@ -6,9 +6,16 @@
 
 package com.leidos.ode.core.distribute;
 
+import com.leidos.ode.agent.data.ODEAgentMessage;
+import java.io.IOException;
+import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.UnknownHostException;
+import javax.jms.JMSException;
 import javax.jms.Message;
+import javax.jms.ObjectMessage;
 
 /**
  *
@@ -20,6 +27,8 @@ public class UDPDataDistributor extends DataDistributor {
     private String targetURL;
     private int targetPort;
 
+    private DatagramSocket socket;
+    
     public UDPDataDistributor(String topicHostURL, int topicHostPort, 
             String connFactName, String topicName, String targetURL, int targetPort){
         
@@ -36,23 +45,32 @@ public class UDPDataDistributor extends DataDistributor {
     @Override
     protected void connectTarget() throws DistributeException{
         try {
-            DatagramSocket socket = new DatagramSocket(targetPort);
-//        String ipv6Address = "SVRWIN-DECRYPT5.intellidrive.local";
-//        InetAddress tmp = InetAddress.getByName(ipv6Address);
-//        InetAddress address = Inet6Address.getByAddress(ipv6Address, tmp.getAddress());
-//
-//        DatagramPacket packet = new DatagramPacket(bytes, bytes.length);
-//        packet.setAddress(address);
-//			
-//        socket.send(packet);        
+            socket = new DatagramSocket(targetPort);
+            InetAddress address = InetAddress.getByName(targetURL);
+            socket.connect(address, targetPort);
         } catch (SocketException ex) {
+            throw new DistributeException("Error connecting to UDP socket", ex);
+        } catch (UnknownHostException ex) {
             throw new DistributeException("Error connecting to UDP socket", ex);
         }
     }
 
     @Override
-    protected void sendData(Message message) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    protected void sendData(Message message) throws DistributeException {
+        //TODO: finish
+        try {
+            ODEAgentMessage msg = (ODEAgentMessage)((ObjectMessage)message).getObject();
+            DatagramPacket packet = new DatagramPacket(msg.getMessagePayload(), msg.getMessagePayload().length);
+            InetAddress address = InetAddress.getByName(targetURL);
+            packet.setAddress(address);
+            packet.setPort(targetPort);
+        
+            socket.send(packet);
+        } catch (IOException ex) {
+            throw new DistributeException("Error sending message", ex);
+        } catch (JMSException ex) {
+            throw new DistributeException("Error sending message", ex);
+        }
     }
 
     /**
