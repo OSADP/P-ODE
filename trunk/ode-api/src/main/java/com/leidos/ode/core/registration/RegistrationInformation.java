@@ -17,8 +17,8 @@ public class RegistrationInformation {
 	private Date endDate;
 	private String subscriptionReceiveAddress;
 	private int subscriptionReceivePort;
-	
-	
+
+
 	public int getId() {
 		return id;
 	}

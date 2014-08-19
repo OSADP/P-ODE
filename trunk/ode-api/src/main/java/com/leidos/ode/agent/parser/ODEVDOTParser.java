@@ -21,21 +21,6 @@ public class ODEVDOTParser implements ODEDataParser {
 
     @Override
     public ODEAgentMessage parseMessage(byte[] bytes) throws ODEParseException {
-        ODEAgentMessage parsedMessage = new ODEAgentMessage();
-        parsedMessage.setMessagePayload(bytes);
-
-        try {
-            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
-            ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
-            Result result = (Result) objectInputStream.readObject();
-            parsedMessage.setFormattedMessage(result);
-
-        } catch (IOException e) {
-            logger.error("Error parsing message. " + e.getLocalizedMessage());
-        } catch (ClassNotFoundException e) {
-            logger.error("Error parsing message. " + e.getLocalizedMessage());
-        }
-
-        return parsedMessage;
+        return null;
     }
 }

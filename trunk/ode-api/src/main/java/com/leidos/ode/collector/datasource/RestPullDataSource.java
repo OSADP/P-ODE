@@ -22,13 +22,13 @@ public class RestPullDataSource extends PullDataSource {
     private Logger logger = Logger.getLogger(TAG);
 
     private String requestURI;
-    private String wfsRequest;
+    private String requestParams;
     private WebTarget webTarget;
 
     @Override
     public void startDataSource() throws DataSourceException {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(getSourceAddress()).append(getRequestURI()).append(getWfsRequest());
+        stringBuilder.append(getSourceAddress()).append(getRequestURI()).append(getRequestParams());
         String address = stringBuilder.toString();
         logger.debug(TAG + "- Starting source with endpoint address: " + address);
 
@@ -59,22 +59,26 @@ public class RestPullDataSource extends PullDataSource {
         this.requestURI = requestURI;
     }
 
-    public String getWfsRequest() {
-        return wfsRequest;
+    public String getRequestParams() {
+        return requestParams;
     }
 
-    public void setWfsRequest(String... wfsRequest) {
+    public void setRequestParams(String... requestParams) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("/?");
         int index = 0;
-        for (String param : wfsRequest) {
+        for (String param : requestParams) {
             stringBuilder.append(param);
-            if (index < wfsRequest.length - 1) {
+            if (index < requestParams.length - 1) {
                 stringBuilder.append("&");
             }
             index++;
         }
-        this.wfsRequest = stringBuilder.toString();
+        this.requestParams = stringBuilder.toString();
     }
+
+    public String getEmulatorWFS(String typeName){
+        return "";
+    };
 }
 

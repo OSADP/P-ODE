@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
     <!-- Load Properties file -->
     <bean id="properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean" scope="prototype">
@@ -12,6 +12,7 @@
         <property name="locations">
             <list>
                 <value>classpath:META-INF/ODEContext-Dev.properties</value>
+                <value>classpath:ritisfilter.properties</value>
             </list>
         </property>
     </bean>
@@ -27,6 +28,9 @@
         <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
     </bean>
 
+    <bean id="dateFormat" class="java.text.SimpleDateFormat">
+        <constructor-arg value="MM-dd-YYYY"/>
+    </bean>
 
     <bean id="BasicSubRegistration" class="com.leidos.ode.agent.registration.SubscriberRegistration">
         <property name="regServiceAddress" value="${leidos.ode.regaddress}"/>
@@ -42,6 +46,8 @@
 
     <bean id="VDOTParser" class="com.leidos.ode.agent.parser.ODEVDOTParser"/>
 
+    <bean id="RITISParser" class="com.leidos.ode.agent.parser.ODERITISParser"/>
+
     <bean id="PassthroughSanitizer" class="com.leidos.ode.agent.sanitizer.PassthroughSanitizer">
     </bean>
 
@@ -50,8 +56,16 @@
         <property name="region" value="${leidos.ode.reg.test.pub.region}"/>
         <property name="registrationType" value="${leidos.ode.reg.test.pub.registrationType}"/>
         <property name="agentId" value="${leidos.ode.reg.test.pub.agentId}"/>
-        <property name="startDate" value="${leidos.ode.reg.test.pub.startDate}"/>
-        <property name="endDate" value="${leidos.ode.reg.test.pub.endDate}"/>
+        <property name="startDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.reg.test.pub.startDate}"/>
+            </bean>
+        </property>
+        <property name="endDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.reg.test.pub.endDate}"/>
+            </bean>
+        </property>
     </bean>
 
     <bean id="TestPubAgent" class="com.leidos.ode.agent.PublishODEAgent">
@@ -61,24 +75,45 @@
         <property name="dataTarget" ref="QueueTarget"/>
         <property name="regInfo" ref="TestRegistrationInfo"/>
     </bean>
-    
-    <bean id="RITISFilterDataSource" class="com.leidos.ode.collector.datasource.RestPullDataSource">
+
+    <bean id="RITISFilter" class="com.leidos.ode.collector.RITISDataSource">
         <property name="sourceAddress" value="${leidos.ode.ritisfilter.baseurl}"/>
-        <property name="requestURI" value="${leidos.ode.ritisfilter.incidentevent.url}"/>
         <property name="user" value="${leidos.ode.ritisfilter.username}"/>
         <property name="pass" value="${leidos.ode.ritisfilter.password}"/>
+        <property name="apiKey" value="${leidos.ode.ritisfilter.apikey}"/>
+        <property name="requestLimit" value="${leidos.ode.ritisfilter.requestlimit}"/>
+        <property name="incidentEventUrl" value="${leidos.ode.ritisfilter.incidentevent.url}"/>
+        <property name="detectorUrl" value="${leidos.ode.ritisfilter.detector.url}"/>
     </bean>
 
     <bean id="RITISFilterAgent" class="com.leidos.ode.agent.PublishODEAgent">
         <property name="registration" ref="BasicPubRegistration"/>
-        <property name="parser" ref="VDOTParser"/>
+        <property name="parser" ref="RITISParser"/>
         <property name="sanitizer" ref="PassthroughSanitizer"/>
         <property name="dataTarget" ref="QueueTarget"/>
     </bean>
 
     <bean id="RITISFilterCollector" class="com.leidos.ode.collector.ODECollector">
         <property name="agent" ref="RITISFilterAgent"/>
-        <property name="dataSource" ref="RITISFilterDataSource"/>
+        <property name="dataSource" ref="RITISFilter"/>
     </bean>
 
+    <bean id="VDOTDataSource" class="com.leidos.ode.collector.VDOTDataSource">
+        <property name="sourceAddress" value="${leidos.ode.vdotfeeds.baseurl}"/>
+        <property name="wfsBaseUrl" value="${leidos.ode.vdotfeeds.wfsbaseurl"/>
+        <property name="xmlBaseUrl" value="${leidos.ode.vdotfeeds.xmlbaseurl}"/>
+        <property name="user" value="${leidos.ode.vdotfeeds.username}"/>
+        <property name="pass" value="${leidos.ode.vdotfeeds.password}"/>
+    </bean>
+
+    <bean id="mongo" class="com.mongodb.Mongo">
+        <constructor-arg name="host" value="127.0.0.1"/>
+        <constructor-arg name="port" value="27017"/>
+    </bean>
+
+    <!-- Define the MongoTemplate which handles connectivity with MongoDB -->
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg name="mongo" ref="mongo"/>
+        <constructor-arg name="databaseName" value="ode"/>
+    </bean>
 </beans>

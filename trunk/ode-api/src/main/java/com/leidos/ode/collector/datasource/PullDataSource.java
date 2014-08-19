@@ -13,12 +13,12 @@ import com.leidos.ode.collector.CollectorDataSourceListener;
  */
 public abstract class PullDataSource implements CollectorDataSource{
 
-	protected CollectorDataSourceListener dataListener;
+    private CollectorDataSourceListener dataListener;
 
-	protected String sourceAddress;
-	protected String sourcePort;
-	protected String user;
-	protected String pass;
+	private String sourceAddress;
+    private String sourcePort;
+    private String user;
+    private String pass;
 
 	public String getSourceAddress() {
 		return sourceAddress;
