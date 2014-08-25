@@ -55,11 +55,11 @@ public class RITISDataSource extends RestPullDataSource {
 
     private void retrieveData(String recordName, String... params) {
         //Check if the previous request was for the same sensor data. If it was, then wait to prevent over api limit error.
-        String previousDetectorFilter = getRequestURI();
+        String previousDetectorFilter = getSourceAddress();
         if (previousDetectorFilter != null && previousDetectorFilter.equals(recordName)) {
             waitForApiRequestLimit();
         }
-        setRequestURI(recordName);
+        setSourceAddress(recordName);
         setRequestParams(params);
 
         try {

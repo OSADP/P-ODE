@@ -3,7 +3,12 @@ package com.leidos.ode.collector;
 import com.leidos.ode.collector.datasource.DataSourceException;
 import com.leidos.ode.collector.datasource.RestPullDataSource;
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Component;
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.UriBuilder;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,7 +17,6 @@ import org.springframework.stereotype.Component;
  * Time: 1:58 PM
  * To change this template use File | Settings | File Templates.
  */
-@Component
 public class VDOTDataSource extends RestPullDataSource {
 
     private final String TAG = getClass().getSimpleName();
@@ -22,33 +26,52 @@ public class VDOTDataSource extends RestPullDataSource {
     private String wfsBaseUrl;
     private String xmlBaseUrl;
 
-    StringBuilder stringBuilder;
+    private WebTarget webTarget;
 
     public VDOTDataSource() {
-        stringBuilder = new StringBuilder();
     }
 
-    private void retrieveData(String recordName) {
-        setRequestURI(getRequestURIXML(recordName));
-        try {
-            startDataSource();
-            byte[] data = getDataFromSource();
-            System.out.println("Received vdotdata of length: " + data.length);
-        } catch (DataSourceException e) {
-            logger.equals(e.getLocalizedMessage());
+    @Override
+    public void startDataSource() throws DataSourceException {
+        if (webTarget == null) {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(getSourceAddress()).append(getWfsBaseUrl());
+            String address = stringBuilder.toString();
+            setSourceAddress(address);
+            logger.debug(TAG + "- Starting source with endpoint address: " + address);
+
+            Client client = ClientBuilder.newClient();
+            //TODO Determine best authentication mode. Basic DOES NOT WORK for VDOT, but Digest and Universal do.
+            //TODO See 5.9.1. Http Authentication Support of https://jersey.java.net/documentation/latest/client.html#d0e4910 for more info on modes.
+            HttpAuthenticationFeature feature = HttpAuthenticationFeature.universal(getUser(), getPass());
+            client.register(feature);
+            webTarget = client.target(UriBuilder.fromUri(address));
         }
     }
 
+    public String retrieveData(String recordName) {
+        return getSourceAddress() + getWFSFilter(recordName);
+    }
+
     private String getRequestURIXML(String recordName) {
-        stringBuilder = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(getXmlBaseUrl()).append("/").append(recordName).append("/");
         return stringBuilder.toString();
     }
 
-    private String getRequestURIWFS(String recordName) {
-        stringBuilder = new StringBuilder();
-        stringBuilder.append(getWfsBaseUrl()).append(recordName);
+    private String getWFSFilter(String recordName) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("&typeName=");
+        stringBuilder.append("orci:");
+        stringBuilder.append(recordName);
+        stringBuilder.append("&");
+        stringBuilder.append("bbox=");
+        stringBuilder.append(getEmulatorWFSbbox());
         return stringBuilder.toString();
+    }
+
+    private String getEmulatorWFSbbox() {
+        return "38.856259,-77.35548,38.882853,-77.259612";
     }
 
     public String getWfsBaseUrl() {
@@ -65,66 +88,5 @@ public class VDOTDataSource extends RestPullDataSource {
 
     public void setXmlBaseUrl(String xmlBaseUrl) {
         this.xmlBaseUrl = xmlBaseUrl;
-    }
-
-    @Override
-    public String getEmulatorWFS(String typeName) {
-        stringBuilder = new StringBuilder();
-        stringBuilder.append(getWfsBaseUrl());
-        stringBuilder.append("&typeName=");
-        stringBuilder.append(typeName);
-        stringBuilder.append("&");
-        stringBuilder.append(getFilter());
-
-        return stringBuilder.toString();
-//        String boundingBoxKML = "<Polygon><outerBoundaryIs><coordinates>-77.3544727652,38.8599860006 -77.2634035056,38.8599860006 -77.2634035056,38.8795318015 -77.3544727652,38.8795318015</coordinates></outerBoundaryIs></Polygon>";
-//        String boundingBoxGeoJSON = "[[[-77.3544727652,38.8599860006],[-77.3544727652,38.8795318015],[-77.2634035056,38.8795318015],[-77.2634035056,38.8599860006],[-77.3544727652,38.8599860006]]]";
-
-    }
-
-    private String getPropertyEqualToLiteral(String propertyName, String literal){
-        stringBuilder.append("<ogc:PropertyIsEqualTo>");
-        stringBuilder.append("<ogc:PropertyName>");
-        stringBuilder.append(propertyName);
-        stringBuilder.append("</ogc:PropertyName>");
-        stringBuilder.append("<ogc:Literal>");
-        stringBuilder.append(literal);
-        stringBuilder.append("</ogc:Literal>");
-        stringBuilder.append("</ogc:PropertyIsEqualTo>");
-
-        return stringBuilder.toString();
-    }
-
-
-    private String getFilter(){
-        stringBuilder = new StringBuilder();
-        stringBuilder.append("Filter=<Filter>");
-        stringBuilder.append("<ogc:And>");
-        stringBuilder.append("<ogc:BBOX>");
-        stringBuilder.append("<ogc:PropertyName>the_geom</ogc:PropertyName>");
-        stringBuilder.append("<gml:Box srcName=\"\">");
-        stringBuilder.append("<gml:coordinates>");
-        stringBuilder.append(getEmulatorBBOX());
-        stringBuilder.append("</gml:coordinates>");
-        stringBuilder.append("</gml:Box>");
-        stringBuilder.append("</ogc:BBOX>");
-        stringBuilder.append(getPropertyEqualToLiteral("orci:route_name", "I-66"));
-        stringBuilder.append("</ogc:And>");
-        stringBuilder.append("</ogc:Filter>");
-        stringBuilder.append("</wfs:Query>");
-        stringBuilder.append("</wfs:GetFeature>");
-
-        return stringBuilder.toString();
-    }
-
-    /**
-     * Returns bounding box representing I-66, outside of the beltway (I-495), between Rt 243 and Rt 50 in Virginia.
-     */
-    private String getEmulatorBBOX(){
-        return "38.85611,-77.353099,38.882238,-77.26306";
-    }
-
-    private String getRouteName(){
-        return "I-66";
     }
 }

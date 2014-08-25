@@ -12,13 +12,18 @@
         <property name="locations">
             <list>
                 <value>classpath:META-INF/ODEContext-Dev.properties</value>
-                <value>classpath:ritisfilter.properties</value>
             </list>
         </property>
     </bean>
 
     <bean id="propertyPlaceholderConfigurer"
           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:ritisfilter.properties</value>
+                <value>classpath:vdotfeeds.properties</value>
+            </list>
+        </property>
         <property name="properties" ref="properties"/>
         <!-- This means don't blow up if a property is not set -->
         <property name="ignoreUnresolvablePlaceholders" value="true"/>
@@ -100,7 +105,7 @@
 
     <bean id="VDOTDataSource" class="com.leidos.ode.collector.VDOTDataSource">
         <property name="sourceAddress" value="${leidos.ode.vdotfeeds.baseurl}"/>
-        <property name="wfsBaseUrl" value="${leidos.ode.vdotfeeds.wfsbaseurl"/>
+        <property name="wfsBaseUrl" value="${leidos.ode.vdotfeeds.wfsbaseurl}"/>
         <property name="xmlBaseUrl" value="${leidos.ode.vdotfeeds.xmlbaseurl}"/>
         <property name="user" value="${leidos.ode.vdotfeeds.username}"/>
         <property name="pass" value="${leidos.ode.vdotfeeds.password}"/>

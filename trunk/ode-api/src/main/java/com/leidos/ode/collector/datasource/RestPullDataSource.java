@@ -21,14 +21,13 @@ public class RestPullDataSource extends PullDataSource {
     private final String TAG = getClass().getSimpleName();
     private Logger logger = Logger.getLogger(TAG);
 
-    private String requestURI;
     private String requestParams;
     private WebTarget webTarget;
 
     @Override
     public void startDataSource() throws DataSourceException {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(getSourceAddress()).append(getRequestURI()).append(getRequestParams());
+        stringBuilder.append(getSourceAddress()).append(getSourceAddress()).append(getRequestParams());
         String address = stringBuilder.toString();
         logger.debug(TAG + "- Starting source with endpoint address: " + address);
 
@@ -51,14 +50,6 @@ public class RestPullDataSource extends PullDataSource {
 //        throw new UnsupportedOperationException("Not supported with REST yet.");
     }
 
-    public String getRequestURI() {
-        return requestURI;
-    }
-
-    public void setRequestURI(String requestURI) {
-        this.requestURI = requestURI;
-    }
-
     public String getRequestParams() {
         return requestParams;
     }
@@ -76,9 +67,5 @@ public class RestPullDataSource extends PullDataSource {
         }
         this.requestParams = stringBuilder.toString();
     }
-
-    public String getEmulatorWFS(String typeName){
-        return "";
-    };
 }
 
