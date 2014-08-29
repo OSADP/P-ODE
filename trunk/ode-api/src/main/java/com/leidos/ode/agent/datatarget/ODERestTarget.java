@@ -67,7 +67,6 @@ public class ODERestTarget implements ODEDataTarget {
 //                                .type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
 //                                    .post(ClientResponse.class, message);
 
-        response.close();
 //        OutputStream os = null;
 //        try {
 //            String input = "{\"qty\":100,\"name\":\"iPad 4\"}";

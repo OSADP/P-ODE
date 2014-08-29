@@ -81,14 +81,16 @@
         <property name="regInfo" ref="TestRegistrationInfo"/>
     </bean>
 
-    <bean id="RITISFilter" class="com.leidos.ode.collector.RITISDataSource">
-        <property name="sourceAddress" value="${leidos.ode.ritisfilter.baseurl}"/>
+    <bean id="RestPullDataSource" class="com.leidos.ode.collector.datasource.RestPullDataSource" abstract="true"/>
+
+    <bean id="RITISFilter" class="com.leidos.ode.collector.RITISDataSource" parent="RestPullDataSource">
+        <property name="protocol" value="${leidos.ode.ritisfilter.protocol}"/>
+        <property name="sourceAddress" value="${leidos.ode.ritisfilter.sourceaddress}"/>
+        <property name="baseUrl" value="${leidos.ode.ritisfilter.baseurl}"/>
         <property name="user" value="${leidos.ode.ritisfilter.username}"/>
         <property name="pass" value="${leidos.ode.ritisfilter.password}"/>
         <property name="apiKey" value="${leidos.ode.ritisfilter.apikey}"/>
         <property name="requestLimit" value="${leidos.ode.ritisfilter.requestlimit}"/>
-        <property name="incidentEventUrl" value="${leidos.ode.ritisfilter.incidentevent.url}"/>
-        <property name="detectorUrl" value="${leidos.ode.ritisfilter.detector.url}"/>
     </bean>
 
     <bean id="RITISFilterAgent" class="com.leidos.ode.agent.PublishODEAgent">
@@ -103,10 +105,11 @@
         <property name="dataSource" ref="RITISFilter"/>
     </bean>
 
-    <bean id="VDOTDataSource" class="com.leidos.ode.collector.VDOTDataSource">
-        <property name="sourceAddress" value="${leidos.ode.vdotfeeds.baseurl}"/>
-        <property name="wfsBaseUrl" value="${leidos.ode.vdotfeeds.wfsbaseurl}"/>
-        <property name="xmlBaseUrl" value="${leidos.ode.vdotfeeds.xmlbaseurl}"/>
+    <bean id="VDOTDataSource" class="com.leidos.ode.collector.VDOTDataSource" parent="RestPullDataSource">
+        <property name="protocol" value="${leidos.ode.vdotfeeds.protocol}"/>
+        <property name="sourceAddress" value="${leidos.ode.vdotfeeds.sourceaddress}"/>
+        <property name="baseUrl" value="${leidos.ode.vdotfeeds.wfsbaseurl}"/>
+        <!--<property name="xmlBaseUrl" value="${leidos.ode.vdotfeeds.xmlbaseurl}"/>-->
         <property name="user" value="${leidos.ode.vdotfeeds.username}"/>
         <property name="pass" value="${leidos.ode.vdotfeeds.password}"/>
     </bean>
@@ -121,4 +124,5 @@
         <constructor-arg name="mongo" ref="mongo"/>
         <constructor-arg name="databaseName" value="ode"/>
     </bean>
+
 </beans>

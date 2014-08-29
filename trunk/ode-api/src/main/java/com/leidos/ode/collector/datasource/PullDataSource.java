@@ -20,35 +20,35 @@ public abstract class PullDataSource implements CollectorDataSource{
     private String user;
     private String pass;
 
-	public String getSourceAddress() {
+    public String getSourceAddress() {
 		return sourceAddress;
 	}
 
-	public void setSourceAddress(String sourceAddress) {
+    public void setSourceAddress(String sourceAddress) {
 		this.sourceAddress = sourceAddress;
 	}
 
-	public String getSourcePort() {
+    public String getSourcePort() {
 		return sourcePort;
 	}
 
-	public void setSourcePort(String sourcePort) {
+    public void setSourcePort(String sourcePort) {
 		this.sourcePort = sourcePort;
 	}
 
-	public String getUser() {
+    public String getUser() {
 		return user;
 	}
 
-	public void setUser(String user) {
+    public void setUser(String user) {
 		this.user = user;
 	}
 
-	public String getPass() {
+    public String getPass() {
 		return pass;
 	}
 
-	public void setPass(String pass) {
+    public void setPass(String pass) {
 		this.pass = pass;
 	}
 
@@ -59,5 +59,4 @@ public abstract class PullDataSource implements CollectorDataSource{
 	public void setDataListener(CollectorDataSourceListener dataListener) {
 		this.dataListener = dataListener;
 	}
-
 }

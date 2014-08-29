@@ -2,7 +2,16 @@ package com.leidos.ode.collector;
 
 import com.leidos.ode.collector.datasource.DataSourceException;
 import com.leidos.ode.collector.datasource.RestPullDataSource;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
+
+import java.io.IOException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,53 +28,70 @@ public class RITISDataSource extends RestPullDataSource {
 
     private String apiKey;
     private int requestLimit;
-    private String incidentEventUrl;
-    private String detectorUrl;
 
     public RITISDataSource() {
 
     }
 
-    public void testGetIncidentEvents() {
-        retrieveData(getIncidentEventUrl(), getApiKey(), "system=vdot_nova");
+    @Override
+    public byte[] getDataFromSource() throws DataSourceException {
+        String requestString = buildRequestString();
+        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        HttpGet httpGet = new HttpGet(requestString);
+        logger.debug("Getting data from " + requestString);
+        try {
+            HttpResponse response = httpClient.execute(httpGet);
+            HttpEntity responseEntity = response.getEntity();
+            byte[] responseBytes = EntityUtils.toByteArray(responseEntity);
+            EntityUtils.consume(responseEntity);
+            return responseBytes;
+        } catch (ClientProtocolException e) {
+            logger.error(e.getLocalizedMessage());
+        } catch (IOException e) {
+            logger.error(e.getLocalizedMessage());
+        } finally {
+            if (httpClient != null) {
+                try {
+                    httpClient.close();
+                } catch (IOException e) {
+                    logger.error(e.getLocalizedMessage());
+                }
+            }
+        }
+        return null;
     }
 
-
-    public void testGetVolume() {
-        retrieveData(getDetectorUrl(), getApiKey(), "system=vdot_nova", "volume=60");
-    }
-
-
-    public void testGetOccupancy() {
-        retrieveData(getDetectorUrl(), getApiKey(), "system=vdot_nova", "occupancy=60");
-    }
-
-
-    public void testGetBluFaxTravelTime() {
-        retrieveData(getDetectorUrl(), getApiKey(), "system=blufax", "travelTime=2000");
+    @Override
+    protected String getWFSFilter() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(getFeedName());
+        stringBuilder.append("?");
+        stringBuilder.append(getApiKey());
+        stringBuilder.append("&");
+        //The system from which we query data (note detector requests only support 1 system).
+        //Possible values
+        stringBuilder.append("system=vdot_nova");
+        stringBuilder.append("&");
+        //Latitude of the lower left corner
+        stringBuilder.append("box-lat=38.856259");
+        stringBuilder.append("&");
+        //Longitude of the lower left corner
+        stringBuilder.append("box-lon=-77.35548");
+        stringBuilder.append("&");
+        //The width (in meters) of the box
+        stringBuilder.append("width=8321");
+        stringBuilder.append("&");
+        //The height (in meters) of the box
+        stringBuilder.append("height=2952");
+        //The road filter returns all dat on the specified roads
+//        stringBuilder.append("road=I-66");
+        return stringBuilder.toString();
     }
 
     private void waitForApiRequestLimit() {
         try {
             Thread.sleep(getRequestLimit());
         } catch (InterruptedException e) {
-            logger.equals(e.getLocalizedMessage());
-        }
-    }
-
-    private void retrieveData(String recordName, String... params) {
-        //Check if the previous request was for the same sensor data. If it was, then wait to prevent over api limit error.
-        String previousDetectorFilter = getSourceAddress();
-        if (previousDetectorFilter != null && previousDetectorFilter.equals(recordName)) {
-            waitForApiRequestLimit();
-        }
-        setSourceAddress(recordName);
-        setRequestParams(params);
-
-        try {
-            startDataSource();
-            byte[] data = getDataFromSource();
-        } catch (DataSourceException e) {
             logger.equals(e.getLocalizedMessage());
         }
     }
@@ -85,21 +111,4 @@ public class RITISDataSource extends RestPullDataSource {
     public void setRequestLimit(String requestLimit) {
         this.requestLimit = Integer.parseInt(requestLimit);
     }
-
-    public String getIncidentEventUrl() {
-        return incidentEventUrl;
-    }
-
-    public void setIncidentEventUrl(String incidentEventUrl) {
-        this.incidentEventUrl = incidentEventUrl;
-    }
-
-    public String getDetectorUrl() {
-        return detectorUrl;
-    }
-
-    public void setDetectorUrl(String detectorUrl) {
-        this.detectorUrl = detectorUrl;
-    }
-
 }
