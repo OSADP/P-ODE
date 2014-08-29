@@ -104,8 +104,8 @@ public class VDOTDataSource extends RestPullDataSource {
         stringBuilder.append("&");
         stringBuilder.append("bbox=");
         stringBuilder.append(getEmulatorWFSbbox());
-        stringBuilder.append("&propertyName=");
-        stringBuilder.append(getEmulatorPropertyNames());
+//        stringBuilder.append("&propertyName=");
+//        stringBuilder.append(getEmulatorPropertyNames());
         return stringBuilder.toString();
 
     }
@@ -119,12 +119,12 @@ public class VDOTDataSource extends RestPullDataSource {
         return "38.856259,-77.35548,38.882853,-77.259612";
     }
 
-    /**
-     * Returns the list of properties to return in the request.
-     *
-     * @return String representing properties to return
-     */
-    private String getEmulatorPropertyNames() {
-        return "orci:speed,orci:volume,orci:occupancy";
-    }
+//    /**
+//     * Returns the list of properties to return in the request.
+//     *
+//     * @return String representing properties to return
+//     */
+//    private String getEmulatorPropertyNames() {
+//        return "orci:speed,orci:volume,orci:occupancy";
+//    }
 }
