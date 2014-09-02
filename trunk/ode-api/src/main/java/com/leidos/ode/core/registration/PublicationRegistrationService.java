@@ -1,13 +1,10 @@
 package com.leidos.ode.core.registration;
 
-
-
 import com.leidos.ode.core.controllers.DistributeDataController;
-import com.leidos.ode.core.controllers.StoreDataController;
 import com.leidos.ode.core.dao.RegistrationDAO;
 import com.leidos.ode.core.data.ODERegistrationResponse;
 import com.leidos.ode.core.data.QueueInfo;
-
+import com.leidos.ode.core.rde.controllers.RDEStoreController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class PublicationRegistrationService {
     @Autowired
-    private StoreDataController storeDataController;
+    private RDEStoreController storeDataController;
     @Autowired
     private DistributeDataController distributeDataController;
     
@@ -70,14 +67,14 @@ public class PublicationRegistrationService {
     /**
      * @return the storeDataController
      */
-    public StoreDataController getStoreDataController() {
+    public RDEStoreController getStoreDataController() {
         return storeDataController;
     }
 
     /**
      * @param storeDataController the storeDataController to set
      */
-    public void setStoreDataController(StoreDataController storeDataController) {
+    public void setStoreDataController(RDEStoreController storeDataController) {
         this.storeDataController = storeDataController;
     }
 

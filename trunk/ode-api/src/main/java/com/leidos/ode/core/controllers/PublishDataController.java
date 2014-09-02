@@ -2,6 +2,8 @@ package com.leidos.ode.core.controllers;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
 import javax.annotation.PostConstruct;
+
+import com.leidos.ode.core.rde.controllers.RDEStoreController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class PublishDataController   {
 
     @Autowired
-    private StoreDataController storeDataController;
+    private RDEStoreController storeDataController;
     @Autowired
     private DistributeDataController distributeDataController;
     private int i = 0;
@@ -36,7 +38,7 @@ public class PublishDataController   {
         return "OK";
     }
 
-    public StoreDataController getStoreDataController() {
+    public RDEStoreController getStoreDataController() {
         return storeDataController;
     }
 

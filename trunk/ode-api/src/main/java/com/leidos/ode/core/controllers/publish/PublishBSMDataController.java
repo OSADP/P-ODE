@@ -14,6 +14,8 @@ import javax.jms.Topic;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+
+import com.leidos.ode.core.rde.controllers.RDEStoreController;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,7 +38,7 @@ public class PublishBSMDataController   {
     private Logger logger = Logger.getLogger(TAG);
 
     @Autowired
-    private StoreDataController storeDataController;
+    private RDEStoreController storeDataController;
     @Autowired
     private DistributeDataController distributeDataController;
     private int i = 0;
@@ -95,7 +97,7 @@ public class PublishBSMDataController   {
         return session.createProducer(topic);
     }
     
-    public StoreDataController getStoreDataController() {
+    public RDEStoreController getStoreDataController() {
         return storeDataController;
     }
 
