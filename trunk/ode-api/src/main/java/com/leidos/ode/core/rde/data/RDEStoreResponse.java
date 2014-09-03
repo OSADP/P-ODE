@@ -3,7 +3,7 @@ package com.leidos.ode.core.rde.data;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Class representing the response received from the RDE upon storing vdotdata.
+ * Class representing the response received from the RDE upon storing data.
  * @lamde
  */
 public class RDEStoreResponse {

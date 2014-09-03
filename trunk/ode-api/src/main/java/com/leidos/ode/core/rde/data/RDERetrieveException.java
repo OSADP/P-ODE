@@ -1,7 +1,7 @@
 package com.leidos.ode.core.rde.data;
 
 /**
- * Exception thrown when attempting to retrieve vdotdata in the RDE.
+ * Exception thrown when attempting to retrieve data from the RDE.
  *
  * @author lamde
  */

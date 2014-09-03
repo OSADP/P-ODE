@@ -7,16 +7,12 @@
 package com.leidos.ode.agent.datatarget;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
-
 import com.leidos.ode.core.data.ODERegistrationResponse;
+import org.apache.log4j.Logger;
 
-import java.io.BufferedWriter;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
-
-import org.apache.log4j.Logger;
 
 /**
  *

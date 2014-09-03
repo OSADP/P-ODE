@@ -1,22 +1,14 @@
 package com.leidos.ode.agent.datatarget;
 
-import java.util.Properties;
+import com.leidos.ode.agent.data.ODEAgentMessage;
+import com.leidos.ode.core.data.ODERegistrationResponse;
+import org.apache.log4j.Logger;
 
-import javax.jms.BytesMessage;
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.JMSException;
-import javax.jms.MessageProducer;
-import javax.jms.Queue;
-import javax.jms.Session;
+import javax.jms.*;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-
-import org.apache.log4j.Logger;
-
-import com.leidos.ode.agent.data.ODEAgentMessage;
-import com.leidos.ode.core.data.ODERegistrationResponse;
+import java.util.Properties;
 import java.util.logging.Level;
 
 
@@ -52,7 +44,7 @@ public class ODEQueueTarget implements ODEDataTarget {
 //		message.writeBytes(message.get);
             messageProducer.send(bytesMessage);
         }catch(JMSException e){
-            throw new DataTargetException("Error sending vdotdata", e);
+            throw new DataTargetException("Error sending data", e);
         }
     }
 

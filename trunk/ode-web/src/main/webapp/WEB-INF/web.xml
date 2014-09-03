@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
 	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
-    <display-name>Spring Web MVC Application</display-name>
+    <display-name>FHWA Prototype Operational Data Environment</display-name>
 
     <servlet>
         <servlet-name>mvc-dispatcher</servlet-name>

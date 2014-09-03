@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Class representing the RDE vdotdata set.
+ * Class representing the RDE data set.
  *
  * @author lamde
  */

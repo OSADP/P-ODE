@@ -5,7 +5,7 @@ import com.leidos.ode.core.data.ODERegistrationResponse;
 
 
 /**
- * This controllers is used when a collector wants to publish vdotdata only.
+ * This controllers is used when a collector wants to publish data only.
  * @author cassadyja
  *
  */

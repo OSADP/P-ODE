@@ -31,13 +31,12 @@ public class RDERetrieveControllerImpl implements RDERetrieveController {
     @Autowired
     private DistributeDataController distributeDataController;
 
-    public RDERetrieveControllerImpl() {
 
-    }
 
     @Override
     public RDERetrieveResponse retrieve(RDEData rdeData) throws RDERetrieveException {
         getOdeLogger().odeLogEvent(TAG, "Request received for: " + rdeData.getName());
+
         return null;
     }
 

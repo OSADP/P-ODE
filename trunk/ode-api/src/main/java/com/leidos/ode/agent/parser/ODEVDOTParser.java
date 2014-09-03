@@ -1,13 +1,7 @@
 package com.leidos.ode.agent.parser;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
-import net.sourceforge.exist.ns.exist.ObjectFactory;
-import net.sourceforge.exist.ns.exist.Result;
 import org.apache.log4j.Logger;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 
 /**
  * Class for parsing VDOT Data (Iteris).

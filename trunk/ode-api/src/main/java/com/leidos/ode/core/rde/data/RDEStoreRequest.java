@@ -1,7 +1,7 @@
 package com.leidos.ode.core.rde.data;
 
 /**
- * Class representing the request for storing vdotdata in the RDE.
+ * Class representing the request for storing data on the RDE.
  *
  * @author lamde
  */

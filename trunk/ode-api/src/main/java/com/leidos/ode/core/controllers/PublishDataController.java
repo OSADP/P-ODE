@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * Class representing the Publish Data controller. Responsible for retrieving vdotdata from the Publisher ODE
- * Agents and verifying the vdotdata published is in accordance with publication registrations. Verified vdotdata
+ * Class representing the Publish Data controller. Responsible for retrieving data from the Publisher ODE
+ * Agents and verifying the data published is in accordance with publication registrations. Verified data
  * is sent to the Store Data component and made available to subscribers via the Distribute Data component.
  *
  * @author cassadyja, lamde

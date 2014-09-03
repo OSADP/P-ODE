@@ -19,9 +19,6 @@ import org.apache.ibatis.session.SqlSessionFactory;
 @Component
 public class RegistrationDAOImpl implements RegistrationDAO {
 
-    @Autowired
-    private MongoTemplate mongoTemplate;
-
     @Override
     public RegistrationInformation storeRegistration(RegistrationInformation regInfo) {
         SqlSessionFactory sqlMapper = DBSessionManager.getSqlSessionFactory();
