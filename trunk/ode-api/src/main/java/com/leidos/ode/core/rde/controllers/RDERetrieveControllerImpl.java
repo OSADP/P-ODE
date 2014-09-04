@@ -35,7 +35,7 @@ public class RDERetrieveControllerImpl implements RDERetrieveController {
 
     @Override
     public RDERetrieveResponse retrieve(RDEData rdeData) throws RDERetrieveException {
-        getOdeLogger().odeLogEvent(TAG, "Request received for: " + rdeData.getName());
+        getOdeLogger().logEvent(TAG, "Request received for: " + rdeData.getName());
 
         return null;
     }

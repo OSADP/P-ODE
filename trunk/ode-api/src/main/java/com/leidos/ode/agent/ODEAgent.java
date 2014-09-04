@@ -11,12 +11,17 @@ import com.leidos.ode.agent.sanitizer.ODESanitizer;
 import com.leidos.ode.agent.sanitizer.ODESanitizerException;
 import com.leidos.ode.core.data.ODERegistrationResponse;
 import com.leidos.ode.core.registration.RegistrationInformation;
+import com.leidos.ode.logging.ODELogger;
 import com.leidos.ode.util.SHAHasher;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
+@Component
 public abstract class ODEAgent {
 
     private final String TAG = getClass().getSimpleName();
@@ -28,7 +33,9 @@ public abstract class ODEAgent {
     protected ODEDataTarget dataTarget;
     protected RegistrationInformation regInfo;
     protected AgentInfo agentInfo;
-    
+
+    @Autowired
+    private ODELogger odeLogger;
     
     private int threadCount = 0;
     private final Byte mutex = new Byte("1");
@@ -60,11 +67,25 @@ public abstract class ODEAgent {
         public void run() {
             try {
                 String messageId = SHAHasher.sha256Hash(messageBytes);
+
+                //Start log event for parsing message
+                getOdeLogger().start(ODELogger.ODEStage.PARSE, messageId);
                 ODEAgentMessage parsedMessage = parser.parseMessage(messageBytes);
+                //Finish log event for parsing message
+                getOdeLogger().finish();
+
                 parsedMessage.setMessageId(messageId);
+
+                getOdeLogger().start(ODELogger.ODEStage.SANITIZE, messageId);
                 parsedMessage = sanitizer.sanitizeMessage(parsedMessage);
+                getOdeLogger().finish();
+
                 parsedMessage.setAgentInfo(agentInfo);
+
+                getOdeLogger().start(ODELogger.ODEStage.SEND, messageId);
                 dataTarget.sendMessage(parsedMessage);
+                getOdeLogger().finish();
+
                 ODEAgent.this.decreaseCount();
             } catch (ODEParseException e) {
                 //TODO: log message and throw to collector
@@ -153,4 +174,7 @@ public abstract class ODEAgent {
         this.regInfo = regInfo;
     }
 
+    private ODELogger getOdeLogger(){
+        return odeLogger;
+    }
 }

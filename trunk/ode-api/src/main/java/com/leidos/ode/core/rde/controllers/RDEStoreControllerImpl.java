@@ -32,7 +32,7 @@ public class RDEStoreControllerImpl implements RDEStoreController {
     @RequestMapping(value = "rdeStore", method = RequestMethod.POST)
     public @ResponseBody
     RDEStoreResponse store(@RequestBody RDEData rdeData) throws RDEStoreException {
-        getOdeLogger().odeLogEvent(TAG, "Request received for: " + rdeData.getName());
+        getOdeLogger().logEvent(TAG, "Request received for: " + rdeData.getName());
 
         return null;
     }

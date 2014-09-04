@@ -5,39 +5,38 @@ import com.leidos.ode.agent.datatarget.DataTargetException;
 import com.leidos.ode.collector.datasource.CollectorDataSource;
 import com.leidos.ode.collector.datasource.DataSourceException;
 
-public class ODECollector implements CollectorDataSourceListener{
+public class ODECollector implements CollectorDataSourceListener {
 
-	private CollectorDataSource dataSource;
-	private ODEAgent agent;
-	
-	public void startUp() throws DataSourceException, DataTargetException {
-		startCollector();
-	}
-	
-	private void startCollector() throws DataSourceException, DataTargetException {
-		agent.startUp();
-		dataSource.startDataSource();
-	}
+    private CollectorDataSource dataSource;
+    private ODEAgent agent;
 
-	@Override
-	public void dataReceived(byte[] receivedData) {
-		agent.processMessage(receivedData);
-	}
+    public void startUp() throws DataSourceException, DataTargetException {
+        startCollector();
+    }
 
-	public CollectorDataSource getDataSource() {
-		return dataSource;
-	}
+    private void startCollector() throws DataSourceException, DataTargetException {
+        agent.startUp();
+        dataSource.startDataSource();
+    }
 
-	public void setDataSource(CollectorDataSource dataSource) {
-		this.dataSource = dataSource;
-	}
+    @Override
+    public void dataReceived(byte[] receivedData) {
+        agent.processMessage(receivedData);
+    }
 
-	public ODEAgent getAgent() {
-		return agent;
-	}
+    public CollectorDataSource getDataSource() {
+        return dataSource;
+    }
 
-	public void setAgent(ODEAgent agent) {
-		this.agent = agent;
-	}
+    public void setDataSource(CollectorDataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
+    public ODEAgent getAgent() {
+        return agent;
+    }
+
+    public void setAgent(ODEAgent agent) {
+        this.agent = agent;
+    }
 }

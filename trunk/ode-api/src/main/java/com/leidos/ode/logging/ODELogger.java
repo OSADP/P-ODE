@@ -13,24 +13,39 @@ import java.util.Date;
  * @author lamde
  */
 @Component
-public class ODELogger{
+public class ODELogger {
 
     private final String TAG = getClass().getSimpleName();
+
+    /**
+     * Represents current stage of message processing in the ODE.
+     * PARSE: Message is being parsed.
+     * SANITIZE: Message is being sanitized.
+     * ENCRYPT: Message is being encrypted.
+     * SEND: Message is being sent to the core.
+     */
+    public enum ODEStage {
+        PARSE, SANITIZE, ENCRYPT, SEND;
+    }
+
+    private LogBean logBean;
 
     @Autowired
     private LogDAO logDAO;
 
-    public ODELogger(){
-
+    public void start(ODEStage odeStage, String messageId) {
+        Date startTime = new Date();
+        logBean = new LogBean(startTime, odeStage, messageId);
     }
 
-    /**
-     * Log event to the database for AAR.
-     * @param component The component that generated the event.
-     * @param message The event message.
-     */
-    public void odeLogEvent(String component, String message) {
-        getLogDAO().storeLogBean(new LogBean(new Date(), component, message));
+    public void finish() {
+        Date endTime = new Date();
+        if (logBean != null) {
+            logBean.setEndTime(endTime);
+            getLogDAO().storeLogBean(logBean);
+        } else {
+            throw new Error("Cannot finish an event that has not been started.");
+        }
     }
 
     private LogDAO getLogDAO() {

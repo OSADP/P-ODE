@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * Class for testing VDOT data source.
+ * Class for testing data sources (currently supports VDOT and RITIS).
  */
 @Controller
 public class TestDataSourceController {

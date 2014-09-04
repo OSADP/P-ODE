@@ -16,15 +16,21 @@ public class LogBean {
 
     @Id
     private String id;
-    private Date date;
-    private String component;
-    private String message;
+    private Date startTime, endTime;
+    private ODELogger.ODEStage odeStage;
+    private String messageId;
 
-    public LogBean(Date date, String component, String message) {
-        this.date = date;
-        this.component = component;
-        this.message = message;
+    public LogBean(Date startTime, Date endTime, ODELogger.ODEStage odeStage, String messageId) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.odeStage = odeStage;
+        this.messageId = messageId;
     }
+
+    public LogBean(Date startTime, ODELogger.ODEStage odeStage, String messageId) {
+        this(startTime, null, odeStage, messageId);
+    }
+
 
     public String getId() {
         return id;
@@ -34,28 +40,24 @@ public class LogBean {
         this.id = id;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getStartTime() {
+        return startTime;
     }
 
-    private void setDate(Date date) {
-        this.date = date;
+    public Date getEndTime() {
+        return endTime;
     }
 
-    public String getComponent() {
-        return component;
+    public void setEndTime(Date endTime){
+        this.endTime = endTime;
     }
 
-    private void setComponent(String component) {
-        this.component = component;
+    public ODELogger.ODEStage getOdeStage() {
+        return odeStage;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    private void setMessage(String message) {
-        this.message = message;
+    public String getMessageId() {
+        return messageId;
     }
 
     @Override
@@ -63,13 +65,14 @@ public class LogBean {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Log [id=");
         stringBuilder.append(getId());
-        stringBuilder.append(", timestamp=");
-        stringBuilder.append(getDate().getTime());
-        stringBuilder.append((", component="));
-        stringBuilder.append(getComponent());
-        stringBuilder.append(", message=");
-        stringBuilder.append(getMessage());
+        stringBuilder.append(", startTime=");
+        stringBuilder.append(getStartTime().getTime());
+        stringBuilder.append(", endTime=");
+        stringBuilder.append(getEndTime().getTime());
+        stringBuilder.append((", odeStage="));
+        stringBuilder.append(getOdeStage());
+        stringBuilder.append(", messageId=");
+        stringBuilder.append(getMessageId());
         return stringBuilder.toString();
     }
-
 }
