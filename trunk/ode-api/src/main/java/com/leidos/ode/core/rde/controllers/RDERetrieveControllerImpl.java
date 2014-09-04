@@ -4,7 +4,6 @@ import com.leidos.ode.core.controllers.DistributeDataController;
 import com.leidos.ode.core.rde.data.RDEData;
 import com.leidos.ode.core.rde.data.RDERetrieveException;
 import com.leidos.ode.core.rde.data.RDERetrieveResponse;
-import com.leidos.ode.logging.ODELogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -26,26 +25,14 @@ public class RDERetrieveControllerImpl implements RDERetrieveController {
     private final String TAG = getClass().getSimpleName();
 
     @Autowired
-    private ODELogger odeLogger;
-
-    @Autowired
     private DistributeDataController distributeDataController;
-
-
 
     @Override
     public RDERetrieveResponse retrieve(RDEData rdeData) throws RDERetrieveException {
-        getOdeLogger().logEvent(TAG, "Request received for: " + rdeData.getName());
-
         return null;
     }
 
     public DistributeDataController getDistributeDataController() {
         return distributeDataController;
     }
-
-    private ODELogger getOdeLogger() {
-        return odeLogger;
-    }
-
 }

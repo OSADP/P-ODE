@@ -16,10 +16,8 @@ import com.leidos.ode.util.SHAHasher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 
 @Component
 public abstract class ODEAgent {
@@ -36,10 +34,10 @@ public abstract class ODEAgent {
 
     @Autowired
     private ODELogger odeLogger;
-    
+
     private int threadCount = 0;
     private final Byte mutex = new Byte("1");
-    
+
     public abstract void startUp() throws DataTargetException;
 
     /**
@@ -56,11 +54,11 @@ public abstract class ODEAgent {
         this.agentInfo = agentInfo;
     }
 
-    private class MessageProcessor implements Runnable{
-        
+    private class MessageProcessor implements Runnable {
+
         private byte[] messageBytes;
-        
-        protected MessageProcessor(byte[] message){
+
+        protected MessageProcessor(byte[] message) {
             messageBytes = message;
         }
 
@@ -93,37 +91,37 @@ public abstract class ODEAgent {
             } catch (ODESanitizerException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
-}           catch (DataTargetException ex) {           
+            } catch (DataTargetException ex) {
                 logger.log(Level.SEVERE, null, ex);
-            }           
+            }
         }
-        
+
     }
-    
+
     public void processMessage(byte[] messageBytes) {
         MessageProcessor mp = new MessageProcessor(messageBytes);
         new Thread(mp).start();
         increaseCount();
     }
 
-    private void increaseCount(){
-        synchronized(mutex){
+    private void increaseCount() {
+        synchronized (mutex) {
             threadCount++;
         }
     }
-    
-    private void decreaseCount(){
-        synchronized(mutex){
+
+    private void decreaseCount() {
+        synchronized (mutex) {
             threadCount--;
         }
     }
-    
-    protected int getThreadCount(){
+
+    protected int getThreadCount() {
         return threadCount;
     }
-    
-    
-    protected void createAgentInfo(ODERegistrationResponse regResponse){
+
+
+    protected void createAgentInfo(ODERegistrationResponse regResponse) {
         AgentInfo info = new AgentInfo();
         info.setAgentId(regResponse.getAgentId());
         info.setMessageType(regResponse.getMessageType());
@@ -131,9 +129,8 @@ public abstract class ODEAgent {
         info.setRegistrationId(regResponse.getRegistrationId());
         setAgentInfo(info);
     }
-    
-    
-    
+
+
     public ODERegistration getRegistration() {
         return registration;
     }
@@ -174,7 +171,7 @@ public abstract class ODEAgent {
         this.regInfo = regInfo;
     }
 
-    private ODELogger getOdeLogger(){
+    private ODELogger getOdeLogger() {
         return odeLogger;
     }
 }

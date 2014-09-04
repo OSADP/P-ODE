@@ -83,7 +83,7 @@
 
     <bean id="RestPullDataSource" class="com.leidos.ode.collector.datasource.RestPullDataSource" abstract="true"/>
 
-    <bean id="RITISFilter" class="com.leidos.ode.collector.RITISDataSource" parent="RestPullDataSource">
+    <bean id="RITISFilterDataSource" class="com.leidos.ode.collector.RITISDataSource" parent="RestPullDataSource">
         <property name="protocol" value="${leidos.ode.ritisfilter.protocol}"/>
         <property name="sourceAddress" value="${leidos.ode.ritisfilter.sourceaddress}"/>
         <property name="baseUrl" value="${leidos.ode.ritisfilter.baseurl}"/>
@@ -91,6 +91,7 @@
         <property name="pass" value="${leidos.ode.ritisfilter.password}"/>
         <property name="apiKey" value="${leidos.ode.ritisfilter.apikey}"/>
         <property name="requestLimit" value="${leidos.ode.ritisfilter.requestlimit}"/>
+        <property name="dataListener" ref="RITISFilterCollector"/>
     </bean>
 
     <bean id="RITISFilterAgent" class="com.leidos.ode.agent.PublishODEAgent">
@@ -102,7 +103,7 @@
 
     <bean id="RITISFilterCollector" class="com.leidos.ode.collector.ODECollector">
         <property name="agent" ref="RITISFilterAgent"/>
-        <property name="dataSource" ref="RITISFilter"/>
+        <property name="dataSource" ref="RITISFilterDataSource"/>
     </bean>
 
     <bean id="VDOTDataSource" class="com.leidos.ode.collector.VDOTDataSource" parent="RestPullDataSource">
@@ -112,6 +113,19 @@
         <!--<property name="xmlBaseUrl" value="${leidos.ode.vdotfeeds.xmlbaseurl}"/>-->
         <property name="user" value="${leidos.ode.vdotfeeds.username}"/>
         <property name="pass" value="${leidos.ode.vdotfeeds.password}"/>
+        <property name="dataListener" ref="VDOTCollector"/>
+    </bean>
+
+    <bean id="VDOTAgent" class="com.leidos.ode.agent.PublishODEAgent">
+        <property name="registration" ref="BasicPubRegistration"/>
+        <property name="parser" ref="VDOTParser"/>
+        <property name="sanitizer" ref="PassthroughSanitizer"/>
+        <property name="dataTarget" ref="QueueTarget"/>
+    </bean>
+
+    <bean id="VDOTCollector" class="com.leidos.ode.collector.ODECollector">
+        <property name="agent" ref="VDOTAgent"/>
+        <property name="dataSource" ref="VDOTDataSource"/>
     </bean>
 
     <bean id="mongo" class="com.mongodb.Mongo">

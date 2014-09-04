@@ -46,7 +46,6 @@ public class UDPPushDataSource extends PushDataSource {
                 e.printStackTrace();
             } finally {
                 stopped = true;
-
             }
         }
 

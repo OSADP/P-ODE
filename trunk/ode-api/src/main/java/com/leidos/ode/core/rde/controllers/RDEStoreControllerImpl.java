@@ -3,8 +3,6 @@ package com.leidos.ode.core.rde.controllers;
 import com.leidos.ode.core.rde.data.RDEData;
 import com.leidos.ode.core.rde.data.RDEStoreException;
 import com.leidos.ode.core.rde.data.RDEStoreResponse;
-import com.leidos.ode.logging.ODELogger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,19 +23,10 @@ public class RDEStoreControllerImpl implements RDEStoreController {
 
     private final String TAG = getClass().getSimpleName();
 
-    @Autowired
-    private ODELogger odeLogger;
-
     @Override
     @RequestMapping(value = "rdeStore", method = RequestMethod.POST)
     public @ResponseBody
     RDEStoreResponse store(@RequestBody RDEData rdeData) throws RDEStoreException {
-        getOdeLogger().logEvent(TAG, "Request received for: " + rdeData.getName());
-
         return null;
-    }
-
-    private ODELogger getOdeLogger() {
-        return odeLogger;
     }
 }
