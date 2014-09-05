@@ -9,6 +9,7 @@ public class QueueInfo {
     private String queueConnectionFactory;
     private String targetAddress;
     private int targetPort;
+    private String wsHost;
     private String wsURL;
 
     public int getId() {
@@ -81,5 +82,19 @@ public class QueueInfo {
         this.wsURL = wsURL;
     }
 
+    /**
+     * @return the wsHost
+     */
+    public String getWsHost() {
+        return wsHost;
+    }
+
+    /**
+     * @param wsHost the wsHost to set
+     */
+    public void setWsHost(String wsHost) {
+        this.wsHost = wsHost;
+    }
+    
 
 }

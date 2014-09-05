@@ -65,6 +65,7 @@ public class UDPPushDataSource extends PushDataSource {
             datagramSocket = new DatagramSocket(getHostPort(), address);
 
             datagramSocket.setSoTimeout(10000);
+            new Thread(new DataSocketListener()).start();
         } catch (UnknownHostException e) {
             throw new DataSourceException("");
         } catch (SocketException e) {

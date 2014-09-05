@@ -50,7 +50,7 @@ public class PublicationRegistrationService {
         resp.setQueueName(qInfo.getQueueName());
         resp.setQueueHostURL(qInfo.getTargetAddress());
         resp.setQueueHostPort(qInfo.getTargetPort());
-        resp.setPublishWebServiceAddress(qInfo.getWsURL());
+        resp.setPublishWebServiceAddress(qInfo.getWsHost()+qInfo.getWsURL());
         return resp;
     }
 

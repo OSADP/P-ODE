@@ -53,7 +53,6 @@ public class UDPDataDistributor extends DataDistributor {
 
     @Override
     protected void sendData(Message message) throws DistributeException {
-        //TODO: finish
         try {
             ODEAgentMessage msg = (ODEAgentMessage) ((ObjectMessage) message).getObject();
             DatagramPacket packet = new DatagramPacket(msg.getMessagePayload(), msg.getMessagePayload().length);
