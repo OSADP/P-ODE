@@ -84,8 +84,8 @@
     <bean id="RestPullDataSource" class="com.leidos.ode.collector.datasource.RestPullDataSource" abstract="true"/>
 
     <bean id="RITISFilterDataSource" class="com.leidos.ode.collector.RITISDataSource" parent="RestPullDataSource">
-        <property name="protocol" value="${leidos.ode.ritisfilter.protocol}"/>
-        <property name="sourceAddress" value="${leidos.ode.ritisfilter.sourceaddress}"/>
+        <property name="hostProtocol" value="${leidos.ode.ritisfilter.protocol}"/>
+        <property name="hostAddress" value="${leidos.ode.ritisfilter.sourceaddress}"/>
         <property name="baseUrl" value="${leidos.ode.ritisfilter.baseurl}"/>
         <property name="username" value="${leidos.ode.ritisfilter.username}"/>
         <property name="password" value="${leidos.ode.ritisfilter.password}"/>
@@ -107,8 +107,8 @@
     </bean>
 
     <bean id="VDOTDataSource" class="com.leidos.ode.collector.VDOTDataSource" parent="RestPullDataSource">
-        <property name="protocol" value="${leidos.ode.vdotfeeds.protocol}"/>
-        <property name="sourceAddress" value="${leidos.ode.vdotfeeds.sourceaddress}"/>
+        <property name="hostProtocol" value="${leidos.ode.vdotfeeds.protocol}"/>
+        <property name="hostAddress" value="${leidos.ode.vdotfeeds.sourceaddress}"/>
         <property name="baseUrl" value="${leidos.ode.vdotfeeds.wfsbaseurl}"/>
         <!--<property name="xmlBaseUrl" value="${leidos.ode.vdotfeeds.xmlbaseurl}"/>-->
         <property name="username" value="${leidos.ode.vdotfeeds.username}"/>
@@ -139,5 +139,49 @@
         <constructor-arg name="databaseName" value="ode"/>
     </bean>
 
+    <bean id="PublishController" class="com.leidos.ode.core.controllers.publish.PublishController" abstract="true"/>
 
+    <bean id="PublishBSMDataController" class="com.leidos.ode.core.controllers.publish.PublishBSMDataController"
+          parent="PublishController">
+        <property name="hostAddress" value=""/>
+        <property name="hostPort" value=/>
+        <property name="connectionFactoryName" value=""/>
+        <property name="topicName" value=""/>
+    </bean>
+
+    <bean id="PublishRITISSpdVolOccDataController" class="com.leidos.ode.core.controllers.publish.PublishRITISSpdVolOccDataController" parent="PublishController">
+        <property name="hostAddress" value=""/>
+        <property name="hostPort" value=/>
+        <property name="connectionFactoryName" value=""/>
+        <property name="topicName" value=""/>
+    </bean>
+
+    <bean id="PublishTravelTimeDataController" class="com.leidos.ode.core.controllers.publish.PublishTravelTimeDataController" parent="PublishController">
+        <property name="hostAddress" value=""/>
+        <property name="hostPort" value=/>
+        <property name="connectionFactoryName" value=""/>
+        <property name="topicName" value=""/>
+    </bean>
+
+    <bean id="PublishVDOTSpdVolOccDataController" class="com.leidos.ode.core.controllers.publish.PublishVDOTSpdVolOccDataController" parent="PublishController">
+        <property name="hostAddress" value=""/>
+        <property name="hostPort" value=/>
+        <property name="connectionFactoryName" value=""/>
+        <property name="topicName" value=""/>
+    </bean>
+
+    <bean id="PublishVDOTWeatherDataController" class="com.leidos.ode.core.controllers.publish.PublishVDOTWeatherDataController" parent="PublishController">
+        <property name="hostAddress" value=""/>
+        <property name="hostPort" value=/>
+        <property name="connectionFactoryName" value=""/>
+        <property name="topicName" value=""/>
+    </bean>
+
+    <bean id="PublishVDOTWeatherDataController"
+          class="com.leidos.ode.core.controllers.publish.PublishVDOTWeatherDataController" parent="PublishController">
+        <property name="hostAddress" value=""/>
+        <property name="hostPort" value=/>
+        <property name="connectionFactoryName" value=""/>
+        <property name="topicName" value=""/>
+    </bean>
 </beans>

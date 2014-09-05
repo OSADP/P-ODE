@@ -33,11 +33,19 @@ public class ODELogger {
     @Autowired
     private LogDAO logDAO;
 
+    /**
+     * Marks the starting point of a given ODEStage in the log message.
+     * @param odeStage
+     * @param messageId
+     */
     public void start(ODEStage odeStage, String messageId) {
         Date startTime = new Date();
         logBean = new LogBean(startTime, odeStage, messageId);
     }
 
+    /**
+     * Marks the completion point of a given ODEStage in the log message.
+     */
     public void finish() {
         Date endTime = new Date();
         if (logBean != null) {
