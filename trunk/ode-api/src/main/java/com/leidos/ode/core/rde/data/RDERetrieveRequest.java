@@ -7,7 +7,7 @@ package com.leidos.ode.core.rde.data;
  */
 public class RDERetrieveRequest {
 
-    public RDERetrieveRequest build(RDEMetadata rdeMetadata){
+    public RDERetrieveRequest build(RDEMetadata rdeMetadata) {
 
         return this;
     }

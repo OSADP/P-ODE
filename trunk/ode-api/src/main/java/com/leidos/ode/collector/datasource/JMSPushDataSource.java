@@ -1,45 +1,21 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.leidos.ode.collector.datasource;
 
-import java.util.Properties;
-import java.util.logging.Level;
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
-import javax.jms.ExceptionListener;
-import javax.jms.JMSException;
-import javax.jms.MessageConsumer;
-import javax.jms.Queue;
-import javax.jms.Session;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.log4j.Logger;
 
+import javax.jms.*;
+import java.util.logging.Level;
+
 /**
- *
  * @author cassadyja
  */
 public class JMSPushDataSource extends PushDataSource implements ExceptionListener {
 
-    private static Logger logger = Logger.getLogger(JMSPushDataSource.class);
-
-    private String hostURL;
-    private String hostPort;
-    private String queueName;
-    private String user;
-    private String pass;
-
-//    private Queue queue;
+    private final String TAG = getClass().getSimpleName();
+    private Logger logger = Logger.getLogger(TAG);
     private Connection connection;
     private MessageConsumer consumer;
-    
-    
+
     public void startDataSource() throws DataSourceException {
         try {
 
@@ -58,7 +34,7 @@ public class JMSPushDataSource extends PushDataSource implements ExceptionListen
 //            env.setProperty("org.omg.CORBA.ORBInitialPort", "3700");
 //
 //            InitialContext ctx = new InitialContext(env);
-            ActiveMQConnectionFactory cf = new ActiveMQConnectionFactory(user, pass, "tcp://" + getHostURL() + ":" + getHostPort());
+            ActiveMQConnectionFactory cf = new ActiveMQConnectionFactory(getUsername(), getPassword(), getHostProtocol() + getHostAddress() + ":" + getHostPort());
 
             // Create a Connection
             connection = cf.createConnection();
@@ -70,7 +46,7 @@ public class JMSPushDataSource extends PushDataSource implements ExceptionListen
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
             // Create the destination (Topic or Queue)
-            Destination destination = session.createQueue(queueName);
+            Destination destination = session.createQueue(getQueueName());
 
             // Create a MessageConsumer from the Session to the Topic or Queue
             consumer = session.createConsumer(destination);
@@ -78,96 +54,21 @@ public class JMSPushDataSource extends PushDataSource implements ExceptionListen
 //        } catch (NamingException e) {
 //            throw new DataSourceException("Error connecting", e);
         } catch (JMSException ex) {
-            throw new DataSourceException("Error connecting",ex);
+            throw new DataSourceException("Error connecting", ex);
         }
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public byte[] getDataFromSource() throws DataSourceException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    /**
-     * @return the hostURL
-     */
-    public String getHostURL() {
-        return hostURL;
-    }
-
-    /**
-     * @param hostURL the hostURL to set
-     */
-    public void setHostURL(String hostURL) {
-        this.hostURL = hostURL;
-    }
-
-    /**
-     * @return the hostPort
-     */
-    public String getHostPort() {
-        return hostPort;
-    }
-
-    /**
-     * @param hostPort the hostPort to set
-     */
-    public void setHostPort(String hostPort) {
-        this.hostPort = hostPort;
-    }
-
-    /**
-     * @return the queueName
-     */
-    public String getQueueName() {
-        return queueName;
-    }
-
-    /**
-     * @param queueName the queueName to set
-     */
-    public void setQueueName(String queueName) {
-        this.queueName = queueName;
-    }
-
-    /**
-     * @return the user
-     */
-    public String getUser() {
-        return user;
-    }
-
-    /**
-     * @param user the user to set
-     */
-    public void setUser(String user) {
-        this.user = user;
-    }
-
-    /**
-     * @return the pass
-     */
-    public String getPass() {
-        return pass;
-    }
-
-    /**
-     * @param pass the pass to set
-     */
-    public void setPass(String pass) {
-        this.pass = pass;
     }
 
     public void onException(JMSException jmse) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public void stop(){
+    public void stop() {
         try {
             connection.close();
         } catch (JMSException ex) {
             java.util.logging.Logger.getLogger(JMSPushDataSource.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
-    
 }

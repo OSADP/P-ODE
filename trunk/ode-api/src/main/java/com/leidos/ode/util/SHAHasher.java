@@ -9,13 +9,12 @@ import java.security.NoSuchAlgorithmException;
 
 
 /**
- *
  * @author cassadyja
  */
 public class SHAHasher {
 
-    public static String sha256Hash(byte[] input){
-        try{
+    public static String sha256Hash(byte[] input) {
+        try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             md.update(input);
             byte[] digest = md.digest();
@@ -23,14 +22,14 @@ public class SHAHasher {
 
             for (int i = 0; i < digest.length; i++) {
                 String hex = Integer.toHexString(0xff & digest[i]);
-                if(hex.length() == 1) hexString.append('0');
+                if (hex.length() == 1) hexString.append('0');
                 hexString.append(hex);
             }
             return hexString.toString();
-        }catch(NoSuchAlgorithmException e){
+        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         return null;
     }
-    
+
 }

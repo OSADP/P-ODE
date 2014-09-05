@@ -48,7 +48,7 @@ public class LogBean {
         return endTime;
     }
 
-    public void setEndTime(Date endTime){
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 

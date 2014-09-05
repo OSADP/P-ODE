@@ -6,20 +6,19 @@
 
 package com.leidos.ode.agent.datatarget;
 
+import com.leidos.ode.agent.datatarget.ODEDataTarget.DataTargetException;
 import com.leidos.ode.core.data.ODERegistrationResponse;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.jms.JMSException;
-import javax.naming.NamingException;
 import junit.framework.TestCase;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
- *
  * @author cassadyja
  */
-public class TestODEQueueTarget extends TestCase{
-    
-    public void testQueueTargetConnect(){
+public class TestODEQueueTarget extends TestCase {
+
+    public void testQueueTargetConnect() {
         try {
             ODEQueueTarget target = new ODEQueueTarget();
             ODERegistrationResponse regResponse = new ODERegistrationResponse();
@@ -27,15 +26,13 @@ public class TestODEQueueTarget extends TestCase{
             regResponse.setQueueName("BSMR1Queue");
             regResponse.setQueueHostURL("localhost");
             regResponse.setQueueHostPort(7676);
-            
-            
             target.configure(regResponse);
             target.close();
         } catch (DataTargetException ex) {
             Logger.getLogger(TestODEQueueTarget.class.getName()).log(Level.SEVERE, null, ex);
             fail();
         }
-       
+
     }
-    
+
 }

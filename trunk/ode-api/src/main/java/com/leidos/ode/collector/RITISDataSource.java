@@ -1,6 +1,5 @@
 package com.leidos.ode.collector;
 
-import com.leidos.ode.collector.datasource.DataSourceException;
 import com.leidos.ode.collector.datasource.RestPullDataSource;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -29,12 +28,8 @@ public class RITISDataSource extends RestPullDataSource {
     private String apiKey;
     private int requestLimit;
 
-    public RITISDataSource() {
-
-    }
-
     @Override
-    public byte[] getDataFromSource() throws DataSourceException {
+    public void startDataSource() throws DataSourceException {
         String requestString = buildRequestString();
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         HttpGet httpGet = new HttpGet(requestString);
@@ -44,7 +39,8 @@ public class RITISDataSource extends RestPullDataSource {
             HttpEntity responseEntity = response.getEntity();
             byte[] responseBytes = EntityUtils.toByteArray(responseEntity);
             EntityUtils.consume(responseEntity);
-            return responseBytes;
+
+            getCollectorDataSourceListener().dataReceived(responseBytes);
         } catch (ClientProtocolException e) {
             logger.error(e.getLocalizedMessage());
         } catch (IOException e) {
@@ -58,7 +54,6 @@ public class RITISDataSource extends RestPullDataSource {
                 }
             }
         }
-        return null;
     }
 
     @Override

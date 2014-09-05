@@ -2,7 +2,6 @@ package com.leidos.ode.core.rde.controllers;
 
 import com.leidos.ode.core.controllers.DistributeDataController;
 import com.leidos.ode.core.rde.data.RDEData;
-import com.leidos.ode.core.rde.data.RDERetrieveException;
 import com.leidos.ode.core.rde.data.RDERetrieveResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

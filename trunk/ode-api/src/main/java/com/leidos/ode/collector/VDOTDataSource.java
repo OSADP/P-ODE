@@ -1,6 +1,5 @@
 package com.leidos.ode.collector;
 
-import com.leidos.ode.collector.datasource.DataSourceException;
 import com.leidos.ode.collector.datasource.RestPullDataSource;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -37,7 +36,7 @@ public class VDOTDataSource extends RestPullDataSource {
     private Logger logger = Logger.getLogger(TAG);
 
     @Override
-    public byte[] getDataFromSource() throws DataSourceException {
+    public void startDataSource() throws DataSourceException {
         String requestString = buildRequestString();
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         HttpGet httpGet = new HttpGet(requestString);
@@ -63,7 +62,7 @@ public class VDOTDataSource extends RestPullDataSource {
                 //Parse realm, nonce sent by server.
                 digestScheme.processChallenge(authHeader);
 
-                UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(getUser(), getPass());
+                UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(getUsername(), getPassword());
                 CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
                 credentialsProvider.setCredentials(AuthScope.ANY, credentials);
                 HttpClientContext httpClientContext = HttpClientContext.create();
@@ -75,7 +74,8 @@ public class VDOTDataSource extends RestPullDataSource {
                 byte[] responseBytes = EntityUtils.toByteArray(responseEntity);
                 EntityUtils.consume(responseEntity);
                 closeableHttpResponse.close();
-                return responseBytes;
+
+                getCollectorDataSourceListener().dataReceived(responseBytes);
             }
         } catch (MalformedChallengeException e) {
             logger.error(e.getLocalizedMessage());
@@ -92,7 +92,6 @@ public class VDOTDataSource extends RestPullDataSource {
                 }
             }
         }
-        return null;
     }
 
     @Override

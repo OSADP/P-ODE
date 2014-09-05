@@ -18,12 +18,14 @@ public class PublicationRegistrationService {
     private RDEStoreController storeDataController;
     @Autowired
     private DistributeDataController distributeDataController;
-    
+
     @Autowired
     private RegistrationDAO regDao;
 
     @RequestMapping(value = "registerPublish", method = RequestMethod.POST)
-    public @ResponseBody ODERegistrationResponse registerPublicationIntent(@RequestBody RegistrationInformation regInfo) {
+    public
+    @ResponseBody
+    ODERegistrationResponse registerPublicationIntent(@RequestBody RegistrationInformation regInfo) {
         ODERegistrationResponse response = null;
         QueueInfo qInfo = getQueueNameForRegistration(regInfo);
         if (qInfo != null) {
@@ -34,7 +36,7 @@ public class PublicationRegistrationService {
 
         return response;
     }
-    
+
 
     private ODERegistrationResponse createRegResponse(RegistrationInformation regInfo, QueueInfo qInfo) {
         ODERegistrationResponse resp = new ODERegistrationResponse();
@@ -91,7 +93,6 @@ public class PublicationRegistrationService {
     public void setDistributeDataController(DistributeDataController distributeDataController) {
         this.distributeDataController = distributeDataController;
     }
-    
-    
+
 
 }

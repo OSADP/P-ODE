@@ -5,28 +5,28 @@ import java.io.Serializable;
 import java.util.Date;
 
 @XmlRootElement
-public class ODEAgentMessage implements Serializable{
+public class ODEAgentMessage implements Serializable {
     private AgentInfo agentInfo;
-    
+
     private Date messageReceivedDate;
     private String messageId;
     private byte[] messagePayload;
     private Object formattedMessage;
 
     public byte[] getMessagePayload() {
-            return messagePayload;
+        return messagePayload;
     }
 
     public void setMessagePayload(byte[] messagePayload) {
-            this.messagePayload = messagePayload;
+        this.messagePayload = messagePayload;
     }
 
     public Object getFormattedMessage() {
-            return formattedMessage;
+        return formattedMessage;
     }
 
     public void setFormattedMessage(Object formattedMessage) {
-            this.formattedMessage = formattedMessage;
+        this.formattedMessage = formattedMessage;
     }
 
     /**
@@ -71,5 +71,5 @@ public class ODEAgentMessage implements Serializable{
         this.messageId = messageId;
     }
 
-        
+
 }

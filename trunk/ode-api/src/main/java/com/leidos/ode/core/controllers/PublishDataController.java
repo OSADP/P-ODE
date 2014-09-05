@@ -1,8 +1,6 @@
 package com.leidos.ode.core.controllers;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
-import javax.annotation.PostConstruct;
-
 import com.leidos.ode.core.rde.controllers.RDEStoreController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,30 +9,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.PostConstruct;
+
 /**
  * Class representing the Publish Data controller. Responsible for retrieving data from the Publisher ODE
  * Agents and verifying the data published is in accordance with publication registrations. Verified data
  * is sent to the Store Data component and made available to subscribers via the Distribute Data component.
  *
  * @author cassadyja, lamde
- *
  */
 @Controller
-public class PublishDataController   {
+public class PublishDataController {
 
     @Autowired
     private RDEStoreController storeDataController;
     @Autowired
     private DistributeDataController distributeDataController;
     private int i = 0;
-    
+
     public PublishDataController() {
 
     }
 
     @RequestMapping(value = "publish", method = RequestMethod.POST)
-    public @ResponseBody String publishData(@RequestBody ODEAgentMessage odeAgentMessage) {
-        System.out.println("~~~~~~~Received message ."+ ++i);
+    public
+    @ResponseBody
+    String publishData(@RequestBody ODEAgentMessage odeAgentMessage) {
+        System.out.println("~~~~~~~Received message ." + ++i);
         return "OK";
     }
 
@@ -45,10 +46,10 @@ public class PublishDataController   {
     public DistributeDataController getDistributeDataController() {
         return distributeDataController;
     }
-    
+
     @PostConstruct
-    public void initTopicConnection(){
-        
+    public void initTopicConnection() {
+
     }
 
 }

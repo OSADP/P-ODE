@@ -7,21 +7,20 @@
 package com.leidos.ode.core.controllers.publish;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.Response;
-import junit.framework.TestCase;
+import javax.ws.rs.core.UriBuilder;
 
 /**
- *
  * @author cassadyja
  */
 public class TestPublishBSM {
-    
-    public static void main(String[] args){
+
+    public static void main(String[] args) {
         String hostURL = "cassadyja2";
         int hostPort = 9090;
         String queueName = "ode-web/publishBSM";

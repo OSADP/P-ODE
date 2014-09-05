@@ -5,6 +5,6 @@ import com.leidos.ode.core.registration.RegistrationInformation;
 
 public interface ODERegistration {
 
-	public ODERegistrationResponse register(RegistrationInformation regInfo);
-	
+    public ODERegistrationResponse register(RegistrationInformation regInfo);
+
 }

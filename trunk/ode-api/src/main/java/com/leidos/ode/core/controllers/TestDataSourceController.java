@@ -2,7 +2,6 @@ package com.leidos.ode.core.controllers;
 
 import com.leidos.ode.collector.RITISDataSource;
 import com.leidos.ode.collector.VDOTDataSource;
-import com.leidos.ode.collector.datasource.DataSourceException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,18 +28,18 @@ public class TestDataSourceController {
     public
     @ResponseBody
     String testVDOTDataSource(@PathVariable String dataSource, @PathVariable String feed) {
-        try {
-            if (dataSource.equalsIgnoreCase("vdot")) {
-                vdotDataSource.setFeedName(feed);
-                return new String(vdotDataSource.getDataFromSource());
-            }
-            if (dataSource.equalsIgnoreCase("ritis")) {
-                ritisDataSource.setFeedName(feed);
-                return new String(ritisDataSource.getDataFromSource());
-            }
-        } catch (DataSourceException e) {
-            logger.error(e.getLocalizedMessage());
+//        try {
+        if (dataSource.equalsIgnoreCase("vdot")) {
+            vdotDataSource.setFeedName(feed);
+//                return new String(vdotDataSource.getDataFromSource());
         }
+        if (dataSource.equalsIgnoreCase("ritis")) {
+            ritisDataSource.setFeedName(feed);
+//                return new String(ritisDataSource.getDataFromSource());
+        }
+//        } catch (DataSourceException e) {
+//            logger.error(e.getLocalizedMessage());
+//        }
         return null;
     }
 }

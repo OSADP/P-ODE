@@ -1,26 +1,23 @@
 package com.leidos.ode.collector.datasource;
 
-import com.leidos.ode.collector.CollectorDataSourceListener;
-
 /**
- * Data will be sent to this collector from the provider.  
+ * Data will be sent to this collector from the provider.
  * The collector will provide a way for the data to be sent, that could be a UDP port or some other method.
  * Once the data has been received it will send it back to the Collector listener.
- * 
+ * <p/>
  * Sources following this data should extend this class.
- * @author cassadyja
  *
+ * @author cassadyja
  */
-public abstract class PushDataSource implements CollectorDataSource {
+public abstract class PushDataSource extends DataSource {
 
-	protected CollectorDataSourceListener listener;
+    private String queueName;
 
-	public CollectorDataSourceListener getListener() {
-		return listener;
-	}
+    public String getQueueName() {
+        return queueName;
+    }
 
-	public void setListener(CollectorDataSourceListener listener) {
-		this.listener = listener;
-	}
-
+    public void setQueueName(String queueName) {
+        this.queueName = queueName;
+    }
 }

@@ -1,15 +1,15 @@
 package com.leidos.ode.agent.registration;
 
-public abstract class AbstractODERegistration implements ODERegistration{
-	
-	protected String regServiceAddress;
+public abstract class AbstractODERegistration implements ODERegistration {
 
-	public String getRegServiceAddress() {
-		return regServiceAddress;
-	}
+    protected String regServiceAddress;
 
-	public void setRegServiceAddress(String regServiceAddress) {
-		this.regServiceAddress = regServiceAddress;
-	}
+    public String getRegServiceAddress() {
+        return regServiceAddress;
+    }
+
+    public void setRegServiceAddress(String regServiceAddress) {
+        this.regServiceAddress = regServiceAddress;
+    }
 
 }

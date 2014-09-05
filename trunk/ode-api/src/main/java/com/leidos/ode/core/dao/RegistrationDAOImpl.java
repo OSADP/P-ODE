@@ -2,14 +2,11 @@ package com.leidos.ode.core.dao;
 
 import com.leidos.ode.core.data.QueueInfo;
 import com.leidos.ode.core.registration.RegistrationInformation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import javax.ejb.Stateless;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
 
 /**
  * Class to handle the registration information access to the database.

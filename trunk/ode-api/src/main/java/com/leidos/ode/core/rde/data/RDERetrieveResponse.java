@@ -12,11 +12,11 @@ public class RDERetrieveResponse {
     @JsonProperty("message")
     private String message;
 
-    public RDERetrieveResponse(String message){
+    public RDERetrieveResponse(String message) {
         this.message = message;
     }
 
-    public String getMessage(){
+    public String getMessage() {
         return message;
     }
 

@@ -19,30 +19,33 @@ public class SubscriptionRegistrationService {
     private RDEStoreController storeDataController;
     @Autowired
     private DistributeDataController distributeDataController;
-    
+
     @Autowired
     private RegistrationDAO regDao;
 
     @RequestMapping(value = "registerSubscribe", method = RequestMethod.POST)
-    public @ResponseBody ODERegistrationResponse registerSubscriptionIntent(@RequestBody RegistrationInformation regInfo) {
+    public
+    @ResponseBody
+    ODERegistrationResponse registerSubscriptionIntent(@RequestBody RegistrationInformation regInfo) {
         ODERegistrationResponse response = null;
 
         regInfo = regDao.storeRegistration(regInfo);
         QueueInfo qi = getQueueNameForRegistration(regInfo);
-        response = createResponse(regInfo,qi);
+        response = createResponse(regInfo, qi);
 
         notifiyDistribute(response);
-        
+
         return response;
     }
 
-    private void notifiyDistribute(ODERegistrationResponse response){
+    private void notifiyDistribute(ODERegistrationResponse response) {
         distributeDataController.receiveSubscriptionNotification(response);
     }
-    
+
     private QueueInfo getQueueNameForRegistration(RegistrationInformation regInfo) {
         return regDao.getQueueForRegistration(regInfo);
     }
+
     private ODERegistrationResponse createResponse(RegistrationInformation regInfo, QueueInfo qInfo) {
         ODERegistrationResponse resp = new ODERegistrationResponse();
         resp.setAgentId(regInfo.getAgentId());
@@ -52,12 +55,12 @@ public class SubscriptionRegistrationService {
         resp.setRegistrationType(regInfo.getRegistrationType());
         resp.setTargetAddress(regInfo.getSubscriptionReceiveAddress());
         resp.setTargetPort(regInfo.getSubscriptionReceivePort());
-        
+
         resp.setQueueConnFact(qInfo.getQueueConnectionFactory());
         resp.setQueueName(qInfo.getQueueName());
         resp.setQueueHostURL(qInfo.getTargetAddress());
-        resp.setQueueHostPort(qInfo.getTargetPort());        
-        
+        resp.setQueueHostPort(qInfo.getTargetPort());
+
         return resp;
     }
 
@@ -88,6 +91,6 @@ public class SubscriptionRegistrationService {
     public void setDistributeDataController(DistributeDataController distributeDataController) {
         this.distributeDataController = distributeDataController;
     }
-    
-    
+
+
 }

@@ -5,42 +5,31 @@
  */
 package com.leidos.ode.core.distribute;
 
-import java.util.Properties;
-import java.util.logging.Level;
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
-import javax.jms.Queue;
-import javax.jms.Session;
-import javax.jms.TextMessage;
-import javax.jms.Topic;
+import org.apache.log4j.Logger;
+
+import javax.jms.*;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import org.apache.log4j.Logger;
+import java.util.Properties;
+import java.util.logging.Level;
 
 /**
- *
  * @author cassadyja
  */
 public abstract class DataDistributor implements Runnable {
 
     private static Logger logger = Logger.getLogger(DataDistributor.class);
-
     protected String topicHostURL;
     protected int topicHostPort;
     protected String connFactName;
     protected String topicName;
-
     private boolean interrupted = false;
     private boolean stopped = false;
-
     private Connection connection;
     private Topic topic;
     private MessageConsumer consumer;
-    
+
     public void run() {
         try {
             logger.info("Starting Data Distributor");
@@ -48,16 +37,16 @@ public abstract class DataDistributor implements Runnable {
             connectTarget();
             while (!isInterrupted()) {
                 Message message = consumer.receive(10000);
-                
-                if(message != null){
-                    if(message instanceof TextMessage){
-                        logger.debug("Distribute found TextMessage, ignoring. "+ message);
-                    }else{
-                        logger.info("Distributor received message: "+message);
+
+                if (message != null) {
+                    if (message instanceof TextMessage) {
+                        logger.debug("Distribute found TextMessage, ignoring. " + message);
+                    } else {
+                        logger.info("Distributor received message: " + message);
                         sendData(message);
                     }
                 }
-                
+
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
@@ -201,4 +190,18 @@ public abstract class DataDistributor implements Runnable {
         this.stopped = stopped;
     }
 
+    public class DistributeException extends Exception {
+
+        public DistributeException() {
+            super();
+        }
+
+        public DistributeException(String message) {
+            super(message);
+        }
+
+        public DistributeException(String message, Throwable throwable) {
+            super(message, throwable);
+        }
+    }
 }

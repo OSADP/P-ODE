@@ -1,16 +1,17 @@
 package com.leidos.ode.collector;
 
 import com.leidos.ode.agent.ODEAgent;
-import com.leidos.ode.agent.datatarget.DataTargetException;
+import com.leidos.ode.agent.datatarget.ODEDataTarget;
+import com.leidos.ode.agent.datatarget.ODEDataTarget.DataTargetException;
 import com.leidos.ode.collector.datasource.CollectorDataSource;
-import com.leidos.ode.collector.datasource.DataSourceException;
+import com.leidos.ode.collector.datasource.CollectorDataSource.DataSourceException;
 
 public class ODECollector implements CollectorDataSourceListener {
 
     private CollectorDataSource dataSource;
     private ODEAgent agent;
 
-    public void startUp() throws DataSourceException, DataTargetException {
+    public void startUp() throws DataSourceException, ODEDataTarget.DataTargetException {
         startCollector();
     }
 

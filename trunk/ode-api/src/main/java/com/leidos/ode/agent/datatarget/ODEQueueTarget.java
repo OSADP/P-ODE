@@ -11,17 +11,14 @@ import javax.naming.NamingException;
 import java.util.Properties;
 import java.util.logging.Level;
 
-
 public class ODEQueueTarget implements ODEDataTarget {
 
-    private static Logger logger = Logger.getLogger(ODEQueueTarget.class);
-
+    private final String TAG = getClass().getSimpleName();
+    private Logger logger = Logger.getLogger(TAG);
     private Connection connection;
     private Queue queue;
-
     private Session session;
     private MessageProducer messageProducer;
-
     private ODERegistrationResponse regInfo;
 
     @Override
@@ -39,11 +36,11 @@ public class ODEQueueTarget implements ODEDataTarget {
 
     @Override
     public void sendMessage(ODEAgentMessage message) throws DataTargetException {
-        try{
+        try {
             BytesMessage bytesMessage = session.createBytesMessage();
 //		message.writeBytes(message.get);
             messageProducer.send(bytesMessage);
-        }catch(JMSException e){
+        } catch (JMSException e) {
             throw new DataTargetException("Error sending data", e);
         }
     }
@@ -54,7 +51,7 @@ public class ODEQueueTarget implements ODEDataTarget {
 
     }
 
-    private void connect() throws NamingException, JMSException  {
+    private void connect() throws NamingException, JMSException {
         Properties env = new Properties();
         env.put(Context.SECURITY_PRINCIPAL, "admin");
         env.put(Context.SECURITY_CREDENTIALS, "admin");
@@ -90,7 +87,7 @@ public class ODEQueueTarget implements ODEDataTarget {
         } catch (JMSException ex) {
             java.util.logging.Logger.getLogger(ODEQueueTarget.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 
 }

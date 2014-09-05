@@ -1,7 +1,6 @@
 package com.leidos.ode.core.rde.controllers;
 
 import com.leidos.ode.core.rde.data.RDEData;
-import com.leidos.ode.core.rde.data.RDEStoreException;
 import com.leidos.ode.core.rde.data.RDEStoreResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +24,8 @@ public class RDEStoreControllerImpl implements RDEStoreController {
 
     @Override
     @RequestMapping(value = "rdeStore", method = RequestMethod.POST)
-    public @ResponseBody
+    public
+    @ResponseBody
     RDEStoreResponse store(@RequestBody RDEData rdeData) throws RDEStoreException {
         return null;
     }

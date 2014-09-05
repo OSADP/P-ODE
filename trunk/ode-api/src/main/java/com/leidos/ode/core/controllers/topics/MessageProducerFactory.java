@@ -7,81 +7,72 @@
 package com.leidos.ode.core.controllers.topics;
 
 import com.leidos.ode.agent.data.AgentInfo;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.JMSException;
-import javax.jms.MessageProducer;
-import javax.jms.Session;
-import javax.jms.Topic;
+import org.apache.log4j.Logger;
+
+import javax.jms.*;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import org.apache.log4j.Logger;
-import org.springframework.jms.core.JmsTemplate;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 /**
- *
  * @author cassadyja
  */
 public class MessageProducerFactory {
     private static Logger logger = Logger.getLogger(MessageProducerFactory.class);
-    
+
     private static MessageProducerFactory theFactory;
-    
+
     private String topicHostURL = "";
     private String topicHostPort = "";
     private String connFactName = "";
-    
+
     private ConnectionFactory cf = null;
     private InitialContext ctx = null;
-    
+
     private Map<String, Connection> connectionMap = new HashMap<String, Connection>();
-    
-    
-    
-    
-    private MessageProducerFactory(){
+
+
+    private MessageProducerFactory() {
         //probably should have the producer factory make connections
         //to the server for each available topic, then creating a producer
         //will be faster.
     }
-    
-    public static MessageProducerFactory getInstance(){
-        if(theFactory == null){
+
+    public static MessageProducerFactory getInstance() {
+        if (theFactory == null) {
             theFactory = new MessageProducerFactory();
         }
         return theFactory;
     }
-    
-    
-    public MessageProducer getMessageProducer(AgentInfo agentInfo){
+
+
+    public MessageProducer getMessageProducer(AgentInfo agentInfo) {
         //determine which topic the message should go to based on
         //the data in controllers info.
         //This will include: message type, and region.
         //Then create a message producer for that topic.
-        
-        
+
+
 //        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 //        consumer = session.createConsumer(topic);
 
         return null;
     }
-    
-    
-    
-    private void createConnections() throws NamingException, JMSException{
+
+
+    private void createConnections() throws NamingException, JMSException {
         createConnectionFactory();
         //for all topics
         Connection conn = createConnection("");
         connectionMap.put("", conn);
-        
-        
+
+
     }
-    
-    private void createConnectionFactory() throws NamingException{
+
+    private void createConnectionFactory() throws NamingException {
         Properties env = new Properties();
         env.put(Context.SECURITY_PRINCIPAL, "admin");
         env.put(Context.SECURITY_CREDENTIALS, "admin");
@@ -99,12 +90,12 @@ public class MessageProducerFactory {
         ctx = new InitialContext(env);
 
         logger.info("Looking up Connection Factory: " + connFactName);
-        cf = (ConnectionFactory) ctx.lookup(connFactName);        
-        
+        cf = (ConnectionFactory) ctx.lookup(connFactName);
+
     }
-    
-    
-    private Connection createConnection(String topicName) throws NamingException, JMSException{
+
+
+    private Connection createConnection(String topicName) throws NamingException, JMSException {
         Topic topic = null;
         logger.info("Looking up topic: " + topicName);
         topic = (Topic) ctx.lookup(topicName);
@@ -113,5 +104,5 @@ public class MessageProducerFactory {
         Connection connection = cf.createConnection();
         return connection;
     }
-    
+
 }

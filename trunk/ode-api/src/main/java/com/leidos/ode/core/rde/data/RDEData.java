@@ -2,6 +2,7 @@ package com.leidos.ode.core.rde.data;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**

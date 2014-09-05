@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.leidos.ode.agent.datatarget;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
@@ -24,8 +18,6 @@ public class ODERestTarget implements ODEDataTarget {
 
     private final String TAG = getClass().getSimpleName();
     private Logger logger = Logger.getLogger(TAG);
-
-
     private HttpURLConnection conn;
     private WebTarget webTarget;
 

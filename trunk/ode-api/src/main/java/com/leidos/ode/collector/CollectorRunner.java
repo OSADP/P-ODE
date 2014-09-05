@@ -1,30 +1,31 @@
 package com.leidos.ode.collector;
 
-import com.leidos.ode.agent.datatarget.DataTargetException;
-import com.leidos.ode.collector.datasource.DataSourceException;
+import com.leidos.ode.agent.datatarget.ODEDataTarget.DataTargetException;
+import com.leidos.ode.collector.datasource.CollectorDataSource.DataSourceException;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.scheduling.quartz.QuartzJobBean;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class CollectorRunner extends QuartzJobBean{
+public class CollectorRunner extends QuartzJobBean {
 
     public String collectorName;
-	
+
     public static void main(String[] args) throws DataSourceException, DataTargetException {
-        if(args != null && args.length == 1){
-                CollectorRunner runner = new CollectorRunner();
-                runner.setCollectorName(args[0]);
-                runner.runCollector();
-        }else{
-                System.out.println("No collector name provided");
+        if (args != null && args.length == 1) {
+            CollectorRunner runner = new CollectorRunner();
+            runner.setCollectorName(args[0]);
+            runner.runCollector();
+        } else {
+            System.out.println("No collector name provided");
 
         }
     }
-    
+
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
         try {
@@ -34,11 +35,11 @@ public class CollectorRunner extends QuartzJobBean{
         } catch (DataTargetException ex) {
             Logger.getLogger(CollectorRunner.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }        
-	
+    }
+
     public void runCollector() throws DataSourceException, DataTargetException {
         ApplicationContext ctx = new ClassPathXmlApplicationContext("ODE-Context.xml");
-        ODECollector collector = (ODECollector)ctx.getBean(collectorName);
+        ODECollector collector = (ODECollector) ctx.getBean(collectorName);
         collector.startUp();
     }
 

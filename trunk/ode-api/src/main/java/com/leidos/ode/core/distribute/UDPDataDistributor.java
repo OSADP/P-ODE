@@ -7,18 +7,14 @@
 package com.leidos.ode.core.distribute;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
+
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
+import java.io.IOException;
+import java.net.*;
 
 /**
- *
  * @author cassadyja
  */
 public class UDPDataDistributor extends DataDistributor {
@@ -28,22 +24,22 @@ public class UDPDataDistributor extends DataDistributor {
     private int targetPort;
 
     private DatagramSocket socket;
-    
-    public UDPDataDistributor(String topicHostURL, int topicHostPort, 
-            String connFactName, String topicName, String targetURL, int targetPort){
-        
+
+    public UDPDataDistributor(String topicHostURL, int topicHostPort,
+                              String connFactName, String topicName, String targetURL, int targetPort) {
+
         setTopicHostURL(topicHostURL);
         setTopicHostPort(topicHostPort);
         setConnFactName(connFactName);
         setTopicName(topicName);
-        
+
         this.targetURL = targetURL;
         this.targetPort = targetPort;
     }
-    
-    
+
+
     @Override
-    protected void connectTarget() throws DistributeException{
+    protected void connectTarget() throws DistributeException {
         try {
             socket = new DatagramSocket(targetPort);
             InetAddress address = InetAddress.getByName(targetURL);
@@ -59,12 +55,12 @@ public class UDPDataDistributor extends DataDistributor {
     protected void sendData(Message message) throws DistributeException {
         //TODO: finish
         try {
-            ODEAgentMessage msg = (ODEAgentMessage)((ObjectMessage)message).getObject();
+            ODEAgentMessage msg = (ODEAgentMessage) ((ObjectMessage) message).getObject();
             DatagramPacket packet = new DatagramPacket(msg.getMessagePayload(), msg.getMessagePayload().length);
             InetAddress address = InetAddress.getByName(targetURL);
             packet.setAddress(address);
             packet.setPort(targetPort);
-        
+
             socket.send(packet);
         } catch (IOException ex) {
             throw new DistributeException("Error sending message", ex);
@@ -100,5 +96,5 @@ public class UDPDataDistributor extends DataDistributor {
     public void setTargetPort(int targetPort) {
         this.targetPort = targetPort;
     }
-    
+
 }

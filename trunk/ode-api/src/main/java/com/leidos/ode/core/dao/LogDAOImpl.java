@@ -21,7 +21,7 @@ public class LogDAOImpl implements LogDAO {
         getMongoTemplate().save(logBean);
     }
 
-    private MongoTemplate getMongoTemplate(){
+    private MongoTemplate getMongoTemplate() {
         return mongoTemplate;
     }
 }
