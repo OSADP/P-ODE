@@ -146,7 +146,7 @@
         <property name="connectionFactoryName" value="${leidos.ode.publisher.connectionfactoryname}"/>
     </bean>
 
-    <bean id="PublishBSMDataController" parent="PublishDataController">
+    <bean id="PublishBSMDataController" class="com.leidos.ode.core.controllers.topics.PublishBSMDataController" parent="PublishDataController">
         <property name="topicName" value="${leidos.ode.publisher.topic.bsm}"/>
     </bean>
 

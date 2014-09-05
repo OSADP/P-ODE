@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 public class PublishRITISSpdVolOccDataController extends PublishDataController {
 
+    @Override
     @RequestMapping(value = PublishEndpoints.RITIS_SPD_VOL_OCC, method = RequestMethod.POST)
     public @ResponseBody String publishData(@RequestBody ODEAgentMessage odeAgentMessage) {
         return publish(odeAgentMessage);

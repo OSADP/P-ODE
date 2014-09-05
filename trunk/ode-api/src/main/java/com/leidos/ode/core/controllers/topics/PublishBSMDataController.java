@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 public class PublishBSMDataController extends PublishDataController {
 
+    @Override
     @RequestMapping(value = PublishEndpoints.BSM, method = RequestMethod.POST)
     public @ResponseBody
     String publishData(@RequestBody ODEAgentMessage odeAgentMessage) {

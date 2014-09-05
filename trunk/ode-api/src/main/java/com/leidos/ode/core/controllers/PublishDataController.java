@@ -25,6 +25,8 @@ public abstract class PublishDataController {
     private String connectionFactoryName;
     private String topicName;
 
+    protected abstract String publishData(ODEAgentMessage odeAgentMessage);
+
     protected final String publish(ODEAgentMessage odeAgentMessage) {
         try {
             if (messageProducer == null) {

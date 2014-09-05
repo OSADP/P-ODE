@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 public class PublishVDOTTravelTimeDataController extends PublishDataController {
 
+    @Override
     @RequestMapping(value = PublishEndpoints.VDOT_TRAVEL_TIME, method = RequestMethod.POST)
     public @ResponseBody String publishData(@RequestBody ODEAgentMessage odeAgentMessage) {
         return publish(odeAgentMessage);
