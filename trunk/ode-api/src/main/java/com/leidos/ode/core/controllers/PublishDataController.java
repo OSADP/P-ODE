@@ -3,7 +3,6 @@ package com.leidos.ode.core.controllers;
 import com.leidos.ode.agent.data.ODEAgentMessage;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.jms.*;
@@ -13,7 +12,7 @@ import javax.naming.NamingException;
 import java.util.Properties;
 
 @Controller
-public class PublishDataController {
+public abstract class PublishDataController {
 
     private String TAG = getClass().getSimpleName();
     private Logger logger = Logger.getLogger(TAG);
@@ -26,11 +25,7 @@ public class PublishDataController {
     private String connectionFactoryName;
     private String topicName;
 
-    @RequestMapping(value = "${endpoint}", method = RequestMethod.POST)
-    public
-    @ResponseBody
-    String publishData(@PathVariable String endpoint, @RequestBody ODEAgentMessage odeAgentMessage) {
-        logger.debug("~~~~~~~Received VDOT Weather message .");
+    protected final String publish(ODEAgentMessage odeAgentMessage) {
         try {
             if (messageProducer == null) {
                 initMessageProducer();
@@ -39,7 +34,6 @@ public class PublishDataController {
         } catch (JMSException e) {
             logger.error("Error connecting to Topic", e);
         }
-
         return "OK";
     }
 
@@ -138,5 +132,17 @@ public class PublishDataController {
 
     public void setTopicName(String topicName) {
         this.topicName = topicName;
+    }
+
+    /**
+     * Constants for Publish Controller endpoints.
+     */
+    public final class PublishEndpoints {
+        public static final String BSM = "publishBSM";
+        public static final String VDOT_WEATHER = "publishVDOTWeather";
+        public static final String VDOT_TRAVEL_TIME = "publishVDOTTravelTime";
+        public static final String VDOT_SPD_VOL_OCC = "publishVDOTSpdVolOcc";
+        public static final String RITIS_SPD_VOL_OCC = "publishRITISSpdVolOcc";
+        public static final String RITIS_WEATHER = "publishRITISWeather";
     }
 }
