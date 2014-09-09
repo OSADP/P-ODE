@@ -9,15 +9,35 @@ import java.util.Arrays;
 public class UDPPushDataSource extends PushDataSource {
 
     private final String TAG = getClass().getSimpleName();
-
     private Logger logger = Logger.getLogger(TAG);
-
     private DatagramSocket datagramSocket = null;
     private boolean interrupted = false;
     private boolean stopped = false;
 
+    @Override
+    public void startDataSource() throws DataSourceException {
+        try {
+            InetAddress tmpAddress = InetAddress.getByName(getHostAddress());
+            logger.info("TMP Host Address: " + tmpAddress.getHostAddress());
+            byte[] addressBytes = tmpAddress.getAddress();
+            InetAddress address = Inet6Address.getByAddress(getHostAddress(), addressBytes);
+            logger.info("Host Address: " + address.getHostAddress());
+            logger.info("Host Address: " + address.getCanonicalHostName());
+
+            logger.info("Connecting datagram socket on port: " + getHostPort());
+            datagramSocket = new DatagramSocket(getHostPort(), address);
+            datagramSocket.setSoTimeout(10000);
+            new Thread(new DataSocketListener()).start();
+        } catch (UnknownHostException e) {
+            throw new DataSourceException("");
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+    }
+
     private class DataSocketListener implements Runnable {
 
+        @Override
         public void run() {
             try {
                 while (!interrupted) {
@@ -39,7 +59,6 @@ public class UDPPushDataSource extends PushDataSource {
                             logger.warn("Error receiving Packet from socket", e);
                         }
                     }
-
                 }
             } catch (Exception e) {
                 logger.fatal("Error with UDP Listener", e);
@@ -48,29 +67,5 @@ public class UDPPushDataSource extends PushDataSource {
                 stopped = true;
             }
         }
-
-    }
-
-    @Override
-    public void startDataSource() throws DataSourceException {
-        try {
-            InetAddress tmpAddress = InetAddress.getByName(getHostAddress());
-            logger.info("TMP Host Address: " + tmpAddress.getHostAddress());
-            byte[] addressBytes = tmpAddress.getAddress();
-            InetAddress address = Inet6Address.getByAddress(getHostAddress(), addressBytes);
-            logger.info("Host Address: " + address.getHostAddress());
-            logger.info("Host Address: " + address.getCanonicalHostName());
-
-            logger.info("Connecting datagram socket on port: " + getHostPort());
-            datagramSocket = new DatagramSocket(getHostPort(), address);
-
-            datagramSocket.setSoTimeout(10000);
-            new Thread(new DataSocketListener()).start();
-        } catch (UnknownHostException e) {
-            throw new DataSourceException("");
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
-
     }
 }

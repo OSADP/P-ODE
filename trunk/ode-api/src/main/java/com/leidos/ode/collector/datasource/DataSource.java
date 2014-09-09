@@ -1,7 +1,5 @@
 package com.leidos.ode.collector.datasource;
 
-import com.leidos.ode.collector.CollectorDataSourceListener;
-
 /**
  * Created with IntelliJ IDEA.
  * User: LAMDE
@@ -17,6 +15,7 @@ public abstract class DataSource implements CollectorDataSource {
     private String username;
     private String password;
     private CollectorDataSourceListener collectorDataSourceListener;
+    private boolean interrupted;
 
     public String getHostProtocol() {
         return hostProtocol;
@@ -64,5 +63,14 @@ public abstract class DataSource implements CollectorDataSource {
 
     public void setCollectorDataSourceListener(CollectorDataSourceListener collectorDataSourceListener) {
         this.collectorDataSourceListener = collectorDataSourceListener;
+    }
+
+    protected final boolean isInterrupted() {
+        return interrupted;
+    }
+
+    @Override
+    public final void stopDataSource() {
+        interrupted = true;
     }
 }

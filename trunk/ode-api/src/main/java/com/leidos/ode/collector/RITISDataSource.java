@@ -2,11 +2,8 @@ package com.leidos.ode.collector;
 
 import com.leidos.ode.collector.datasource.RestPullDataSource;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
@@ -22,38 +19,13 @@ import java.io.IOException;
 public class RITISDataSource extends RestPullDataSource {
 
     private final String TAG = getClass().getSimpleName();
-
     private Logger logger = Logger.getLogger(TAG);
-
     private String apiKey;
-    private int requestLimit;
 
     @Override
     public void startDataSource() throws DataSourceException {
-        String requestString = buildRequestString();
-        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-        HttpGet httpGet = new HttpGet(requestString);
-        logger.debug("Getting data from " + requestString);
-        try {
-            HttpResponse response = httpClient.execute(httpGet);
-            HttpEntity responseEntity = response.getEntity();
-            byte[] responseBytes = EntityUtils.toByteArray(responseEntity);
-            EntityUtils.consume(responseEntity);
-
-            getCollectorDataSourceListener().dataReceived(responseBytes);
-        } catch (ClientProtocolException e) {
-            logger.error(e.getLocalizedMessage());
-        } catch (IOException e) {
-            logger.error(e.getLocalizedMessage());
-        } finally {
-            if (httpClient != null) {
-                try {
-                    httpClient.close();
-                } catch (IOException e) {
-                    logger.error(e.getLocalizedMessage());
-                }
-            }
-        }
+        super.startDataSource();
+        new Thread(new RestPullListener()).start();
     }
 
     @Override
@@ -83,14 +55,6 @@ public class RITISDataSource extends RestPullDataSource {
         return stringBuilder.toString();
     }
 
-    private void waitForApiRequestLimit() {
-        try {
-            Thread.sleep(getRequestLimit());
-        } catch (InterruptedException e) {
-            logger.equals(e.getLocalizedMessage());
-        }
-    }
-
     public String getApiKey() {
         return apiKey;
     }
@@ -99,11 +63,37 @@ public class RITISDataSource extends RestPullDataSource {
         this.apiKey = "api-key=" + apiKey;
     }
 
-    public int getRequestLimit() {
-        return requestLimit;
-    }
-
-    public void setRequestLimit(String requestLimit) {
-        this.requestLimit = Integer.parseInt(requestLimit);
+    protected class RestPullListener implements Runnable {
+        @Override
+        public void run() {
+            CloseableHttpResponse response = null;
+            try {
+                while (!isInterrupted()) {
+                    response = getHttpClient().execute(getHttpGet());
+                    HttpEntity responseEntity = response.getEntity();
+                    byte[] responseBytes = EntityUtils.toByteArray(responseEntity);
+                    EntityUtils.consume(responseEntity);
+                    getCollectorDataSourceListener().dataReceived(responseBytes);
+                    Thread.sleep(getRequestLimit());
+                }
+            } catch (ClientProtocolException e) {
+                logger.error(e.getLocalizedMessage());
+            } catch (IOException e) {
+                logger.error(e.getLocalizedMessage());
+            } catch (InterruptedException e) {
+                logger.error(e.getLocalizedMessage());
+            } finally {
+                if (getHttpClient() != null) {
+                    try {
+                        getHttpClient().close();
+                        if (response != null) {
+                            response.close();
+                        }
+                    } catch (IOException e) {
+                        logger.error(e.getLocalizedMessage());
+                    }
+                }
+            }
+        }
     }
 }

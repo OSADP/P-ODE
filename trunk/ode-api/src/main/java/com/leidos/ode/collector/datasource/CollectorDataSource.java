@@ -4,6 +4,12 @@ public interface CollectorDataSource {
 
     public void startDataSource() throws DataSourceException;
 
+    public void stopDataSource();
+
+    public interface CollectorDataSourceListener {
+        public void dataReceived(byte[] receivedData);
+    }
+
     public class DataSourceException extends Exception {
 
         public DataSourceException(String string) {
