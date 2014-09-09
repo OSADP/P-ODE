@@ -11,7 +11,6 @@ public class UDPPushDataSource extends PushDataSource {
     private final String TAG = getClass().getSimpleName();
     private Logger logger = Logger.getLogger(TAG);
     private DatagramSocket datagramSocket = null;
-    private boolean interrupted = false;
     private boolean stopped = false;
 
     @Override
@@ -40,7 +39,7 @@ public class UDPPushDataSource extends PushDataSource {
         @Override
         public void run() {
             try {
-                while (!interrupted) {
+                while (!isInterrupted()) {
                     try {
                         byte[] receiveData = new byte[5120];
                         DatagramPacket packet = new DatagramPacket(receiveData, receiveData.length);
