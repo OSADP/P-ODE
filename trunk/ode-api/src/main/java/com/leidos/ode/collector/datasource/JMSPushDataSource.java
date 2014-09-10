@@ -16,7 +16,7 @@ public class JMSPushDataSource extends PushDataSource implements ExceptionListen
     private Connection connection;
     private MessageConsumer consumer;
 
-    public void startDataSource() throws DataSourceException {
+    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) throws DataSourceException {
         try {
 
 //            Properties env = new Properties();

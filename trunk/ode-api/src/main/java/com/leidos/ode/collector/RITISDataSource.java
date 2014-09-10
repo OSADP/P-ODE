@@ -23,9 +23,9 @@ public class RITISDataSource extends RestPullDataSource {
     private String apiKey;
 
     @Override
-    public void startDataSource() throws DataSourceException {
-        super.startDataSource();
-        new Thread(new RestPullListener()).start();
+    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) throws DataSourceException {
+        super.startDataSource(collectorDataSourceListener);
+        new Thread(new RITISDataSourceRunnable(collectorDataSourceListener)).start();
     }
 
     @Override
@@ -63,7 +63,12 @@ public class RITISDataSource extends RestPullDataSource {
         this.apiKey = "api-key=" + apiKey;
     }
 
-    protected class RestPullListener implements Runnable {
+    private class RITISDataSourceRunnable extends DataSourceRunnable {
+
+        private RITISDataSourceRunnable(CollectorDataSourceListener collectorDataSourceListener) {
+            super(collectorDataSourceListener);
+        }
+
         @Override
         public void run() {
             CloseableHttpResponse response = null;

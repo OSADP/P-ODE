@@ -2,7 +2,7 @@ package com.leidos.ode.collector.datasource;
 
 public interface CollectorDataSource {
 
-    public void startDataSource() throws DataSourceException;
+    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) throws DataSourceException;
 
     public void stopDataSource();
 

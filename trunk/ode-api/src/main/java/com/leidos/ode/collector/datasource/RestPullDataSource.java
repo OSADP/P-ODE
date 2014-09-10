@@ -37,7 +37,7 @@ public abstract class RestPullDataSource extends PullDataSource {
     }
 
     @Override
-    public void startDataSource() throws DataSourceException {
+    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) throws DataSourceException {
         String requestString = buildRequestString();
         httpClient = HttpClientBuilder.create().build();
         httpGet = new HttpGet(requestString);

@@ -18,7 +18,7 @@ public class ODECollector implements CollectorDataSourceListener {
 
     private void startCollector() throws DataSourceException, DataTargetException {
         agent.startUp();
-        dataSource.startDataSource();
+        dataSource.startDataSource(this);
     }
 
     @Override

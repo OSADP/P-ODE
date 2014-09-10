@@ -82,6 +82,21 @@
         <property name="regInfo" ref="TestRegistrationInfo"/>
     </bean>
 
+    <bean id="UDPPushDataSource" class="com.leidos.ode.collector.datasource.UDPPushDataSource" parent="PushDataSource">
+
+    </bean>
+
+    <bean id="JMSPushDataSource" class="com.leidos.ode.collector.datasource.JMSPushDataSource" parent="PushDataSource">
+        <property name="hostProtocol" value="tcp://"/>
+        <property name="hostAddress" value="localhost"/>
+        <property name="hostPort" value="7847"/>
+        <property name="username" value="leidos"/>
+        <property name="password" value="H3SvjshHnNBX"/>
+        <property name="queueName" value="Clients.leidos.ATIS.Events"/>
+    </bean>
+
+    <bean id="PushDataSource" class="com.leidos.ode.collector.datasource.PushDataSource" abstract="true"/>
+
     <bean id="RestPullDataSource" class="com.leidos.ode.collector.datasource.RestPullDataSource" abstract="true"/>
 
     <bean id="RITISFilterDataSource" class="com.leidos.ode.collector.RITISDataSource" parent="RestPullDataSource">
@@ -92,7 +107,6 @@
         <property name="password" value="${leidos.ode.ritisfilter.password}"/>
         <property name="apiKey" value="${leidos.ode.ritisfilter.apikey}"/>
         <property name="requestLimit" value="${leidos.ode.ritisfilter.requestlimit}"/>
-        <property name="collectorDataSourceListener" ref="RITISFilterCollector"/>
     </bean>
 
     <bean id="RITISFilterAgent" class="com.leidos.ode.agent.PublishODEAgent">
@@ -114,7 +128,6 @@
         <!--<property name="xmlBaseUrl" value="${leidos.ode.vdotfeeds.xmlbaseurl}"/>-->
         <property name="username" value="${leidos.ode.vdotfeeds.username}"/>
         <property name="password" value="${leidos.ode.vdotfeeds.password}"/>
-        <property name="collectorDataSourceListener" ref="VDOTCollector"/>
     </bean>
 
     <bean id="VDOTAgent" class="com.leidos.ode.agent.PublishODEAgent">

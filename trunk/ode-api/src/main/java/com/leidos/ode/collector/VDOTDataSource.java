@@ -33,8 +33,8 @@ public class VDOTDataSource extends RestPullDataSource {
     private CloseableHttpResponse response;
 
     @Override
-    public void startDataSource() throws DataSourceException {
-        super.startDataSource();
+    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) throws DataSourceException {
+        super.startDataSource(collectorDataSourceListener);
         try {
             //Initial request without credentials returns "HTTP/1.1 401 Unauthorized"
             response = getHttpClient().execute(getHttpGet());
@@ -43,7 +43,7 @@ public class VDOTDataSource extends RestPullDataSource {
             logger.debug("Status code: " + statusCode);
 
             if (statusCode == HttpStatus.SC_UNAUTHORIZED) {
-                new Thread(new RestPullListener()).start();
+                new Thread(new VDOTDataSourceRunnable(collectorDataSourceListener)).start();
             }
         } catch (ClientProtocolException e) {
             logger.error(e.getLocalizedMessage());
@@ -83,7 +83,11 @@ public class VDOTDataSource extends RestPullDataSource {
         return "38.856259,-77.35548,38.882853,-77.259612";
     }
 
-    private class RestPullListener implements Runnable {
+    private class VDOTDataSourceRunnable extends DataSourceRunnable {
+
+        private VDOTDataSourceRunnable(CollectorDataSourceListener collectorDataSourceListener){
+            super(collectorDataSourceListener);
+        }
         @Override
         public void run() {
             try {

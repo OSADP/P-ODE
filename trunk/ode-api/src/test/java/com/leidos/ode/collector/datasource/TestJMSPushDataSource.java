@@ -38,7 +38,12 @@ public class TestJMSPushDataSource extends TestCase {
         ds.setPassword("H3SvjshHnNBX");
         ds.setQueueName("Clients.leidos.ATIS.Events");
         try {
-            ds.startDataSource();
+            ds.startDataSource(new CollectorDataSource.CollectorDataSourceListener() {
+                @Override
+                public void dataReceived(byte[] receivedData) {
+
+                }
+            });
         } catch (DataSourceException ex) {
             Logger.getLogger(TestJMSPushDataSource.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();

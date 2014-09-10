@@ -14,7 +14,7 @@ public abstract class DataSource implements CollectorDataSource {
     private int hostPort;
     private String username;
     private String password;
-    private CollectorDataSourceListener collectorDataSourceListener;
+
     private boolean interrupted;
 
     public String getHostProtocol() {
@@ -57,14 +57,6 @@ public abstract class DataSource implements CollectorDataSource {
         this.password = password;
     }
 
-    public CollectorDataSourceListener getCollectorDataSourceListener() {
-        return collectorDataSourceListener;
-    }
-
-    public void setCollectorDataSourceListener(CollectorDataSourceListener collectorDataSourceListener) {
-        this.collectorDataSourceListener = collectorDataSourceListener;
-    }
-
     protected final boolean isInterrupted() {
         return interrupted;
     }
@@ -72,5 +64,17 @@ public abstract class DataSource implements CollectorDataSource {
     @Override
     public final void stopDataSource() {
         interrupted = true;
+    }
+
+    protected abstract class DataSourceRunnable implements Runnable{
+        private CollectorDataSourceListener collectorDataSourceListener;
+
+        protected DataSourceRunnable(CollectorDataSourceListener collectorDataSourceListener) {
+            this.collectorDataSourceListener = collectorDataSourceListener;
+        }
+
+        protected final CollectorDataSourceListener getCollectorDataSourceListener(){
+            return collectorDataSourceListener;
+        }
     }
 }

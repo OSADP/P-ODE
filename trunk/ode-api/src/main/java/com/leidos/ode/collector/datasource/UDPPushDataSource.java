@@ -11,10 +11,9 @@ public class UDPPushDataSource extends PushDataSource {
     private final String TAG = getClass().getSimpleName();
     private Logger logger = Logger.getLogger(TAG);
     private DatagramSocket datagramSocket = null;
-    private boolean stopped = false;
 
     @Override
-    public void startDataSource() throws DataSourceException {
+    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) throws DataSourceException {
         try {
             InetAddress tmpAddress = InetAddress.getByName(getHostAddress());
             logger.info("TMP Host Address: " + tmpAddress.getHostAddress());
@@ -26,7 +25,7 @@ public class UDPPushDataSource extends PushDataSource {
             logger.info("Connecting datagram socket on port: " + getHostPort());
             datagramSocket = new DatagramSocket(getHostPort(), address);
             datagramSocket.setSoTimeout(10000);
-            new Thread(new DataSocketListener()).start();
+            new Thread(new UDPPushDataSourceRunnable(collectorDataSourceListener)).start();
         } catch (UnknownHostException e) {
             throw new DataSourceException("");
         } catch (SocketException e) {
@@ -34,7 +33,11 @@ public class UDPPushDataSource extends PushDataSource {
         }
     }
 
-    private class DataSocketListener implements Runnable {
+    private class UDPPushDataSourceRunnable extends DataSourceRunnable {
+
+        private UDPPushDataSourceRunnable(CollectorDataSourceListener collectorDataSourceListener) {
+            super(collectorDataSourceListener);
+        }
 
         @Override
         public void run() {
@@ -62,8 +65,6 @@ public class UDPPushDataSource extends PushDataSource {
             } catch (Exception e) {
                 logger.fatal("Error with UDP Listener", e);
                 e.printStackTrace();
-            } finally {
-                stopped = true;
             }
         }
     }
