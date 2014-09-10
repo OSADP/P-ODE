@@ -6,7 +6,7 @@ public class ODERITISParser implements ODEDataParser {
 
     @Override
     public ODEAgentMessage parseMessage(byte[] bytes) throws ODEParseException {
-        // TODO Auto-generated method stub
+
         return null;
     }
 

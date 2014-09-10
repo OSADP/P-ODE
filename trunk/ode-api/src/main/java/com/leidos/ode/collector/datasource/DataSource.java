@@ -96,6 +96,7 @@ public abstract class DataSource implements CollectorDataSource {
      * @param collectorDataSourceListener the listener for data received
      */
     protected final void executeDataSourceThread(CollectorDataSourceListener collectorDataSourceListener) {
+        stopDataSourceThread();
         if (dataSourceThread == null) {
             dataSourceThread = new Thread(new DataSourceRunnable(collectorDataSourceListener));
             dataSourceThread.start();
