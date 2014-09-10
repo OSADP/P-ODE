@@ -73,7 +73,7 @@ public class JMSPushDataSource extends PushDataSource implements ExceptionListen
     }
 
     @Override
-    protected byte[] executeDataSource() {
+    protected byte[] pollDataSource() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

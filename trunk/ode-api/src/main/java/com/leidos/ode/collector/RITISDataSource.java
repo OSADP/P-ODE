@@ -28,7 +28,7 @@ public class RITISDataSource extends RestPullDataSource {
     }
 
     @Override
-    protected byte[] executeDataSource() {
+    protected byte[] pollDataSource() {
         try {
             setHttpResponse(getHttpClient().execute(getHttpGet()));
             HttpEntity responseEntity = getHttpReponse().getEntity();

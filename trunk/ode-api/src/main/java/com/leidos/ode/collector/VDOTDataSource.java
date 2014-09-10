@@ -51,7 +51,7 @@ public class VDOTDataSource extends RestPullDataSource {
     }
 
     @Override
-    protected byte[] executeDataSource() {
+    protected byte[] pollDataSource() {
         try {
             //Get current current "WWW-Authenticate" header from response
             // WWW-Authenticate:Digest realm="My Test Realm", qop="auth",

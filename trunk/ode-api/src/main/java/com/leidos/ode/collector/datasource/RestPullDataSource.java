@@ -37,9 +37,9 @@ public abstract class RestPullDataSource extends PullDataSource {
         super.stopDataSource();//Must call super here to stop the thread
         if (getHttpClient() != null) {
             try {
-                getHttpClient().close();
+                getHttpClient().close();//Close http client to avoid leaks
                 if (getHttpReponse() != null) {
-                    getHttpReponse().close();
+                    getHttpReponse().close();//Close http response to avoid leaks
                 }
             } catch (IOException e) {
                 getLogger().error(e.getLocalizedMessage());
@@ -76,7 +76,7 @@ public abstract class RestPullDataSource extends PullDataSource {
     }
 
     /**
-     * Closes any existing http response, and sets the new one.
+     * Closes any existing http response to avoid leaks; then, sets the new one.
      *
      * @param httpResponse
      */
@@ -103,6 +103,7 @@ public abstract class RestPullDataSource extends PullDataSource {
 
     /**
      * Sets the base url for this data source. Can only be set once.
+     *
      * @param baseUrl
      */
     public void setBaseUrl(String baseUrl) {
@@ -117,6 +118,7 @@ public abstract class RestPullDataSource extends PullDataSource {
 
     /**
      * Sets the feed name for this data source. Can only be set once.
+     *
      * @param feedName
      */
     public void setFeedName(String feedName) {

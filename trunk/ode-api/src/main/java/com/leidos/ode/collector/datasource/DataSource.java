@@ -79,8 +79,13 @@ public abstract class DataSource implements CollectorDataSource {
      *
      * @return the data from the source
      */
-    protected abstract byte[] executeDataSource();
+    protected abstract byte[] pollDataSource();
 
+    /**
+     * Returns logger for the data source.
+     *
+     * @return
+     */
     protected abstract Logger getLogger();
 
     /**
@@ -108,6 +113,9 @@ public abstract class DataSource implements CollectorDataSource {
         }
     }
 
+    /**
+     * Class to handle polling of data source. Notifies listener of data received.
+     */
     private class DataSourceRunnable implements Runnable {
         private CollectorDataSourceListener collectorDataSourceListener;
 
@@ -122,7 +130,7 @@ public abstract class DataSource implements CollectorDataSource {
         @Override
         public void run() {
             while (!isInterrupted()) {
-                byte[] bytes = executeDataSource();
+                byte[] bytes = pollDataSource();
                 if (bytes != null) {
                     getCollectorDataSourceListener().onDataReceived(bytes);
                 } else {
