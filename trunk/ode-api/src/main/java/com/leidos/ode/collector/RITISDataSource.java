@@ -3,6 +3,7 @@ package com.leidos.ode.collector;
 import com.leidos.ode.collector.datasource.RestPullDataSource;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
@@ -30,8 +31,8 @@ public class RITISDataSource extends RestPullDataSource {
     @Override
     protected byte[] pollDataSource() {
         try {
-            setHttpResponse(getHttpClient().execute(getHttpGet()));
-            HttpEntity responseEntity = getHttpReponse().getEntity();
+            CloseableHttpResponse closeableHttpResponse= getHttpClient().execute(getHttpGet());
+            HttpEntity responseEntity = closeableHttpResponse.getEntity();
             byte[] responseBytes = EntityUtils.toByteArray(responseEntity);
             EntityUtils.consume(responseEntity);
             Thread.sleep(getRequestLimit());

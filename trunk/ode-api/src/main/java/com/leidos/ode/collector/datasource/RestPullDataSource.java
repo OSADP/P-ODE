@@ -1,6 +1,5 @@
 package com.leidos.ode.collector.datasource;
 
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -23,7 +22,6 @@ public abstract class RestPullDataSource extends PullDataSource {
     private String feedName;
     private String requestString;
     private CloseableHttpClient httpClient;
-    private CloseableHttpResponse httpResponse;
     private HttpGet httpGet;
     private int requestLimit;
 
@@ -38,9 +36,6 @@ public abstract class RestPullDataSource extends PullDataSource {
         if (getHttpClient() != null) {
             try {
                 getHttpClient().close();//Close http client to avoid leaks
-                if (getHttpReponse() != null) {
-                    getHttpReponse().close();//Close http response to avoid leaks
-                }
             } catch (IOException e) {
                 getLogger().error(e.getLocalizedMessage());
             }
@@ -71,26 +66,6 @@ public abstract class RestPullDataSource extends PullDataSource {
         return httpClient;
     }
 
-    protected final CloseableHttpResponse getHttpReponse() {
-        return httpResponse;
-    }
-
-    /**
-     * Closes any existing http response to avoid leaks; then, sets the new one.
-     *
-     * @param httpResponse
-     */
-    protected final void setHttpResponse(CloseableHttpResponse httpResponse) {
-        if (httpResponse != null) {
-            try {
-                httpResponse.close();
-            } catch (IOException e) {
-                getLogger().error(e.getLocalizedMessage());
-            }
-        }
-        this.httpResponse = httpResponse;
-    }
-
     protected final HttpGet getHttpGet() {
         return httpGet;
     }
@@ -102,14 +77,12 @@ public abstract class RestPullDataSource extends PullDataSource {
     }
 
     /**
-     * Sets the base url for this data source. Can only be set once.
+     * Sets the base url for this data source.
      *
      * @param baseUrl
      */
     public void setBaseUrl(String baseUrl) {
-        if (baseUrl == null) {
-            this.baseUrl = baseUrl;
-        }
+        this.baseUrl = baseUrl;
     }
 
     public final String getFeedName() {
@@ -117,14 +90,12 @@ public abstract class RestPullDataSource extends PullDataSource {
     }
 
     /**
-     * Sets the feed name for this data source. Can only be set once.
+     * Sets the feed name for this data source.
      *
      * @param feedName
      */
     public void setFeedName(String feedName) {
-        if (feedName == null) {
-            this.feedName = feedName;
-        }
+        this.feedName = feedName;
     }
 
     public final int getRequestLimit() {
@@ -132,14 +103,12 @@ public abstract class RestPullDataSource extends PullDataSource {
     }
 
     /**
-     * Sets the request interval limit for this data source. Can only be set once.
+     * Sets the request interval limit for this data source.
      *
      * @param requestLimit
      */
     public void setRequestLimit(String requestLimit) {
-        if (requestLimit == null) {
-            this.requestLimit = Integer.parseInt(requestLimit);
-        }
+        this.requestLimit = Integer.parseInt(requestLimit);
     }
 }
 

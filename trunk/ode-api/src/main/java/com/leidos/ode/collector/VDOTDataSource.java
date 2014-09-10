@@ -10,6 +10,7 @@ import org.apache.http.auth.MalformedChallengeException;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.auth.DigestScheme;
 import org.apache.http.impl.client.BasicCredentialsProvider;
@@ -29,18 +30,21 @@ public class VDOTDataSource extends RestPullDataSource {
 
     private final String TAG = getClass().getSimpleName();
     private Logger logger = Logger.getLogger(TAG);
+    private Header firstHeader;//Necessary to keep track of for Digest authentication
 
     @Override
     public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) {
         super.startDataSource(collectorDataSourceListener);
         try {
-            //Initial request without credentials returns "HTTP/1.1 401 Unauthorized"
-            setHttpResponse(getHttpClient().execute(getHttpGet()));
+            CloseableHttpResponse closeableHttpResponse = getHttpClient().execute(getHttpGet());
 
-            int statusCode = getHttpReponse().getStatusLine().getStatusCode();
-            getLogger().debug("Status code: " + statusCode);
+            int statusCode = closeableHttpResponse.getStatusLine().getStatusCode();
+            getLogger().debug("Using digest scheme. Initial status code: " + statusCode);
 
             if (statusCode == HttpStatus.SC_UNAUTHORIZED) {
+                firstHeader = closeableHttpResponse.getFirstHeader(AUTH.WWW_AUTH);
+                getLogger().debug("authHeader: " + firstHeader);
+                closeableHttpResponse.close();
                 executeDataSourceThread(collectorDataSourceListener);
             }
         } catch (ClientProtocolException e) {
@@ -53,18 +57,8 @@ public class VDOTDataSource extends RestPullDataSource {
     @Override
     protected byte[] pollDataSource() {
         try {
-            //Get current current "WWW-Authenticate" header from response
-            // WWW-Authenticate:Digest realm="My Test Realm", qop="auth",
-            //nonce="cdcf6cbe6ee17ae0790ed399935997e8", opaque="ae40d7c8ca6a35af15460d352be5e71c"
-            Header authHeader = getHttpReponse().getFirstHeader(AUTH.WWW_AUTH);
-            getHttpReponse().close();
-
-            getLogger().debug("authHeader: " + authHeader);
-
             DigestScheme digestScheme = new DigestScheme();
-
-            //Parse realm, nonce sent by server.
-            digestScheme.processChallenge(authHeader);
+            digestScheme.processChallenge(firstHeader);
 
             UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(getUsername(), getPassword());
             CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
@@ -72,16 +66,19 @@ public class VDOTDataSource extends RestPullDataSource {
             HttpClientContext httpClientContext = HttpClientContext.create();
             httpClientContext.setCredentialsProvider(credentialsProvider);
 
-            setHttpResponse(getHttpClient().execute(getHttpGet(), httpClientContext));
+            CloseableHttpResponse closeableHttpResponse = getHttpClient().execute(getHttpGet(), httpClientContext);
 //                String responseString = EntityUtils.toString(responseBody.getEntity());
-            HttpEntity responseEntity = getHttpReponse().getEntity();
+            HttpEntity responseEntity = closeableHttpResponse.getEntity();
             byte[] responseBytes = EntityUtils.toByteArray(responseEntity);
             EntityUtils.consume(responseEntity);
-            getHttpReponse().close();
+            closeableHttpResponse.close();
+            Thread.sleep(getRequestLimit());
             return responseBytes;
         } catch (IOException e) {
             getLogger().error(e.getLocalizedMessage());
         } catch (MalformedChallengeException e) {
+            getLogger().error(e.getLocalizedMessage());
+        } catch (InterruptedException e) {
             getLogger().error(e.getLocalizedMessage());
         }
         return null;
@@ -90,11 +87,9 @@ public class VDOTDataSource extends RestPullDataSource {
     @Override
     protected String getWFSFilter() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("&typeName=");
-        stringBuilder.append("orci:");
+        stringBuilder.append("&typeName=orci:");
         stringBuilder.append(getFeedName());
-        stringBuilder.append("&");
-        stringBuilder.append("bbox=");
+        stringBuilder.append("&bbox=");
         stringBuilder.append(getEmulatorWFSbbox());
 //        stringBuilder.append("&propertyName=");
 //        stringBuilder.append(getEmulatorPropertyNames());

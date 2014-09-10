@@ -100,6 +100,7 @@ public abstract class DataSource implements CollectorDataSource {
         if (dataSourceThread == null) {
             dataSourceThread = new Thread(new DataSourceRunnable(collectorDataSourceListener));
             dataSourceThread.start();
+            logger.debug("Started data source thread.");
         }
     }
 
@@ -108,6 +109,7 @@ public abstract class DataSource implements CollectorDataSource {
      */
     private void stopDataSourceThread() {
         if (dataSourceThread != null) {
+            logger.debug("Stopping data source thread.");
             interrupted = true;
             dataSourceThread.interrupt();
             dataSourceThread = null;

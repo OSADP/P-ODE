@@ -3,6 +3,7 @@ package com.leidos.ode.core.controllers;
 import com.leidos.ode.collector.RITISDataSource;
 import com.leidos.ode.collector.VDOTDataSource;
 import com.leidos.ode.collector.datasource.CollectorDataSource;
+import com.leidos.ode.collector.datasource.CollectorDataSource.CollectorDataSourceListener;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,7 +24,7 @@ public class TestDataSourceController {
     private VDOTDataSource vdotDataSource;
     @Autowired
     private RITISDataSource ritisDataSource;
-    private CollectorDataSource.CollectorDataSourceListener listener;
+    private CollectorDataSourceListener listener;
 
     public TestDataSourceController() {
         listener = new CollectorDataSource.CollectorDataSourceListener() {
@@ -40,19 +41,13 @@ public class TestDataSourceController {
     String testVDOTDataSource(@PathVariable String dataSource, @PathVariable String feed) {
         if (dataSource.equalsIgnoreCase("vdot")) {
             vdotDataSource.setFeedName(feed);
+            vdotDataSource.setRequestLimit("1000");
             vdotDataSource.startDataSource(listener);
         }
         if (dataSource.equalsIgnoreCase("ritis")) {
             ritisDataSource.setFeedName(feed);
             ritisDataSource.startDataSource(listener);
         }
-
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Started data source ");
-        stringBuilder.append(dataSource);
-        stringBuilder.append(" with feed ");
-        stringBuilder.append(feed);
-        stringBuilder.append(".");
-        return stringBuilder.toString();
+        return "Started data source.";
     }
 }
