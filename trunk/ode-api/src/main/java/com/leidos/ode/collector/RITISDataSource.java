@@ -10,11 +10,11 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 
 /**
- * Created with IntelliJ IDEA.
- * User: LAMDE
- * Date: 8/18/14
- * Time: 1:42 PM
- * To change this template use File | Settings | File Templates.
+ * RITIS data source, that includes a geographical bounding box filter for the emulator. Handles
+ * requests to RITIS for data using the api key provided to us by RITIS.
+ * Polls for RITIS data using Apache HTTP libraries.
+ *
+ * @author lamde
  */
 public class RITISDataSource extends RestPullDataSource {
 
@@ -24,8 +24,38 @@ public class RITISDataSource extends RestPullDataSource {
 
     @Override
     public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) throws DataSourceException {
-        super.startDataSource(collectorDataSourceListener);
-        new Thread(new RITISDataSourceRunnable(collectorDataSourceListener)).start();
+        new Thread(new DataSourceRunnable(collectorDataSourceListener)).start();
+    }
+
+    @Override
+    protected byte[] executeDataSource() {
+        CloseableHttpResponse response = null;
+        try {
+            response = getHttpClient().execute(getHttpGet());
+            HttpEntity responseEntity = response.getEntity();
+            byte[] responseBytes = EntityUtils.toByteArray(responseEntity);
+            EntityUtils.consume(responseEntity);
+            Thread.sleep(getRequestLimit());
+            return responseBytes;
+        } catch (ClientProtocolException e) {
+            logger.error(e.getLocalizedMessage());
+        } catch (IOException e) {
+            logger.error(e.getLocalizedMessage());
+        } catch (InterruptedException e) {
+            logger.error(e.getLocalizedMessage());
+        } finally {
+            if (getHttpClient() != null) {
+                try {
+                    getHttpClient().close();
+                    if (response != null) {
+                        response.close();
+                    }
+                } catch (IOException e) {
+                    logger.error(e.getLocalizedMessage());
+                }
+            }
+        }
+        return null;
     }
 
     @Override
@@ -63,42 +93,8 @@ public class RITISDataSource extends RestPullDataSource {
         this.apiKey = "api-key=" + apiKey;
     }
 
-    private class RITISDataSourceRunnable extends DataSourceRunnable {
-
-        private RITISDataSourceRunnable(CollectorDataSourceListener collectorDataSourceListener) {
-            super(collectorDataSourceListener);
-        }
-
-        @Override
-        public void run() {
-            CloseableHttpResponse response = null;
-            try {
-                while (!isInterrupted()) {
-                    response = getHttpClient().execute(getHttpGet());
-                    HttpEntity responseEntity = response.getEntity();
-                    byte[] responseBytes = EntityUtils.toByteArray(responseEntity);
-                    EntityUtils.consume(responseEntity);
-                    getCollectorDataSourceListener().dataReceived(responseBytes);
-                    Thread.sleep(getRequestLimit());
-                }
-            } catch (ClientProtocolException e) {
-                logger.error(e.getLocalizedMessage());
-            } catch (IOException e) {
-                logger.error(e.getLocalizedMessage());
-            } catch (InterruptedException e) {
-                logger.error(e.getLocalizedMessage());
-            } finally {
-                if (getHttpClient() != null) {
-                    try {
-                        getHttpClient().close();
-                        if (response != null) {
-                            response.close();
-                        }
-                    } catch (IOException e) {
-                        logger.error(e.getLocalizedMessage());
-                    }
-                }
-            }
-        }
+    @Override
+    protected Logger getLogger() {
+        return logger;
     }
 }

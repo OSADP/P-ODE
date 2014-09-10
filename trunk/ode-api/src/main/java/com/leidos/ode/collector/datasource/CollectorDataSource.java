@@ -7,7 +7,7 @@ public interface CollectorDataSource {
     public void stopDataSource();
 
     public interface CollectorDataSourceListener {
-        public void dataReceived(byte[] receivedData);
+        public void onDataReceived(byte[] receivedData);
     }
 
     public class DataSourceException extends Exception {

@@ -40,7 +40,7 @@ public class TestJMSPushDataSource extends TestCase {
         try {
             ds.startDataSource(new CollectorDataSource.CollectorDataSourceListener() {
                 @Override
-                public void dataReceived(byte[] receivedData) {
+                public void onDataReceived(byte[] receivedData) {
 
                 }
             });

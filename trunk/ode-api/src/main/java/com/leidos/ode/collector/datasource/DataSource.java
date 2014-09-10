@@ -1,5 +1,8 @@
 package com.leidos.ode.collector.datasource;
 
+
+import org.apache.log4j.Logger;
+
 /**
  * Created with IntelliJ IDEA.
  * User: LAMDE
@@ -9,12 +12,13 @@ package com.leidos.ode.collector.datasource;
  */
 public abstract class DataSource implements CollectorDataSource {
 
+    private final String TAG = getClass().getSimpleName();
+    private Logger logger = Logger.getLogger(TAG);
     private String hostProtocol;
     private String hostAddress;
     private int hostPort;
     private String username;
     private String password;
-
     private boolean interrupted;
 
     public String getHostProtocol() {
@@ -66,15 +70,31 @@ public abstract class DataSource implements CollectorDataSource {
         interrupted = true;
     }
 
-    protected abstract class DataSourceRunnable implements Runnable{
+    protected abstract byte[] executeDataSource();
+
+    protected abstract Logger getLogger();
+
+    protected final class DataSourceRunnable implements Runnable {
         private CollectorDataSourceListener collectorDataSourceListener;
 
-        protected DataSourceRunnable(CollectorDataSourceListener collectorDataSourceListener) {
+        public DataSourceRunnable(CollectorDataSourceListener collectorDataSourceListener) {
             this.collectorDataSourceListener = collectorDataSourceListener;
         }
 
-        protected final CollectorDataSourceListener getCollectorDataSourceListener(){
+        public CollectorDataSourceListener getCollectorDataSourceListener() {
             return collectorDataSourceListener;
+        }
+
+        @Override
+        public void run() {
+            while (!isInterrupted()) {
+                byte[] bytes = executeDataSource();
+                if (bytes != null) {
+                    getCollectorDataSourceListener().onDataReceived(bytes);
+                } else {
+                    logger.debug("Data source response bytes was null!.");
+                }
+            }
         }
     }
 }

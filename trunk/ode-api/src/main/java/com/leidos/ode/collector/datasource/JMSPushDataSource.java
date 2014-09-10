@@ -71,4 +71,14 @@ public class JMSPushDataSource extends PushDataSource implements ExceptionListen
         }
 
     }
+
+    @Override
+    protected byte[] executeDataSource() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    protected Logger getLogger() {
+        return logger;
+    }
 }

@@ -23,7 +23,11 @@ public abstract class RestPullDataSource extends PullDataSource {
     private HttpGet httpGet;
     private int requestLimit;
 
-    protected String buildRequestString() {
+    protected RestPullDataSource(){
+        initializeHttpResources();
+    }
+
+    private String buildRequestString() {
         if (requestString == null) {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(getHostProtocol());
@@ -36,8 +40,7 @@ public abstract class RestPullDataSource extends PullDataSource {
         return new StringBuilder().append(requestString).append(getWFSFilter()).toString();
     }
 
-    @Override
-    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) throws DataSourceException {
+    public void initializeHttpResources() {
         String requestString = buildRequestString();
         httpClient = HttpClientBuilder.create().build();
         httpGet = new HttpGet(requestString);
