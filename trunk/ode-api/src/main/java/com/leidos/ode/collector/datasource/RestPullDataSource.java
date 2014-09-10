@@ -1,9 +1,12 @@
 package com.leidos.ode.collector.datasource;
 
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.log4j.Logger;
+
+import java.io.IOException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,11 +23,35 @@ public abstract class RestPullDataSource extends PullDataSource {
     private String feedName;
     private String requestString;
     private CloseableHttpClient httpClient;
+    private CloseableHttpResponse httpResponse;
     private HttpGet httpGet;
     private int requestLimit;
 
-    protected RestPullDataSource(){
+    @Override
+    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) {
         initializeHttpResources();
+    }
+
+    @Override
+    public void stopDataSource() {
+        super.stopDataSource();//Must call super here to stop the thread
+        if (getHttpClient() != null) {
+            try {
+                getHttpClient().close();
+                if (getHttpReponse() != null) {
+                    getHttpReponse().close();
+                }
+            } catch (IOException e) {
+                getLogger().error(e.getLocalizedMessage());
+            }
+        }
+    }
+
+    private void initializeHttpResources() {
+        String requestString = buildRequestString();
+        httpClient = HttpClientBuilder.create().build();
+        httpGet = new HttpGet(requestString);
+        logger.debug("Getting data from " + requestString);
     }
 
     private String buildRequestString() {
@@ -40,15 +67,28 @@ public abstract class RestPullDataSource extends PullDataSource {
         return new StringBuilder().append(requestString).append(getWFSFilter()).toString();
     }
 
-    public void initializeHttpResources() {
-        String requestString = buildRequestString();
-        httpClient = HttpClientBuilder.create().build();
-        httpGet = new HttpGet(requestString);
-        logger.debug("Getting data from " + requestString);
-    }
-
     protected final CloseableHttpClient getHttpClient() {
         return httpClient;
+    }
+
+    protected final CloseableHttpResponse getHttpReponse() {
+        return httpResponse;
+    }
+
+    /**
+     * Closes any existing http response, and sets the new one.
+     *
+     * @param httpResponse
+     */
+    protected final void setHttpResponse(CloseableHttpResponse httpResponse) {
+        if (httpResponse != null) {
+            try {
+                httpResponse.close();
+            } catch (IOException e) {
+                getLogger().error(e.getLocalizedMessage());
+            }
+        }
+        this.httpResponse = httpResponse;
     }
 
     protected final HttpGet getHttpGet() {
@@ -61,6 +101,10 @@ public abstract class RestPullDataSource extends PullDataSource {
         return baseUrl;
     }
 
+    /**
+     * Sets the base url for this data source. Can only be set once.
+     * @param baseUrl
+     */
     public void setBaseUrl(String baseUrl) {
         if (baseUrl == null) {
             this.baseUrl = baseUrl;
@@ -71,6 +115,10 @@ public abstract class RestPullDataSource extends PullDataSource {
         return feedName;
     }
 
+    /**
+     * Sets the feed name for this data source. Can only be set once.
+     * @param feedName
+     */
     public void setFeedName(String feedName) {
         if (feedName == null) {
             this.feedName = feedName;
@@ -81,6 +129,11 @@ public abstract class RestPullDataSource extends PullDataSource {
         return requestLimit;
     }
 
+    /**
+     * Sets the request interval limit for this data source. Can only be set once.
+     *
+     * @param requestLimit
+     */
     public void setRequestLimit(String requestLimit) {
         if (requestLimit == null) {
             this.requestLimit = Integer.parseInt(requestLimit);

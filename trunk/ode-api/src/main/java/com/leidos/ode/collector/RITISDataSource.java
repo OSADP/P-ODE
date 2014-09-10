@@ -3,7 +3,6 @@ package com.leidos.ode.collector;
 import com.leidos.ode.collector.datasource.RestPullDataSource;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
@@ -23,37 +22,26 @@ public class RITISDataSource extends RestPullDataSource {
     private String apiKey;
 
     @Override
-    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) throws DataSourceException {
-        new Thread(new DataSourceRunnable(collectorDataSourceListener)).start();
+    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) {
+        super.startDataSource(collectorDataSourceListener);
+        executeDataSourceThread(collectorDataSourceListener);
     }
 
     @Override
     protected byte[] executeDataSource() {
-        CloseableHttpResponse response = null;
         try {
-            response = getHttpClient().execute(getHttpGet());
-            HttpEntity responseEntity = response.getEntity();
+            setHttpResponse(getHttpClient().execute(getHttpGet()));
+            HttpEntity responseEntity = getHttpReponse().getEntity();
             byte[] responseBytes = EntityUtils.toByteArray(responseEntity);
             EntityUtils.consume(responseEntity);
             Thread.sleep(getRequestLimit());
             return responseBytes;
         } catch (ClientProtocolException e) {
-            logger.error(e.getLocalizedMessage());
+            getLogger().error(e.getLocalizedMessage());
         } catch (IOException e) {
-            logger.error(e.getLocalizedMessage());
+            getLogger().error(e.getLocalizedMessage());
         } catch (InterruptedException e) {
-            logger.error(e.getLocalizedMessage());
-        } finally {
-            if (getHttpClient() != null) {
-                try {
-                    getHttpClient().close();
-                    if (response != null) {
-                        response.close();
-                    }
-                } catch (IOException e) {
-                    logger.error(e.getLocalizedMessage());
-                }
-            }
+            getLogger().error(e.getLocalizedMessage());
         }
         return null;
     }

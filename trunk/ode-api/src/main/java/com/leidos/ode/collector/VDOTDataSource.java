@@ -10,7 +10,6 @@ import org.apache.http.auth.MalformedChallengeException;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.auth.DigestScheme;
 import org.apache.http.impl.client.BasicCredentialsProvider;
@@ -30,32 +29,24 @@ public class VDOTDataSource extends RestPullDataSource {
 
     private final String TAG = getClass().getSimpleName();
     private Logger logger = Logger.getLogger(TAG);
-    private CloseableHttpResponse response;
 
     @Override
-    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) throws DataSourceException {
+    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) {
+        super.startDataSource(collectorDataSourceListener);
         try {
             //Initial request without credentials returns "HTTP/1.1 401 Unauthorized"
-            response = getHttpClient().execute(getHttpGet());
+            setHttpResponse(getHttpClient().execute(getHttpGet()));
 
-            int statusCode = response.getStatusLine().getStatusCode();
+            int statusCode = getHttpReponse().getStatusLine().getStatusCode();
             getLogger().debug("Status code: " + statusCode);
 
             if (statusCode == HttpStatus.SC_UNAUTHORIZED) {
-                new Thread(new DataSourceRunnable(collectorDataSourceListener)).start();
+                executeDataSourceThread(collectorDataSourceListener);
             }
         } catch (ClientProtocolException e) {
             getLogger().error(e.getLocalizedMessage());
         } catch (IOException e) {
             getLogger().error(e.getLocalizedMessage());
-        } finally {
-            if (getHttpClient() != null) {
-                try {
-                    getHttpClient().close();
-                } catch (IOException e) {
-                    getLogger().error(e.getLocalizedMessage());
-                }
-            }
         }
     }
 
@@ -65,8 +56,8 @@ public class VDOTDataSource extends RestPullDataSource {
             //Get current current "WWW-Authenticate" header from response
             // WWW-Authenticate:Digest realm="My Test Realm", qop="auth",
             //nonce="cdcf6cbe6ee17ae0790ed399935997e8", opaque="ae40d7c8ca6a35af15460d352be5e71c"
-            Header authHeader = response.getFirstHeader(AUTH.WWW_AUTH);
-            response.close();
+            Header authHeader = getHttpReponse().getFirstHeader(AUTH.WWW_AUTH);
+            getHttpReponse().close();
 
             getLogger().debug("authHeader: " + authHeader);
 
@@ -81,28 +72,17 @@ public class VDOTDataSource extends RestPullDataSource {
             HttpClientContext httpClientContext = HttpClientContext.create();
             httpClientContext.setCredentialsProvider(credentialsProvider);
 
-            CloseableHttpResponse closeableHttpResponse = getHttpClient().execute(getHttpGet(), httpClientContext);
+            setHttpResponse(getHttpClient().execute(getHttpGet(), httpClientContext));
 //                String responseString = EntityUtils.toString(responseBody.getEntity());
-            HttpEntity responseEntity = closeableHttpResponse.getEntity();
+            HttpEntity responseEntity = getHttpReponse().getEntity();
             byte[] responseBytes = EntityUtils.toByteArray(responseEntity);
             EntityUtils.consume(responseEntity);
-            closeableHttpResponse.close();
+            getHttpReponse().close();
             return responseBytes;
         } catch (IOException e) {
             getLogger().error(e.getLocalizedMessage());
         } catch (MalformedChallengeException e) {
             getLogger().error(e.getLocalizedMessage());
-        } finally {
-            if (getHttpClient() != null) {
-                try {
-                    getHttpClient().close();
-                    if (response != null) {
-                        response.close();
-                    }
-                } catch (IOException e) {
-                    logger.error(e.getLocalizedMessage());
-                }
-            }
         }
         return null;
     }

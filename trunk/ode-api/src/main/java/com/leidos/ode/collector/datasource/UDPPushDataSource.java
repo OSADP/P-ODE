@@ -25,7 +25,7 @@ public class UDPPushDataSource extends PushDataSource {
             getLogger().info("Connecting datagram socket on port: " + getHostPort());
             datagramSocket = new DatagramSocket(getHostPort(), address);
             datagramSocket.setSoTimeout(10000);
-            new Thread(new DataSourceRunnable(collectorDataSourceListener)).start();
+            executeDataSourceThread(collectorDataSourceListener);
         } catch (UnknownHostException e) {
             throw new DataSourceException(e.getLocalizedMessage());
         } catch (SocketException e) {

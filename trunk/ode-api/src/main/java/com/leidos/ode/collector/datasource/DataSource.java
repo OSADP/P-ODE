@@ -20,6 +20,7 @@ public abstract class DataSource implements CollectorDataSource {
     private String username;
     private String password;
     private boolean interrupted;
+    private Thread dataSourceThread;
 
     public String getHostProtocol() {
         return hostProtocol;
@@ -61,20 +62,53 @@ public abstract class DataSource implements CollectorDataSource {
         this.password = password;
     }
 
-    protected final boolean isInterrupted() {
+    private boolean isInterrupted() {
         return interrupted;
     }
 
     @Override
-    public final void stopDataSource() {
-        interrupted = true;
+    public void stopDataSource() {
+        stopDataSourceThread();
     }
 
+    /**
+     * Returns a byte array containing the data retrieve from the source. This method
+     * should not be called directly! For use by the DataSourceRunnable only. Data
+     * sources should implement this method with logic for retrieving data from the
+     * source.
+     *
+     * @return the data from the source
+     */
     protected abstract byte[] executeDataSource();
 
     protected abstract Logger getLogger();
 
-    protected final class DataSourceRunnable implements Runnable {
+    /**
+     * Creates a new DataSource thread for retrieving data from the source;
+     * then executes the thread. Only one thread per DataSource is allowed. Asynchronously
+     * sends received data to the specified listener.
+     *
+     * @param collectorDataSourceListener the listener for data received
+     */
+    protected final void executeDataSourceThread(CollectorDataSourceListener collectorDataSourceListener) {
+        if (dataSourceThread == null) {
+            dataSourceThread = new Thread(new DataSourceRunnable(collectorDataSourceListener));
+            dataSourceThread.start();
+        }
+    }
+
+    /**
+     * Stops the DataSource thread.
+     */
+    private void stopDataSourceThread() {
+        if (dataSourceThread != null) {
+            interrupted = true;
+            dataSourceThread.interrupt();
+            dataSourceThread = null;
+        }
+    }
+
+    private class DataSourceRunnable implements Runnable {
         private CollectorDataSourceListener collectorDataSourceListener;
 
         public DataSourceRunnable(CollectorDataSourceListener collectorDataSourceListener) {
