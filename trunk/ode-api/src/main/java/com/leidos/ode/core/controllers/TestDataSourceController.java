@@ -41,7 +41,8 @@ public class TestDataSourceController {
     String testVDOTDataSource(@PathVariable String dataSource, @PathVariable String feed) {
         if (dataSource.equalsIgnoreCase("vdot")) {
             vdotDataSource.setFeedName(feed);
-            vdotDataSource.setRequestLimit("1000");
+            //Setting request limit to slow down the requests
+            vdotDataSource.setRequestLimit("10000");
             vdotDataSource.startDataSource(listener);
         }
         if (dataSource.equalsIgnoreCase("ritis")) {
