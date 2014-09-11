@@ -33,6 +33,7 @@ public class TestDataSourceController {
                 logger.debug("received data: " + new String(receivedData));
             }
         };
+        //Setting request limit to slow down the requests
     }
 
     @RequestMapping(value = "test/{dataSource}/{feed}", method = RequestMethod.GET)
@@ -41,7 +42,6 @@ public class TestDataSourceController {
     String testVDOTDataSource(@PathVariable String dataSource, @PathVariable String feed) {
         if (dataSource.equalsIgnoreCase("vdot")) {
             vdotDataSource.setFeedName(feed);
-            //Setting request limit to slow down the requests
             vdotDataSource.setRequestLimit("10000");
             vdotDataSource.startDataSource(listener);
         }
