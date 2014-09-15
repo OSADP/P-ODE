@@ -13,8 +13,6 @@ public abstract class PublishDataController {
 
     private String TAG = getClass().getSimpleName();
     private Logger logger = Logger.getLogger(TAG);
-    private Topic topic;
-    private Connection connection;
     private Session session;
     private MessageProducer messageProducer;
     private String hostAddress;
@@ -25,53 +23,52 @@ public abstract class PublishDataController {
     protected abstract String publishData(ODEAgentMessage odeAgentMessage);
 
     protected final String publish(ODEAgentMessage odeAgentMessage) {
-        if (messageProducer == null) {
-            initTopicConnection();
-        }
+        initTopicConnection();
         sendMessage(odeAgentMessage);
         return "OK";
     }
 
     private void initTopicConnection() {
-        try {
-            Properties env = new Properties();
-            env.put(Context.SECURITY_PRINCIPAL, "admin");
-            env.put(Context.SECURITY_CREDENTIALS, "admin");
-            env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.appserv.naming.S1ASCtxFactory");
-            env.put(Context.PROVIDER_URL, "iiop://" + getHostAddress() + ":" + getHostPort());
+        if (messageProducer == null) {
+            try {
+                Properties env = new Properties();
+                env.put(Context.SECURITY_PRINCIPAL, "admin");
+                env.put(Context.SECURITY_CREDENTIALS, "admin");
+                env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.appserv.naming.S1ASCtxFactory");
+                env.put(Context.PROVIDER_URL, "iiop://" + getHostAddress() + ":" + getHostPort());
 
-            env.setProperty("java.naming.factory.initial", "com.sun.enterprise.naming.impl.SerialInitContextFactory");
-            env.setProperty("java.naming.factory.url.pkgs", "com.sun.enterprise.naming");
-            env.setProperty("java.naming.factory.state", "com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl");
-            env.setProperty("org.omg.CORBA.ORBInitialHost", getHostAddress());
+                env.setProperty("java.naming.factory.initial", "com.sun.enterprise.naming.impl.SerialInitContextFactory");
+                env.setProperty("java.naming.factory.url.pkgs", "com.sun.enterprise.naming");
+                env.setProperty("java.naming.factory.state", "com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl");
+                env.setProperty("org.omg.CORBA.ORBInitialHost", getHostAddress());
 
-            // optional. Defaults to 3700. Only needed if target orb port is not 3700.
-            env.setProperty("org.omg.CORBA.ORBInitialPort", "3700");
+                // optional. Defaults to 3700. Only needed if target orb port is not 3700.
+                env.setProperty("org.omg.CORBA.ORBInitialPort", "3700");
 
-            logger.info("Getting Context");
-            InitialContext ctx = new InitialContext(env);
+                logger.info("Getting Context");
+                InitialContext ctx = new InitialContext(env);
 
-            logger.info("Looking up Connection Factory: " + getConnectionFactoryName());
-            ConnectionFactory cf = (ConnectionFactory) ctx.lookup(getConnectionFactoryName());
+                logger.info("Looking up Connection Factory: " + getConnectionFactoryName());
+                ConnectionFactory cf = (ConnectionFactory) ctx.lookup(getConnectionFactoryName());
 
-            logger.info("Looking up Queue: " + getTopicName());
-            topic = (Topic) ctx.lookup(getTopicName());
+                logger.info("Looking up Queue: " + getTopicName());
+                Topic topic = (Topic) ctx.lookup(getTopicName());
 
-            logger.info("Getting connection");
-            connection = cf.createConnection();
+                logger.info("Getting connection");
+                Connection connection = cf.createConnection();
 
-            logger.info("Getting session");
-            session = (connection.createSession(false, Session.AUTO_ACKNOWLEDGE));
+                logger.info("Getting session");
+                session = (connection.createSession(false, Session.AUTO_ACKNOWLEDGE));
 
-            logger.info("Getting producer");
-            messageProducer = session.createProducer(topic);
+                logger.info("Getting producer");
+                messageProducer = session.createProducer(topic);
 
-        } catch (JMSException e) {
-            logger.error("Error connecting to Topic", e);
-        } catch (NamingException e) {
-            logger.error("Error connecting to Topic", e);
+            } catch (JMSException e) {
+                logger.error("Error connecting to Topic", e);
+            } catch (NamingException e) {
+                logger.error("Error connecting to Topic", e);
+            }
         }
-
     }
 
     private void sendMessage(ODEAgentMessage odeAgentMessage) {
