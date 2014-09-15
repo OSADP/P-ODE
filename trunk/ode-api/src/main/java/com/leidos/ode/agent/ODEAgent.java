@@ -8,7 +8,7 @@ import com.leidos.ode.agent.parser.ODEDataParser;
 import com.leidos.ode.agent.parser.ODEDataParser.ODEParseException;
 import com.leidos.ode.agent.registration.ODERegistration;
 import com.leidos.ode.agent.sanitizer.ODESanitizer;
-import com.leidos.ode.agent.sanitizer.ODESanitizer.*;
+import com.leidos.ode.agent.sanitizer.ODESanitizer.ODESanitizerException;
 import com.leidos.ode.core.data.ODERegistrationResponse;
 import com.leidos.ode.core.registration.RegistrationInformation;
 import com.leidos.ode.logging.ODELogger;
@@ -25,13 +25,12 @@ public abstract class ODEAgent {
     private final String TAG = getClass().getSimpleName();
     private final Logger logger = Logger.getLogger(TAG);
 
+    protected AgentInfo agentInfo;
     protected ODERegistration registration;
     protected ODEDataParser parser;
     protected ODESanitizer sanitizer;
     protected ODEDataTarget dataTarget;
     protected RegistrationInformation regInfo;
-    protected AgentInfo agentInfo;
-
     @Autowired
     private ODELogger odeLogger;
 
@@ -40,19 +39,6 @@ public abstract class ODEAgent {
 
     public abstract void startUp() throws DataTargetException;
 
-    /**
-     * @return the agentInfo
-     */
-    public AgentInfo getAgentInfo() {
-        return agentInfo;
-    }
-
-    /**
-     * @param agentInfo the agentInfo to set
-     */
-    public void setAgentInfo(AgentInfo agentInfo) {
-        this.agentInfo = agentInfo;
-    }
 
     private class MessageProcessor implements Runnable {
 
@@ -68,20 +54,20 @@ public abstract class ODEAgent {
 
                 //Start log event for parsing message
                 getOdeLogger().start(ODELogger.ODEStage.PARSE, messageId);
-                ODEAgentMessage parsedMessage = parser.parseMessage(messageBytes);
+                ODEAgentMessage parsedMessage = getParser().parseMessage(messageBytes);
                 //Finish log event for parsing message
                 getOdeLogger().finish();
 
                 parsedMessage.setMessageId(messageId);
 
                 getOdeLogger().start(ODELogger.ODEStage.SANITIZE, messageId);
-                parsedMessage = sanitizer.sanitizeMessage(parsedMessage);
+                parsedMessage = getSanitizer().sanitizeMessage(parsedMessage);
                 getOdeLogger().finish();
 
-                parsedMessage.setAgentInfo(agentInfo);
+                parsedMessage.setAgentInfo(getAgentInfo());
 
                 getOdeLogger().start(ODELogger.ODEStage.SEND, messageId);
-                dataTarget.sendMessage(parsedMessage);
+                getDataTarget().sendMessage(parsedMessage);
                 getOdeLogger().finish();
 
                 ODEAgent.this.decreaseCount();
@@ -95,7 +81,6 @@ public abstract class ODEAgent {
                 logger.log(Level.SEVERE, null, ex);
             }
         }
-
     }
 
     public void processMessage(byte[] messageBytes) {
@@ -130,6 +115,13 @@ public abstract class ODEAgent {
         setAgentInfo(info);
     }
 
+    public AgentInfo getAgentInfo() {
+        return agentInfo;
+    }
+
+    public void setAgentInfo(AgentInfo agentInfo) {
+        this.agentInfo = agentInfo;
+    }
 
     public ODERegistration getRegistration() {
         return registration;

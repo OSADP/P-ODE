@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+    <context:component-scan base-package="com.leidos.ode"/>
 
     <!-- Load Properties file -->
     <bean id="properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean" scope="prototype">
@@ -82,6 +89,10 @@
         <property name="regInfo" ref="TestRegistrationInfo"/>
     </bean>
 
+    <bean id="PushDataSource" class="com.leidos.ode.collector.datasource.PushDataSource" abstract="true"/>
+
+    <bean id="RestPullDataSource" class="com.leidos.ode.collector.datasource.RestPullDataSource" abstract="true"/>
+
     <bean id="UDPPushDataSource" class="com.leidos.ode.collector.datasource.UDPPushDataSource" parent="PushDataSource">
 
     </bean>
@@ -94,10 +105,6 @@
         <property name="password" value="H3SvjshHnNBX"/>
         <property name="queueName" value="Clients.leidos.ATIS.Events"/>
     </bean>
-
-    <bean id="PushDataSource" class="com.leidos.ode.collector.datasource.PushDataSource" abstract="true"/>
-
-    <bean id="RestPullDataSource" class="com.leidos.ode.collector.datasource.RestPullDataSource" abstract="true"/>
 
     <bean id="RITISFilterDataSource" class="com.leidos.ode.collector.RITISDataSource" parent="RestPullDataSource">
         <property name="hostProtocol" value="${leidos.ode.ritisfilter.protocol}"/>
@@ -153,33 +160,45 @@
         <constructor-arg name="databaseName" value="ode"/>
     </bean>
 
+    <!-- ~~~~~~~~~~~~~~~~~~Data Controllers~~~~~~~~~~~~~~~~~~ -->
     <bean id="PublishDataController" class="com.leidos.ode.core.controllers.PublishDataController" abstract="true">
         <property name="hostAddress" value="${leidos.ode.publisher.hostaddress}"/>
         <property name="hostPort" value="${leidos.ode.publisher.hostport}"/>
         <property name="connectionFactoryName" value="${leidos.ode.publisher.connectionfactoryname}"/>
     </bean>
 
-    <bean id="PublishBSMDataController" class="com.leidos.ode.core.controllers.topics.PublishBSMDataController" parent="PublishDataController">
+    <bean id="PublishBSMDataController" class="com.leidos.ode.core.controllers.topics.PublishBSMDataController"
+          parent="PublishDataController">
         <property name="topicName" value="${leidos.ode.publisher.topic.bsm}"/>
     </bean>
 
-    <bean id="PublishVDOTWeatherDataController" class="com.leidos.ode.core.controllers.topics.PublishVDOTWeatherDataController" parent="PublishDataController">
+    <bean id="PublishVDOTWeatherDataController"
+          class="com.leidos.ode.core.controllers.topics.PublishVDOTWeatherDataController"
+          parent="PublishDataController">
         <property name="topicName" value="${leidos.ode.publisher.topic.vdotweather}"/>
     </bean>
 
-    <bean id="PublishVDOTTravelTimeDataController" class="com.leidos.ode.core.controllers.topics.PublishVDOTTravelTimeDataController" parent="PublishDataController">
+    <bean id="PublishVDOTTravelTimeDataController"
+          class="com.leidos.ode.core.controllers.topics.PublishVDOTTravelTimeDataController"
+          parent="PublishDataController">
         <property name="topicName" value="${leidos.ode.publisher.topic.vdottraveltime}"/>
     </bean>
 
-    <bean id="PublishVDOTSpdVolOccDataController" class="com.leidos.ode.core.controllers.topics.PublishVDOTSpdVolOccDataController" parent="PublishDataController">
+    <bean id="PublishVDOTSpdVolOccDataController"
+          class="com.leidos.ode.core.controllers.topics.PublishVDOTSpdVolOccDataController"
+          parent="PublishDataController">
         <property name="topicName" value="${leidos.ode.publisher.topic.vdotspdvolocc}"/>
     </bean>
 
-    <bean id="PublishRITISSpdVolOccDataController" class="com.leidos.ode.core.controllers.topics.PublishRITISSpdVolOccDataController" parent="PublishDataController">
+    <bean id="PublishRITISSpdVolOccDataController"
+          class="com.leidos.ode.core.controllers.topics.PublishRITISSpdVolOccDataController"
+          parent="PublishDataController">
         <property name="topicName" value="${leidos.ode.publisher.topic.ritisspdvolocc}"/>
     </bean>
 
-    <bean id="PublishRITISWeatherDataController" class="com.leidos.ode.core.controllers.topics.PublishRITISWeatherDataController" parent="PublishDataController">
+    <bean id="PublishRITISWeatherDataController"
+          class="com.leidos.ode.core.controllers.topics.PublishRITISWeatherDataController"
+          parent="PublishDataController">
         <property name="topicName" value="${leidos.ode.publisher.topic.ritisweather}"/>
     </bean>
 </beans>

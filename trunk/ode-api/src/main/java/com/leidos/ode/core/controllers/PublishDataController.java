@@ -2,16 +2,13 @@ package com.leidos.ode.core.controllers;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Controller;
 
-import javax.annotation.PostConstruct;
 import javax.jms.*;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.util.Properties;
 
-@Controller
 public abstract class PublishDataController {
 
     private String TAG = getClass().getSimpleName();
@@ -28,18 +25,13 @@ public abstract class PublishDataController {
     protected abstract String publishData(ODEAgentMessage odeAgentMessage);
 
     protected final String publish(ODEAgentMessage odeAgentMessage) {
-        try {
-            if (messageProducer == null) {
-                initMessageProducer();
-            }
-            sendMessage(odeAgentMessage);
-        } catch (JMSException e) {
-            logger.error("Error connecting to Topic", e);
+        if (messageProducer == null) {
+            initTopicConnection();
         }
+        sendMessage(odeAgentMessage);
         return "OK";
     }
 
-    @PostConstruct
     private void initTopicConnection() {
         try {
             Properties env = new Properties();
@@ -59,10 +51,8 @@ public abstract class PublishDataController {
             logger.info("Getting Context");
             InitialContext ctx = new InitialContext(env);
 
-
             logger.info("Looking up Connection Factory: " + getConnectionFactoryName());
             ConnectionFactory cf = (ConnectionFactory) ctx.lookup(getConnectionFactoryName());
-
 
             logger.info("Looking up Queue: " + getTopicName());
             topic = (Topic) ctx.lookup(getTopicName());
@@ -70,12 +60,15 @@ public abstract class PublishDataController {
             logger.info("Getting connection");
             connection = cf.createConnection();
 
+            logger.info("Getting session");
+            session = (connection.createSession(false, Session.AUTO_ACKNOWLEDGE));
+
+            logger.info("Getting producer");
+            messageProducer = session.createProducer(topic);
 
         } catch (JMSException e) {
-            // TODO Auto-generated catch block
             logger.error("Error connecting to Topic", e);
         } catch (NamingException e) {
-            // TODO Auto-generated catch block
             logger.error("Error connecting to Topic", e);
         }
 
@@ -87,6 +80,7 @@ public abstract class PublishDataController {
             logger.info("Preparing message for topic");
             ObjectMessage msg = session.createObjectMessage();
             msg.setObject(odeAgentMessage);
+
             logger.info("Placing message on topic");
             messageProducer.send(msg);
 
@@ -95,13 +89,6 @@ public abstract class PublishDataController {
         } catch (Exception e) {
             logger.error("Error creating message.", e);
         }
-    }
-
-    private void initMessageProducer() throws JMSException {
-        logger.info("Getting session");
-        session = (connection.createSession(false, Session.AUTO_ACKNOWLEDGE));
-        logger.info("Getting producer");
-        messageProducer = session.createProducer(topic);
     }
 
     private String getHostAddress() {

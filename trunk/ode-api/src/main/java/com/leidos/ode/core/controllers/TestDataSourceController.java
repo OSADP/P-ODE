@@ -39,7 +39,7 @@ public class TestDataSourceController {
     @RequestMapping(value = "test/{dataSource}/{feed}", method = RequestMethod.GET)
     public
     @ResponseBody
-    String testVDOTDataSource(@PathVariable String dataSource, @PathVariable String feed) {
+    String testDataSourceFeed(@PathVariable String dataSource, @PathVariable String feed) {
         if (dataSource.equalsIgnoreCase("vdot")) {
             vdotDataSource.setFeedName(feed);
             vdotDataSource.setRequestLimit("10000");
@@ -50,5 +50,12 @@ public class TestDataSourceController {
             ritisDataSource.startDataSource(listener);
         }
         return "Started data source.";
+    }
+
+    @RequestMapping(value = "test/stopAllSourcs", method = RequestMethod.GET)
+    public @ResponseBody String stopAllDataSources(){
+        vdotDataSource.stopDataSource();
+        ritisDataSource.stopDataSource();
+        return "Stopped all data sources.";
     }
 }

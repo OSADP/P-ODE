@@ -13,28 +13,16 @@ import java.util.Date;
  * @author lamde
  */
 @Component
-public class ODELogger {
+public final class ODELogger {
 
     private final String TAG = getClass().getSimpleName();
-
-    /**
-     * Represents current stage of message processing in the ODE.
-     * PARSE: Message is being parsed.
-     * SANITIZE: Message is being sanitized.
-     * ENCRYPT: Message is being encrypted.
-     * SEND: Message is being sent to the core.
-     */
-    public enum ODEStage {
-        PARSE, SANITIZE, ENCRYPT, SEND;
-    }
-
     private LogBean logBean;
-
     @Autowired
     private LogDAO logDAO;
 
     /**
      * Marks the starting point of a given ODEStage in the log message.
+     *
      * @param odeStage
      * @param messageId
      */
@@ -58,6 +46,17 @@ public class ODELogger {
 
     private LogDAO getLogDAO() {
         return logDAO;
+    }
+
+    /**
+     * Represents current stage of message processing in the ODE.
+     * PARSE: Message is being parsed.
+     * SANITIZE: Message is being sanitized.
+     * ENCRYPT: Message is being encrypted.
+     * SEND: Message is being sent to the core.
+     */
+    public enum ODEStage {
+        PARSE, SANITIZE, ENCRYPT, SEND;
     }
 
 }
