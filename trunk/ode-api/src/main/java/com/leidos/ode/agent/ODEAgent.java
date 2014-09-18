@@ -34,7 +34,6 @@ public abstract class ODEAgent {
     @Autowired
     private ODELogger odeLogger;
 
-
     public abstract void startUp() throws DataTargetException;
 
     public void processMessage(byte[] messageBytes) {
@@ -120,6 +119,10 @@ public abstract class ODEAgent {
         return odeLogger;
     }
 
+    protected Logger getLogger(){
+        return logger;
+    }
+
     private class MessageProcessor implements Runnable {
 
         private byte[] messageBytes;
@@ -152,11 +155,11 @@ public abstract class ODEAgent {
 
                 ODEAgent.this.decreaseCount();
             } catch (ODEParseException e) {
-                logger.error(e.getLocalizedMessage());
+                getLogger().error(e.getLocalizedMessage());
             } catch (ODESanitizerException e) {
-                logger.error(e.getLocalizedMessage());
+                getLogger().error(e.getLocalizedMessage());
             } catch (DataTargetException e) {
-                logger.error(e.getLocalizedMessage());
+                getLogger().error(e.getLocalizedMessage());
             }
         }
     }
