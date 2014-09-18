@@ -19,12 +19,12 @@ public class ODEQueueTarget implements ODEDataTarget {
     private Queue queue;
     private Session session;
     private MessageProducer messageProducer;
-    private ODERegistrationResponse regInfo;
+    private ODERegistrationResponse registrationResponse;
 
     @Override
-    public void configure(ODERegistrationResponse regInfo) throws DataTargetException {
+    public void configure(ODERegistrationResponse registrationResponse) throws DataTargetException {
         try {
-            this.regInfo = regInfo;
+            this.registrationResponse = registrationResponse;
             connect();
             createProducer();
         } catch (NamingException ex) {
@@ -38,7 +38,6 @@ public class ODEQueueTarget implements ODEDataTarget {
     public void sendMessage(ODEAgentMessage message) throws DataTargetException {
         try {
             BytesMessage bytesMessage = session.createBytesMessage();
-//		message.writeBytes(message.get);
             messageProducer.send(bytesMessage);
         } catch (JMSException e) {
             throw new DataTargetException("Error sending data", e);
@@ -48,7 +47,6 @@ public class ODEQueueTarget implements ODEDataTarget {
     private void createProducer() throws JMSException {
         session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
         messageProducer = session.createProducer(queue);
-
     }
 
     private void connect() throws NamingException, JMSException {
@@ -56,23 +54,23 @@ public class ODEQueueTarget implements ODEDataTarget {
         env.put(Context.SECURITY_PRINCIPAL, "admin");
         env.put(Context.SECURITY_CREDENTIALS, "admin");
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.appserv.naming.S1ASCtxFactory");
-        env.put(Context.PROVIDER_URL, "iiop://" + regInfo.getQueueHostURL() + ":" + regInfo.getQueueHostPort());
+        env.put(Context.PROVIDER_URL, "iiop://" + registrationResponse.getQueueHostURL() + ":" + registrationResponse.getQueueHostPort());
 
         env.setProperty("java.naming.factory.initial", "com.sun.enterprise.naming.impl.SerialInitContextFactory");
         env.setProperty("java.naming.factory.url.pkgs", "com.sun.enterprise.naming");
         env.setProperty("java.naming.factory.state", "com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl");
-        env.setProperty("org.omg.CORBA.ORBInitialHost", regInfo.getQueueHostURL());
+        env.setProperty("org.omg.CORBA.ORBInitialHost", registrationResponse.getQueueHostURL());
 
         // optional. Defaults to 3700. Only needed if target orb port is not 3700.
         env.setProperty("org.omg.CORBA.ORBInitialPort", "3700");
 
         InitialContext ctx = new InitialContext(env);
 
-        logger.info("Looking up Connection Factory: " + regInfo.getQueueConnFact());
-        ConnectionFactory cf = (ConnectionFactory) ctx.lookup(regInfo.getQueueConnFact());
+        logger.info("Looking up Connection Factory: " + registrationResponse.getQueueConnFact());
+        ConnectionFactory cf = (ConnectionFactory) ctx.lookup(registrationResponse.getQueueConnFact());
 
-        logger.info("Looking up Queue: " + regInfo.getQueueName());
-        queue = (Queue) ctx.lookup(regInfo.getQueueName());
+        logger.info("Looking up Queue: " + registrationResponse.getQueueName());
+        queue = (Queue) ctx.lookup(registrationResponse.getQueueName());
 
         logger.info("Getting connection");
         connection = cf.createConnection();
@@ -87,7 +85,5 @@ public class ODEQueueTarget implements ODEDataTarget {
         } catch (JMSException ex) {
             java.util.logging.Logger.getLogger(ODEQueueTarget.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
-
 }

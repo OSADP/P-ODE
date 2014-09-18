@@ -11,7 +11,7 @@ public class SubscribeAgent extends ODEAgent {
 
     @Override
     public void startUp() {
-        ODERegistrationResponse regResponse = registration.register(regInfo);
+        ODERegistrationResponse regResponse = registration.register(registrationInformation);
         createAgentInfo(regResponse);
     }
 

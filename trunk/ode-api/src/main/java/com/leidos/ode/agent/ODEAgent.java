@@ -30,7 +30,7 @@ public abstract class ODEAgent {
     protected ODEDataParser parser;
     protected ODESanitizer sanitizer;
     protected ODEDataTarget dataTarget;
-    protected RegistrationInformation regInfo;
+    protected RegistrationInformation registrationInformation;
     @Autowired
     private ODELogger odeLogger;
 
@@ -38,7 +38,6 @@ public abstract class ODEAgent {
     private final Byte mutex = new Byte("1");
 
     public abstract void startUp() throws DataTargetException;
-
 
     private class MessageProcessor implements Runnable {
 
@@ -54,20 +53,20 @@ public abstract class ODEAgent {
 
                 //Start log event for parsing message
                 getOdeLogger().start(ODELogger.ODEStage.PARSE, messageId);
-                ODEAgentMessage parsedMessage = getParser().parseMessage(messageBytes);
+                ODEAgentMessage odeAgentMessage = getParser().parseMessage(messageBytes);
                 //Finish log event for parsing message
                 getOdeLogger().finish();
 
-                parsedMessage.setMessageId(messageId);
+                odeAgentMessage.setMessageId(messageId);
 
                 getOdeLogger().start(ODELogger.ODEStage.SANITIZE, messageId);
-                parsedMessage = getSanitizer().sanitizeMessage(parsedMessage);
+                odeAgentMessage = getSanitizer().sanitizeMessage(odeAgentMessage);
                 getOdeLogger().finish();
 
-                parsedMessage.setAgentInfo(getAgentInfo());
+                odeAgentMessage.setAgentInfo(getAgentInfo());
 
                 getOdeLogger().start(ODELogger.ODEStage.SEND, messageId);
-                getDataTarget().sendMessage(parsedMessage);
+                getDataTarget().sendMessage(odeAgentMessage);
                 getOdeLogger().finish();
 
                 ODEAgent.this.decreaseCount();
@@ -155,12 +154,12 @@ public abstract class ODEAgent {
         this.dataTarget = dataTarget;
     }
 
-    public RegistrationInformation getRegInfo() {
-        return regInfo;
+    public RegistrationInformation getRegistrationInformation() {
+        return registrationInformation;
     }
 
-    public void setRegInfo(RegistrationInformation regInfo) {
-        this.regInfo = regInfo;
+    public void setRegistrationInformation(RegistrationInformation registrationInformation) {
+        this.registrationInformation = registrationInformation;
     }
 
     private ODELogger getOdeLogger() {

@@ -6,23 +6,60 @@ import com.leidos.ode.collector.datasource.CollectorDataSource;
 import com.leidos.ode.collector.datasource.CollectorDataSource.CollectorDataSourceListener;
 import com.leidos.ode.collector.datasource.CollectorDataSource.DataSourceException;
 
-public class ODECollector implements CollectorDataSourceListener {
+import javax.annotation.PostConstruct;
+
+public class ODECollector {
 
     private CollectorDataSource dataSource;
     private ODEAgent agent;
+    private CollectorDataSourceListener odeCollectorDataSourceListener;
+    private CollectorDataSourceListener externalCollectorDataSourceListener;
 
+    @PostConstruct
+    private void initialize() {
+        odeCollectorDataSourceListener = new CollectorDataSourceListener() {
+            @Override
+            public void onDataReceived(byte[] receivedData) {
+                if (getAgent() != null) {
+                    getAgent().processMessage(receivedData);
+                }
+                if (externalCollectorDataSourceListener != null) {
+                    externalCollectorDataSourceListener.onDataReceived(receivedData);
+                }
+            }
+        };
+    }
+
+    /**
+     * Starts the collector. Data callbacks are only available to the collector.
+     * @throws DataSourceException
+     * @throws DataTargetException
+     */
     public void startUp() throws DataSourceException, DataTargetException {
+        startUp(null);
+    }
+
+    /**
+     * Starts the collector with an external listener for callbacks.
+     *
+     * @param externalCollectorDataSourceListener
+     * @throws DataSourceException
+     * @throws DataTargetException
+     */
+    public void startUp(CollectorDataSourceListener externalCollectorDataSourceListener) throws DataSourceException, DataTargetException {
+        this.externalCollectorDataSourceListener = externalCollectorDataSourceListener;
         startCollector();
     }
 
     private void startCollector() throws DataSourceException, DataTargetException {
         getAgent().startUp();
-        getDataSource().startDataSource(this);
+        getDataSource().startDataSource(odeCollectorDataSourceListener);
     }
 
-    @Override
-    public void onDataReceived(byte[] receivedData) {
-        agent.processMessage(receivedData);
+    public void stop() {
+        if (getDataSource() != null) {
+            getDataSource().stopDataSource();
+        }
     }
 
     public CollectorDataSource getDataSource() {

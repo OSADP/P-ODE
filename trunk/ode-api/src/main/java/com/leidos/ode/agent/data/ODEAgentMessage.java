@@ -17,16 +17,18 @@ public class ODEAgentMessage implements Serializable {
         return messagePayload;
     }
 
-    public void setMessagePayload(byte[] messagePayload) {
+    public ODEAgentMessage setMessagePayload(byte[] messagePayload) {
         this.messagePayload = messagePayload;
+        return this;
     }
 
     public Object getFormattedMessage() {
         return formattedMessage;
     }
 
-    public void setFormattedMessage(Object formattedMessage) {
+    public ODEAgentMessage setFormattedMessage(Object formattedMessage) {
         this.formattedMessage = formattedMessage;
+        return this;
     }
 
     /**
@@ -39,8 +41,9 @@ public class ODEAgentMessage implements Serializable {
     /**
      * @param agentInfo the agentInfo to set
      */
-    public void setAgentInfo(AgentInfo agentInfo) {
+    public ODEAgentMessage setAgentInfo(AgentInfo agentInfo) {
         this.agentInfo = agentInfo;
+        return this;
     }
 
     /**
@@ -53,8 +56,9 @@ public class ODEAgentMessage implements Serializable {
     /**
      * @param messageReceivedDate the messageReceivedDate to set
      */
-    public void setMessageReceivedDate(Date messageReceivedDate) {
+    public ODEAgentMessage setMessageReceivedDate(Date messageReceivedDate) {
         this.messageReceivedDate = messageReceivedDate;
+        return this;
     }
 
     /**
@@ -67,8 +71,9 @@ public class ODEAgentMessage implements Serializable {
     /**
      * @param messageId the messageId to set
      */
-    public void setMessageId(String messageId) {
+    public ODEAgentMessage setMessageId(String messageId) {
         this.messageId = messageId;
+        return this;
     }
 
 

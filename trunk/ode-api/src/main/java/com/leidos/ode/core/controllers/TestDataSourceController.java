@@ -1,11 +1,14 @@
 package com.leidos.ode.core.controllers;
 
+import com.leidos.ode.agent.datatarget.ODEDataTarget;
+import com.leidos.ode.collector.ODECollector;
 import com.leidos.ode.collector.RITISDataSource;
 import com.leidos.ode.collector.VDOTDataSource;
 import com.leidos.ode.collector.datasource.CollectorDataSource;
 import com.leidos.ode.collector.datasource.CollectorDataSource.CollectorDataSourceListener;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,10 +23,14 @@ public class TestDataSourceController {
 
     private final String TAG = getClass().getSimpleName();
     private Logger logger = Logger.getLogger(TAG);
+
     @Autowired
-    private VDOTDataSource vdotDataSource;
+    @Qualifier("VDOTCollector")
+    private ODECollector vdotCollector;
     @Autowired
-    private RITISDataSource ritisDataSource;
+    @Qualifier("RITISFilterCollector")
+    private ODECollector ritisCollector;
+
     private CollectorDataSourceListener listener;
 
     public TestDataSourceController() {
@@ -40,22 +47,30 @@ public class TestDataSourceController {
     public
     @ResponseBody
     String testDataSourceFeed(@PathVariable String dataSource, @PathVariable String feed) {
-        if (dataSource.equalsIgnoreCase("vdot")) {
-            vdotDataSource.setFeedName(feed);
-            vdotDataSource.setRequestLimit("10000");
-            vdotDataSource.startDataSource(listener);
-        }
-        if (dataSource.equalsIgnoreCase("ritis")) {
-            ritisDataSource.setFeedName(feed);
-            ritisDataSource.startDataSource(listener);
+        try {
+            if (dataSource.equalsIgnoreCase("vdot")) {
+                ((VDOTDataSource) vdotCollector.getDataSource()).setFeedName(feed);
+                ((VDOTDataSource) vdotCollector.getDataSource()).setRequestLimit("10000");
+                vdotCollector.startUp(listener);
+            }
+            if (dataSource.equalsIgnoreCase("ritis")) {
+                ((RITISDataSource) ritisCollector.getDataSource()).setFeedName(feed);
+                ritisCollector.startUp(listener);
+            }
+        } catch (ODEDataTarget.DataTargetException e) {
+            logger.error(e.getLocalizedMessage());
+        } catch (CollectorDataSource.DataSourceException e) {
+            logger.error(e.getLocalizedMessage());
         }
         return "Started data source.";
     }
 
-    @RequestMapping(value = "test/stopAllSourcs", method = RequestMethod.GET)
-    public @ResponseBody String stopAllDataSources(){
-        vdotDataSource.stopDataSource();
-        ritisDataSource.stopDataSource();
+    @RequestMapping(value = "test/stopAllSources", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    String stopAllDataSources() {
+        vdotCollector.stop();
+        ritisCollector.stop();
         return "Stopped all data sources.";
     }
 }

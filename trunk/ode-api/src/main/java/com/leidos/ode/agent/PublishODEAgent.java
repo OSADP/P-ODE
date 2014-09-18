@@ -12,14 +12,8 @@ public class PublishODEAgent extends ODEAgent {
 
     @Override
     public void startUp() throws DataTargetException {
-        ODERegistrationResponse regResponse = performRegistration();
+        ODERegistrationResponse regResponse = registration.register(registrationInformation);
         dataTarget.configure(regResponse);
         createAgentInfo(regResponse);
     }
-
-    private ODERegistrationResponse performRegistration() {
-        ODERegistrationResponse regResponse = registration.register(regInfo);
-        return regResponse;
-    }
-
 }
