@@ -45,12 +45,14 @@
         <constructor-arg value="MM-dd-YYYY"/>
     </bean>
 
-    <bean id="BasicSubRegistration" class="com.leidos.ode.agent.registration.SubscriberRegistration">
-        <property name="regServiceAddress" value="${leidos.ode.regaddress}"/>
+    <bean id="BasicSubRegistration" class="com.leidos.ode.agent.registration.BasicODERegistration">
+        <property name="registrationBaseUrl" value="${leidos.ode.reg.baseurl}"/>
+        <property name="registrationEndpoint" value="${leidos.ode.reg.sub.endpoint}"/>
     </bean>
 
-    <bean id="BasicPubRegistration" class="com.leidos.ode.agent.registration.PublisherRegistration">
-        <property name="regServiceAddress" value="${leidos.ode.regaddress}"/>
+    <bean id="BasicPubRegistration" class="com.leidos.ode.agent.registration.BasicODERegistration">
+        <property name="registrationBaseUrl" value="${leidos.ode.reg.baseurl}"/>
+        <property name="registrationEndpoint" value="${leidos.ode.reg.pub.endpoint}"/>
     </bean>
 
     <bean id="BSMParser" class="com.leidos.ode.agent.parser.ODEBSMParser"/>
@@ -79,6 +81,8 @@
                 <constructor-arg value="${leidos.ode.reg.test.pub.endDate}"/>
             </bean>
         </property>
+        <property name="subscriptionReceiveAddress" value="${leidos.ode.reg.test.sub.receiveAddress}"/>
+        <property name="subscriptionReceivePort" value="${leidos.ode.reg.test.sub.receivePort}"/>
     </bean>
 
     <bean id="TestPubAgent" class="com.leidos.ode.agent.PublishODEAgent">

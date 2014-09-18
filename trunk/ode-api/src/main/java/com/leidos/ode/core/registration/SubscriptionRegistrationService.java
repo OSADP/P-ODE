@@ -4,7 +4,6 @@ import com.leidos.ode.core.controllers.DistributeDataController;
 import com.leidos.ode.core.dao.RegistrationDAO;
 import com.leidos.ode.core.data.ODERegistrationResponse;
 import com.leidos.ode.core.data.QueueInfo;
-import com.leidos.ode.core.rde.controllers.RDEStoreController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,81 +15,55 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class SubscriptionRegistrationService {
 
     @Autowired
-    private RDEStoreController storeDataController;
-    @Autowired
     private DistributeDataController distributeDataController;
-
     @Autowired
-    private RegistrationDAO regDao;
+    private RegistrationDAO registrationDAO;
 
     @RequestMapping(value = "registerSubscribe", method = RequestMethod.POST)
     public
     @ResponseBody
-    ODERegistrationResponse registerSubscriptionIntent(@RequestBody RegistrationInformation regInfo) {
+    ODERegistrationResponse registerSubscriptionIntent(@RequestBody RegistrationInformation registrationInformation) {
         ODERegistrationResponse response = null;
-
-        regInfo = regDao.storeRegistration(regInfo);
-        QueueInfo qi = getQueueNameForRegistration(regInfo);
-        response = createResponse(regInfo, qi);
-
-        notifiyDistribute(response);
-
+        registrationInformation = getRegistrationDAO().storeRegistration(registrationInformation);
+        QueueInfo queueInfo = getQueueNameForRegistration(registrationInformation);
+        if (queueInfo != null) {
+            response = createRegResponse(registrationInformation, queueInfo);
+            notifiyDistribute(response);
+        }
         return response;
     }
 
     private void notifiyDistribute(ODERegistrationResponse response) {
-        distributeDataController.receiveSubscriptionNotification(response);
+        getDistributeDataController().receiveSubscriptionNotification(response);
     }
 
     private QueueInfo getQueueNameForRegistration(RegistrationInformation regInfo) {
-        return regDao.getQueueForRegistration(regInfo);
+        return getRegistrationDAO().getQueueForRegistration(regInfo);
     }
 
-    private ODERegistrationResponse createResponse(RegistrationInformation regInfo, QueueInfo qInfo) {
+    private ODERegistrationResponse createRegResponse(RegistrationInformation regInfo, QueueInfo qInfo) {
         ODERegistrationResponse resp = new ODERegistrationResponse();
         resp.setAgentId(regInfo.getAgentId());
         resp.setMessageType(regInfo.getMessageType());
         resp.setRegion(regInfo.getRegion());
         resp.setRegistrationId(regInfo.getId());
         resp.setRegistrationType(regInfo.getRegistrationType());
-        resp.setTargetAddress(regInfo.getSubscriptionReceiveAddress());
-        resp.setTargetPort(regInfo.getSubscriptionReceivePort());
 
         resp.setQueueConnFact(qInfo.getQueueConnectionFactory());
         resp.setQueueName(qInfo.getQueueName());
         resp.setQueueHostURL(qInfo.getTargetAddress());
         resp.setQueueHostPort(qInfo.getTargetPort());
+        resp.setTargetAddress(regInfo.getSubscriptionReceiveAddress());
+        resp.setTargetPort(regInfo.getSubscriptionReceivePort());
 
         return resp;
     }
 
-    /**
-     * @return the storeDataController
-     */
-    public RDEStoreController getStoreDataController() {
-        return storeDataController;
-    }
-
-    /**
-     * @param storeDataController the storeDataController to set
-     */
-    public void setStoreDataController(RDEStoreController storeDataController) {
-        this.storeDataController = storeDataController;
-    }
-
-    /**
-     * @return the distributeDataController
-     */
-    public DistributeDataController getDistributeDataController() {
+    private DistributeDataController getDistributeDataController() {
         return distributeDataController;
     }
 
-    /**
-     * @param distributeDataController the distributeDataController to set
-     */
-    public void setDistributeDataController(DistributeDataController distributeDataController) {
-        this.distributeDataController = distributeDataController;
+    private RegistrationDAO getRegistrationDAO() {
+        return registrationDAO;
     }
-
-
 }

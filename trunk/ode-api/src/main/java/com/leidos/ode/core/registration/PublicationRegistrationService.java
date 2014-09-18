@@ -1,10 +1,8 @@
 package com.leidos.ode.core.registration;
 
-import com.leidos.ode.core.controllers.DistributeDataController;
 import com.leidos.ode.core.dao.RegistrationDAO;
 import com.leidos.ode.core.data.ODERegistrationResponse;
 import com.leidos.ode.core.data.QueueInfo;
-import com.leidos.ode.core.rde.controllers.RDEStoreController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,10 +12,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class PublicationRegistrationService {
-    @Autowired
-    private RDEStoreController storeDataController;
-    @Autowired
-    private DistributeDataController distributeDataController;
 
     @Autowired
     private RegistrationDAO regDao;
@@ -27,16 +21,14 @@ public class PublicationRegistrationService {
     @ResponseBody
     ODERegistrationResponse registerPublicationIntent(@RequestBody RegistrationInformation regInfo) {
         ODERegistrationResponse response = null;
+        regInfo = getRegDao().storeRegistration(regInfo);
         QueueInfo qInfo = getQueueNameForRegistration(regInfo);
         if (qInfo != null) {
-            regInfo = regDao.storeRegistration(regInfo);
             response = createRegResponse(regInfo, qInfo);
-
         }
 
         return response;
     }
-
 
     private ODERegistrationResponse createRegResponse(RegistrationInformation regInfo, QueueInfo qInfo) {
         ODERegistrationResponse resp = new ODERegistrationResponse();
@@ -50,12 +42,12 @@ public class PublicationRegistrationService {
         resp.setQueueName(qInfo.getQueueName());
         resp.setQueueHostURL(qInfo.getTargetAddress());
         resp.setQueueHostPort(qInfo.getTargetPort());
-        resp.setPublishWebServiceAddress(qInfo.getWsHost()+qInfo.getWsURL());
+        resp.setPublishWebServiceAddress(qInfo.getWsHost() + qInfo.getWsURL());
         return resp;
     }
 
     private QueueInfo getQueueNameForRegistration(RegistrationInformation regInfo) {
-        return regDao.getQueueForRegistration(regInfo);
+        return getRegDao().getQueueForRegistration(regInfo);
     }
 
     public RegistrationDAO getRegDao() {
@@ -65,34 +57,4 @@ public class PublicationRegistrationService {
     public void setRegDao(RegistrationDAO regDao) {
         this.regDao = regDao;
     }
-
-    /**
-     * @return the storeDataController
-     */
-    public RDEStoreController getStoreDataController() {
-        return storeDataController;
-    }
-
-    /**
-     * @param storeDataController the storeDataController to set
-     */
-    public void setStoreDataController(RDEStoreController storeDataController) {
-        this.storeDataController = storeDataController;
-    }
-
-    /**
-     * @return the distributeDataController
-     */
-    public DistributeDataController getDistributeDataController() {
-        return distributeDataController;
-    }
-
-    /**
-     * @param distributeDataController the distributeDataController to set
-     */
-    public void setDistributeDataController(DistributeDataController distributeDataController) {
-        this.distributeDataController = distributeDataController;
-    }
-
-
 }

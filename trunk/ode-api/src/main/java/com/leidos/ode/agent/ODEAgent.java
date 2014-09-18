@@ -13,17 +13,17 @@ import com.leidos.ode.core.data.ODERegistrationResponse;
 import com.leidos.ode.core.registration.RegistrationInformation;
 import com.leidos.ode.logging.ODELogger;
 import com.leidos.ode.util.SHAHasher;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Component
 public abstract class ODEAgent {
 
     private final String TAG = getClass().getSimpleName();
     private final Logger logger = Logger.getLogger(TAG);
+    private final Byte mutex = new Byte("1");
+    private int threadCount = 0;
 
     protected AgentInfo agentInfo;
     protected ODERegistration registration;
@@ -34,58 +34,22 @@ public abstract class ODEAgent {
     @Autowired
     private ODELogger odeLogger;
 
-    private int threadCount = 0;
-    private final Byte mutex = new Byte("1");
 
     public abstract void startUp() throws DataTargetException;
-
-    private class MessageProcessor implements Runnable {
-
-        private byte[] messageBytes;
-
-        protected MessageProcessor(byte[] message) {
-            messageBytes = message;
-        }
-
-        public void run() {
-            try {
-                String messageId = SHAHasher.sha256Hash(messageBytes);
-
-                //Start log event for parsing message
-                getOdeLogger().start(ODELogger.ODEStage.PARSE, messageId);
-                ODEAgentMessage odeAgentMessage = getParser().parseMessage(messageBytes);
-                //Finish log event for parsing message
-                getOdeLogger().finish();
-
-                odeAgentMessage.setMessageId(messageId);
-
-                getOdeLogger().start(ODELogger.ODEStage.SANITIZE, messageId);
-                odeAgentMessage = getSanitizer().sanitizeMessage(odeAgentMessage);
-                getOdeLogger().finish();
-
-                odeAgentMessage.setAgentInfo(getAgentInfo());
-
-                getOdeLogger().start(ODELogger.ODEStage.SEND, messageId);
-                getDataTarget().sendMessage(odeAgentMessage);
-                getOdeLogger().finish();
-
-                ODEAgent.this.decreaseCount();
-            } catch (ODEParseException e) {
-                //TODO: log message and throw to collector
-                e.printStackTrace();
-            } catch (ODESanitizerException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (DataTargetException ex) {
-                logger.log(Level.SEVERE, null, ex);
-            }
-        }
-    }
 
     public void processMessage(byte[] messageBytes) {
         MessageProcessor mp = new MessageProcessor(messageBytes);
         new Thread(mp).start();
         increaseCount();
+    }
+
+    protected void createAgentInfo(ODERegistrationResponse regResponse) {
+        AgentInfo info = new AgentInfo();
+        info.setAgentId(regResponse.getAgentId());
+        info.setMessageType(regResponse.getMessageType());
+        info.setRegion(regResponse.getRegion());
+        info.setRegistrationId(regResponse.getRegistrationId());
+        setAgentInfo(info);
     }
 
     private void increaseCount() {
@@ -102,16 +66,6 @@ public abstract class ODEAgent {
 
     protected int getThreadCount() {
         return threadCount;
-    }
-
-
-    protected void createAgentInfo(ODERegistrationResponse regResponse) {
-        AgentInfo info = new AgentInfo();
-        info.setAgentId(regResponse.getAgentId());
-        info.setMessageType(regResponse.getMessageType());
-        info.setRegion(regResponse.getRegion());
-        info.setRegistrationId(regResponse.getRegistrationId());
-        setAgentInfo(info);
     }
 
     public AgentInfo getAgentInfo() {
@@ -164,5 +118,46 @@ public abstract class ODEAgent {
 
     private ODELogger getOdeLogger() {
         return odeLogger;
+    }
+
+    private class MessageProcessor implements Runnable {
+
+        private byte[] messageBytes;
+
+        protected MessageProcessor(byte[] message) {
+            messageBytes = message;
+        }
+
+        public void run() {
+            try {
+                String messageId = SHAHasher.sha256Hash(messageBytes);
+
+                //Start log event for parsing message
+                getOdeLogger().start(ODELogger.ODEStage.PARSE, messageId);
+                ODEAgentMessage odeAgentMessage = getParser().parseMessage(messageBytes);
+                //Finish log event for parsing message
+                getOdeLogger().finish();
+
+                odeAgentMessage.setMessageId(messageId);
+
+                getOdeLogger().start(ODELogger.ODEStage.SANITIZE, messageId);
+                odeAgentMessage = getSanitizer().sanitizeMessage(odeAgentMessage);
+                getOdeLogger().finish();
+
+                odeAgentMessage.setAgentInfo(getAgentInfo());
+
+                getOdeLogger().start(ODELogger.ODEStage.SEND, messageId);
+                getDataTarget().sendMessage(odeAgentMessage);
+                getOdeLogger().finish();
+
+                ODEAgent.this.decreaseCount();
+            } catch (ODEParseException e) {
+                logger.error(e.getLocalizedMessage());
+            } catch (ODESanitizerException e) {
+                logger.error(e.getLocalizedMessage());
+            } catch (DataTargetException e) {
+                logger.error(e.getLocalizedMessage());
+            }
+        }
     }
 }
