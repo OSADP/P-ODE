@@ -8,11 +8,21 @@ package com.leidos.ode.emulator;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
 import com.leidos.ode.agent.data.bsm.BSM;
+import com.leidos.ode.agent.datatarget.ODEDataTarget;
 import com.leidos.ode.collector.ODECollector;
+import com.leidos.ode.collector.datasource.CollectorDataSource;
+import com.leidos.ode.core.controllers.PublishDataController;
+import com.leidos.ode.emulator.agent.EmulatorDataTarget;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.bind.DatatypeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  *
@@ -41,16 +51,54 @@ public class ODEEmulator implements EmulatorDataListener{
     @Qualifier("BSMCollector")
     private ODECollector bsmCollector;
 
+    
+    
     private CurrentDataSet currentData = new CurrentDataSet();
     
     //This needs to be a WS method, probably POST
     //Will take a list of names representing the collectors to be started.
-    public void startEmulator(){
-        //lookup collectors in the context, start them.
-        
-        
+    @RequestMapping(value = "startEmulator", method = RequestMethod.POST)
+    public void startEmulator(@RequestBody EmulatorCollectorList collectors){
+        for(String s:collectors.getCollectors()){
+            try{
+                if(s.equalsIgnoreCase("RITISWeatherCollector")){
+                    ritisWeatherCollector.stop();
+                    ((EmulatorDataTarget)ritisWeatherCollector.getAgent().getDataTarget()).setListener(this);
+                    ritisWeatherCollector.startUp();
+                }else if(s.equalsIgnoreCase("RITISSpeedCollector")){
+                    ritisSpeedCollector.stop();
+                    ((EmulatorDataTarget)ritisSpeedCollector.getAgent().getDataTarget()).setListener(this);
+                    ritisSpeedCollector.startUp();
+                }else if(s.equalsIgnoreCase("VDOTSpeedCollector")){
+                    vdotSpeedCollector.stop();
+                    ((EmulatorDataTarget)vdotSpeedCollector.getAgent().getDataTarget()).setListener(this);
+                    vdotSpeedCollector.startUp();
+                }else if(s.equalsIgnoreCase("VDOTWeatherCollector")){
+                    vdotWeatherCollector.stop();
+                    ((EmulatorDataTarget)vdotWeatherCollector.getAgent().getDataTarget()).setListener(this);
+                    vdotWeatherCollector.startUp();
+                }else if(s.equalsIgnoreCase("VDOTTravelCollector")){
+                    vdotTravelTimeCollector.stop();
+                    ((EmulatorDataTarget)vdotTravelTimeCollector.getAgent().getDataTarget()).setListener(this);
+                    vdotTravelTimeCollector.startUp();
+                }else if(s.equalsIgnoreCase("BSMCollector")){
+                    bsmCollector.stop();
+                    ((EmulatorDataTarget)bsmCollector.getAgent().getDataTarget()).setListener(this);
+                    bsmCollector.startUp();
+                }
+            } catch (CollectorDataSource.DataSourceException ex) {
+                Logger.getLogger(ODEEmulator.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ODEDataTarget.DataTargetException ex) {
+                Logger.getLogger(ODEEmulator.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
     
+    
+    @RequestMapping(value = "getCurrentData", method = RequestMethod.GET)
+    public @ResponseBody CurrentDataSet getCurrentData(){
+        return currentData;
+    }
     
     
     public void dataReceived(String messageType, ODEAgentMessage data) {

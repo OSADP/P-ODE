@@ -11,11 +11,13 @@ import com.leidos.ode.agent.data.bsm.BSM;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author cassadyja
  */
+@XmlRootElement
 public class CurrentDataSet {
     
     private String eastBoundTravelTime;
