@@ -52,33 +52,19 @@ public class BasicODERegistration implements ODERegistration {
             closeableHttpResponse = httpClient.execute(httpPost);
 
             int statusCode = closeableHttpResponse.getStatusLine().getStatusCode();
+            //If the request was unsuccessful return
             if (statusCode != HttpStatus.SC_OK) {
                 getLogger().error("Registration unsuccessful. Status code: " + statusCode);
+                return null;
             }
-
-            HttpEntity responseEntity = closeableHttpResponse.getEntity();
-            byte[] responseBytes = EntityUtils.toByteArray(responseEntity);
-            EntityUtils.consume(responseEntity);
-            String responseString = new String(responseBytes);
-            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            Document document = documentBuilder.parse(new InputSource(new StringReader(responseString)));
-            JAXBContext registrationResponseContext = JAXBContext.newInstance(ODERegistrationResponse.class);
-            Unmarshaller unmarshaller = registrationResponseContext.createUnmarshaller();
-            ODERegistrationResponse odeRegistrationResponse = (ODERegistrationResponse) unmarshaller.unmarshal(document);
-            getLogger().debug("Successfull parsed ODERegistrationResponse.");
-            return odeRegistrationResponse;
-        } catch (JAXBException e) {
-            getLogger().error(e.getLocalizedMessage());
+            return marshallRegistrationResponseFromHttpResponse(closeableHttpResponse);
         } catch (UnsupportedEncodingException e) {
             getLogger().error(e.getLocalizedMessage());
         } catch (ClientProtocolException e) {
             getLogger().error(e.getLocalizedMessage());
         } catch (IOException e) {
             getLogger().error(e.getLocalizedMessage());
-        } catch (ParserConfigurationException e) {
-            getLogger().error(e.getLocalizedMessage());
-        } catch (SAXException e) {
+        } catch (JAXBException e) {
             getLogger().error(e.getLocalizedMessage());
         } finally {
             try {
@@ -91,6 +77,28 @@ public class BasicODERegistration implements ODERegistration {
             } catch (IOException e) {
                 getLogger().error(e.getLocalizedMessage());
             }
+        }
+        return null;
+    }
+
+    private ODERegistrationResponse marshallRegistrationResponseFromHttpResponse(CloseableHttpResponse closeableHttpResponse) throws JAXBException, IOException {
+        try {
+            HttpEntity responseEntity = closeableHttpResponse.getEntity();
+            byte[] responseBytes = EntityUtils.toByteArray(responseEntity);
+            EntityUtils.consume(responseEntity);
+            String responseString = new String(responseBytes);
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            Document document = documentBuilder.parse(new InputSource(new StringReader(responseString)));
+            JAXBContext registrationResponseContext = JAXBContext.newInstance(ODERegistrationResponse.class);
+            Unmarshaller unmarshaller = registrationResponseContext.createUnmarshaller();
+            ODERegistrationResponse odeRegistrationResponse = (ODERegistrationResponse) unmarshaller.unmarshal(document);
+            getLogger().debug("Successfully marshalled ODERegistrationResponse.");
+            return odeRegistrationResponse;
+        } catch (ParserConfigurationException e) {
+            getLogger().error(e.getLocalizedMessage());
+        } catch (SAXException e) {
+            getLogger().error(e.getLocalizedMessage());
         }
         return null;
     }

@@ -11,8 +11,13 @@ public class SubscribeODEAgent extends ODEAgent {
 
     @Override
     public void startUp() {
-        ODERegistrationResponse regResponse = registration.register(registrationInformation);
-        createAgentInfo(regResponse);
+        ODERegistrationResponse registrationResponse = registration.register(registrationInformation);
+        if (registrationResponse != null) {
+            createAgentInfo(registrationResponse);
+            getLogger().debug("Registration succeeded.");
+        } else {
+            getLogger().error("Registration failed. Registration response was null.");
+        }
     }
 
 }

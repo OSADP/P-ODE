@@ -12,9 +12,13 @@ public class PublishODEAgent extends ODEAgent {
 
     @Override
     public void startUp() throws DataTargetException {
-        ODERegistrationResponse regResponse = registration.register(registrationInformation);
-        getLogger().debug("Registration response" + (regResponse != null ? "is not null." : "is null!"));
-        dataTarget.configure(regResponse);
-        createAgentInfo(regResponse);
+        ODERegistrationResponse registrationResponse = registration.register(registrationInformation);
+        if (registrationResponse != null) {
+            dataTarget.configure(registrationResponse);
+            createAgentInfo(registrationResponse);
+            getLogger().debug("Registration succeeded.");
+        } else {
+            getLogger().error("Registration failed. Registration response was null.");
+        }
     }
 }
