@@ -12,15 +12,15 @@
 
     <!--&lt;!&ndash; Load Properties file &ndash;&gt;-->
     <!--<bean id="properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean" scope="prototype">-->
-        <!--<property name="ignoreResourceNotFound" value="true"/>-->
-        <!--&lt;!&ndash;-->
-        <!--Allow for the (optional) override of these properties-->
-        <!--&ndash;&gt;-->
-        <!--<property name="locations">-->
-            <!--<list>-->
-                <!--<value>classpath:META-INF/ODEContext-Dev.properties</value>-->
-            <!--</list>-->
-        <!--</property>-->
+    <!--<property name="ignoreResourceNotFound" value="true"/>-->
+    <!--&lt;!&ndash;-->
+    <!--Allow for the (optional) override of these properties-->
+    <!--&ndash;&gt;-->
+    <!--<property name="locations">-->
+    <!--<list>-->
+    <!--<value>classpath:META-INF/ODEContext-Dev.properties</value>-->
+    <!--</list>-->
+    <!--</property>-->
     <!--</bean>-->
 
     <bean id="propertyPlaceholderConfigurer"
