@@ -9,14 +9,13 @@ package com.leidos.ode.emulator;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- *
  * @author cassadyja
  */
 @XmlRootElement
 public class EmulatorCollectorList {
     private String[] collectors = new String[]{"RITISWeatherCollector",
-        "RITISSpeedCollector","VDOTSpeedCollector","VDOTWeatherCollector",
-        "VDOTTravelCollector","BSMCollector"};
+            "RITISSpeedCollector", "VDOTSpeedCollector", "VDOTWeatherCollector",
+            "VDOTTravelCollector", "BSMCollector"};
 
     /**
      * @return the collectors
@@ -31,6 +30,6 @@ public class EmulatorCollectorList {
     public void setCollectors(String[] collectors) {
         this.collectors = collectors;
     }
-    
-    
+
+
 }

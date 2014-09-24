@@ -9,6 +9,7 @@
     <modules>
         <module>ode-api</module>
         <module>ode-web</module>
+        <module>ode-emulator</module>
     </modules>
 
     <properties>

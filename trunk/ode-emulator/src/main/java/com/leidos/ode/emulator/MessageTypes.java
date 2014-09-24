@@ -7,7 +7,6 @@
 package com.leidos.ode.emulator;
 
 /**
- *
  * @author cassadyja
  */
 public enum MessageTypes {
@@ -17,18 +16,18 @@ public enum MessageTypes {
     RITISSpeed("RITISSpeed"),
     RITISWeather("RITISWeather"),
     BSM("BSM");
-    
     private final String name;
-    private MessageTypes(String s){
-        name = s;
+
+    private MessageTypes(String name) {
+        this.name = name;
     }
-    
-    public boolean equalsName(String otherName){
-        return (otherName == null)? false:name.equals(otherName);
+
+    public boolean equalsName(String otherName) {
+        return (otherName != null) && name.equals(otherName);
     }
 
     @Override
-    public String toString(){
-       return name;
+    public String toString() {
+        return name;
     }
 }

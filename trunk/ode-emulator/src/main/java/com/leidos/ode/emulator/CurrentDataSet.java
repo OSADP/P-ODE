@@ -8,41 +8,35 @@ package com.leidos.ode.emulator;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
 import com.leidos.ode.agent.data.bsm.BSM;
+
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- *
  * @author cassadyja
  */
 @XmlRootElement
 public class CurrentDataSet {
-    
+
     private String eastBoundTravelTime;
     private String westBoundTravelTime;
-    
     private Date bsmLastUpdate;
     private Map<String, BSM> bsmDataEast = new HashMap<String, BSM>();
     private Map<String, BSM> bsmDataWest = new HashMap<String, BSM>();
-    
     private Date vdotWeatherLastUpdate;
     private ODEAgentMessage vdotWeatherDataEast;
     private ODEAgentMessage vdotWeatherDataWest;
-    
     private Date vdotTravelLastUpdate;
     private ODEAgentMessage vdotTravelDataEast;
     private ODEAgentMessage vdotTravelDataWest;
-    
     private Date vdotSpeedLastUpdate;
     private ODEAgentMessage vdotSpeedDataEast;
     private ODEAgentMessage vdotSpeedDataWest;
-    
     private Date ritisWeatherLastUpdate;
     private ODEAgentMessage ritisWeatherDataEast;
     private ODEAgentMessage ritisWeatherDataWest;
-    
     private Date ritisSpeedLastUpdate;
     private ODEAgentMessage ritisSpeedDataEast;
     private ODEAgentMessage ritisSpeedDataWest;
@@ -61,7 +55,6 @@ public class CurrentDataSet {
         this.bsmLastUpdate = bsmLastUpdate;
     }
 
- 
     /**
      * @return the vdotWeatherLastUpdate
      */
@@ -75,7 +68,6 @@ public class CurrentDataSet {
     private void setVdotWeatherLastUpdate(Date vdotWeatherLastUpdate) {
         this.vdotWeatherLastUpdate = vdotWeatherLastUpdate;
     }
-
 
     /**
      * @return the vdotTravelLastUpdate
@@ -91,7 +83,6 @@ public class CurrentDataSet {
         this.vdotTravelLastUpdate = vdotTravelLastUpdate;
     }
 
-
     /**
      * @return the vdotSpeedLastUpdate
      */
@@ -106,8 +97,6 @@ public class CurrentDataSet {
         this.vdotSpeedLastUpdate = vdotSpeedLastUpdate;
     }
 
-
-
     /**
      * @return the ritisWeatherLastUpdate
      */
@@ -121,8 +110,6 @@ public class CurrentDataSet {
     private void setRitisWeatherLastUpdate(Date ritisWeatherLastUpdate) {
         this.ritisWeatherLastUpdate = ritisWeatherLastUpdate;
     }
-
-
 
     /**
      * @return the ritisSpeedLastUpdate
@@ -177,10 +164,10 @@ public class CurrentDataSet {
      * @param vdotWeatherDataEast the vdotWeatherDataEast to set
      */
     public void setVdotWeatherDataEast(ODEAgentMessage vdotWeatherDataEast) {
-        if(!this.vdotWeatherDataEast.getMessageId().equals(vdotWeatherDataEast.getMessageId())){
+        if (!this.vdotWeatherDataEast.getMessageId().equals(vdotWeatherDataEast.getMessageId())) {
             this.vdotWeatherDataEast = vdotWeatherDataEast;
             recalculateEast();
-        }     
+        }
         setVdotWeatherLastUpdate(new Date());
     }
 
@@ -195,7 +182,7 @@ public class CurrentDataSet {
      * @param vdotWeatherDataWest the vdotWeatherDataWest to set
      */
     public void setVdotWeatherDataWest(ODEAgentMessage vdotWeatherDataWest) {
-        if(!this.vdotWeatherDataWest.getMessageId().equals(vdotWeatherDataWest.getMessageId())){
+        if (!this.vdotWeatherDataWest.getMessageId().equals(vdotWeatherDataWest.getMessageId())) {
             this.vdotWeatherDataWest = vdotWeatherDataWest;
             recalculateWest();
         }
@@ -214,7 +201,7 @@ public class CurrentDataSet {
      * @param vdotTravelDataEast the vdotTravelDataEast to set
      */
     public void setVdotTravelDataEast(ODEAgentMessage vdotTravelDataEast) {
-        if(!this.vdotTravelDataEast.getMessageId().equals(vdotTravelDataEast.getMessageId())){
+        if (!this.vdotTravelDataEast.getMessageId().equals(vdotTravelDataEast.getMessageId())) {
             this.vdotTravelDataEast = vdotTravelDataEast;
             recalculateEast();
         }
@@ -232,10 +219,10 @@ public class CurrentDataSet {
      * @param vdotTravelDataWest the vdotTravelDataWest to set
      */
     public void setVdotTravelDataWest(ODEAgentMessage vdotTravelDataWest) {
-        if(!this.vdotTravelDataWest.getMessageId().equals(vdotTravelDataWest.getMessageId())){
+        if (!this.vdotTravelDataWest.getMessageId().equals(vdotTravelDataWest.getMessageId())) {
             this.vdotTravelDataWest = vdotTravelDataWest;
             recalculateWest();
-        }            
+        }
         setVdotTravelLastUpdate(new Date());
     }
 
@@ -250,10 +237,10 @@ public class CurrentDataSet {
      * @param vdotSpeedDataEast the vdotSpeedDataEast to set
      */
     public void setVdotSpeedDataEast(ODEAgentMessage vdotSpeedDataEast) {
-        if(!this.vdotSpeedDataEast.getMessageId().equals(vdotSpeedDataEast.getMessageId())){
+        if (!this.vdotSpeedDataEast.getMessageId().equals(vdotSpeedDataEast.getMessageId())) {
             this.vdotSpeedDataEast = vdotSpeedDataEast;
             recalculateEast();
-        }            
+        }
         setVdotSpeedLastUpdate(new Date());
     }
 
@@ -268,10 +255,10 @@ public class CurrentDataSet {
      * @param vdotSpeedDataWest the vdotSpeedDataWest to set
      */
     public void setVdotSpeedDataWest(ODEAgentMessage vdotSpeedDataWest) {
-        if(!this.vdotSpeedDataWest.getMessageId().equals(vdotSpeedDataWest.getMessageId())){
+        if (!this.vdotSpeedDataWest.getMessageId().equals(vdotSpeedDataWest.getMessageId())) {
             this.vdotSpeedDataWest = vdotSpeedDataWest;
             recalculateWest();
-        }            
+        }
         setVdotSpeedLastUpdate(new Date());
     }
 
@@ -286,10 +273,10 @@ public class CurrentDataSet {
      * @param ritisWeatherDataEast the ritisWeatherDataEast to set
      */
     public void setRitisWeatherDataEast(ODEAgentMessage ritisWeatherDataEast) {
-        if(!this.ritisWeatherDataEast.getMessageId().equals(ritisWeatherDataEast.getMessageId())){
+        if (!this.ritisWeatherDataEast.getMessageId().equals(ritisWeatherDataEast.getMessageId())) {
             this.ritisWeatherDataEast = ritisWeatherDataEast;
             recalculateEast();
-        }         
+        }
         setRitisWeatherLastUpdate(new Date());
     }
 
@@ -304,10 +291,10 @@ public class CurrentDataSet {
      * @param ritisWeatherDataWest the ritisWeatherDataWest to set
      */
     public void setRitisWeatherDataWest(ODEAgentMessage ritisWeatherDataWest) {
-        if(!this.ritisWeatherDataWest.getMessageId().equals(ritisWeatherDataWest.getMessageId())){
+        if (!this.ritisWeatherDataWest.getMessageId().equals(ritisWeatherDataWest.getMessageId())) {
             this.ritisWeatherDataWest = ritisWeatherDataWest;
             recalculateWest();
-        }        
+        }
         setRitisWeatherLastUpdate(new Date());
     }
 
@@ -322,7 +309,7 @@ public class CurrentDataSet {
      * @param ritisSpeedDataEast the ritisSpeedDataEast to set
      */
     public void setRitisSpeedDataEast(ODEAgentMessage ritisSpeedDataEast) {
-        if(!this.ritisSpeedDataEast.getMessageId().equals(ritisSpeedDataEast.getMessageId())){
+        if (!this.ritisSpeedDataEast.getMessageId().equals(ritisSpeedDataEast.getMessageId())) {
             this.ritisSpeedDataEast = ritisSpeedDataEast;
             recalculateEast();
         }
@@ -340,7 +327,7 @@ public class CurrentDataSet {
      * @param ritisSpeedDataWest the ritisSpeedDataWest to set
      */
     public void setRitisSpeedDataWest(ODEAgentMessage ritisSpeedDataWest) {
-        if(!this.ritisSpeedDataWest.getMessageId().equals(ritisSpeedDataWest.getMessageId())){
+        if (!this.ritisSpeedDataWest.getMessageId().equals(ritisSpeedDataWest.getMessageId())) {
             this.ritisSpeedDataWest = ritisSpeedDataWest;
             recalculateWest();
         }
@@ -375,45 +362,43 @@ public class CurrentDataSet {
         this.bsmDataWest = bsmDataWest;
     }
 
-    public void addBSMWestData(String ip, BSM data){
+    public void addBSMWestData(String ip, BSM data) {
         BSM existing = bsmDataWest.get(ip);
-        if(existing != null){
-            if(existing.getMessageCount() != data.getMessageCount()
-                    && !existing.getBsmMessageId().equalsIgnoreCase(data.getBsmMessageId())){
+        if (existing != null) {
+            if (existing.getMessageCount() != data.getMessageCount()
+                    && !existing.getBsmMessageId().equalsIgnoreCase(data.getBsmMessageId())) {
                 bsmDataWest.put(ip, data);
                 recalculateWest();
             }
-        }else{
+        } else {
             bsmDataWest.put(ip, data);
             recalculateWest();
         }
         setBsmLastUpdate(new Date());
     }
-    
-    public void addBSMEastData(String ip, BSM data){
+
+    public void addBSMEastData(String ip, BSM data) {
         BSM existing = bsmDataEast.get(ip);
-        if(existing != null){
-            if(existing.getMessageCount() != data.getMessageCount()
-                    && !existing.getBsmMessageId().equalsIgnoreCase(data.getBsmMessageId())){
+        if (existing != null) {
+            if (existing.getMessageCount() != data.getMessageCount()
+                    && !existing.getBsmMessageId().equalsIgnoreCase(data.getBsmMessageId())) {
                 bsmDataEast.put(ip, data);
                 recalculateEast();
             }
-        }else{
+        } else {
             bsmDataEast.put(ip, data);
             recalculateEast();
         }
-        setBsmLastUpdate(new Date());        
+        setBsmLastUpdate(new Date());
     }
-    
-    
-    
-    private void recalculateWest(){
-        
+
+    private void recalculateWest() {
+
     }
-    
-    private void recalculateEast(){
-        
+
+    private void recalculateEast() {
+
     }
-    
-    
+
+
 }

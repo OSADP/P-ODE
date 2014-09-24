@@ -11,11 +11,8 @@ import com.leidos.ode.agent.data.bsm.BSM;
 import com.leidos.ode.agent.datatarget.ODEDataTarget;
 import com.leidos.ode.collector.ODECollector;
 import com.leidos.ode.collector.datasource.CollectorDataSource;
-import com.leidos.ode.core.controllers.PublishDataController;
 import com.leidos.ode.emulator.agent.EmulatorDataTarget;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.bind.DatatypeConverter;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -24,14 +21,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.xml.bind.DatatypeConverter;
+
 /**
- *
  * @author cassadyja
  */
 @Controller
-public class ODEEmulator implements EmulatorDataListener{
-    
-    
+public class ODEEmulator implements EmulatorDataListener {
+
+    private final String TAG = getClass().getSimpleName();
+    private Logger logger = Logger.getLogger(TAG);
     @Autowired
     @Qualifier("RITISWeatherCollector")
     private ODECollector ritisWeatherCollector;
@@ -50,77 +49,71 @@ public class ODEEmulator implements EmulatorDataListener{
     @Autowired
     @Qualifier("BSMCollector")
     private ODECollector bsmCollector;
-
-    
-    
     private CurrentDataSet currentData = new CurrentDataSet();
-    
+
     //This needs to be a WS method, probably POST
     //Will take a list of names representing the collectors to be started.
     @RequestMapping(value = "startEmulator", method = RequestMethod.POST)
-    public void startEmulator(@RequestBody EmulatorCollectorList collectors){
-        for(String s:collectors.getCollectors()){
-            try{
-                if(s.equalsIgnoreCase("RITISWeatherCollector")){
+    public void startEmulator(@RequestBody EmulatorCollectorList collectors) {
+        for (String s : collectors.getCollectors()) {
+            try {
+                if (s.equalsIgnoreCase("RITISWeatherCollector")) {
                     ritisWeatherCollector.stop();
-                    ((EmulatorDataTarget)ritisWeatherCollector.getAgent().getDataTarget()).setListener(this);
+                    ((EmulatorDataTarget) ritisWeatherCollector.getAgent().getDataTarget()).setListener(this);
                     ritisWeatherCollector.startUp();
-                }else if(s.equalsIgnoreCase("RITISSpeedCollector")){
+                } else if (s.equalsIgnoreCase("RITISSpeedCollector")) {
                     ritisSpeedCollector.stop();
-                    ((EmulatorDataTarget)ritisSpeedCollector.getAgent().getDataTarget()).setListener(this);
+                    ((EmulatorDataTarget) ritisSpeedCollector.getAgent().getDataTarget()).setListener(this);
                     ritisSpeedCollector.startUp();
-                }else if(s.equalsIgnoreCase("VDOTSpeedCollector")){
+                } else if (s.equalsIgnoreCase("VDOTSpeedCollector")) {
                     vdotSpeedCollector.stop();
-                    ((EmulatorDataTarget)vdotSpeedCollector.getAgent().getDataTarget()).setListener(this);
+                    ((EmulatorDataTarget) vdotSpeedCollector.getAgent().getDataTarget()).setListener(this);
                     vdotSpeedCollector.startUp();
-                }else if(s.equalsIgnoreCase("VDOTWeatherCollector")){
+                } else if (s.equalsIgnoreCase("VDOTWeatherCollector")) {
                     vdotWeatherCollector.stop();
-                    ((EmulatorDataTarget)vdotWeatherCollector.getAgent().getDataTarget()).setListener(this);
+                    ((EmulatorDataTarget) vdotWeatherCollector.getAgent().getDataTarget()).setListener(this);
                     vdotWeatherCollector.startUp();
-                }else if(s.equalsIgnoreCase("VDOTTravelCollector")){
+                } else if (s.equalsIgnoreCase("VDOTTravelCollector")) {
                     vdotTravelTimeCollector.stop();
-                    ((EmulatorDataTarget)vdotTravelTimeCollector.getAgent().getDataTarget()).setListener(this);
+                    ((EmulatorDataTarget) vdotTravelTimeCollector.getAgent().getDataTarget()).setListener(this);
                     vdotTravelTimeCollector.startUp();
-                }else if(s.equalsIgnoreCase("BSMCollector")){
+                } else if (s.equalsIgnoreCase("BSMCollector")) {
                     bsmCollector.stop();
-                    ((EmulatorDataTarget)bsmCollector.getAgent().getDataTarget()).setListener(this);
+                    ((EmulatorDataTarget) bsmCollector.getAgent().getDataTarget()).setListener(this);
                     bsmCollector.startUp();
                 }
             } catch (CollectorDataSource.DataSourceException ex) {
-                Logger.getLogger(ODEEmulator.class.getName()).log(Level.SEVERE, null, ex);
+                logger.error(ex.getLocalizedMessage());
             } catch (ODEDataTarget.DataTargetException ex) {
-                Logger.getLogger(ODEEmulator.class.getName()).log(Level.SEVERE, null, ex);
+                logger.error(ex.getLocalizedMessage());
             }
         }
     }
-    
-    
+
     @RequestMapping(value = "getCurrentData", method = RequestMethod.GET)
-    public @ResponseBody CurrentDataSet getCurrentData(){
+    public
+    @ResponseBody
+    CurrentDataSet getCurrentData() {
         return currentData;
     }
-    
-    
+
     public void dataReceived(String messageType, ODEAgentMessage data) {
-        if(MessageTypes.BSM.equals(MessageTypes.valueOf(messageType))){
+        if (MessageTypes.BSM.equals(MessageTypes.valueOf(messageType))) {
             bsmDataReceived(data);
-        }else if(MessageTypes.VDOTSpeed.equals(MessageTypes.valueOf(messageType))){
+        } else if (MessageTypes.VDOTSpeed.equals(MessageTypes.valueOf(messageType))) {
             vdotSpeedDataReceived(data);
-        }else if(MessageTypes.VDOTTravel.equals(MessageTypes.valueOf(messageType))){
+        } else if (MessageTypes.VDOTTravel.equals(MessageTypes.valueOf(messageType))) {
             vdotTravelTimeDataReceived(data);
-        }else if(MessageTypes.VDOTWeather.equals(MessageTypes.valueOf(messageType))){
+        } else if (MessageTypes.VDOTWeather.equals(MessageTypes.valueOf(messageType))) {
             vdotWeatherDataReceived(data);
-        }else if(MessageTypes.RITISSpeed.equals(MessageTypes.valueOf(messageType))){
+        } else if (MessageTypes.RITISSpeed.equals(MessageTypes.valueOf(messageType))) {
             ritisSpeedDataReceived(data);
-        }else if(MessageTypes.RITISWeather.equals(MessageTypes.valueOf(messageType))){
+        } else if (MessageTypes.RITISWeather.equals(MessageTypes.valueOf(messageType))) {
             ritisWeatherDataReceived(data);
         }
     }
 
-    
-    
     public void ritisSpeedDataReceived(ODEAgentMessage data) {
-        
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -141,33 +134,30 @@ public class ODEEmulator implements EmulatorDataListener{
     }
 
     public void bsmDataReceived(ODEAgentMessage data) {
-        double heading = ((BSM)data.getFormattedMessage()).getHeading();
+        double heading = ((BSM) data.getFormattedMessage()).getHeading();
         String hex = convertBytesToHex(data.getMessagePayload());
         String ip = getIPAddressForBSM(hex);
-        if(heading >= 180 && heading < 360){
+        if (heading >= 180 && heading < 360) {
             //WEST
-            currentData.addBSMWestData(ip, (BSM)data.getFormattedMessage());
-        }else if(heading >=0 && heading < 180){
+            currentData.addBSMWestData(ip, (BSM) data.getFormattedMessage());
+        } else if (heading >= 0 && heading < 180) {
             //EAST
-            currentData.addBSMEastData(ip, (BSM)data.getFormattedMessage());
+            currentData.addBSMEastData(ip, (BSM) data.getFormattedMessage());
         }
     }
 
-    
-    public String getIPAddressForBSM(String hex){
+    public String getIPAddressForBSM(String hex) {
         int addressEnd = hex.indexOf("7766");
-        if(addressEnd > -1){
-            return hex.substring(0,addressEnd);
+        if (addressEnd > -1) {
+            return hex.substring(0, addressEnd);
         }
         return null;
     }
-    public String convertBytesToHex(byte[] bytes){
-        String hexString = DatatypeConverter.printHexBinary(bytes);
-        return  hexString;
+
+    public String convertBytesToHex(byte[] bytes) {
+        return DatatypeConverter.printHexBinary(bytes);
     }
-    
-    
-    
+
     /**
      * @return the ritisWeatherCollector
      */
@@ -252,6 +242,5 @@ public class ODEEmulator implements EmulatorDataListener{
         this.bsmCollector = bsmCollector;
     }
 
-    
-    
+
 }
