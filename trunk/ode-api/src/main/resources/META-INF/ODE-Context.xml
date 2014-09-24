@@ -45,6 +45,14 @@
         <constructor-arg value="MM-dd-YYYY"/>
     </bean>
 
+    <bean id="LogDAO" class="com.leidos.ode.core.dao.LogDAOImpl">
+        <property name="mongoTemplate" ref="mongoTemplate"/>
+    </bean>
+
+    <bean id="ODELogger" class="com.leidos.ode.logging.ODELogger">
+        <property name="logDAO" ref="LogDAO"/>
+    </bean>
+
     <bean id="BasicSubRegistration" class="com.leidos.ode.agent.registration.BasicODERegistration">
         <property name="registrationBaseUrl" value="${leidos.ode.reg.baseurl}"/>
         <property name="registrationEndpoint" value="${leidos.ode.reg.sub.endpoint}"/>
@@ -63,8 +71,7 @@
 
     <bean id="RITISParser" class="com.leidos.ode.agent.parser.ODERITISParser"/>
 
-    <bean id="PassthroughSanitizer" class="com.leidos.ode.agent.sanitizer.PassthroughSanitizer">
-    </bean>
+    <bean id="PassthroughSanitizer" class="com.leidos.ode.agent.sanitizer.PassthroughSanitizer"/>
 
     <bean id="TestRegistrationInfo" class="com.leidos.ode.core.registration.RegistrationInformation">
         <property name="messageType" value="${leidos.ode.reg.test.pub.messageType}"/>
@@ -91,6 +98,7 @@
         <property name="sanitizer" ref="PassthroughSanitizer"/>
         <property name="dataTarget" ref="QueueTarget"/>
         <property name="registrationInformation" ref="TestRegistrationInfo"/>
+        <property name="odeLogger" ref="ODELogger"/>
     </bean>
 
     <bean id="PushDataSource" class="com.leidos.ode.collector.datasource.PushDataSource" abstract="true"/>
@@ -126,6 +134,7 @@
         <property name="sanitizer" ref="PassthroughSanitizer"/>
         <property name="dataTarget" ref="QueueTarget"/>
         <property name="registrationInformation" ref="TestRegistrationInfo"/>
+        <property name="odeLogger" ref="ODELogger"/>
     </bean>
 
     <bean id="RITISFilterCollector" class="com.leidos.ode.collector.ODECollector">
@@ -148,6 +157,7 @@
         <property name="sanitizer" ref="PassthroughSanitizer"/>
         <property name="dataTarget" ref="QueueTarget"/>
         <property name="registrationInformation" ref="TestRegistrationInfo"/>
+        <property name="odeLogger" ref="ODELogger"/>
     </bean>
 
     <bean id="VDOTCollector" class="com.leidos.ode.collector.ODECollector">

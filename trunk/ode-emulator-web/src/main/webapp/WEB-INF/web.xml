@@ -20,7 +20,7 @@
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>classpath*:/META-INF/Emulator-Context.xml</param-value>
+        <param-value>classpath*:/META-INF/ODE-Emulator-Context.xml</param-value>
     </context-param>
 
     <listener>

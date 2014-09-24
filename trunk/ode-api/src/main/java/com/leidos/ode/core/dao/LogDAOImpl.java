@@ -10,10 +10,8 @@ import org.springframework.stereotype.Component;
  *
  * @author lamde
  */
-@Component
 public class LogDAOImpl implements LogDAO {
 
-    @Autowired
     private MongoTemplate mongoTemplate;
 
     @Override
@@ -23,5 +21,9 @@ public class LogDAOImpl implements LogDAO {
 
     private MongoTemplate getMongoTemplate() {
         return mongoTemplate;
+    }
+
+    public void setMongoTemplate(MongoTemplate mongoTemplate){
+        this.mongoTemplate = mongoTemplate;
     }
 }

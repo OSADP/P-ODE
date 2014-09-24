@@ -14,7 +14,6 @@ import com.leidos.ode.core.registration.RegistrationInformation;
 import com.leidos.ode.logging.ODELogger;
 import com.leidos.ode.util.SHAHasher;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,15 +22,13 @@ public abstract class ODEAgent {
     private final String TAG = getClass().getSimpleName();
     private final Logger logger = Logger.getLogger(TAG);
     private final Byte mutex = new Byte("1");
-    private int threadCount = 0;
-
     protected AgentInfo agentInfo;
     protected ODERegistration registration;
     protected ODEDataParser parser;
     protected ODESanitizer sanitizer;
     protected ODEDataTarget dataTarget;
     protected RegistrationInformation registrationInformation;
-    @Autowired
+    private int threadCount = 0;
     private ODELogger odeLogger;
 
     public abstract void startUp() throws DataTargetException;
@@ -119,7 +116,11 @@ public abstract class ODEAgent {
         return odeLogger;
     }
 
-    protected Logger getLogger(){
+    public void setOdeLogger(ODELogger odeLogger) {
+        this.odeLogger = odeLogger;
+    }
+
+    protected Logger getLogger() {
         return logger;
     }
 

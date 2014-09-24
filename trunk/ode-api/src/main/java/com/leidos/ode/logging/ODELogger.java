@@ -12,12 +12,10 @@ import java.util.Date;
  *
  * @author lamde
  */
-@Component
 public final class ODELogger {
 
     private final String TAG = getClass().getSimpleName();
     private LogBean logBean;
-    @Autowired
     private LogDAO logDAO;
 
     /**
@@ -46,6 +44,10 @@ public final class ODELogger {
 
     private LogDAO getLogDAO() {
         return logDAO;
+    }
+
+    public void setLogDAO(LogDAO logDAO){
+        this.logDAO = logDAO;
     }
 
     /**

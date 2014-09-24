@@ -5,7 +5,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-4.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:component-scan base-package="com.leidos.ode"/>
+    <context:component-scan base-package="com.leidos.ode.emulator"/>
 
     <bean id="propertyPlaceholderConfigurer"
           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -20,6 +20,39 @@
         This means that any system properties set on the command line will take precedence over those set locally or in a properties file.
         -->
         <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+    </bean>
+
+    <bean id="dateFormat" class="java.text.SimpleDateFormat">
+        <constructor-arg value="MM-dd-YYYY"/>
+    </bean>
+
+    <bean id="LogDAO" class="com.leidos.ode.core.dao.LogDAOImpl">
+        <property name="mongoTemplate" ref="mongoTemplate"/>
+    </bean>
+
+    <bean id="ODELogger" class="com.leidos.ode.logging.ODELogger">
+        <property name="logDAO" ref="LogDAO"/>
+    </bean>
+
+    <bean id="PushDataSource" class="com.leidos.ode.collector.datasource.PushDataSource" abstract="true"/>
+
+    <bean id="VDOTParser" class="com.leidos.ode.agent.parser.ODEVDOTParser"/>
+
+    <bean id="PassthroughSanitizer" class="com.leidos.ode.agent.sanitizer.PassthroughSanitizer"/>
+
+    <bean id="RITISParser" class="com.leidos.ode.agent.parser.ODERITISParser"/>
+
+    <bean id="BSMParser" class="com.leidos.ode.agent.parser.ODEBSMParser"/>
+
+    <bean id="mongo" class="com.mongodb.Mongo">
+        <constructor-arg name="host" value="127.0.0.1"/>
+        <constructor-arg name="port" value="27017"/>
+    </bean>
+
+    <!-- Define the MongoTemplate which handles connectivity with MongoDB -->
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg name="mongo" ref="mongo"/>
+        <constructor-arg name="databaseName" value="ode"/>
     </bean>
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~VDOT Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
@@ -65,6 +98,7 @@
         <property name="sanitizer" ref="PassthroughSanitizer"/>
         <property name="dataTarget" ref="VDOTWeatherDataTarget"/>
         <property name="registrationInformation" ref="VDOTWeatherRegistrationInfo"/>
+        <property name="odeLogger" ref="ODELogger"/>
     </bean>
 
     <bean id="VDOTWeatherCollector" class="com.leidos.ode.collector.ODECollector">
@@ -161,6 +195,7 @@
         <property name="sanitizer" ref="PassthroughSanitizer"/>
         <property name="dataTarget" ref="VDOTTravelDataTarget"/>
         <property name="registrationInformation" ref="VDOTTravelRegistrationInfo"/>
+        <property name="odeLogger" ref="ODELogger"/>
     </bean>
 
     <bean id="VDOTTravelCollector" class="com.leidos.ode.collector.ODECollector">
@@ -211,6 +246,7 @@
         <property name="sanitizer" ref="PassthroughSanitizer"/>
         <property name="dataTarget" ref="RITISSpeedDataTarget"/>
         <property name="registrationInformation" ref="RITISSpeedRegistrationInfo"/>
+        <property name="odeLogger" ref="ODELogger"/>
     </bean>
 
     <bean id="RITISSpeedCollector" class="com.leidos.ode.collector.ODECollector">
@@ -259,6 +295,7 @@
         <property name="sanitizer" ref="PassthroughSanitizer"/>
         <property name="dataTarget" ref="RITISWeatherDataTarget"/>
         <property name="registrationInformation" ref="RITISWeatherRegistrationInfo"/>
+        <property name="odeLogger" ref="ODELogger"/>
     </bean>
 
     <bean id="RITISWeatherCollector" class="com.leidos.ode.collector.ODECollector">
@@ -308,6 +345,7 @@
         <property name="sanitizer" ref="PassthroughSanitizer"/>
         <property name="dataTarget" ref="BSMDataTarget"/>
         <property name="registrationInformation" ref="BSMRegistrationInfo"/>
+        <property name="odeLogger" ref="ODELogger"/>
     </bean>
 
     <bean id="BSMCollector" class="com.leidos.ode.collector.ODECollector">
