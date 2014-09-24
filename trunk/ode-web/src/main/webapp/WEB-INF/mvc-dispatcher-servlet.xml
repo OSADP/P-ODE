@@ -12,21 +12,21 @@
     <mvc:annotation-driven/>
 
     <!--<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
-        <!--<property name="prefix">-->
-            <!--<value>WEB-INF/jsp/</value>-->
-        <!--</property>-->
-        <!--<property name="suffix">-->
-            <!--<value>.jsp</value>-->
-        <!--</property>-->
+    <!--<property name="prefix">-->
+    <!--<value>WEB-INF/jsp/</value>-->
+    <!--</property>-->
+    <!--<property name="suffix">-->
+    <!--<value>.jsp</value>-->
+    <!--</property>-->
     <!--</bean>-->
 
     <!--&lt;!&ndash; Configure to plugin JSON as request and response in method handler &ndash;&gt;-->
     <!--<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">-->
-        <!--<property name="messageConverters">-->
-            <!--<list>-->
-                <!--<ref bean="jsonMessageConverter"/>-->
-            <!--</list>-->
-        <!--</property>-->
+    <!--<property name="messageConverters">-->
+    <!--<list>-->
+    <!--<ref bean="jsonMessageConverter"/>-->
+    <!--</list>-->
+    <!--</property>-->
     <!--</bean>-->
 
     <!--&lt;!&ndash; Configure bean to convert JSON to POJO and vice versa &ndash;&gt;-->

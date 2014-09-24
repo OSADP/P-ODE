@@ -28,11 +28,6 @@
             <artifactId>ode-api</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.leidos.ode</groupId>
-            <artifactId>ode-emulator</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
     </dependencies>
 
     <build>
