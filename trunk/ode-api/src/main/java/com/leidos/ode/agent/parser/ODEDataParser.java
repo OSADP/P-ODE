@@ -10,7 +10,7 @@ public abstract class ODEDataParser {
     protected final Logger logger = Logger.getLogger(TAG);
     private ODEMessageType odeMessageType = ODEMessageType.UNDEFINED;
 
-    protected abstract ODEAgentMessage parseMessage(byte[] bytes) throws ODEParseException;
+    public abstract ODEAgentMessage parseMessage(byte[] bytes) throws ODEParseException;
 
     public final ODEMessageType getODEMessageType() {
         return odeMessageType;
