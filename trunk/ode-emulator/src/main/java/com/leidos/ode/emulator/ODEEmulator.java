@@ -4,10 +4,9 @@ import com.leidos.ode.agent.data.ODEAgentMessage;
 import com.leidos.ode.agent.data.bsm.BSM;
 import com.leidos.ode.agent.datatarget.ODEDataTarget;
 import com.leidos.ode.collector.ODECollector;
-import com.leidos.ode.collector.RITISDataSource;
-import com.leidos.ode.collector.VDOTDataSource;
 import com.leidos.ode.collector.datasource.CollectorDataSource;
 import com.leidos.ode.emulator.agent.EmulatorDataTarget;
+import com.leidos.ode.util.ODEMessageType;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -94,17 +93,17 @@ public class ODEEmulator implements EmulatorDataListener {
     }
 
     public void dataReceived(String messageType, ODEAgentMessage data) {
-        if (MessageTypes.BSM.equals(MessageTypes.valueOf(messageType))) {
+        if (ODEMessageType.BSM.equals(ODEMessageType.valueOf(messageType))) {
             bsmDataReceived(data);
-        } else if (MessageTypes.VDOTSpeed.equals(MessageTypes.valueOf(messageType))) {
+        } else if (ODEMessageType.VDOTSpeed.equals(ODEMessageType.valueOf(messageType))) {
             vdotSpeedDataReceived(data);
-        } else if (MessageTypes.VDOTTravel.equals(MessageTypes.valueOf(messageType))) {
+        } else if (ODEMessageType.VDOTTravel.equals(ODEMessageType.valueOf(messageType))) {
             vdotTravelTimeDataReceived(data);
-        } else if (MessageTypes.VDOTWeather.equals(MessageTypes.valueOf(messageType))) {
+        } else if (ODEMessageType.VDOTWeather.equals(ODEMessageType.valueOf(messageType))) {
             vdotWeatherDataReceived(data);
-        } else if (MessageTypes.RITISSpeed.equals(MessageTypes.valueOf(messageType))) {
+        } else if (ODEMessageType.RITISSpeed.equals(ODEMessageType.valueOf(messageType))) {
             ritisSpeedDataReceived(data);
-        } else if (MessageTypes.RITISWeather.equals(MessageTypes.valueOf(messageType))) {
+        } else if (ODEMessageType.RITISWeather.equals(ODEMessageType.valueOf(messageType))) {
             ritisWeatherDataReceived(data);
         }
     }
