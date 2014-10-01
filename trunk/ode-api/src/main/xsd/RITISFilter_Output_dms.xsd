@@ -1,0 +1,15 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified">
+    <xs:element name="dmsTime" type="xs:dateTime"/>
+    <xs:element name="dMSDeviceStatus">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element type="xs:string" name="organization-information"/>
+                <xs:element type="xs:string" name="device-id"/>
+                <xs:element type="xs:string" name="dms-device-status"/>
+                <xs:element type="xs:string" name="dms-current-message"/>
+                <xs:element type="xs:string" name="message-beacon"/>
+                <xs:element type="xs:string" name="message-source-mode" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

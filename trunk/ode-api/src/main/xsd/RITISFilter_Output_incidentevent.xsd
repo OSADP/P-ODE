@@ -1,0 +1,249 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified">
+    <xs:element name="messageHeader">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="sender">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element type="xs:string" name="agencyName"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element type="xs:byte" name="messageID"/>
+                <xs:element type="xs:dateTime" name="timeStamp"/>
+                <xs:element type="xs:byte" name="msgCount"/>
+                <xs:element name="localMessageHeader">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element type="xs:byte" name="totalEvents"/>
+                            <xs:element type="xs:byte" name="filteredEvents"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="responseGroup">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="incident" maxOccurs="unbounded" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="head">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element type="xs:string" name="id"/>
+                                        <xs:element type="xs:string" name="issuingAgency"/>
+                                        <xs:element type="xs:dateTime" name="updateTime"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="location">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element type="xs:string" name="locationName"/>
+                                        <xs:element name="pointLocation">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="crossStreetsPoint">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="onStreetInfo">
+                                                                    <xs:complexType>
+                                                                        <xs:sequence>
+                                                                            <xs:element type="xs:string" name="prefix"/>
+                                                                            <xs:element type="xs:short" name="name"/>
+                                                                        </xs:sequence>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                                <xs:element name="atStreetInfo">
+                                                                    <xs:complexType>
+                                                                        <xs:sequence>
+                                                                            <xs:element type="xs:string" name="prefix"/>
+                                                                            <xs:element type="xs:float" name="name"/>
+                                                                        </xs:sequence>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                                <xs:element type="xs:string" name="direction"/>
+                                                                <xs:element name="adminAreas">
+                                                                    <xs:complexType>
+                                                                        <xs:sequence>
+                                                                            <xs:element type="xs:string" name="county"/>
+                                                                            <xs:element type="xs:string" name="state"/>
+                                                                        </xs:sequence>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="geoLocationPoint">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element type="xs:int" name="latitude"/>
+                                                                <xs:element type="xs:int" name="longitude"/>
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="typeEvent">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element type="xs:string" name="accidentsAndIncidents"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="affectedLanes">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element type="xs:byte" name="lanesAffected"/>
+                                        <xs:element type="xs:byte" name="laneTotalCnt"/>
+                                        <xs:element name="types">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element type="xs:string" name="type" maxOccurs="unbounded" minOccurs="0"/>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element type="xs:string" name="location"/>
+                                        <xs:element type="xs:string" name="condition"/>
+                                        <xs:element type="xs:string" name="direction"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element type="xs:dateTime" name="startTime"/>
+                            <xs:element name="localIncidentInformation">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="lane">
+                                            <xs:complexType>
+                                                <xs:simpleContent>
+                                                    <xs:extension base="xs:string">
+                                                        <xs:attribute type="xs:int" name="type" use="optional"/>
+                                                        <xs:attribute type="xs:short" name="status" use="optional"/>
+                                                        <xs:attribute type="xs:int" name="direction" use="optional"/>
+                                                    </xs:extension>
+                                                </xs:simpleContent>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="resource" maxOccurs="unbounded" minOccurs="0">
+                                            <xs:complexType>
+                                                <xs:simpleContent>
+                                                    <xs:extension base="xs:string">
+                                                        <xs:attribute type="xs:dateTime" name="notified" use="optional"/>
+                                                        <xs:attribute type="xs:string" name="name" use="optional"/>
+                                                        <xs:attribute type="xs:string" name="type" use="optional"/>
+                                                        <xs:attribute type="xs:dateTime" name="arrived" use="optional"/>
+                                                        <xs:attribute type="xs:dateTime" name="departed" use="optional"/>
+                                                    </xs:extension>
+                                                </xs:simpleContent>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="event" maxOccurs="unbounded" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="head">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element type="xs:string" name="id"/>
+                                        <xs:element type="xs:string" name="issuingAgency"/>
+                                        <xs:element type="xs:dateTime" name="updateTime"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="location">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element type="xs:string" name="locationName"/>
+                                        <xs:element name="pointLocation">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="crossStreetsPoint">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="onStreetInfo">
+                                                                    <xs:complexType>
+                                                                        <xs:sequence>
+                                                                            <xs:element type="xs:string" name="prefix"/>
+                                                                            <xs:element type="xs:short" name="name"/>
+                                                                        </xs:sequence>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                                <xs:element name="atStreetInfo" minOccurs="0">
+                                                                    <xs:complexType>
+                                                                        <xs:sequence>
+                                                                            <xs:element type="xs:string" name="prefix"/>
+                                                                            <xs:element type="xs:float" name="name"/>
+                                                                        </xs:sequence>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                                <xs:element type="xs:string" name="direction"/>
+                                                                <xs:element name="adminAreas">
+                                                                    <xs:complexType>
+                                                                        <xs:sequence>
+                                                                            <xs:element type="xs:string" name="county"/>
+                                                                            <xs:element type="xs:string" name="state"/>
+                                                                        </xs:sequence>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="geoLocationPoint">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element type="xs:int" name="latitude"/>
+                                                                <xs:element type="xs:int" name="longitude"/>
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="typeEvent">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element type="xs:string" name="trafficConditions"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element type="xs:dateTime" name="startTime"/>
+                            <xs:element name="localEventInformation">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element type="xs:string" name="tmcCode" minOccurs="0"/>
+                                        <xs:element type="xs:string" name="regionalEvent" minOccurs="0"/>
+                                        <xs:element name="lane">
+                                            <xs:complexType>
+                                                <xs:simpleContent>
+                                                    <xs:extension base="xs:string">
+                                                        <xs:attribute type="xs:short" name="type" use="optional"/>
+                                                        <xs:attribute type="xs:byte" name="status" use="optional"/>
+                                                        <xs:attribute type="xs:short" name="direction" use="optional"/>
+                                                    </xs:extension>
+                                                </xs:simpleContent>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

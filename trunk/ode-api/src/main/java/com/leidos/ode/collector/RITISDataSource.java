@@ -56,20 +56,28 @@ public class RITISDataSource extends RestPullDataSource {
         stringBuilder.append("&");
         //The system from which we query data (note detector requests only support 1 system).
         //Possible values
-        stringBuilder.append("system=vdot_nova");
-        stringBuilder.append("&");
-        //Latitude of the lower left corner
-        stringBuilder.append("box-lat=38.856259");
-        stringBuilder.append("&");
-        //Longitude of the lower left corner
-        stringBuilder.append("box-lon=-77.35548");
-        stringBuilder.append("&");
-        //The width (in meters) of the box
-        stringBuilder.append("width=8321");
-        stringBuilder.append("&");
-        //The height (in meters) of the box
-        stringBuilder.append("height=2952");
-        //The road filter returns all dat on the specified roads
+        if (getFeedName().equals("incidentevent") || getFeedName().equals("dms") || getFeedName().equals("detector")) {
+            stringBuilder.append("system=vdot_nova");
+            stringBuilder.append("&");
+            //Latitude of the lower left corner
+            stringBuilder.append("box-lat=38.856259");
+            stringBuilder.append("&");
+            //Longitude of the lower left corner
+            stringBuilder.append("box-lon=-77.35548");
+            stringBuilder.append("&");
+            //The width (in meters) of the box
+            stringBuilder.append("width=8321");
+            stringBuilder.append("&");
+            //The height (in meters) of the box
+            stringBuilder.append("height=2952");
+        }
+        if (getFeedName().equals("weather")){
+            stringBuilder.append("system=nws");
+            stringBuilder.append("type=alerts");
+            stringBuilder.append("state=Virginia");
+        }
+
+        //The road filter returns all data on the specified roads
 //        stringBuilder.append("road=I-66");
         return stringBuilder.toString();
     }
