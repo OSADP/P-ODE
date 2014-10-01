@@ -4,21 +4,21 @@ import com.leidos.ode.agent.data.ODEAgentMessage;
 
 public interface ODESanitizer {
 
-    public ODEAgentMessage sanitizeMessage(ODEAgentMessage message) throws ODESanitizerException;
+    public ODEAgentMessage sanitizeMessage(ODEAgentMessage message) throws ODESanitizeException;
 
-    public class ODESanitizerException extends Exception {
+    public class ODESanitizeException extends Exception {
 
         private static final long serialVersionUID = 1L;
 
-        public ODESanitizerException() {
+        public ODESanitizeException() {
             super();
         }
 
-        public ODESanitizerException(String message) {
+        public ODESanitizeException(String message) {
             super(message);
         }
 
-        public ODESanitizerException(String message, Throwable throwable) {
+        public ODESanitizeException(String message, Throwable throwable) {
             super(message, throwable);
         }
 

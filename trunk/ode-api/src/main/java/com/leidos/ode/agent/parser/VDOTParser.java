@@ -2,7 +2,6 @@ package com.leidos.ode.agent.parser;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
 import net.sourceforge.exist.ns.exist.Result;
-import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -16,10 +15,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.StringReader;
 
-public class ODEVDOTParser implements ODEDataParser {
-
-    private final String TAG = getClass().getSimpleName();
-    private final Logger logger = Logger.getLogger(TAG);
+public class VDOTParser extends ODEDataParser {
 
     @Override
     public ODEAgentMessage parseMessage(byte[] bytes) throws ODEParseException {
@@ -34,15 +30,13 @@ public class ODEVDOTParser implements ODEDataParser {
             logger.debug(TAG + ": Sucessfully parsed result.");
             return new ODEAgentMessage().setFormattedMessage(result).setMessagePayload(bytes);
         } catch (ParserConfigurationException e) {
-            logger.error(e.getLocalizedMessage());
-        } catch (SAXException e) {
-            logger.error(e.getLocalizedMessage());
-        } catch (IOException e) {
-            logger.error(e.getLocalizedMessage());
+            throw new ODEParseException(e.getMessage(), e);
         } catch (JAXBException e) {
-            logger.error(e.getLocalizedMessage());
+            throw new ODEParseException(e.getMessage(), e);
+        } catch (SAXException e) {
+            throw new ODEParseException(e.getMessage(), e);
+        } catch (IOException e) {
+            throw new ODEParseException(e.getMessage(), e);
         }
-        return null;
     }
-
 }

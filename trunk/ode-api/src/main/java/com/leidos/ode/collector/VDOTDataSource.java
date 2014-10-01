@@ -110,6 +110,12 @@ public class VDOTDataSource extends RestPullDataSource {
         return logger;
     }
 
+    @Override
+    public void setFeedName(String feedName){
+        super.setFeedName(feedName);
+
+    }
+
 //    /**
 //     * Returns the list of properties to return in the request.
 //     *

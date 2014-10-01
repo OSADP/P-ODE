@@ -5,10 +5,8 @@ import com.leidos.ode.agent.data.ODEAgentMessage;
 import com.leidos.ode.agent.datatarget.ODEDataTarget;
 import com.leidos.ode.agent.datatarget.ODEDataTarget.DataTargetException;
 import com.leidos.ode.agent.parser.ODEDataParser;
-import com.leidos.ode.agent.parser.ODEDataParser.ODEParseException;
 import com.leidos.ode.agent.registration.ODERegistration;
 import com.leidos.ode.agent.sanitizer.ODESanitizer;
-import com.leidos.ode.agent.sanitizer.ODESanitizer.ODESanitizerException;
 import com.leidos.ode.core.data.ODERegistrationResponse;
 import com.leidos.ode.core.registration.RegistrationInformation;
 import com.leidos.ode.logging.ODELogger;
@@ -155,9 +153,9 @@ public abstract class ODEAgent {
                 getOdeLogger().finish();
 
                 ODEAgent.this.decreaseCount();
-            } catch (ODEParseException e) {
+            } catch (ODEDataParser.ODEParseException e) {
                 getLogger().error(e.getLocalizedMessage());
-            } catch (ODESanitizerException e) {
+            } catch (ODESanitizer.ODESanitizeException e) {
                 getLogger().error(e.getLocalizedMessage());
             } catch (DataTargetException e) {
                 getLogger().error(e.getLocalizedMessage());

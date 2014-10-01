@@ -36,13 +36,13 @@
 
     <bean id="PushDataSource" class="com.leidos.ode.collector.datasource.PushDataSource" abstract="true"/>
 
-    <bean id="VDOTParser" class="com.leidos.ode.agent.parser.ODEVDOTParser"/>
+    <bean id="VDOTParser" class="com.leidos.ode.agent.parser.VDOTParser"/>
 
     <bean id="PassthroughSanitizer" class="com.leidos.ode.agent.sanitizer.PassthroughSanitizer"/>
 
-    <bean id="RITISParser" class="com.leidos.ode.agent.parser.ODERITISParser"/>
+    <bean id="RITISParser" class="com.leidos.ode.agent.parser.RITISParser"/>
 
-    <bean id="BSMParser" class="com.leidos.ode.agent.parser.ODEBSMParser"/>
+    <bean id="BSMParser" class="com.leidos.ode.agent.parser.BSMParser"/>
 
     <bean id="mongo" class="com.mongodb.Mongo">
         <constructor-arg name="host" value="127.0.0.1"/>

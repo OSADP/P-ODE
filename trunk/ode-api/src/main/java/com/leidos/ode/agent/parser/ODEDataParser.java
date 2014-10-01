@@ -1,10 +1,25 @@
 package com.leidos.ode.agent.parser;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
+import com.leidos.ode.util.ODEMessageType;
+import org.apache.log4j.Logger;
 
-public interface ODEDataParser {
+public abstract class ODEDataParser {
 
-    public ODEAgentMessage parseMessage(byte[] bytes) throws ODEParseException;
+    protected final String TAG = getClass().getSimpleName();
+    protected final Logger logger = Logger.getLogger(TAG);
+    private ODEMessageType odeMessageType = ODEMessageType.UNDEFINED;
+
+    protected abstract ODEAgentMessage parseMessage(byte[] bytes) throws ODEParseException;
+
+    public final ODEMessageType getODEMessageType() {
+        return odeMessageType;
+    }
+
+    public final ODEDataParser setODEMessageType(String odeMessageType) {
+        this.odeMessageType = ODEMessageType.valueOf(odeMessageType);
+        return this;
+    }
 
     public class ODEParseException extends Exception {
 
@@ -21,5 +36,6 @@ public interface ODEDataParser {
         public ODEParseException(String message, Throwable throwable) {
             super(message, throwable);
         }
+
     }
 }

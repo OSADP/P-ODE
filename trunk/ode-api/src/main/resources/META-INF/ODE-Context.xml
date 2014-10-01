@@ -63,13 +63,13 @@
         <property name="registrationEndpoint" value="${leidos.ode.reg.pub.endpoint}"/>
     </bean>
 
-    <bean id="BSMParser" class="com.leidos.ode.agent.parser.ODEBSMParser"/>
+    <bean id="BSMParser" class="com.leidos.ode.agent.parser.BSMParser"/>
 
     <bean id="QueueTarget" class="com.leidos.ode.agent.datatarget.ODEQueueTarget"/>
 
-    <bean id="VDOTParser" class="com.leidos.ode.agent.parser.ODEVDOTParser"/>
+    <bean id="VDOTParser" class="com.leidos.ode.agent.parser.VDOTParser"/>
 
-    <bean id="RITISParser" class="com.leidos.ode.agent.parser.ODERITISParser"/>
+    <bean id="RITISParser" class="com.leidos.ode.agent.parser.RITISParser"/>
 
     <bean id="PassthroughSanitizer" class="com.leidos.ode.agent.sanitizer.PassthroughSanitizer"/>
 

@@ -23,14 +23,12 @@ public class TestDataSourceController {
 
     private final String TAG = getClass().getSimpleName();
     private Logger logger = Logger.getLogger(TAG);
-
     @Autowired
     @Qualifier("VDOTCollector")
     private ODECollector vdotCollector;
     @Autowired
     @Qualifier("RITISFilterCollector")
     private ODECollector ritisCollector;
-
     private CollectorDataSourceListener listener;
 
     public TestDataSourceController() {
@@ -50,11 +48,13 @@ public class TestDataSourceController {
         try {
             if (dataSource.equalsIgnoreCase("vdot")) {
                 ((VDOTDataSource) vdotCollector.getDataSource()).setFeedName(feed);
+                vdotCollector.getAgent().getParser().setODEMessageType(feed);
                 ((VDOTDataSource) vdotCollector.getDataSource()).setRequestLimit("10000");
                 vdotCollector.startUp(listener);
             }
             if (dataSource.equalsIgnoreCase("ritis")) {
                 ((RITISDataSource) ritisCollector.getDataSource()).setFeedName(feed);
+                ritisCollector.getAgent().getParser().setODEMessageType(feed);
                 ritisCollector.startUp(listener);
             }
         } catch (ODEDataTarget.DataTargetException e) {
