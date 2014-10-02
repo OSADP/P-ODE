@@ -26,12 +26,8 @@
         <constructor-arg value="MM-dd-YYYY"/>
     </bean>
 
-    <bean id="LogDAO" class="com.leidos.ode.core.dao.LogDAOImpl">
-        <property name="mongoTemplate" ref="mongoTemplate"/>
-    </bean>
-
     <bean id="ODELogger" class="com.leidos.ode.logging.ODELogger">
-        <property name="logDAO" ref="LogDAO"/>
+        <property name="mongoTemplate" ref="mongoTemplate"/>
     </bean>
 
     <bean id="PushDataSource" class="com.leidos.ode.collector.datasource.PushDataSource" abstract="true"/>

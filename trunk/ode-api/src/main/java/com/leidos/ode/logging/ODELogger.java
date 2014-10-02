@@ -1,9 +1,6 @@
 package com.leidos.ode.logging;
 
-import com.leidos.ode.core.dao.LogDAO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
-import org.springframework.stereotype.Component;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.util.Date;
 
@@ -17,7 +14,7 @@ public final class ODELogger {
 
     private final String TAG = getClass().getSimpleName();
     private LogBean logBean;
-    private LogDAO logDAO;
+    private MongoTemplate mongoTemplate;
 
     /**
      * Marks the starting point of a given ODEStage in the log message.
@@ -31,24 +28,24 @@ public final class ODELogger {
     }
 
     /**
-     * Marks the completion point of a given ODEStage in the log message.
+     * Marks the completion point of a given ODEStage in the log message and saves the bean in Mongo.
      */
     public void finish() {
         Date endTime = new Date();
         if (logBean != null) {
             logBean.setEndTime(endTime);
-            getLogDAO().storeLogBean(logBean);
+            getMongoTemplate().save(logBean);
         } else {
             throw new Error("Cannot finish an event that has not been started.");
         }
     }
 
-    private LogDAO getLogDAO() {
-        return logDAO;
+    private MongoTemplate getMongoTemplate() {
+        return mongoTemplate;
     }
 
-    public void setLogDAO(LogDAO logDAO){
-        this.logDAO = logDAO;
+    public void setMongoTemplate(MongoTemplate mongoTemplate){
+        this.mongoTemplate = mongoTemplate;
     }
 
     /**
