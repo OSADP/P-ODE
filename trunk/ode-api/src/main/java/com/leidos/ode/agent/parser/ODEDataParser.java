@@ -17,7 +17,7 @@ public abstract class ODEDataParser {
     }
 
     public final ODEDataParser setODEMessageType(String odeMessageType) {
-        this.odeMessageType = ODEMessageType.valueOf(odeMessageType);
+        this.odeMessageType = ODEMessageType.typeForFeed(odeMessageType);
         return this;
     }
 
