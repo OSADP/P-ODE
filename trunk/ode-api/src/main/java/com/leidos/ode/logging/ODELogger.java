@@ -1,5 +1,6 @@
 package com.leidos.ode.logging;
 
+import org.apache.log4j.Logger;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.util.Date;
@@ -13,6 +14,7 @@ import java.util.Date;
 public final class ODELogger {
 
     private final String TAG = getClass().getSimpleName();
+    private Logger logger = Logger.getLogger(TAG);
     private LogBean logBean;
     private MongoTemplate mongoTemplate;
 
@@ -25,6 +27,7 @@ public final class ODELogger {
     public void start(ODEStage odeStage, String messageId) {
         Date startTime = new Date();
         logBean = new LogBean(startTime, odeStage, messageId);
+        logger.debug(TAG + " Started log event for stage: " + odeStage);
     }
 
     /**
@@ -35,6 +38,7 @@ public final class ODELogger {
         if (logBean != null) {
             logBean.setEndTime(endTime);
             getMongoTemplate().save(logBean);
+            logger.debug(TAG + " Stored log bean.");
         } else {
             throw new Error("Cannot finish an event that has not been started.");
         }
@@ -44,7 +48,7 @@ public final class ODELogger {
         return mongoTemplate;
     }
 
-    public void setMongoTemplate(MongoTemplate mongoTemplate){
+    public void setMongoTemplate(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
     }
 
