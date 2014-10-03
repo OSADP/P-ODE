@@ -46,11 +46,10 @@ public class ODEEmulator implements EmulatorDataListener {
     private ODECollector bsmCollector;
     private CurrentDataSet currentData = new CurrentDataSet();
 
-    //This needs to be a WS method, probably POST
-    //Will take a list of names representing the collectors to be started.
     @RequestMapping(value = "startEmulator", method = RequestMethod.POST)
-    public void startEmulator(@RequestBody EmulatorCollectorList collectors) {
+    public @ResponseBody String startEmulator(@RequestBody EmulatorCollectorList collectors) {
         for (String s : collectors.getCollectors()) {
+            System.out.println(s);
             try {
                 if (s.equalsIgnoreCase("RITISWeatherCollector")) {
                     ritisWeatherCollector.stop();
@@ -83,12 +82,11 @@ public class ODEEmulator implements EmulatorDataListener {
                 logger.error(ex.getLocalizedMessage());
             }
         }
+        return "<response>started</response>";
     }
 
     @RequestMapping(value = "getCurrentData", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    CurrentDataSet getCurrentData() {
+    public @ResponseBody CurrentDataSet getCurrentData() {
         return currentData;
     }
 
