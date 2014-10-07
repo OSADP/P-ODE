@@ -126,7 +126,7 @@ public class CollectorRunner extends QuartzJobBean {
                 getCollector(context, VDOT_COLLECTOR_BEAN_NAME, dataSourceBeanName);
             case VDOTSpeed:
                 getCollector(context, VDOT_COLLECTOR_BEAN_NAME, dataSourceBeanName);
-            case VDOTTravel:
+            case VDOTTravelTime:
                 getCollector(context, VDOT_COLLECTOR_BEAN_NAME, dataSourceBeanName);
             case RITISSpeed:
                 getCollector(context, RITIS_FILTER_COLLECTOR_BEAN_NAME, dataSourceBeanName);
@@ -167,4 +167,5 @@ public class CollectorRunner extends QuartzJobBean {
     private Logger getLogger() {
         return logger;
     }
+
 }

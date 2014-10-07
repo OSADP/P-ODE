@@ -34,7 +34,7 @@ public class TestRITISFeed {
     
     public void run() throws CollectorDataSource.DataSourceException, ODEDataTarget.DataTargetException{
         ApplicationContext ctx = new ClassPathXmlApplicationContext("META-INF/ODE-Context.xml");
-        ODECollector collector = (ODECollector) ctx.getBean("RITISFilterCollector");
+        ODECollector collector = (ODECollector) ctx.getBean("BasicRITISCollector");
         collector.startUp();        
     }
 }

@@ -95,7 +95,7 @@ public class ODEEmulator implements EmulatorDataListener {
             bsmDataReceived(data);
         } else if (ODEMessageType.VDOTSpeed.equals(ODEMessageType.valueOf(messageType))) {
             vdotSpeedDataReceived(data);
-        } else if (ODEMessageType.VDOTTravel.equals(ODEMessageType.valueOf(messageType))) {
+        } else if (ODEMessageType.VDOTTravelTime.equals(ODEMessageType.valueOf(messageType))) {
             vdotTravelTimeDataReceived(data);
         } else if (ODEMessageType.VDOTWeather.equals(ODEMessageType.valueOf(messageType))) {
             vdotWeatherDataReceived(data);

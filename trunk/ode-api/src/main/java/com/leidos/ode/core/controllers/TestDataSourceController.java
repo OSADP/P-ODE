@@ -27,7 +27,7 @@ public class TestDataSourceController {
     @Qualifier("VDOTCollector")
     private ODECollector vdotCollector;
     @Autowired
-    @Qualifier("RITISFilterCollector")
+    @Qualifier("BasicRITISCollector")
     private ODECollector ritisCollector;
     private CollectorDataSourceListener listener;
 

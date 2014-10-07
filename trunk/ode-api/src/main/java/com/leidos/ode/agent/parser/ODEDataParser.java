@@ -1,7 +1,6 @@
 package com.leidos.ode.agent.parser;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
-import com.leidos.ode.util.ODEMessageType;
 import org.apache.log4j.Logger;
 
 public abstract class ODEDataParser {

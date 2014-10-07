@@ -18,7 +18,7 @@
     <!--&ndash;&gt;-->
     <!--<property name="locations">-->
     <!--<list>-->
-    <!--<value>classpath:META-INF/ODEContext-Dev.properties</value>-->
+    <!--<value>classpath:META-INF/ODE-Context-Dev.properties</value>-->
     <!--</list>-->
     <!--</property>-->
     <!--</bean>-->
@@ -27,10 +27,10 @@
           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
-                <value>classpath:META-INF/ODEContext-Dev.properties</value>
+                <value>classpath:META-INF/ODE-Context-Dev.properties</value>
                 <value>classpath:publisher.properties</value>
-                <value>classpath:ritisfilter.properties</value>
-                <value>classpath:vdotfeeds.properties</value>
+                <value>classpath:ritis.properties</value>
+                <value>classpath:vdot.properties</value>
             </list>
         </property>
         <!-- This means don't blow up if a property is not set -->
@@ -112,14 +112,14 @@
         <property name="parser" ref="BSMParser"/>
         <property name="sanitizer" ref="PassthroughSanitizer"/>
         <property name="dataTarget" ref="RESTTarget"/>
-        <property name="registrationInformation" ref="TestRegistrationInfo"/>
+        <property name="registrationInformation" ref="BSMPubRegistrationInfo"/>
         <property name="odeLogger" ref="ODELogger"/>
     </bean>
     
     <bean id="BSMUDPPushDataSource" class="com.leidos.ode.collector.datasource.UDPPushDataSource">
     </bean>
     
-    <bean id="RITISFilterCollector" class="com.leidos.ode.collector.ODECollector">
+    <bean id="BSMCollector" class="com.leidos.ode.collector.ODECollector">
         <property name="agent" ref="BSMPubAgent"/>
         <property name="dataSource" ref="BSMUDPPushDataSource"/>
     </bean>
@@ -142,71 +142,191 @@
         <property name="queueName" value="Clients.leidos.ATIS.Events"/>
     </bean>
 
-    <bean id="RITISFilterDataSource" class="com.leidos.ode.collector.RITISDataSource" parent="RestPullDataSource">
-        <property name="hostProtocol" value="${leidos.ode.ritisfilter.protocol}"/>
-        <property name="hostAddress" value="${leidos.ode.ritisfilter.sourceaddress}"/>
-        <property name="baseUrl" value="${leidos.ode.ritisfilter.baseurl}"/>
-        <property name="username" value="${leidos.ode.ritisfilter.username}"/>
-        <property name="password" value="${leidos.ode.ritisfilter.password}"/>
-        <property name="apiKey" value="${leidos.ode.ritisfilter.apikey}"/>
-        <property name="requestLimit" value="${leidos.ode.ritisfilter.requestlimit}"/>
+    <bean id="BasicRITISDataSource" class="com.leidos.ode.collector.RITISDataSource" parent="RestPullDataSource">
+        <property name="hostProtocol" value="${leidos.ode.ritis.protocol}"/>
+        <property name="hostAddress" value="${leidos.ode.ritis.sourceaddress}"/>
+        <property name="baseUrl" value="${leidos.ode.ritis.baseurl}"/>
+        <property name="username" value="${leidos.ode.ritis.username}"/>
+        <property name="password" value="${leidos.ode.ritis.password}"/>
+        <property name="apiKey" value="${leidos.ode.ritis.apikey}"/>
+        <property name="requestLimit" value="${leidos.ode.ritis.requestlimit}"/>
     </bean>
 
-    <bean id="RITISSpeed" parent="RITISFilterDataSource">
-        <property name="feedName" value="${leidos.ode.ritisfilter.detector.url}"/>
+    <bean id="RITISSpeed" parent="BasicRITISDataSource">
+        <property name="feedName" value="${leidos.ode.ritis.detector.url}"/>
     </bean>
 
-    <bean id="RITISWeather" parent="RITISFilterDataSource">
-        <property name="feedName" value="${leidos.ode.ritisfilter.weather.url}"/>
+    <bean id="RITISWeather" parent="BasicRITISDataSource">
+        <property name="feedName" value="${leidos.ode.ritis.weather.url}"/>
     </bean>
 
-    <bean id="RITISFilterAgent" class="com.leidos.ode.agent.PublishODEAgent">
+    <bean id="RITISSpeedPubRegistrationInfo" class="com.leidos.ode.core.registration.RegistrationInformation">
+        <property name="messageType" value="${leidos.ode.reg.ritisspeed.pub.messageType}"/>
+        <property name="region" value="${leidos.ode.reg.ritisspeed.pub.region}"/>
+        <property name="registrationType" value="${leidos.ode.reg.ritisspeed.pub.registrationType}"/>
+        <property name="agentId" value="${leidos.ode.reg.ritisspeed.pub.agentId}"/>
+        <property name="startDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.reg.ritisspeed.pub.startDate}"/>
+            </bean>
+        </property>
+        <property name="endDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.reg.ritisspeed.pub.endDate}"/>
+            </bean>
+        </property>
+    </bean>
+
+
+    <bean id="RITISWeatherPubRegistrationInfo" class="com.leidos.ode.core.registration.RegistrationInformation">
+        <property name="messageType" value="${leidos.ode.reg.ritisweather.pub.messageType}"/>
+        <property name="region" value="${leidos.ode.reg.ritisweather.pub.region}"/>
+        <property name="registrationType" value="${leidos.ode.reg.ritisweather.pub.registrationType}"/>
+        <property name="agentId" value="${leidos.ode.reg.ritisweather.pub.agentId}"/>
+        <property name="startDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.reg.ritisweather.pub.startDate}"/>
+            </bean>
+        </property>
+        <property name="endDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.reg.ritisweather.pub.endDate}"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="BasicRITISAgent" class="com.leidos.ode.agent.PublishODEAgent">
         <property name="registration" ref="BasicPubRegistration"/>
         <property name="parser" ref="RITISParser"/>
         <property name="sanitizer" ref="PassthroughSanitizer"/>
-        <property name="dataTarget" ref="QueueTarget"/>
-        <property name="registrationInformation" ref="TestRegistrationInfo"/>
+        <property name="dataTarget" ref="RESTTarget"/>
         <property name="odeLogger" ref="ODELogger"/>
     </bean>
 
-    <bean id="RITISFilterCollector" class="com.leidos.ode.collector.ODECollector">
-        <property name="agent" ref="RITISFilterAgent"/>
-        <property name="dataSource" ref="RITISFilterDataSource"/>
+    <bean id="RITISWeatherAgent" parent="BasicRITISAgent">
+        <property name="registrationInformation" ref="RITISWeatherPubRegistrationInfo"/>
     </bean>
 
-    <bean id="VDOTDataSource" class="com.leidos.ode.collector.VDOTDataSource" parent="RestPullDataSource">
-        <property name="hostProtocol" value="${leidos.ode.vdotfeeds.protocol}"/>
-        <property name="hostAddress" value="${leidos.ode.vdotfeeds.sourceaddress}"/>
-        <property name="baseUrl" value="${leidos.ode.vdotfeeds.wfsbaseurl}"/>
-        <!--<property name="xmlBaseUrl" value="${leidos.ode.vdotfeeds.xmlbaseurl}"/>-->
-        <property name="username" value="${leidos.ode.vdotfeeds.username}"/>
-        <property name="password" value="${leidos.ode.vdotfeeds.password}"/>
+    <bean id="RITISSpeedAgent" parent="BasicRITISAgent">
+        <property name="registrationInformation" ref="RITISSpeedPubRegistrationInfo"/>
     </bean>
 
-    <bean id="VDOTWeather" parent="VDOTDataSource">
-        <property name="feedName" value="${leidos.ode.vdotfeeds.shorttermweatherevents.wfsurl}"/>
+    <bean id="RITISWeatherCollector" class="com.leidos.ode.collector.ODECollector">
+        <property name="agent" ref="RITISWeatherAgent"/>
+        <property name="dataSource" ref="RITISWeather"/>
     </bean>
 
-    <bean id="VDOTSpeed" parent="VDOTDataSource">
-        <property name="feedName" value="${leidos.ode.vdotfeeds.trafficsensorstations.wfsurl}"/>
+    <bean id="RITISSpeedCollector" class="com.leidos.ode.collector.ODECollector">
+        <property name="agent" ref="RITISSpeedAgent"/>
+        <property name="dataSource" ref="RITISSpeed"/>
     </bean>
 
-    <bean id="VDOTTravelTime" parent="VDOTDataSource">
-        <property name="feedName" value="${leidos.ode.vdotfeeds.traveltimesegments.wfsurl}"/>
+    <bean id="BasicVDOTDataSource" class="com.leidos.ode.collector.VDOTDataSource" parent="RestPullDataSource">
+        <property name="hostProtocol" value="${leidos.ode.vdot.protocol}"/>
+        <property name="hostAddress" value="${leidos.ode.vdot.sourceaddress}"/>
+        <property name="baseUrl" value="${leidos.ode.vdot.wfsbaseurl}"/>
+        <!--<property name="xmlBaseUrl" value="${leidos.ode.vdot.xmlbaseurl}"/>-->
+        <property name="username" value="${leidos.ode.vdot.username}"/>
+        <property name="password" value="${leidos.ode.vdot.password}"/>
     </bean>
 
-    <bean id="VDOTAgent" class="com.leidos.ode.agent.PublishODEAgent">
+    <bean id="VDOTWeather" parent="BasicVDOTDataSource">
+        <property name="feedName" value="${leidos.ode.vdot.shorttermweatherevents.wfsurl}"/>
+    </bean>
+
+    <bean id="VDOTSpeed" parent="BasicVDOTDataSource">
+        <property name="feedName" value="${leidos.ode.vdot.trafficsensorstations.wfsurl}"/>
+    </bean>
+
+    <bean id="VDOTTravelTime" parent="BasicVDOTDataSource">
+        <property name="feedName" value="${leidos.ode.vdot.traveltimesegments.wfsurl}"/>
+    </bean>
+
+    <bean id="VDOTWeatherPubRegistrationInfo" class="com.leidos.ode.core.registration.RegistrationInformation">
+        <property name="messageType" value="${leidos.ode.reg.vdotweather.pub.messageType}"/>
+        <property name="region" value="${leidos.ode.reg.vdotweather.pub.region}"/>
+        <property name="registrationType" value="${leidos.ode.reg.vdotweather.pub.registrationType}"/>
+        <property name="agentId" value="${leidos.ode.reg.vdotweather.pub.agentId}"/>
+        <property name="startDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.reg.vdotweather.pub.startDate}"/>
+            </bean>
+        </property>
+        <property name="endDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.reg.vdotweather.pub.endDate}"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="VDOTSpeedPubRegistrationInfo" class="com.leidos.ode.core.registration.RegistrationInformation">
+        <property name="messageType" value="${leidos.ode.reg.vdotspeed.pub.messageType}"/>
+        <property name="region" value="${leidos.ode.reg.vdotspeed.pub.region}"/>
+        <property name="registrationType" value="${leidos.ode.reg.vdotspeed.pub.registrationType}"/>
+        <property name="agentId" value="${leidos.ode.reg.vdotspeed.pub.agentId}"/>
+        <property name="startDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.reg.vdotspeed.pub.startDate}"/>
+            </bean>
+        </property>
+        <property name="endDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.reg.vdotspeed.pub.endDate}"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="VDOTTravelTimePubRegistrationInfo" class="com.leidos.ode.core.registration.RegistrationInformation">
+        <property name="messageType" value="${leidos.ode.reg.vdottraveltime.pub.messageType}"/>
+        <property name="region" value="${leidos.ode.reg.vdottraveltime.pub.region}"/>
+        <property name="registrationType" value="${leidos.ode.reg.vdottraveltime.pub.registrationType}"/>
+        <property name="agentId" value="${leidos.ode.reg.vdottraveltime.pub.agentId}"/>
+        <property name="startDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.reg.vdottraveltime.pub.startDate}"/>
+            </bean>
+        </property>
+        <property name="endDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.reg.vdottraveltime.pub.endDate}"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="BasicVDOTAgent" class="com.leidos.ode.agent.PublishODEAgent">
         <property name="registration" ref="BasicPubRegistration"/>
         <property name="parser" ref="VDOTParser"/>
         <property name="sanitizer" ref="PassthroughSanitizer"/>
-        <property name="dataTarget" ref="QueueTarget"/>
+        <property name="dataTarget" ref="RESTTarget"/>
         <property name="registrationInformation" ref="TestRegistrationInfo"/>
         <property name="odeLogger" ref="ODELogger"/>
     </bean>
 
-    <bean id="VDOTCollector" class="com.leidos.ode.collector.ODECollector">
-        <property name="agent" ref="VDOTAgent"/>
-        <property name="dataSource" ref="VDOTDataSource"/>
+    <bean id="VDOTWeatherAgent" parent="BasicVDOTAgent">
+        <property name="registrationInformation" ref="VDOTWeatherPubRegistrationInfo"/>
+    </bean>
+
+    <bean id="VDOTSpeedAgent" parent="BasicVDOTAgent">
+        <property name="registrationInformation" ref="VDOTSpeedPubRegistrationInfo"/>
+    </bean>
+
+    <bean id="VDOTTravelTimeAgent" parent="BasicVDOTAgent">
+        <property name="registrationInformation" ref="VDOTTravelTimePubRegistrationInfo"/>
+    </bean>
+
+    <bean id="VDOTWeatherCollector" class="com.leidos.ode.collector.ODECollector">
+        <property name="dataSource" ref="VDOTWeather"/>
+        <property name="agent" ref="VDOTWeatherAgent"/>
+    </bean>
+
+    <bean id="VDOTSpeedCollector" class="com.leidos.ode.collector.ODECollector">
+        <property name="dataSource" ref="VDOTSpeed"/>
+        <property name="agent" ref="VDOTSpeedAgent"/>
+    </bean>
+
+    <bean id="VDOTTravelTimeCollector" class="com.leidos.ode.collector.ODECollector">
+        <property name="dataSource" ref="VDOTTravelTime"/>
+        <property name="agent" ref="VDOTTravelTimeAgent"/>
     </bean>
 
     <bean id="mongo" class="com.mongodb.Mongo">
