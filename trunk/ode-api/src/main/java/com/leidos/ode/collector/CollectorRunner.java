@@ -24,12 +24,14 @@ public class CollectorRunner extends QuartzJobBean {
 
     private final String TAG = getClass().getSimpleName();
     private final String RUNNER_PROPERTIES_FILENAME = "collector_runner.properties";
-    private final int DATA_SOURCE_ENABLED = 1;
-    private final int DATA_SOURCE_DISABLED = 0;
     private final String VDOT_COLLECTOR_BEAN_NAME = "VDOTCollector";
     private final String RITIS_FILTER_COLLECTOR_BEAN_NAME = "RITISFilterCollector";
     private Logger logger = Logger.getLogger(TAG);
     private Properties runnerProperties;
+
+    {
+        getLogger().error("Unable to build collectors. Runner properties was null!");
+    }
 
     public static void main(String[] args) throws DataSourceException, DataTargetException {
         CollectorRunner runner = new CollectorRunner();
@@ -52,6 +54,7 @@ public class CollectorRunner extends QuartzJobBean {
      * file for the CollectorRunner. For each valid message type defined in the properties file, if the
      * message type is enabled, a collector will be created with an appropriate data source matching the
      * message type. This list is used internally to the CollectorRunner for starting each ODECollector.
+     *
      * @return
      */
     private List<ODECollector> buildCollectors() {
@@ -63,23 +66,26 @@ public class CollectorRunner extends QuartzJobBean {
                 String valueString = (String) propertyMap.getValue();
                 ODEMessageType odeMessageType = ODEMessageType.valueOf(keyString);
                 if (odeMessageType != null) {
-                    int valueInt = Integer.parseInt(valueString);
-                    if (valueInt == DATA_SOURCE_ENABLED) {
-                        ODECollector collector = getCollectorForMessageType(context, odeMessageType);
-                        if (collector != null) {
-                            collectors.add(collector);
+                    try {
+                        int valueInt = Integer.parseInt(valueString);
+                        if (valueInt == 1) {
+                            ODECollector collector = getCollectorForMessageType(context, odeMessageType);
+                            if (collector != null) {
+                                collectors.add(collector);
+                            }
+                            getLogger().debug("Data source " + keyString + " is enabled.");
+                        } else if (valueInt == 0) {
+                            getLogger().debug("Data source " + keyString + " is disabled.");
+                        } else {
+                            throw new NumberFormatException();
                         }
-                        getLogger().debug("Data source " + keyString + " is enabled.");
-                    }
-                    if (valueInt == DATA_SOURCE_DISABLED) {
-                        getLogger().debug("Data source " + keyString + " is disabled.");
+                    } catch (NumberFormatException e) {
+                        getLogger().warn("Invalid data source definition. Expected '1' for enabled, or '0' for disabled, but instead found " + valueString + ". Please correct this issue in the collector runner properties and try again.");
                     }
                 } else {
                     getLogger().error("Unable to determine message type for property: " + keyString);
                 }
             }
-        } else {
-            getLogger().error("Unable to build collectors. Runner properties was null!");
         }
         return collectors;
     }
@@ -109,7 +115,7 @@ public class CollectorRunner extends QuartzJobBean {
     /**
      * Uses ODEMessageType to determine the appropriate collector for the given data source in the application context.
      *
-     * @param context Application context
+     * @param context        Application context
      * @param odeMessageType Message type for this collector's data source
      * @return An ODE Collector who's data source is appropriate for the given message type
      */
@@ -138,7 +144,7 @@ public class CollectorRunner extends QuartzJobBean {
     /**
      * Returns a collector whose data source is the bean found with the provided data source bean name.
      *
-     * @param context Application context
+     * @param context            Application context
      * @param dataSourceBeanName Data source bean name for the collector
      * @return An ODECollector with the appropriate data source.
      */
