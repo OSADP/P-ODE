@@ -36,7 +36,7 @@ public class CollectorRunner extends QuartzJobBean {
 
     private void initialize() {
         runnerProperties = new Properties();
-        context = new ClassPathXmlApplicationContext("META-INF/ODE-Context.xml");
+        setContext(new ClassPathXmlApplicationContext("META-INF/ODE-Context.xml"));
         collectors = new ArrayList<ODECollector>();
         if (loadRunnerProperties()) {
             buildCollectors();
@@ -62,7 +62,7 @@ public class CollectorRunner extends QuartzJobBean {
     /**
      * Starts up the collectors for on the enabled message types in the properties file.
      */
-    public void startUpCollectors() {
+    public final void startUpCollectors() {
         try {
             for (ODECollector collector : getCollectors()) {
                 collector.startUp();
@@ -133,6 +133,11 @@ public class CollectorRunner extends QuartzJobBean {
 
     private ApplicationContext getContext() {
         return context;
+    }
+
+    private void setContext(ApplicationContext context) {
+        this.context = context;
+        getLogger().debug("Using application context: '" + context.getDisplayName() + "'.");
     }
 
     private List<ODECollector> getCollectors() {

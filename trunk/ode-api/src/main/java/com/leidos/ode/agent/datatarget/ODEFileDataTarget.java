@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+
 /**
  * @author cassadyja
  */
@@ -49,6 +50,5 @@ public class ODEFileDataTarget implements ODEDataTarget {
     public void setFilePath(String filePath) {
         this.filePath = filePath;
     }
-
 
 }

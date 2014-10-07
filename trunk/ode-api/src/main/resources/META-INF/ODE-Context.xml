@@ -23,6 +23,9 @@
     <!--</property>-->
     <!--</bean>-->
 
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Common Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
     <bean id="propertyPlaceholderConfigurer"
           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
@@ -45,6 +48,17 @@
         <constructor-arg value="MM-dd-YYYY"/>
     </bean>
 
+    <bean id="mongo" class="com.mongodb.Mongo">
+        <constructor-arg name="host" value="127.0.0.1"/>
+        <constructor-arg name="port" value="27017"/>
+    </bean>
+
+    <!-- Define the MongoTemplate which handles connectivity with MongoDB -->
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg name="mongo" ref="mongo"/>
+        <constructor-arg name="databaseName" value="ode"/>
+    </bean>
+
     <bean id="ODELogger" class="com.leidos.ode.logging.ODELogger">
         <property name="mongoTemplate" ref="mongoTemplate"/>
     </bean>
@@ -59,15 +73,13 @@
         <property name="registrationEndpoint" value="${leidos.ode.reg.pub.endpoint}"/>
     </bean>
 
-    <bean id="BSMParser" class="com.leidos.ode.agent.parser.BSMParser"/>
+    <bean id="SubscribeODEAgent" class="com.leidos.ode.agent.BasicODEAgent"/>
+
+    <bean id="PublishODEAgent" class="com.leidos.ode.agent.PublishODEAgent"/>
 
     <bean id="QueueTarget" class="com.leidos.ode.agent.datatarget.ODEQueueTarget"/>
     
     <bean id="RESTTarget" class="com.leidos.ode.agent.datatarget.ODERestTarget"/>
-
-    <bean id="VDOTParser" class="com.leidos.ode.agent.parser.VDOTParser"/>
-
-    <bean id="RITISParser" class="com.leidos.ode.agent.parser.RITISParser"/>
 
     <bean id="PassthroughSanitizer" class="com.leidos.ode.agent.sanitizer.PassthroughSanitizer"/>
 
@@ -89,6 +101,28 @@
         <property name="subscriptionReceiveAddress" value="${leidos.ode.reg.test.sub.receiveAddress}"/>
         <property name="subscriptionReceivePort" value="${leidos.ode.reg.test.sub.receivePort}"/>
     </bean>
+
+    <bean id="PushDataSource" class="com.leidos.ode.collector.datasource.PushDataSource" abstract="true"/>
+
+    <bean id="RestPullDataSource" class="com.leidos.ode.collector.datasource.RestPullDataSource" abstract="true"/>
+
+    <bean id="UDPPushDataSource" class="com.leidos.ode.collector.datasource.UDPPushDataSource" parent="PushDataSource">
+
+    </bean>
+
+    <bean id="JMSPushDataSource" class="com.leidos.ode.collector.datasource.JMSPushDataSource" parent="PushDataSource">
+        <property name="hostProtocol" value="tcp://"/>
+        <property name="hostAddress" value="localhost"/>
+        <property name="hostPort" value="7847"/>
+        <property name="username" value="leidos"/>
+        <property name="password" value="H3SvjshHnNBX"/>
+        <property name="queueName" value="Clients.leidos.ATIS.Events"/>
+    </bean>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~BSM Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <bean id="BSMParser" class="com.leidos.ode.agent.parser.BSMParser"/>
 
     <bean id="BSMPubRegistrationInfo" class="com.leidos.ode.core.registration.RegistrationInformation">
         <property name="messageType" value="${leidos.ode.reg.bsm.pub.messageType}"/>
@@ -124,23 +158,10 @@
         <property name="dataSource" ref="BSMUDPPushDataSource"/>
     </bean>
 
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~RITIS Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
-    <bean id="PushDataSource" class="com.leidos.ode.collector.datasource.PushDataSource" abstract="true"/>
-
-    <bean id="RestPullDataSource" class="com.leidos.ode.collector.datasource.RestPullDataSource" abstract="true"/>
-
-    <bean id="UDPPushDataSource" class="com.leidos.ode.collector.datasource.UDPPushDataSource" parent="PushDataSource">
-
-    </bean>
-
-    <bean id="JMSPushDataSource" class="com.leidos.ode.collector.datasource.JMSPushDataSource" parent="PushDataSource">
-        <property name="hostProtocol" value="tcp://"/>
-        <property name="hostAddress" value="localhost"/>
-        <property name="hostPort" value="7847"/>
-        <property name="username" value="leidos"/>
-        <property name="password" value="H3SvjshHnNBX"/>
-        <property name="queueName" value="Clients.leidos.ATIS.Events"/>
-    </bean>
+    <bean id="RITISParser" class="com.leidos.ode.agent.parser.RITISParser"/>
 
     <bean id="BasicRITISDataSource" class="com.leidos.ode.collector.RITISDataSource" parent="RestPullDataSource">
         <property name="hostProtocol" value="${leidos.ode.ritis.protocol}"/>
@@ -225,6 +246,11 @@
         <property name="dataSource" ref="RITISSpeed"/>
         <property name="agent" ref="RITISSpeedAgent"/>
     </bean>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~VDOT Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <bean id="VDOTParser" class="com.leidos.ode.agent.parser.VDOTParser"/>
 
     <bean id="BasicVDOTDataSource" class="com.leidos.ode.collector.VDOTDataSource" parent="RestPullDataSource">
         <property name="hostProtocol" value="${leidos.ode.vdot.protocol}"/>
@@ -339,19 +365,9 @@
         <property name="agent" ref="VDOTTravelTimeAgent"/>
     </bean>
 
-    <bean id="mongo" class="com.mongodb.Mongo">
-        <constructor-arg name="host" value="127.0.0.1"/>
-        <constructor-arg name="port" value="27017"/>
-    </bean>
-
-    <!-- Define the MongoTemplate which handles connectivity with MongoDB -->
-    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
-        <constructor-arg name="mongo" ref="mongo"/>
-        <constructor-arg name="databaseName" value="ode"/>
-    </bean>
-
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Data Controllers~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
     <bean id="PublishDataController" class="com.leidos.ode.core.controllers.PublishDataController" abstract="true">
         <property name="hostAddress" value="${leidos.ode.publisher.hostaddress}"/>
         <property name="hostPort" value="${leidos.ode.publisher.hostport}"/>

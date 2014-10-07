@@ -1,6 +1,5 @@
 package com.leidos.ode.collector.datasource;
 
-import com.leidos.ode.collector.datasource.PullDataSource;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;

@@ -17,7 +17,6 @@ public class RegistrationInformation {
     private String subscriptionReceiveAddress;
     private int subscriptionReceivePort;
 
-
     public int getId() {
         return id;
     }
@@ -89,6 +88,5 @@ public class RegistrationInformation {
     public void setSubscriptionReceivePort(int subscriptionReceivePort) {
         this.subscriptionReceivePort = subscriptionReceivePort;
     }
-
 
 }

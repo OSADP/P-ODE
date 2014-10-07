@@ -30,6 +30,10 @@
         <property name="mongoTemplate" ref="mongoTemplate"/>
     </bean>
 
+    <bean id="SubscribeODEAgent" class="com.leidos.ode.agent.BasicODEAgent"/>
+
+    <bean id="PublishODEAgent" class="com.leidos.ode.agent.PublishODEAgent"/>
+
     <bean id="PushDataSource" class="com.leidos.ode.collector.datasource.PushDataSource" abstract="true"/>
 
     <bean id="VDOTParser" class="com.leidos.ode.agent.parser.VDOTParser"/>
@@ -88,7 +92,7 @@
         <property name="messageType" value="${leidos.ode.emulator.vdotweather.datatarget.messageType}"/>
     </bean>
 
-    <bean id="VDOTWeatherSubAgent" class="com.leidos.ode.agent.SubscribeODEAgent">
+    <bean id="VDOTWeatherSubAgent" parent="SubscribeODEAgent">
         <property name="registration" ref="VDOTWeatherSubRegistration"/>
         <property name="parser" ref="VDOTParser"/>
         <property name="sanitizer" ref="PassthroughSanitizer"/>
@@ -137,7 +141,7 @@
         <property name="messageType" value="${leidos.ode.emulator.vdotspeed.datatarget.messageType}"/>
     </bean>
 
-    <bean id="VDOTSpeedSubAgent" class="com.leidos.ode.agent.SubscribeODEAgent">
+    <bean id="VDOTSpeedSubAgent" parent="SubscribeODEAgent">
         <property name="registration" ref="VDOTSpeedSubRegistration"/>
         <property name="parser" ref="VDOTParser"/>
         <property name="sanitizer" ref="PassthroughSanitizer"/>
@@ -185,7 +189,7 @@
         <property name="messageType" value="${leidos.ode.emulator.vdottravel.datatarget.messageType}"/>
     </bean>
 
-    <bean id="VDOTTravelSubAgent" class="com.leidos.ode.agent.SubscribeODEAgent">
+    <bean id="VDOTTravelSubAgent" parent="SubscribeODEAgent">
         <property name="registration" ref="VDOTTravelSubRegistration"/>
         <property name="parser" ref="VDOTParser"/>
         <property name="sanitizer" ref="PassthroughSanitizer"/>
@@ -236,7 +240,7 @@
         <property name="messageType" value="${leidos.ode.emulator.ritisspeed.datatarget.messageType}"/>
     </bean>
 
-    <bean id="RITISSpeedSubAgent" class="com.leidos.ode.agent.SubscribeODEAgent">
+    <bean id="RITISSpeedSubAgent" parent="SubscribeODEAgent">
         <property name="registration" ref="RITISSpeedSubRegistration"/>
         <property name="parser" ref="RITISParser"/>
         <property name="sanitizer" ref="PassthroughSanitizer"/>
@@ -285,7 +289,7 @@
         <property name="messageType" value="${leidos.ode.emulator.ritisweather.datatarget.messageType}"/>
     </bean>
 
-    <bean id="RITISWeatherSubAgent" class="com.leidos.ode.agent.SubscribeODEAgent">
+    <bean id="RITISWeatherSubAgent" parent="SubscribeODEAgent">
         <property name="registration" ref="RITISWeatherSubRegistration"/>
         <property name="parser" ref="RITISParser"/>
         <property name="sanitizer" ref="PassthroughSanitizer"/>
@@ -335,7 +339,7 @@
         <property name="messageType" value="${leidos.ode.emulator.bsm.datatarget.messageType}"/>
     </bean>
 
-    <bean id="BSMSubAgent" class="com.leidos.ode.agent.SubscribeODEAgent">
+    <bean id="BSMSubAgent" parent="SubscribeODEAgent">
         <property name="registration" ref="BSMSubRegistration"/>
         <property name="parser" ref="BSMParser"/>
         <property name="sanitizer" ref="PassthroughSanitizer"/>

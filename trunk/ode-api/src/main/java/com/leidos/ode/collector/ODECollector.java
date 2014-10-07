@@ -1,6 +1,6 @@
 package com.leidos.ode.collector;
 
-import com.leidos.ode.agent.ODEAgent;
+import com.leidos.ode.agent.BasicODEAgent;
 import com.leidos.ode.agent.datatarget.ODEDataTarget.DataTargetException;
 import com.leidos.ode.collector.datasource.CollectorDataSource;
 import com.leidos.ode.collector.datasource.CollectorDataSource.CollectorDataSourceListener;
@@ -14,7 +14,7 @@ public class ODECollector {
     private final String TAG = getClass().getSimpleName();
     private Logger logger = Logger.getLogger(TAG);
     private CollectorDataSource dataSource;
-    private ODEAgent agent;
+    private BasicODEAgent agent;
     private CollectorDataSourceListener odeCollectorDataSourceListener;
     private CollectorDataSourceListener externalCollectorDataSourceListener;
 
@@ -85,11 +85,11 @@ public class ODECollector {
         this.dataSource = dataSource;
     }
 
-    public ODEAgent getAgent() {
+    public BasicODEAgent getAgent() {
         return agent;
     }
 
-    public void setAgent(ODEAgent agent) {
+    public void setAgent(BasicODEAgent agent) {
         this.agent = agent;
     }
 

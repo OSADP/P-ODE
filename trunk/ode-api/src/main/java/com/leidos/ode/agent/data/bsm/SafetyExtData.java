@@ -5,18 +5,14 @@ import java.io.StringWriter;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-
-
 @XmlRootElement
 public class SafetyExtData {
 	private int bsmId;
 	private Integer pathHistoryLength;
 	private Integer itemCount;
 	private String pathHistory;
-	
 	private Integer curveRadius;
 	private Integer curveConfidence;
-	
 	private Integer vehStatusLights;
 	private Integer vehStatusLightBar;
 	private Integer wiperStatFront;
@@ -62,7 +58,6 @@ public class SafetyExtData {
 	private Integer v2vBumperRear;
 	private Integer v2vMass;
 	private Integer v2vType;
-	
 	
 	public int getBsmId() {
 		return bsmId;
