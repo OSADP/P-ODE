@@ -1,6 +1,7 @@
 package com.leidos.ode.collector;
 
 import com.leidos.ode.agent.BasicODEAgent;
+import com.leidos.ode.agent.ODEAgent.MessageListener;
 import com.leidos.ode.agent.datatarget.ODEDataTarget.DataTargetException;
 import com.leidos.ode.collector.datasource.CollectorDataSource;
 import com.leidos.ode.collector.datasource.CollectorDataSource.CollectorDataSourceListener;
@@ -16,7 +17,7 @@ public class ODECollector {
     private CollectorDataSource dataSource;
     private BasicODEAgent agent;
     private CollectorDataSourceListener odeCollectorDataSourceListener;
-    private CollectorDataSourceListener externalCollectorDataSourceListener;
+    private MessageListener messageListener;
 
     @PostConstruct
     private void initialize() {
@@ -25,9 +26,6 @@ public class ODECollector {
             public void onDataReceived(byte[] receivedData) {
                 if (getAgent() != null) {
                     getAgent().processMessage(receivedData);
-                }
-                if (externalCollectorDataSourceListener != null) {
-                    externalCollectorDataSourceListener.onDataReceived(receivedData);
                 }
             }
         };
@@ -46,19 +44,18 @@ public class ODECollector {
     /**
      * Starts the collector with an external listener for callbacks.
      *
-     * @param externalCollectorDataSourceListener
-     *
+     * @param messageListener
      * @throws DataSourceException
      * @throws DataTargetException
      */
-    public void startUp(CollectorDataSourceListener externalCollectorDataSourceListener) throws DataSourceException, DataTargetException {
-        this.externalCollectorDataSourceListener = externalCollectorDataSourceListener;
+    public void startUp(MessageListener messageListener) throws DataSourceException, DataTargetException {
+        this.messageListener = messageListener;
         startCollector();
     }
 
     private void startCollector() throws DataSourceException, DataTargetException {
         if (getAgent() != null) {
-            getAgent().startUp();
+            getAgent().startUp(messageListener);
             if (getDataSource() != null) {
                 getDataSource().startDataSource(odeCollectorDataSourceListener);
                 getLogger().debug("Started collector.");
@@ -96,4 +93,5 @@ public class ODECollector {
     private Logger getLogger() {
         return logger;
     }
+
 }

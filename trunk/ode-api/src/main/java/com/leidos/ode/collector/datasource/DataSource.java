@@ -1,5 +1,6 @@
 package com.leidos.ode.collector.datasource;
 
+
 import org.apache.log4j.Logger;
 
 /**
@@ -133,7 +134,11 @@ public abstract class DataSource implements CollectorDataSource {
             while (!isInterrupted()) {
                 byte[] bytes = pollDataSource();
                 if (bytes != null) {
-                    getCollectorDataSourceListener().onDataReceived(bytes);
+                    if (getCollectorDataSourceListener() != null) {
+                        getCollectorDataSourceListener().onDataReceived(bytes);
+                    } else {
+                        logger.warn("Data source listener was null! Listener will not be notified.");
+                    }
                 } else {
                     logger.debug("Data source response bytes was null!.");
                 }

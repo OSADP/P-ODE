@@ -64,6 +64,7 @@ public class VDOTDataSource extends RestPullDataSource {
             CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
             credentialsProvider.setCredentials(AuthScope.ANY, credentials);
             HttpClientContext httpClientContext = HttpClientContext.create();
+
             httpClientContext.setCredentialsProvider(credentialsProvider);
 
             CloseableHttpResponse closeableHttpResponse = getHttpClient().execute(getHttpGet(), httpClientContext);

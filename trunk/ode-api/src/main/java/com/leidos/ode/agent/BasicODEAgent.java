@@ -27,6 +27,7 @@ public class BasicODEAgent implements ODEAgent {
     protected ODERegistrationResponse registrationResponse;
     private int threadCount = 0;
     private ODELogger odeLogger;
+    private MessageListener messageListener;
 
     @Override
     public void startUp() throws DataTargetException {
@@ -40,8 +41,14 @@ public class BasicODEAgent implements ODEAgent {
     }
 
     @Override
+    public void startUp(MessageListener messageListener) throws DataTargetException {
+        this.messageListener = messageListener;
+        startUp();
+    }
+
+    @Override
     public void processMessage(byte[] messageBytes) {
-        MessageProcessor mp = new MessageProcessor(messageBytes);
+        MessageProcessor mp = new MessageProcessor(messageListener, messageBytes);
         new Thread(mp).start();
         increaseCount();
     }
@@ -137,9 +144,15 @@ public class BasicODEAgent implements ODEAgent {
 
     private class MessageProcessor implements Runnable {
 
+        private MessageListener messageListener;
         private byte[] messageBytes;
 
         protected MessageProcessor(byte[] message) {
+            this(null, message);
+        }
+
+        protected MessageProcessor(MessageListener messageListener, byte[] message) {
+            this.messageListener = messageListener;
             messageBytes = message;
         }
 
@@ -166,6 +179,9 @@ public class BasicODEAgent implements ODEAgent {
                 getOdeLogger().finish();
 
                 BasicODEAgent.this.decreaseCount();
+
+                notifyListener(odeAgentMessage);
+
             } catch (ODEDataParser.ODEParseException e) {
                 getLogger().error(e.getLocalizedMessage());
             } catch (ODESanitizer.ODESanitizeException e) {
@@ -173,6 +189,16 @@ public class BasicODEAgent implements ODEAgent {
             } catch (DataTargetException e) {
                 getLogger().error(e.getLocalizedMessage());
             }
+        }
+
+        private void notifyListener(ODEAgentMessage odeAgentMessage) {
+            if (getMessageListener() != null) {
+                getMessageListener().onMessageProcessed(odeAgentMessage);
+            }
+        }
+
+        private MessageListener getMessageListener() {
+            return messageListener;
         }
     }
 }

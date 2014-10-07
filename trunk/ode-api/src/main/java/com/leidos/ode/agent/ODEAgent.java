@@ -1,5 +1,6 @@
 package com.leidos.ode.agent;
 
+import com.leidos.ode.agent.data.ODEAgentMessage;
 import com.leidos.ode.agent.datatarget.ODEDataTarget.DataTargetException;
 
 /**
@@ -13,5 +14,11 @@ public interface ODEAgent {
 
     public void startUp() throws DataTargetException;
 
+    public void startUp(MessageListener messageListener) throws DataTargetException;
+
     public void processMessage(byte[] messageBytes);
+
+    public interface MessageListener {
+        void onMessageProcessed(ODEAgentMessage odeAgentMessage);
+    }
 }

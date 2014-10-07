@@ -1,11 +1,12 @@
 package com.leidos.ode.core.controllers;
 
+import com.leidos.ode.agent.ODEAgent.MessageListener;
+import com.leidos.ode.agent.data.ODEAgentMessage;
 import com.leidos.ode.agent.datatarget.ODEDataTarget;
 import com.leidos.ode.collector.ODECollector;
 import com.leidos.ode.collector.RITISDataSource;
 import com.leidos.ode.collector.VDOTDataSource;
 import com.leidos.ode.collector.datasource.CollectorDataSource;
-import com.leidos.ode.collector.datasource.CollectorDataSource.CollectorDataSourceListener;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,16 +30,15 @@ public class TestDataSourceController {
     @Autowired
     @Qualifier("BasicRITISCollector")
     private ODECollector ritisCollector;
-    private CollectorDataSourceListener listener;
+    private MessageListener listener;
 
     public TestDataSourceController() {
-        listener = new CollectorDataSource.CollectorDataSourceListener() {
+        listener = new MessageListener() {
             @Override
-            public void onDataReceived(byte[] receivedData) {
-                logger.debug("received data: " + new String(receivedData));
+            public void onMessageProcessed(ODEAgentMessage odeAgentMessage) {
+                logger.debug("Message processed.");
             }
         };
-        //Setting request limit to slow down the requests
     }
 
     @RequestMapping(value = "test/{dataSource}/{feed}", method = RequestMethod.GET)
