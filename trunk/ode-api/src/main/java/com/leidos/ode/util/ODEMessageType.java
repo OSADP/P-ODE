@@ -20,6 +20,7 @@ public enum ODEMessageType {
     RITISSpeed("RITISSpeed"),
     RITISWeather("RITISWeather"),
     BSM("BSM");
+
     private final String name;
 
     private ODEMessageType(String name) {

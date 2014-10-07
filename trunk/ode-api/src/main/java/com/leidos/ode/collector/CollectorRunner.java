@@ -2,6 +2,7 @@ package com.leidos.ode.collector;
 
 import com.leidos.ode.agent.datatarget.ODEDataTarget.DataTargetException;
 import com.leidos.ode.collector.datasource.CollectorDataSource.DataSourceException;
+import com.leidos.ode.collector.datasource.DataSource;
 import com.leidos.ode.util.ODEMessageType;
 import org.apache.log4j.Logger;
 import org.quartz.JobExecutionContext;
@@ -40,8 +41,9 @@ public class CollectorRunner extends QuartzJobBean {
         runnerProperties = new Properties();
         try {
             runnerProperties.load(new FileInputStream(new File(RUNNER_PROPERTIES_FILENAME)));
+            getLogger().debug("Loaded collector runner properties file.");
         } catch (IOException e) {
-            getLogger().error("Unable to load runner properties file.");
+            getLogger().error("Unable to load collector runner properties file.");
         }
     }
 
@@ -115,15 +117,15 @@ public class CollectorRunner extends QuartzJobBean {
         String dataSourceBeanName = odeMessageType.toString();
         switch (odeMessageType) {
             case VDOTWeather:
-                getVDOTCollector(context, dataSourceBeanName);
+                getCollector(context, VDOT_COLLECTOR_BEAN_NAME, dataSourceBeanName);
             case VDOTSpeed:
-                getVDOTCollector(context, dataSourceBeanName);
+                getCollector(context, VDOT_COLLECTOR_BEAN_NAME, dataSourceBeanName);
             case VDOTTravel:
-                getVDOTCollector(context, dataSourceBeanName);
+                getCollector(context, VDOT_COLLECTOR_BEAN_NAME, dataSourceBeanName);
             case RITISSpeed:
-                getRITISCollector(context, dataSourceBeanName);
+                getCollector(context, RITIS_FILTER_COLLECTOR_BEAN_NAME, dataSourceBeanName);
             case RITISWeather:
-                getRITISCollector(context, dataSourceBeanName);
+                getCollector(context, RITIS_FILTER_COLLECTOR_BEAN_NAME, dataSourceBeanName);
             case BSM:
                 //TODO determine which collector to return here
                 return null;
@@ -134,49 +136,26 @@ public class CollectorRunner extends QuartzJobBean {
     }
 
     /**
-     * Returns a VDOT collector for the given data source.
+     * Returns a collector whose data source is the bean found with the provided data source bean name.
      *
      * @param context Application context
-     * @param dataSourceBean Data source bean name for the collector
-     * @return A VDOTCollector with the appropriate data source.
+     * @param dataSourceBeanName Data source bean name for the collector
+     * @return An ODECollector with the appropriate data source.
      */
-    private ODECollector getVDOTCollector(ApplicationContext context, String dataSourceBean) {
-        ODECollector vdotCollector = (ODECollector) context.getBean(VDOT_COLLECTOR_BEAN_NAME);
-        if (vdotCollector != null) {
-            VDOTDataSource vdotDataSource = (VDOTDataSource) context.getBean(dataSourceBean);
-            if (vdotDataSource != null) {
-                vdotCollector.setDataSource(vdotDataSource);
-                getLogger().debug("Set data source '" + dataSourceBean + "' for VDOT collector.");
+    private ODECollector getCollector(ApplicationContext context, String collectorBeanName, String dataSourceBeanName) {
+        ODECollector collector = (ODECollector) context.getBean(collectorBeanName);
+        if (collector != null) {
+            DataSource dataSource = (DataSource) context.getBean(dataSourceBeanName);
+            if (dataSource != null) {
+                collector.setDataSource(dataSource);
+                getLogger().debug("Set data source '" + dataSourceBeanName + "' for collector.");
             } else {
-                getLogger().error("Unable to find VDOT data source bean in application context with name: " + dataSourceBean);
+                getLogger().error("Unable to find data source bean in application context with name: " + dataSourceBeanName);
             }
         } else {
-            getLogger().error("Unable to find bean VDOT collector in application context with name: " + VDOT_COLLECTOR_BEAN_NAME);
+            getLogger().error("Unable to find collector bean in application context with name: " + collectorBeanName);
         }
-        return vdotCollector;
-    }
-
-    /**
-     * Returns a RITIS collector for the given data source.
-     *
-     * @param context Application context
-     * @param dataSourceBean Data source bean name for the collector
-     * @return A RITISFilterCollector with the appropriate data source.
-     */
-    private ODECollector getRITISCollector(ApplicationContext context, String dataSourceBean) {
-        ODECollector ritisCollector = (ODECollector) context.getBean(RITIS_FILTER_COLLECTOR_BEAN_NAME);
-        if (ritisCollector != null) {
-            VDOTDataSource vdotDataSource = (VDOTDataSource) context.getBean(dataSourceBean);
-            if (vdotDataSource != null) {
-                ritisCollector.setDataSource(vdotDataSource);
-                getLogger().debug("Set data source '" + dataSourceBean + "' for VDOT collector.");
-            } else {
-                getLogger().error("Unable to find VDOT data source bean in application context with name: " + dataSourceBean);
-            }
-        } else {
-            getLogger().error("Unable to find bean RITIS collector in application context with name: " + RITIS_FILTER_COLLECTOR_BEAN_NAME);
-        }
-        return ritisCollector;
+        return collector;
     }
 
     private Logger getLogger() {
