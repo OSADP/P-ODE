@@ -19,7 +19,7 @@ import java.util.Properties;
 public class CollectorRunner extends QuartzJobBean {
 
     private final String TAG = getClass().getSimpleName();
-    private final String RUNNER_PROPERTIES_FILENAME = "/collector_runner.properties";
+    private final String RUNNER_PROPERTIES = "/collector_runner.properties";
     private Logger logger = Logger.getLogger(TAG);
     private Properties runnerProperties;
     private ApplicationContext context;
@@ -45,7 +45,7 @@ public class CollectorRunner extends QuartzJobBean {
 
     private boolean loadRunnerProperties() {
         try {
-            getRunnerProperties().load(getClass().getResourceAsStream(RUNNER_PROPERTIES_FILENAME));
+            getRunnerProperties().load(getClass().getResourceAsStream(RUNNER_PROPERTIES));
             getLogger().debug("Loaded collector runner properties file.");
             return true;
         } catch (IOException e) {
@@ -67,7 +67,7 @@ public class CollectorRunner extends QuartzJobBean {
             for (ODECollector collector : getCollectors()) {
                 collector.startUp();
             }
-            getLogger().debug("Started " + getCollectors().size() + " collectors.");
+            getLogger().debug("Started " + getCollectors().size() + " collector(s).");
         } catch (DataSourceException e) {
             getLogger().error(e.getLocalizedMessage());
         } catch (DataTargetException ex) {
@@ -83,7 +83,8 @@ public class CollectorRunner extends QuartzJobBean {
                     ODEMessageType odeMessageType = ODEMessageType.valueOf(propertyKeyString);
                     if (odeMessageType != null) {
                         String propertyValueString = (String) propertyEntry.getValue();
-                        if (isEnabledMessageType(odeMessageType, propertyValueString)) {
+                        if (isMessageTypeEnabled(odeMessageType, propertyValueString)) {
+                            getLogger().debug("Message type '" + odeMessageType.name() + "' is enabled.");
                             ODECollector odeCollector = getODECollector(odeMessageType);
                             if (odeCollector != null) {
                                 getCollectors().add(odeCollector);
@@ -91,6 +92,8 @@ public class CollectorRunner extends QuartzJobBean {
                             } else {
                                 getLogger().warn("Unable to add collector for message type '" + odeMessageType.name() + "'. Collector not found for this message type.");
                             }
+                        } else {
+                            getLogger().debug("Message type '" + odeMessageType.name() + "' is disabled.");
                         }
                     }
                 }
@@ -98,21 +101,13 @@ public class CollectorRunner extends QuartzJobBean {
         }
     }
 
-    private boolean isEnabledMessageType(ODEMessageType odeMessageType, String propertyValueString) {
-        if (odeMessageType != null && propertyValueString != null) {
+    private boolean isMessageTypeEnabled(ODEMessageType odeMessageType, String stateString) {
+        if (odeMessageType != null && stateString != null) {
             try {
-                int propertyValueInt = Integer.parseInt(propertyValueString);
-                if (propertyValueInt == 1) {
-                    getLogger().debug("Message type " + odeMessageType.name() + " is enabled.");
-                    return true;
-                } else if (propertyValueInt == 0) {
-                    getLogger().debug("Message type " + odeMessageType.name() + " is disabled.");
-
-                } else {
-                    getLogger().warn("Message type " + odeMessageType.name() + " state unknown. Expected: '1' or '0', for enabled or disabled. Received: '" + propertyValueString + "'.");
-                }
+                int stateInt = Integer.parseInt(stateString);
+                return stateInt == 1;
             } catch (NumberFormatException e) {
-                getLogger().error(e.getLocalizedMessage());
+                getLogger().warn("State uknown for message type '" + odeMessageType.name() + "'. Expected: '1' or '0', for enabled or disabled. Received: '" + stateString + "'.");
             }
         }
         return false;
