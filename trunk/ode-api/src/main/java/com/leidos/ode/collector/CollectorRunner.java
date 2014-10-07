@@ -2,7 +2,6 @@ package com.leidos.ode.collector;
 
 import com.leidos.ode.agent.datatarget.ODEDataTarget.DataTargetException;
 import com.leidos.ode.collector.datasource.CollectorDataSource.DataSourceException;
-import com.leidos.ode.collector.datasource.DataSource;
 import com.leidos.ode.util.ODEMessageType;
 import org.apache.log4j.Logger;
 import org.quartz.JobExecutionContext;
@@ -24,14 +23,10 @@ public class CollectorRunner extends QuartzJobBean {
 
     private final String TAG = getClass().getSimpleName();
     private final String RUNNER_PROPERTIES_FILENAME = "collector_runner.properties";
-    private final String VDOT_COLLECTOR_BEAN_NAME = "VDOTCollector";
-    private final String RITIS_FILTER_COLLECTOR_BEAN_NAME = "RITISFilterCollector";
     private Logger logger = Logger.getLogger(TAG);
     private Properties runnerProperties;
-
-    {
-        getLogger().error("Unable to build collectors. Runner properties was null!");
-    }
+    private ApplicationContext context;
+    private List<ODECollector> collectors;
 
     public static void main(String[] args) throws DataSourceException, DataTargetException {
         CollectorRunner runner = new CollectorRunner();
@@ -41,53 +36,15 @@ public class CollectorRunner extends QuartzJobBean {
     @PostConstruct
     private void initialize() {
         runnerProperties = new Properties();
+        context = new ClassPathXmlApplicationContext("ODE-Context.xml");
+        collectors = new ArrayList<ODECollector>();
         try {
-            runnerProperties.load(new FileInputStream(new File(RUNNER_PROPERTIES_FILENAME)));
+            getRunnerProperties().load(new FileInputStream(new File(RUNNER_PROPERTIES_FILENAME)));
             getLogger().debug("Loaded collector runner properties file.");
+            buildCollectors();
         } catch (IOException e) {
             getLogger().error("Unable to load collector runner properties file.");
         }
-    }
-
-    /**
-     * Returns a list of ODECollectors which are built using the message types defined in the properties
-     * file for the CollectorRunner. For each valid message type defined in the properties file, if the
-     * message type is enabled, a collector will be created with an appropriate data source matching the
-     * message type. This list is used internally to the CollectorRunner for starting each ODECollector.
-     *
-     * @return
-     */
-    private List<ODECollector> buildCollectors() {
-        List<ODECollector> collectors = new ArrayList<ODECollector>();
-        if (runnerProperties != null) {
-            ApplicationContext context = new ClassPathXmlApplicationContext("ODE-Context.xml");
-            for (Map.Entry<Object, Object> propertyMap : runnerProperties.entrySet()) {
-                String keyString = (String) propertyMap.getKey();
-                String valueString = (String) propertyMap.getValue();
-                ODEMessageType odeMessageType = ODEMessageType.valueOf(keyString);
-                if (odeMessageType != null) {
-                    try {
-                        int valueInt = Integer.parseInt(valueString);
-                        if (valueInt == 1) {
-                            ODECollector collector = getCollectorForMessageType(context, odeMessageType);
-                            if (collector != null) {
-                                collectors.add(collector);
-                            }
-                            getLogger().debug("Data source " + keyString + " is enabled.");
-                        } else if (valueInt == 0) {
-                            getLogger().debug("Data source " + keyString + " is disabled.");
-                        } else {
-                            throw new NumberFormatException();
-                        }
-                    } catch (NumberFormatException e) {
-                        getLogger().warn("Invalid data source definition. Expected '1' for enabled, or '0' for disabled, but instead found " + valueString + ". Please correct this issue in the collector runner properties and try again.");
-                    }
-                } else {
-                    getLogger().error("Unable to determine message type for property: " + keyString);
-                }
-            }
-        }
-        return collectors;
     }
 
     @Override
@@ -100,11 +57,10 @@ public class CollectorRunner extends QuartzJobBean {
      */
     public void startUpCollectors() {
         try {
-            List<ODECollector> collectors = buildCollectors();
-            for (ODECollector collector : collectors) {
+            for (ODECollector collector : getCollectors()) {
                 collector.startUp();
             }
-            getLogger().debug("Started " + collectors.size() + " collectors.");
+            getLogger().debug("Started " + getCollectors().size() + " collectors.");
         } catch (DataSourceException e) {
             getLogger().error(e.getLocalizedMessage());
         } catch (DataTargetException ex) {
@@ -112,56 +68,73 @@ public class CollectorRunner extends QuartzJobBean {
         }
     }
 
-    /**
-     * Uses ODEMessageType to determine the appropriate collector for the given data source in the application context.
-     *
-     * @param context        Application context
-     * @param odeMessageType Message type for this collector's data source
-     * @return An ODE Collector who's data source is appropriate for the given message type
-     */
-    private ODECollector getCollectorForMessageType(ApplicationContext context, ODEMessageType odeMessageType) {
-        String dataSourceBeanName = odeMessageType.toString();
-        switch (odeMessageType) {
-            case VDOTWeather:
-                getCollector(context, VDOT_COLLECTOR_BEAN_NAME, dataSourceBeanName);
-            case VDOTSpeed:
-                getCollector(context, VDOT_COLLECTOR_BEAN_NAME, dataSourceBeanName);
-            case VDOTTravelTime:
-                getCollector(context, VDOT_COLLECTOR_BEAN_NAME, dataSourceBeanName);
-            case RITISSpeed:
-                getCollector(context, RITIS_FILTER_COLLECTOR_BEAN_NAME, dataSourceBeanName);
-            case RITISWeather:
-                getCollector(context, RITIS_FILTER_COLLECTOR_BEAN_NAME, dataSourceBeanName);
-            case BSM:
-                //TODO determine which collector to return here
-                return null;
-            default:
-                //TODO determine which collector to return here
-                return null;
+    private void buildCollectors() {
+        if (getRunnerProperties() != null) {
+            for (Map.Entry<Object, Object> propertyEntry : getRunnerProperties().entrySet()) {
+                String propertyKeyString = (String) propertyEntry.getKey();
+                if (propertyKeyString != null) {
+                    ODEMessageType odeMessageType = ODEMessageType.valueOf(propertyKeyString);
+                    if (odeMessageType != null) {
+                        String propertyValueString = (String) propertyEntry.getValue();
+                        if (isEnabledMessageType(odeMessageType, propertyValueString)) {
+                            ODECollector odeCollector = getODECollector(odeMessageType);
+                            if (odeCollector != null) {
+                                getCollectors().add(odeCollector);
+                                getLogger().debug("Added collector for message type '" + odeMessageType.name() + "'.");
+                            } else {
+                                getLogger().warn("Unable to add collector for message type '" + odeMessageType.name() + "'. Collector not found for this message type.");
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
-    /**
-     * Returns a collector whose data source is the bean found with the provided data source bean name.
-     *
-     * @param context            Application context
-     * @param dataSourceBeanName Data source bean name for the collector
-     * @return An ODECollector with the appropriate data source.
-     */
-    private ODECollector getCollector(ApplicationContext context, String collectorBeanName, String dataSourceBeanName) {
-        ODECollector collector = (ODECollector) context.getBean(collectorBeanName);
-        if (collector != null) {
-            DataSource dataSource = (DataSource) context.getBean(dataSourceBeanName);
-            if (dataSource != null) {
-                collector.setDataSource(dataSource);
-                getLogger().debug("Set data source '" + dataSourceBeanName + "' for collector.");
-            } else {
-                getLogger().error("Unable to find data source bean in application context with name: " + dataSourceBeanName);
+    private boolean isEnabledMessageType(ODEMessageType odeMessageType, String propertyValueString) {
+        if (odeMessageType != null && propertyValueString != null) {
+            try {
+                int propertyValueInt = Integer.parseInt(propertyValueString);
+                if (propertyValueInt == 1) {
+                    getLogger().debug("Message type " + odeMessageType.name() + " is enabled.");
+                    return true;
+                } else if (propertyValueInt == 0) {
+                    getLogger().debug("Message type " + odeMessageType.name() + " is disabled.");
+
+                } else {
+                    getLogger().warn("Message type " + odeMessageType.name() + " state unknown. Expected: '1' or '0', for enabled or disabled. Received: '" + propertyValueString + "'.");
+                }
+            } catch (NumberFormatException e) {
+                getLogger().error(e.getLocalizedMessage());
             }
-        } else {
-            getLogger().error("Unable to find collector bean in application context with name: " + collectorBeanName);
         }
-        return collector;
+        return false;
+    }
+
+    private ODECollector getODECollector(ODEMessageType odeMessageType) {
+        if (odeMessageType != null) {
+            String collectorName = odeMessageType.name() + "Collector";
+            ODECollector odeCollector = (ODECollector) getContext().getBean(collectorName);
+            if (odeCollector != null) {
+                getLogger().debug("Found collector with name: '" + collectorName + "'.");
+                return odeCollector;
+            } else {
+                getLogger().warn("Unable to find collector with name: '" + collectorName + "'.");
+            }
+        }
+        return null;
+    }
+
+    private Properties getRunnerProperties() {
+        return runnerProperties;
+    }
+
+    private ApplicationContext getContext() {
+        return context;
+    }
+
+    private List<ODECollector> getCollectors() {
+        return collectors;
     }
 
     private Logger getLogger() {
