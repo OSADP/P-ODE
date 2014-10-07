@@ -2,7 +2,7 @@ package com.leidos.ode.agent.parser;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
 import generated.CollectionPeriod;
-import net.opengis.gml._3.Point;
+import generated.Header;
 import net.sourceforge.exist.ns.exist.Result;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -36,7 +36,7 @@ public class RITISParser extends ODEDataParser {
             } catch (JAXBException e) {
                 logger.error("Unable to unmarshal bytes into a RITISSpeed object.");
                 logger.debug("Attempting to unmarshal bytes into a RITISWeather object instead.");
-                jaxbContext = JAXBContext.newInstance(Point.class);
+                jaxbContext = JAXBContext.newInstance(Header.class);
                 unmarshaller = jaxbContext.createUnmarshaller();
                 result = (Result) unmarshaller.unmarshal(document);
                 logger.debug("Unmarshalled bytes into a RITISWeather object.");

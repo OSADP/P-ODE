@@ -73,7 +73,9 @@ public class RITISDataSource extends RestPullDataSource {
         }
         if (getFeedName().equals("weather")){
             stringBuilder.append("system=nws");
+            stringBuilder.append("&");
             stringBuilder.append("type=alerts");
+            stringBuilder.append("&");
             stringBuilder.append("state=Virginia");
         }
 

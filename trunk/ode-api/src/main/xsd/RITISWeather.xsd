@@ -1,19 +1,11 @@
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.opengis.net/gml/3.2" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <xs:element name="Point">
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="header">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="pos">
-                    <xs:complexType>
-                        <xs:simpleContent>
-                            <xs:extension base="xs:string">
-                                <xs:attribute type="xs:byte" name="srsDimension"/>
-                            </xs:extension>
-                        </xs:simpleContent>
-                    </xs:complexType>
-                </xs:element>
+                <xs:element type="xs:string" name="sender"/>
+                <xs:element type="xs:dateTime" name="timestamp"/>
             </xs:sequence>
-            <xs:attribute type="xs:string" name="srsName"/>
-            <xs:attribute type="xs:string" name="id"/>
         </xs:complexType>
     </xs:element>
+    <xs:element name="alerts" type="xs:string"/>
 </xs:schema>
