@@ -24,7 +24,7 @@ public class TestDataSourceController {
     private final String TAG = getClass().getSimpleName();
     private Logger logger = Logger.getLogger(TAG);
     @Autowired
-    @Qualifier("VDOTCollector")
+    @Qualifier("BasicVDOTCollector")
     private ODECollector vdotCollector;
     @Autowired
     @Qualifier("BasicRITISCollector")

@@ -27,7 +27,7 @@ public class VDOTParser extends ODEDataParser {
             JAXBContext jaxbContext = JAXBContext.newInstance(Result.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             Result result = (Result) unmarshaller.unmarshal(document);
-            logger.debug(TAG + ": Sucessfully parsed result.");
+            logger.debug("Sucessfully parsed result.");
             return new ODEAgentMessage().setFormattedMessage(result).setMessagePayload(bytes);
         } catch (ParserConfigurationException e) {
             throw new ODEParseException(e.getMessage(), e);

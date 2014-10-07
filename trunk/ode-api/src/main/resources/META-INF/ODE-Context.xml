@@ -211,14 +211,19 @@
         <property name="registrationInformation" ref="RITISSpeedPubRegistrationInfo"/>
     </bean>
 
+    <bean id="BasicRITISCollector" class="com.leidos.ode.collector.ODECollector">
+        <property name="dataSource" ref="BasicRITISDataSource"/>
+        <property name="agent" ref="BasicRITISAgent"/>
+    </bean>
+
     <bean id="RITISWeatherCollector" class="com.leidos.ode.collector.ODECollector">
-        <property name="agent" ref="RITISWeatherAgent"/>
         <property name="dataSource" ref="RITISWeather"/>
+        <property name="agent" ref="RITISWeatherAgent"/>
     </bean>
 
     <bean id="RITISSpeedCollector" class="com.leidos.ode.collector.ODECollector">
-        <property name="agent" ref="RITISSpeedAgent"/>
         <property name="dataSource" ref="RITISSpeed"/>
+        <property name="agent" ref="RITISSpeedAgent"/>
     </bean>
 
     <bean id="BasicVDOTDataSource" class="com.leidos.ode.collector.VDOTDataSource" parent="RestPullDataSource">
@@ -312,6 +317,11 @@
 
     <bean id="VDOTTravelTimeAgent" parent="BasicVDOTAgent">
         <property name="registrationInformation" ref="VDOTTravelTimePubRegistrationInfo"/>
+    </bean>
+
+    <bean id="BasicVDOTCollector" class="com.leidos.ode.collector.ODECollector">
+        <property name="dataSource" ref="BasicVDOTDataSource"/>
+        <property name="agent" ref="BasicVDOTAgent"/>
     </bean>
 
     <bean id="VDOTWeatherCollector" class="com.leidos.ode.collector.ODECollector">

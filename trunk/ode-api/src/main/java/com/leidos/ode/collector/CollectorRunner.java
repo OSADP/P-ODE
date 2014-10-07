@@ -10,9 +10,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
-import javax.annotation.PostConstruct;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,29 +19,39 @@ import java.util.Properties;
 public class CollectorRunner extends QuartzJobBean {
 
     private final String TAG = getClass().getSimpleName();
-    private final String RUNNER_PROPERTIES_FILENAME = "collector_runner.properties";
+    private final String RUNNER_PROPERTIES_FILENAME = "/collector_runner.properties";
     private Logger logger = Logger.getLogger(TAG);
     private Properties runnerProperties;
     private ApplicationContext context;
     private List<ODECollector> collectors;
+
+    public CollectorRunner() {
+        initialize();
+    }
 
     public static void main(String[] args) throws DataSourceException, DataTargetException {
         CollectorRunner runner = new CollectorRunner();
         runner.startUpCollectors();
     }
 
-    @PostConstruct
     private void initialize() {
         runnerProperties = new Properties();
-        context = new ClassPathXmlApplicationContext("ODE-Context.xml");
+        context = new ClassPathXmlApplicationContext("META-INF/ODE-Context.xml");
         collectors = new ArrayList<ODECollector>();
-        try {
-            getRunnerProperties().load(new FileInputStream(new File(RUNNER_PROPERTIES_FILENAME)));
-            getLogger().debug("Loaded collector runner properties file.");
+        if (loadRunnerProperties()) {
             buildCollectors();
+        }
+    }
+
+    private boolean loadRunnerProperties() {
+        try {
+            getRunnerProperties().load(getClass().getResourceAsStream(RUNNER_PROPERTIES_FILENAME));
+            getLogger().debug("Loaded collector runner properties file.");
+            return true;
         } catch (IOException e) {
             getLogger().error("Unable to load collector runner properties file.");
         }
+        return false;
     }
 
     @Override
