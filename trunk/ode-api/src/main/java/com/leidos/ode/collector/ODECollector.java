@@ -5,12 +5,14 @@ import com.leidos.ode.agent.datatarget.ODEDataTarget.DataTargetException;
 import com.leidos.ode.collector.datasource.CollectorDataSource;
 import com.leidos.ode.collector.datasource.CollectorDataSource.CollectorDataSourceListener;
 import com.leidos.ode.collector.datasource.CollectorDataSource.DataSourceException;
-import com.leidos.ode.util.ODEMessageType;
+import org.apache.log4j.Logger;
 
 import javax.annotation.PostConstruct;
 
 public class ODECollector {
 
+    private final String TAG = getClass().getSimpleName();
+    private Logger logger = Logger.getLogger(TAG);
     private CollectorDataSource dataSource;
     private ODEAgent agent;
     private CollectorDataSourceListener odeCollectorDataSourceListener;
@@ -33,6 +35,7 @@ public class ODECollector {
 
     /**
      * Starts the collector. Data callbacks are only available to the collector.
+     *
      * @throws DataSourceException
      * @throws DataTargetException
      */
@@ -44,6 +47,7 @@ public class ODECollector {
      * Starts the collector with an external listener for callbacks.
      *
      * @param externalCollectorDataSourceListener
+     *
      * @throws DataSourceException
      * @throws DataTargetException
      */
@@ -53,13 +57,23 @@ public class ODECollector {
     }
 
     private void startCollector() throws DataSourceException, DataTargetException {
-        getAgent().startUp();
-        getDataSource().startDataSource(odeCollectorDataSourceListener);
+        if (getAgent() != null) {
+            getAgent().startUp();
+            if (getDataSource() != null) {
+                getDataSource().startDataSource(odeCollectorDataSourceListener);
+                getLogger().debug("Started collector.");
+            } else {
+                getLogger().error("Unable to start collector. Data source is null!");
+            }
+        } else {
+            getLogger().error("Unable to start collector. Agent is null!");
+        }
     }
 
     public void stop() {
         if (getDataSource() != null) {
             getDataSource().stopDataSource();
+            getLogger().debug("Stopped data source.");
         }
     }
 
@@ -77,5 +91,9 @@ public class ODECollector {
 
     public void setAgent(ODEAgent agent) {
         this.agent = agent;
+    }
+
+    private Logger getLogger() {
+        return logger;
     }
 }

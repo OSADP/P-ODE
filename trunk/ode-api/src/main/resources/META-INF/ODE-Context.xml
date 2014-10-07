@@ -124,6 +124,14 @@
         <property name="requestLimit" value="${leidos.ode.ritisfilter.requestlimit}"/>
     </bean>
 
+    <bean id="RITISSpeed" parent="RITISFilterDataSource">
+        <property name="feedName" value="${leidos.ode.ritisfilter.detector.url}"/>
+    </bean>
+
+    <bean id="RITISWeather" parent="RITISFilterDataSource">
+        <property name="feedName" value="${leidos.ode.ritisfilter.weather.url}"/>
+    </bean>
+
     <bean id="RITISFilterAgent" class="com.leidos.ode.agent.PublishODEAgent">
         <property name="registration" ref="BasicPubRegistration"/>
         <property name="parser" ref="RITISParser"/>
@@ -145,6 +153,18 @@
         <!--<property name="xmlBaseUrl" value="${leidos.ode.vdotfeeds.xmlbaseurl}"/>-->
         <property name="username" value="${leidos.ode.vdotfeeds.username}"/>
         <property name="password" value="${leidos.ode.vdotfeeds.password}"/>
+    </bean>
+
+    <bean id="VDOTWeather" parent="VDOTDataSource">
+        <property name="feedName" value="${leidos.ode.vdotfeeds.shorttermweatherevents.wfsurl}"/>
+    </bean>
+
+    <bean id="VDOTSpeed" parent="VDOTDataSource">
+        <property name="feedName" value="${leidos.ode.vdotfeeds.trafficsensorstations.wfsurl}"/>
+    </bean>
+
+    <bean id="VDOTTravelTime" parent="VDOTDataSource">
+        <property name="feedName" value="${leidos.ode.vdotfeeds.traveltimesegments.wfsurl}"/>
     </bean>
 
     <bean id="VDOTAgent" class="com.leidos.ode.agent.PublishODEAgent">

@@ -7,7 +7,11 @@
 package com.leidos.ode.util;
 
 /**
- * @author cassadyja
+ * Class for keeping track of ODE message types.
+ * **WARNING: Enum is strongly coupled to bean names in the ODE-Context.xml.
+ * Changes to bean names could result in unexpected behavior and/or exceptions
+ * being thrown! Do not modify this class.
+ * @author cassadyja, lamde
  */
 public enum ODEMessageType {
     VDOTWeather("VDOTWeather"),
@@ -15,40 +19,11 @@ public enum ODEMessageType {
     VDOTTravel("VDOTTravelTime"),
     RITISSpeed("RITISSpeed"),
     RITISWeather("RITISWeather"),
-    BSM("BSM"),
-    UNDEFINED("Undefined");
+    BSM("BSM");
     private final String name;
 
     private ODEMessageType(String name) {
         this.name = name;
-    }
-
-    public static ODEMessageType typeForFeed(String feed) {
-        if (feed != null) {
-            if (feed.equals("vat_road_cond_point") || feed.equals("vat_road_cond_line") || feed.equals("vat_road_cond_area")) {
-                return VDOTWeather;
-            }
-            if (feed.equals("tss_detector_status")) {
-                return VDOTSpeed;
-            }
-            if (feed.equals("traveltimesegment")) {
-                return VDOTTravel;
-            }
-            if (feed.equals("detector")) {
-                return RITISSpeed;
-            }
-            if (feed.equals("weather")) {
-                return RITISWeather;
-            }
-            if (feed.equals("bsm")) {
-                return BSM;
-            }
-        }
-        return UNDEFINED;
-    }
-
-    public boolean equalsName(String otherName) {
-        return (otherName != null) && name.equals(otherName);
     }
 
     @Override

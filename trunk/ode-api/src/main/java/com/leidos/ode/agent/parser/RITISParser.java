@@ -1,7 +1,6 @@
 package com.leidos.ode.agent.parser;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
-import com.leidos.ode.util.ODEMessageType;
 import generated.CollectionPeriod;
 import net.opengis.gml._3.Point;
 import net.sourceforge.exist.ns.exist.Result;
@@ -22,30 +21,30 @@ public class RITISParser extends ODEDataParser {
 
     @Override
     public ODEAgentMessage parseMessage(byte[] bytes) throws ODEParseException {
-        if (getODEMessageType().equals(ODEMessageType.UNDEFINED) || getODEMessageType() == null) {
-            throw new ODEParseException("Cannot parse message. Message type is undefined.");
-        }
         try {
             String messageString = new String(bytes);
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             Document document = documentBuilder.parse(new InputSource(new StringReader(messageString)));
-            JAXBContext jaxbContext = null;
-            if (getODEMessageType().equals(ODEMessageType.RITISSpeed)) {
-                jaxbContext = JAXBContext.newInstance(CollectionPeriod.class);
-            }
-            if (getODEMessageType().equals(ODEMessageType.RITISWeather)) {
+            JAXBContext jaxbContext = JAXBContext.newInstance(CollectionPeriod.class);
+            Unmarshaller unmarshaller;
+            Result result;
+            try {
+                unmarshaller = jaxbContext.createUnmarshaller();
+                result = (Result) unmarshaller.unmarshal(document);
+                logger.debug("Unmarshalled bytes into a RITISSpeed object.");
+            } catch (JAXBException e) {
+                logger.error("Unable to unmarshal bytes into a RITISSpeed object.");
+                logger.debug("Attempting to unmarshal bytes into a RITISWeather object instead.");
                 jaxbContext = JAXBContext.newInstance(Point.class);
+                unmarshaller = jaxbContext.createUnmarshaller();
+                result = (Result) unmarshaller.unmarshal(document);
+                logger.debug("Unmarshalled bytes into a RITISWeather object.");
             }
-
-            if (jaxbContext != null) {
-                Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-                Result result = (Result) unmarshaller.unmarshal(document);
-                logger.debug(TAG + ": Sucessfully parsed result.");
-                return new ODEAgentMessage().setFormattedMessage(result).setMessagePayload(bytes);
-            } else {
-                throw new ODEParseException("JAXB Context was not initialized. Not a valid RITISParser message type.");
+            if (result == null) {
+                logger.warn("Unmarshalling of bytes was unsuccessful. ODEAgentMessage formatted message will be null.");
             }
+            return new ODEAgentMessage().setFormattedMessage(result).setMessagePayload(bytes);
         } catch (ParserConfigurationException e) {
             throw new ODEParseException(e.getMessage(), e);
         } catch (JAXBException e) {

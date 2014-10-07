@@ -8,18 +8,8 @@ public abstract class ODEDataParser {
 
     protected final String TAG = getClass().getSimpleName();
     protected final Logger logger = Logger.getLogger(TAG);
-    private ODEMessageType odeMessageType = ODEMessageType.UNDEFINED;
 
     public abstract ODEAgentMessage parseMessage(byte[] bytes) throws ODEParseException;
-
-    public final ODEMessageType getODEMessageType() {
-        return odeMessageType;
-    }
-
-    public final ODEDataParser setODEMessageType(String odeMessageType) {
-        this.odeMessageType = ODEMessageType.typeForFeed(odeMessageType);
-        return this;
-    }
 
     public class ODEParseException extends Exception {
 
