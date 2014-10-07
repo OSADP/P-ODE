@@ -10,6 +10,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.net.HttpURLConnection;
+import javax.ws.rs.client.Entity;
 
 /**
  * @author cassadyja
@@ -52,7 +53,8 @@ public class ODERestTarget implements ODEDataTarget {
     }
 
     public void sendMessage(ODEAgentMessage message) throws DataTargetException {
-        Response response = webTarget.request().get();
+        Entity<ODEAgentMessage> e = Entity.xml(message);
+        Response response = webTarget.request().post(e);
         String responseString = response.getEntity().toString();
         System.out.println("Test " + responseString);
 //        ClientResponse response = webTarget.path("http://localhost:9090/ode-web").path("publish")

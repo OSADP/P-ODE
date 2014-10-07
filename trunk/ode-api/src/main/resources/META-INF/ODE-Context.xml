@@ -62,6 +62,8 @@
     <bean id="BSMParser" class="com.leidos.ode.agent.parser.BSMParser"/>
 
     <bean id="QueueTarget" class="com.leidos.ode.agent.datatarget.ODEQueueTarget"/>
+    
+    <bean id="RESTTarget" class="com.leidos.ode.agent.datatarget.ODERestTarget"/>
 
     <bean id="VDOTParser" class="com.leidos.ode.agent.parser.VDOTParser"/>
 
@@ -88,14 +90,40 @@
         <property name="subscriptionReceivePort" value="${leidos.ode.reg.test.sub.receivePort}"/>
     </bean>
 
-    <bean id="TestPubAgent" class="com.leidos.ode.agent.PublishODEAgent">
+    <bean id="BSMPubRegistrationInfo" class="com.leidos.ode.core.registration.RegistrationInformation">
+        <property name="messageType" value="${leidos.ode.reg.bsm.pub.messageType}"/>
+        <property name="region" value="${leidos.ode.reg.bsm.pub.region}"/>
+        <property name="registrationType" value="${leidos.ode.reg.bsm.pub.registrationType}"/>
+        <property name="agentId" value="${leidos.ode.reg.bsm.pub.agentId}"/>
+        <property name="startDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.reg.bsm.pub.startDate}"/>
+            </bean>
+        </property>
+        <property name="endDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.reg.bsm.pub.endDate}"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="BSMPubAgent" class="com.leidos.ode.agent.PublishODEAgent">
         <property name="registration" ref="BasicPubRegistration"/>
         <property name="parser" ref="BSMParser"/>
         <property name="sanitizer" ref="PassthroughSanitizer"/>
-        <property name="dataTarget" ref="QueueTarget"/>
+        <property name="dataTarget" ref="RESTTarget"/>
         <property name="registrationInformation" ref="TestRegistrationInfo"/>
         <property name="odeLogger" ref="ODELogger"/>
     </bean>
+    
+    <bean id="BSMUDPPushDataSource" class="com.leidos.ode.collector.datasource.UDPPushDataSource">
+    </bean>
+    
+    <bean id="RITISFilterCollector" class="com.leidos.ode.collector.ODECollector">
+        <property name="agent" ref="BSMPubAgent"/>
+        <property name="dataSource" ref="BSMUDPPushDataSource"/>
+    </bean>
+
 
     <bean id="PushDataSource" class="com.leidos.ode.collector.datasource.PushDataSource" abstract="true"/>
 
