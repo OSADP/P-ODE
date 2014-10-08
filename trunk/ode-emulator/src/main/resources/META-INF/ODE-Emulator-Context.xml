@@ -57,7 +57,7 @@
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~VDOT Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-    <bean id="VDOTWeatherRegistrationInfo" class="com.leidos.ode.core.registration.RegistrationInformation">
+    <bean id="VDOTWeatherRegistrationInfo" class="com.leidos.ode.agent.data.RegistrationInformation">
         <property name="messageType" value="${leidos.ode.emulator.vdotweather.messageType}"/>
         <property name="region" value="${leidos.ode.emulator.vdotweather.region}"/>
         <property name="registrationType" value="${leidos.ode.emulator.vdotweather.sub.registrationType}"/>
@@ -106,7 +106,7 @@
         <property name="dataSource" ref="VDOTWeatherDataSource"/>
     </bean>
 
-    <bean id="VDOTSpeedRegistrationInfo" class="com.leidos.ode.core.registration.RegistrationInformation">
+    <bean id="VDOTSpeedRegistrationInfo" class="com.leidos.ode.agent.data.RegistrationInformation">
         <property name="messageType" value="${leidos.ode.emulator.vdotspeed.messageType}"/>
         <property name="region" value="${leidos.ode.emulator.vdotspeed.region}"/>
         <property name="registrationType" value="${leidos.ode.emulator.vdotspeed.sub.registrationType}"/>
@@ -154,7 +154,7 @@
         <property name="dataSource" ref="VDOTSpeedDataSource"/>
     </bean>
 
-    <bean id="VDOTTravelRegistrationInfo" class="com.leidos.ode.core.registration.RegistrationInformation">
+    <bean id="VDOTTravelRegistrationInfo" class="com.leidos.ode.agent.data.RegistrationInformation">
         <property name="messageType" value="${leidos.ode.emulator.vdottravel.messageType}"/>
         <property name="region" value="${leidos.ode.emulator.vdottravel.region}"/>
         <property name="registrationType" value="${leidos.ode.emulator.vdottravel.sub.registrationType}"/>
@@ -205,7 +205,7 @@
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~RITIS Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-    <bean id="RITISSpeedRegistrationInfo" class="com.leidos.ode.core.registration.RegistrationInformation">
+    <bean id="RITISSpeedRegistrationInfo" class="com.leidos.ode.agent.data.RegistrationInformation">
         <property name="messageType" value="${leidos.ode.emulator.ritisspeed.messageType}"/>
         <property name="region" value="${leidos.ode.emulator.ritisspeed.region}"/>
         <property name="registrationType" value="${leidos.ode.emulator.ritisspeed.sub.registrationType}"/>
@@ -254,7 +254,7 @@
         <property name="dataSource" ref="RITISSpeedDataSource"/>
     </bean>
 
-    <bean id="RITISWeatherRegistrationInfo" class="com.leidos.ode.core.registration.RegistrationInformation">
+    <bean id="RITISWeatherRegistrationInfo" class="com.leidos.ode.agent.data.RegistrationInformation">
         <property name="messageType" value="${leidos.ode.emulator.ritisweather.messageType}"/>
         <property name="region" value="${leidos.ode.emulator.ritisweather.region}"/>
         <property name="registrationType" value="${leidos.ode.emulator.ritisweather.sub.registrationType}"/>
@@ -305,7 +305,7 @@
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~BSM Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-    <bean id="BSMRegistrationInfo" class="com.leidos.ode.core.registration.RegistrationInformation">
+    <bean id="BSMRegistrationInfo" class="com.leidos.ode.agent.data.RegistrationInformation">
         <property name="messageType" value="${leidos.ode.emulator.bsm.messageType}"/>
         <property name="region" value="${leidos.ode.emulator.bsm.region}"/>
         <property name="registrationType" value="${leidos.ode.emulator.bsm.sub.registrationType}"/>
