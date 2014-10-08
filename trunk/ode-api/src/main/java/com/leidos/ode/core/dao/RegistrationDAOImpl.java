@@ -1,7 +1,7 @@
 package com.leidos.ode.core.dao;
 
 import com.leidos.ode.core.data.QueueInfo;
-import com.leidos.ode.core.registration.RegistrationInformation;
+import com.leidos.ode.agent.data.RegistrationInformation;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.stereotype.Component;

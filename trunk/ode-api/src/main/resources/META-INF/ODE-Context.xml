@@ -83,7 +83,7 @@
 
     <bean id="PassthroughSanitizer" class="com.leidos.ode.agent.sanitizer.PassthroughSanitizer"/>
 
-    <bean id="TestRegistrationInfo" class="com.leidos.ode.core.registration.RegistrationInformation">
+    <bean id="TestRegistrationInfo" class="com.leidos.ode.agent.data.RegistrationInformation">
         <property name="messageType" value="${leidos.ode.reg.test.pub.messageType}"/>
         <property name="region" value="${leidos.ode.reg.test.pub.region}"/>
         <property name="registrationType" value="${leidos.ode.reg.test.pub.registrationType}"/>
@@ -124,7 +124,8 @@
 
     <bean id="BSMParser" class="com.leidos.ode.agent.parser.BSMParser"/>
 
-    <bean id="BSMPubRegistrationInfo" class="com.leidos.ode.core.registration.RegistrationInformation">
+    <bean id="BSMPubRegistrationInfo" class="com.leidos.ode.agent.data.RegistrationInformation">
+    <bean id="BSMPubRegistrationInfo" class="com.leidos.ode.agent.data.RegistrationInformation">
         <property name="messageType" value="${leidos.ode.reg.bsm.pub.messageType}"/>
         <property name="region" value="${leidos.ode.reg.bsm.pub.region}"/>
         <property name="registrationType" value="${leidos.ode.reg.bsm.pub.registrationType}"/>
@@ -181,7 +182,7 @@
         <property name="feedName" value="${leidos.ode.ritis.weather.url}"/>
     </bean>
 
-    <bean id="RITISSpeedPubRegistrationInfo" class="com.leidos.ode.core.registration.RegistrationInformation">
+    <bean id="RITISSpeedPubRegistrationInfo" class="com.leidos.ode.agent.data.RegistrationInformation">
         <property name="messageType" value="${leidos.ode.reg.ritisspeed.pub.messageType}"/>
         <property name="region" value="${leidos.ode.reg.ritisspeed.pub.region}"/>
         <property name="registrationType" value="${leidos.ode.reg.ritisspeed.pub.registrationType}"/>
@@ -199,7 +200,7 @@
     </bean>
 
 
-    <bean id="RITISWeatherPubRegistrationInfo" class="com.leidos.ode.core.registration.RegistrationInformation">
+    <bean id="RITISWeatherPubRegistrationInfo" class="com.leidos.ode.agent.data.RegistrationInformation">
         <property name="messageType" value="${leidos.ode.reg.ritisweather.pub.messageType}"/>
         <property name="region" value="${leidos.ode.reg.ritisweather.pub.region}"/>
         <property name="registrationType" value="${leidos.ode.reg.ritisweather.pub.registrationType}"/>
@@ -273,7 +274,7 @@
         <property name="feedName" value="${leidos.ode.vdot.traveltimesegments.wfsurl}"/>
     </bean>
 
-    <bean id="VDOTWeatherPubRegistrationInfo" class="com.leidos.ode.core.registration.RegistrationInformation">
+    <bean id="VDOTWeatherPubRegistrationInfo" class="com.leidos.ode.agent.data.RegistrationInformation">
         <property name="messageType" value="${leidos.ode.reg.vdotweather.pub.messageType}"/>
         <property name="region" value="${leidos.ode.reg.vdotweather.pub.region}"/>
         <property name="registrationType" value="${leidos.ode.reg.vdotweather.pub.registrationType}"/>
@@ -290,7 +291,7 @@
         </property>
     </bean>
 
-    <bean id="VDOTSpeedPubRegistrationInfo" class="com.leidos.ode.core.registration.RegistrationInformation">
+    <bean id="VDOTSpeedPubRegistrationInfo" class="com.leidos.ode.agent.data.RegistrationInformation">
         <property name="messageType" value="${leidos.ode.reg.vdotspeed.pub.messageType}"/>
         <property name="region" value="${leidos.ode.reg.vdotspeed.pub.region}"/>
         <property name="registrationType" value="${leidos.ode.reg.vdotspeed.pub.registrationType}"/>
@@ -307,7 +308,7 @@
         </property>
     </bean>
 
-    <bean id="VDOTTravelTimePubRegistrationInfo" class="com.leidos.ode.core.registration.RegistrationInformation">
+    <bean id="VDOTTravelTimePubRegistrationInfo" class="com.leidos.ode.agent.data.RegistrationInformation">
         <property name="messageType" value="${leidos.ode.reg.vdottraveltime.pub.messageType}"/>
         <property name="region" value="${leidos.ode.reg.vdottraveltime.pub.region}"/>
         <property name="registrationType" value="${leidos.ode.reg.vdottraveltime.pub.registrationType}"/>
@@ -408,4 +409,59 @@
           parent="PublishDataController">
         <property name="topicName" value="${leidos.ode.publisher.topic.ritisweather}"/>
     </bean>
+    
+    
+    
+    <!--  TEST  -->
+    
+    <bean id="BSMSUBRegistrationInfo" class="com.leidos.ode.agent.data.RegistrationInformation">
+        <property name="messageType" value="${leidos.ode.emulator.bsm.messageType}"/>
+        <property name="region" value="${leidos.ode.emulator.bsm.region}"/>
+        <property name="registrationType" value="${leidos.ode.emulator.bsm.sub.registrationType}"/>
+        <property name="agentId" value="${leidos.ode.emulator.bsm.sub.agentId}"/>
+        <property name="subscriptionReceiveAddress" value="${leidos.ode.emulator.bsm.hostAddress}"/>
+        <property name="subscriptionReceivePort" value="${leidos.ode.emulator.bsm.hostPort}"/>
+        <property name="startDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.emulator.bsm.sub.startDate}"/>
+            </bean>
+        </property>
+        <property name="endDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.emulator.bsm.sub.endDate}"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="BSMSUBDataSource" class="com.leidos.ode.collector.datasource.UDPPushDataSource" parent="PushDataSource">
+        <property name="hostProtocol" value="${leidos.ode.emulator.bsm.hostProtocol}"/>
+        <property name="hostAddress" value="${leidos.ode.emulator.bsm.hostAddress}"/>
+        <property name="hostPort" value="${leidos.ode.emulator.bsm.hostPort}"/>
+    </bean>
+
+    <bean id="BSMSubRegistration" class="com.leidos.ode.agent.registration.BasicODERegistration">
+        <property name="registrationBaseUrl" value="${leidos.ode.reg.baseurl}"/>
+        <property name="registrationEndpoint" value="${leidos.ode.reg.sub.endpoint}"/>
+    </bean>
+
+    <bean id="BSMDataTarget" class="com.leidos.ode.agent.datatarget.ODEFileDataTarget">
+    </bean>
+
+    <bean id="BSMSubAgent" class="com.leidos.ode.agent.SubscribeODEAgent">
+        <property name="registration" ref="BSMSubRegistration"/>
+        <property name="parser" ref="BSMParser"/>
+        <property name="sanitizer" ref="PassthroughSanitizer"/>
+        <property name="dataTarget" ref="BSMDataTarget"/>
+        <property name="registrationInformation" ref="BSMSUBRegistrationInfo"/>
+        <property name="odeLogger" ref="ODELogger"/>
+    </bean>
+
+    <bean id="BSMSUBCollector" class="com.leidos.ode.collector.ODECollector">
+        <property name="agent" ref="BSMSubAgent"/>
+        <property name="dataSource" ref="BSMSUBDataSource"/>
+    </bean>    
+        
+    
+    
+    
 </beans>

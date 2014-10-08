@@ -1,4 +1,4 @@
-package com.leidos.ode.core.registration;
+package com.leidos.ode.agent.data;
 
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -16,6 +16,7 @@ public class RegistrationInformation {
     private Date endDate;
     private String subscriptionReceiveAddress;
     private int subscriptionReceivePort;
+
 
     public int getId() {
         return id;
@@ -88,5 +89,6 @@ public class RegistrationInformation {
     public void setSubscriptionReceivePort(int subscriptionReceivePort) {
         this.subscriptionReceivePort = subscriptionReceivePort;
     }
+
 
 }

@@ -7,13 +7,15 @@
 package com.leidos.ode.core.controllers.publish;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
+
 
 /**
  * @author cassadyja
@@ -28,12 +30,20 @@ public class TestPublishBSM {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("http://").append(hostURL).append(":").append(hostPort).append("/").append(queueName);
         String address = stringBuilder.toString();
-
-        Client client = ClientBuilder.newClient();
-        WebTarget webTarget = client.target(UriBuilder.fromUri(address));
         ODEAgentMessage odeAgentMessage = new ODEAgentMessage();
-        Entity<ODEAgentMessage> e = Entity.xml(odeAgentMessage);
-        Response response = webTarget.request().post(e);
-        System.out.println(response);
+
+        
+        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        HttpPost httppost = new HttpPost(address);
+//        
+//        httppost.setEntity(null);
+//        CloseableHttpResponse closeableHttpResponse = httpClient.execute(httppost);
+//        HttpEntity responseEntity = closeableHttpResponse.getEntity();
+//        byte[] responseBytes = EntityUtils.toByteArray(responseEntity);
+//        EntityUtils.consume(responseEntity);
+
+        
+//        Entity<ODEAgentMessage> e = Entity.xml(odeAgentMessage);
+//        System.out.println(response);
     }
 }

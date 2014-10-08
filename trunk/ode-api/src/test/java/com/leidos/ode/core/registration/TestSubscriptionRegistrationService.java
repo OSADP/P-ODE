@@ -6,6 +6,7 @@
 
 package com.leidos.ode.core.registration;
 
+import com.leidos.ode.agent.data.RegistrationInformation;
 import junit.framework.TestCase;
 
 import javax.ws.rs.client.Client;

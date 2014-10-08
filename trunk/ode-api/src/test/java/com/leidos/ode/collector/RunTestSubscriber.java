@@ -6,6 +6,7 @@
 package com.leidos.ode.collector;
 
 import com.leidos.ode.agent.datatarget.ODEDataTarget;
+import com.leidos.ode.agent.datatarget.PrintingDataTarget;
 import com.leidos.ode.collector.datasource.CollectorDataSource;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,14 +19,14 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  *
  * @author cassadyja
  */
-public class TestRITISFeed {
+public class RunTestSubscriber {
     public static void main(String args[]){
         try {
-            new TestRITISFeed().run();
+            new RunTestSubscriber().run();
         } catch (CollectorDataSource.DataSourceException ex) {
-            Logger.getLogger(TestRITISFeed.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RunTestSubscriber.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ODEDataTarget.DataTargetException ex) {
-            Logger.getLogger(TestRITISFeed.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RunTestSubscriber.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         
@@ -34,7 +35,9 @@ public class TestRITISFeed {
     
     public void run() throws CollectorDataSource.DataSourceException, ODEDataTarget.DataTargetException{
         ApplicationContext ctx = new ClassPathXmlApplicationContext("META-INF/ODE-Context.xml");
-        ODECollector collector = (ODECollector) ctx.getBean("BasicRITISCollector");
+        ODECollector collector = (ODECollector) ctx.getBean("BSMCollector");
+        ODEDataTarget target = new PrintingDataTarget();
+        collector.getAgent().setDataTarget(target);
         collector.startUp();        
     }
 }

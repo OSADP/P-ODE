@@ -6,6 +6,7 @@
 
 package com.leidos.ode.core.registration;
 
+import com.leidos.ode.agent.data.RegistrationInformation;
 import com.leidos.ode.core.dao.RegistrationDAO;
 import com.leidos.ode.core.dao.RegistrationDAOImpl;
 import com.leidos.ode.core.data.ODERegistrationResponse;

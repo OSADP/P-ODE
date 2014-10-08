@@ -1,7 +1,7 @@
 package com.leidos.ode.agent.registration;
 
 import com.leidos.ode.core.data.ODERegistrationResponse;
-import com.leidos.ode.core.registration.RegistrationInformation;
+import com.leidos.ode.agent.data.RegistrationInformation;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;

@@ -2,13 +2,13 @@ package com.leidos.ode.agent;
 
 import com.leidos.ode.agent.data.AgentInfo;
 import com.leidos.ode.agent.data.ODEAgentMessage;
+import com.leidos.ode.agent.data.RegistrationInformation;
 import com.leidos.ode.agent.datatarget.ODEDataTarget;
 import com.leidos.ode.agent.datatarget.ODEDataTarget.DataTargetException;
 import com.leidos.ode.agent.parser.ODEDataParser;
 import com.leidos.ode.agent.registration.ODERegistration;
 import com.leidos.ode.agent.sanitizer.ODESanitizer;
 import com.leidos.ode.core.data.ODERegistrationResponse;
-import com.leidos.ode.core.registration.RegistrationInformation;
 import com.leidos.ode.logging.ODELogger;
 import com.leidos.ode.util.SHAHasher;
 import org.apache.log4j.Logger;
