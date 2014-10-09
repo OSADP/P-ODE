@@ -2,11 +2,18 @@ package com.leidos.ode.emulator;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
 import com.leidos.ode.agent.data.bsm.BSM;
+import com.leidos.ode.agent.data.ritis.RITISData;
+import com.leidos.ode.agent.data.ritis.RITISSpeedData;
+import com.leidos.ode.agent.data.vdot.VDOTData;
+import com.leidos.ode.agent.data.vdot.VDOTSpeedData;
 import com.leidos.ode.agent.datatarget.ODEDataTarget;
 import com.leidos.ode.collector.ODECollector;
 import com.leidos.ode.collector.datasource.CollectorDataSource;
 import com.leidos.ode.emulator.agent.EmulatorDataTarget;
 import com.leidos.ode.util.ODEMessageType;
+import generated.CollectionPeriod;
+import generated.CollectionPeriod.CollectionPeriodItem.ZoneReports.ZoneReport.ZoneData.ZoneDataItem;
+import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -91,31 +98,104 @@ public class ODEEmulator implements EmulatorDataListener {
     }
 
     public void dataReceived(String messageType, ODEAgentMessage data) {
-        if (ODEMessageType.BSM.equals(ODEMessageType.valueOf(messageType))) {
-            bsmDataReceived(data);
-        } else if (ODEMessageType.VDOTSpeed.equals(ODEMessageType.valueOf(messageType))) {
-            vdotSpeedDataReceived(data);
-        } else if (ODEMessageType.VDOTTravelTime.equals(ODEMessageType.valueOf(messageType))) {
-            vdotTravelTimeDataReceived(data);
-        } else if (ODEMessageType.VDOTWeather.equals(ODEMessageType.valueOf(messageType))) {
-            vdotWeatherDataReceived(data);
-        } else if (ODEMessageType.RITISSpeed.equals(ODEMessageType.valueOf(messageType))) {
-            ritisSpeedDataReceived(data);
-        } else if (ODEMessageType.RITISWeather.equals(ODEMessageType.valueOf(messageType))) {
-            ritisWeatherDataReceived(data);
+        if(data != null){
+            if (ODEMessageType.BSM.equals(ODEMessageType.valueOf(messageType))) {
+                bsmDataReceived(data);
+            } else if (ODEMessageType.VDOTSpeed.equals(ODEMessageType.valueOf(messageType))) {
+                vdotSpeedDataReceived(data);
+            } else if (ODEMessageType.VDOTTravelTime.equals(ODEMessageType.valueOf(messageType))) {
+                vdotTravelTimeDataReceived(data);
+            } else if (ODEMessageType.VDOTWeather.equals(ODEMessageType.valueOf(messageType))) {
+                vdotWeatherDataReceived(data);
+            } else if (ODEMessageType.RITISSpeed.equals(ODEMessageType.valueOf(messageType))) {
+                ritisSpeedDataReceived(data);
+            } else if (ODEMessageType.RITISWeather.equals(ODEMessageType.valueOf(messageType))) {
+                ritisWeatherDataReceived(data);
+            }
         }
     }
 
     public void ritisSpeedDataReceived(ODEAgentMessage data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<RITISData> ritisData = (List<RITISData>)data.getFormattedMessage();
+        RITISSpeedData eastData = getRITISDataAverage(ritisData, "E");
+        RITISSpeedData westData = getRITISDataAverage(ritisData, "W");
+        //TODO: set values to correct directions in current data
+        
     }
+    
+    
+    private RITISSpeedData getRITISDataAverage(List<RITISData> ritisData, String direction){
+        int count = 0;
+        int avgSpeed = -1;
+        
+        for(RITISData rd:ritisData){
+            RITISSpeedData rsd = (RITISSpeedData)rd;
+            List<ZoneDataItem> items = rsd.getCollectionPeriod().getCollectionPeriodItem().getZoneReports().getZoneReport().getZoneData().getZoneDataItem();
+            for(ZoneDataItem item:items){
+                //TODO: determine if this item is for the correct direction we are looking for.
+                if(avgSpeed == -1){
+                    avgSpeed = item.getZoneVehicleSpeed();
+                }else{
+                    avgSpeed += item.getZoneVehicleSpeed();
+                }
+                count++;
+            }
+            
+        }
+        
+        avgSpeed = (int) avgSpeed/count;
+        
+        RITISSpeedData retData = new RITISSpeedData();
+        CollectionPeriod cp = new CollectionPeriod();
+        CollectionPeriod.CollectionPeriodItem cpi = new CollectionPeriod.CollectionPeriodItem();
+        CollectionPeriod.CollectionPeriodItem.ZoneReports zps = new CollectionPeriod.CollectionPeriodItem.ZoneReports();
+        CollectionPeriod.CollectionPeriodItem.ZoneReports.ZoneReport zp = new CollectionPeriod.CollectionPeriodItem.ZoneReports.ZoneReport();
+        
+        CollectionPeriod.CollectionPeriodItem.ZoneReports.ZoneReport.ZoneData zd = new CollectionPeriod.CollectionPeriodItem.ZoneReports.ZoneReport.ZoneData();
+        ZoneDataItem zdi = new ZoneDataItem();
+        
+        zdi.setZoneVehicleSpeed(Byte.valueOf(Integer.toString(avgSpeed)));
+        
+        zd.getZoneDataItem().add(zdi);
+        zp.setZoneData(zd);
+        zps.setZoneReport(zp);
+        cpi.setZoneReports(zps);
+        cp.setCollectionPeriodItem(cpi);
+        retData.setCollectionPeriod(cp);
+        return retData;
+    }
+    
 
     public void ritisWeatherDataReceived(ODEAgentMessage data) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public void vdotSpeedDataReceived(ODEAgentMessage data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<VDOTData> vdotData = (List<VDOTData>)data.getFormattedMessage();
+        VDOTSpeedData eastData = getVDOTSpeedDataAverage(vdotData, "E");
+        VDOTSpeedData westData = getVDOTSpeedDataAverage(vdotData, "W");
+        //TODO set values to current data.
+    }
+    
+    private VDOTSpeedData getVDOTSpeedDataAverage(List<VDOTData> data, String direction){
+        int avgSpeed = -1;
+        int count = 0;
+        for(VDOTData d:data){
+            VDOTSpeedData vsd = (VDOTSpeedData)d;
+            if(direction.equalsIgnoreCase(vsd.getLaneDirection())){
+                if(avgSpeed == -1){
+                    avgSpeed = vsd.getSpeed();
+                }else{
+                    avgSpeed += vsd.getSpeed();
+                }
+                count++;
+            }
+        }
+        avgSpeed = (int) avgSpeed/count;
+        VDOTSpeedData retData = new VDOTSpeedData();
+        retData.setLaneDirection(direction);
+        retData.setSpeed(avgSpeed);
+        return retData;
     }
 
     public void vdotTravelTimeDataReceived(ODEAgentMessage data) {

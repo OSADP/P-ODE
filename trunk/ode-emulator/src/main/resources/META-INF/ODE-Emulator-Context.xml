@@ -136,6 +136,8 @@
         <property name="registrationBaseUrl" value="${leidos.ode.reg.baseurl}"/>
         <property name="registrationEndpoint" value="${leidos.ode.reg.sub.endpoint}"/>
     </bean>
+    
+    <bean id="VDOTSpeedSanitize" class = "com.leidos.ode.emulator.agent.VDOTSpeedEmptyDataSanitizer"></bean>
 
     <bean id="VDOTSpeedDataTarget" class="com.leidos.ode.emulator.agent.EmulatorDataTarget">
         <property name="messageType" value="${leidos.ode.emulator.vdotspeed.datatarget.messageType}"/>
@@ -144,7 +146,7 @@
     <bean id="VDOTSpeedSubAgent" parent="SubscribeODEAgent">
         <property name="registration" ref="VDOTSpeedSubRegistration"/>
         <property name="parser" ref="VDOTParser"/>
-        <property name="sanitizer" ref="PassthroughSanitizer"/>
+        <property name="sanitizer" ref="VDOTSpeedSanitize"/>
         <property name="dataTarget" ref="VDOTSpeedDataTarget"/>
         <property name="registrationInformation" ref="VDOTSpeedRegistrationInfo"/>
     </bean>
@@ -224,6 +226,9 @@
         </property>
     </bean>
 
+    <bean id="RITISSpeedSanitize" class = "com.leidos.ode.emulator.agent.RITISSpeedEmptySanitizer"></bean>
+
+
     <bean id="RITISSpeedDataSource" class="com.leidos.ode.collector.datasource.UDPPushDataSource"
           parent="PushDataSource">
         <property name="hostProtocol" value="${leidos.ode.emulator.ritisspeed.hostProtocol}"/>
@@ -243,7 +248,7 @@
     <bean id="RITISSpeedSubAgent" parent="SubscribeODEAgent">
         <property name="registration" ref="RITISSpeedSubRegistration"/>
         <property name="parser" ref="RITISParser"/>
-        <property name="sanitizer" ref="PassthroughSanitizer"/>
+        <property name="sanitizer" ref="RITISSpeedSanitize"/>
         <property name="dataTarget" ref="RITISSpeedDataTarget"/>
         <property name="registrationInformation" ref="RITISSpeedRegistrationInfo"/>
         <property name="odeLogger" ref="ODELogger"/>
