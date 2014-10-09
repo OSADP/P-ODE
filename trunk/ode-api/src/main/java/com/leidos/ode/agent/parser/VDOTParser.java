@@ -1,6 +1,10 @@
 package com.leidos.ode.agent.parser;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
+import com.leidos.ode.agent.data.vdot.VDOTData;
+import com.leidos.ode.agent.parser.jsoup.VDOTJsoup;
+
+import java.util.List;
 
 public class VDOTParser extends ODEDataParser {
 
@@ -25,6 +29,10 @@ public class VDOTParser extends ODEDataParser {
 //        } catch (IOException e) {
 //            throw new ODEParseException(e.getMessage(), e);
 //        }
-        return null;
+        getLogger().debug("Parsing VDOT data.");
+        List<VDOTData> vdotData = VDOTJsoup.parseVDOTData(bytes);
+        getLogger().debug("Successfully parsed VDOT data.");
+        getLogger().debug("Total data elements parsed into objects: " + vdotData.size());
+        return new ODEAgentMessage().setFormattedMessage(vdotData).setMessagePayload(bytes);
     }
 }

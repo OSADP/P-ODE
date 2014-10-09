@@ -1,11 +1,12 @@
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:element name="organization-id" type="xs:string"/>
     <xs:element name="network-id" type="xs:string"/>
     <xs:element name="timeStamp" type="xs:dateTime"/>
     <xs:element name="collection-period">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="collection-period-item" maxOccurs="unbounded" minOccurs="0">
+                <xs:element name="collection-period-item">
                     <xs:complexType>
                         <xs:sequence>
                             <xs:element type="xs:dateTime" name="detection-time-stamp"/>
@@ -20,14 +21,20 @@
                                                     <xs:element name="zone-data">
                                                         <xs:complexType>
                                                             <xs:sequence>
-                                                                <xs:element name="zone-data-item" maxOccurs="unbounded" minOccurs="0">
+                                                                <xs:element name="zone-data-item" maxOccurs="unbounded"
+                                                                            minOccurs="0">
                                                                     <xs:complexType>
                                                                         <xs:sequence>
-                                                                            <xs:element type="xs:int" name="zone-number"/>
-                                                                            <xs:element type="xs:byte" name="zone-vehicle-count"/>
-                                                                            <xs:element type="xs:byte" name="occupancy"/>
-                                                                            <xs:element type="xs:byte" name="zone-vehicle-speed"/>
-                                                                            <xs:element type="xs:byte" name="zone-status"/>
+                                                                            <xs:element type="xs:short"
+                                                                                        name="zone-number"/>
+                                                                            <xs:element type="xs:byte"
+                                                                                        name="zone-vehicle-count"/>
+                                                                            <xs:element type="xs:byte"
+                                                                                        name="occupancy"/>
+                                                                            <xs:element type="xs:byte"
+                                                                                        name="zone-vehicle-speed"/>
+                                                                            <xs:element type="xs:byte"
+                                                                                        name="zone-status"/>
                                                                         </xs:sequence>
                                                                     </xs:complexType>
                                                                 </xs:element>

@@ -59,7 +59,5 @@ public class EmulatorDataTarget implements ODEDataTarget {
     public void setMessageType(String messageType) {
         this.messageType = messageType;
     }
-    
-    
-    
+
 }

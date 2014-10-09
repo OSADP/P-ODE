@@ -260,6 +260,7 @@
         <!--<property name="xmlBaseUrl" value="${leidos.ode.vdot.xmlbaseurl}"/>-->
         <property name="username" value="${leidos.ode.vdot.username}"/>
         <property name="password" value="${leidos.ode.vdot.password}"/>
+        <property name="requestLimit" value="${leidos.ode.vdot.requestLimit}"/>
     </bean>
 
     <bean id="VDOTWeather" parent="BasicVDOTDataSource">

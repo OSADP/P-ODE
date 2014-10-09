@@ -7,5 +7,59 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-    <xs:element name="alerts" type="xs:string"/>
+    <xs:element name="alerts">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="alert">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="head">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element type="xs:string" name="id"/>
+                                        <xs:element type="xs:string" name="identifier"/>
+                                        <xs:element type="xs:string" name="sender"/>
+                                        <xs:element type="xs:string" name="headline"/>
+                                        <xs:element type="xs:string" name="messageType"/>
+                                        <xs:element name="timestamps">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element type="xs:dateTime" name="sent"/>
+                                                    <xs:element type="xs:dateTime" name="effective"/>
+                                                    <xs:element type="xs:dateTime" name="expired"/>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element type="xs:string" name="locations"/>
+                            <xs:element name="information">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element type="xs:string" name="category"/>
+                                        <xs:element type="xs:string" name="status"/>
+                                        <xs:element type="xs:string" name="type"/>
+                                        <xs:element type="xs:string" name="severity"/>
+                                        <xs:element type="xs:string" name="certainty"/>
+                                        <xs:element type="xs:string" name="urgency"/>
+                                        <xs:element type="xs:string" name="scope"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="notes">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element type="xs:string" name="description"/>
+                                        <xs:element type="xs:string" name="instruction"/>
+                                        <xs:element type="xs:string" name="note"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 </xs:schema>

@@ -75,8 +75,9 @@ public class RITISDataSource extends RestPullDataSource {
             stringBuilder.append("system=nws");
             stringBuilder.append("&");
             stringBuilder.append("type=alerts");
-            stringBuilder.append("&");
-            stringBuilder.append("state=Virginia");
+            //For some reason, no results are ever returned when using the following state filter
+//            stringBuilder.append("&");
+//            stringBuilder.append("state=Virginia");
         }
 
         //The road filter returns all data on the specified roads

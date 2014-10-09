@@ -5,10 +5,14 @@ import org.apache.log4j.Logger;
 
 public abstract class ODEDataParser {
 
-    protected final String TAG = getClass().getSimpleName();
-    protected final Logger logger = Logger.getLogger(TAG);
+    private final String TAG = getClass().getSimpleName();
+    private final Logger logger = Logger.getLogger(TAG);
 
     public abstract ODEAgentMessage parseMessage(byte[] bytes) throws ODEParseException;
+
+    protected Logger getLogger(){
+        return logger;
+    }
 
     public class ODEParseException extends Exception {
 
