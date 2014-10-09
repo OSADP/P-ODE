@@ -13,7 +13,6 @@ public class RITISParser extends ODEDataParser {
         getLogger().debug("Parsing RITIS data.");
         List<RITISData> ritisData = RITISJsoup.parseRITISData(bytes);
         getLogger().debug("Successfully parsed RITIS data.");
-        getLogger().debug("Total data elements parsed into objects: " + ritisData.size());
 
         return new ODEAgentMessage().setFormattedMessage(ritisData).setMessagePayload(bytes);
     }

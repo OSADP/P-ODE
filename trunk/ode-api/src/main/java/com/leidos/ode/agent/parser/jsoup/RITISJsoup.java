@@ -163,6 +163,12 @@ public class RITISJsoup extends ODEJsoup {
         return ritisWeatherDataList;
     }
 
+    /**
+     * Parses the Header element of RITISWeather data.
+     *
+     * @param headerElement
+     * @return
+     */
     private static Header parseHeader(Element headerElement) {
         if (headerElement != null) {
             try {
@@ -186,6 +192,12 @@ public class RITISJsoup extends ODEJsoup {
         return null;
     }
 
+    /**
+     * Parses the Alerts element of RITISWeather data.
+     *
+     * @param alertsElement
+     * @return
+     */
     private static List<Alerts> parseAlerts(Element alertsElement) {
         List<Alerts> alertsList = new ArrayList<Alerts>();
         if (alertsElement != null) {
@@ -202,7 +214,9 @@ public class RITISJsoup extends ODEJsoup {
                                     .append(System.lineSeparator())
                                     .append("</").append(tagName).append(">")
                                     .toString();
+                            //Fix the unclosed tag 'area'. This bug seems to be Jsoup related, because the same url in a browser returns valid xml
                             html = fixHtmlWithUnclosedTag(html, "area", "arealocation");
+
                             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
                             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
                             org.w3c.dom.Document document = documentBuilder.parse(new InputSource(new StringReader(html)));
@@ -228,6 +242,14 @@ public class RITISJsoup extends ODEJsoup {
         return alertsList;
     }
 
+    /**
+     * Fixes an html string that contains an unclosed tag.
+     *
+     * @param html
+     * @param unclosedTag
+     * @param followingTag
+     * @return
+     */
     private static String fixHtmlWithUnclosedTag(String html, String unclosedTag, String followingTag) {
         if (html != null && unclosedTag != null && followingTag != null) {
 

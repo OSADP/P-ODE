@@ -1,7 +1,5 @@
 package com.leidos.ode.agent.data.vdot;
 
-import com.leidos.ode.agent.data.Geometry;
-
 import java.util.Date;
 
 /**
@@ -17,13 +15,13 @@ public class VDOTTravelTimeData implements VDOTData {
     private Date lastTimeUpdated;
     private String segmentName;
     private int travelTime;
-    private Geometry geometry;
+    private float[] geometry;
 
-    public Geometry getGeometry() {
+    public float[] getGeometry() {
         return geometry;
     }
 
-    public void setGeometry(Geometry geometry) {
+    public void setGeometry(float[] geometry) {
         this.geometry = geometry;
     }
 

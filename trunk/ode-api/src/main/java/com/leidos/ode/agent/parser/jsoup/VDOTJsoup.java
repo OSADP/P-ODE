@@ -1,6 +1,5 @@
 package com.leidos.ode.agent.parser.jsoup;
 
-import com.leidos.ode.agent.data.Geometry;
 import com.leidos.ode.agent.data.vdot.VDOTData;
 import com.leidos.ode.agent.data.vdot.VDOTSpeedData;
 import com.leidos.ode.agent.data.vdot.VDOTTravelTimeData;
@@ -206,12 +205,12 @@ public class VDOTJsoup extends ODEJsoup {
         return vdotTravelTimeDataList;
     }
 
-    private static Geometry parseGeometry(Element element) {
+    private static float[] parseGeometry(Element element) {
         Elements geometryElements = element.getElementsByTag("gml:Point");
 
         Elements geometryChildren = geometryElements.first().children();
 
-        Geometry geometry = new Geometry();
+        float[] geometry = new float[2];
 
         for (Element geometryChild : geometryChildren) {
 
@@ -220,8 +219,8 @@ public class VDOTJsoup extends ODEJsoup {
 
             if (tagName.equals("gml:pos")) {
                 String[] position = value.split(" ");
-                geometry.setCoordLat(Float.parseFloat(position[0]));
-                geometry.setCoordLong(Float.parseFloat(position[1]));
+                geometry[0] = Float.parseFloat(position[0]);
+                geometry[1] = Float.parseFloat(position[1]);
                 break;
             }
         }

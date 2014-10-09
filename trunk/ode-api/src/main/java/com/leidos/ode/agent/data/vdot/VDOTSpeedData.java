@@ -1,7 +1,5 @@
 package com.leidos.ode.agent.data.vdot;
 
-import com.leidos.ode.agent.data.Geometry;
-
 import java.util.Date;
 
 /**
@@ -24,7 +22,7 @@ public class VDOTSpeedData implements VDOTData {
     private int occupancy;
     private String routeName;
     private int speed;
-    private Geometry geometry;
+    private float[] geometry;
     private int volume;
     private int nodeId;
 
@@ -44,11 +42,11 @@ public class VDOTSpeedData implements VDOTData {
         this.deviceName = deviceName;
     }
 
-    public Geometry getGeometry() {
+    public float[] getGeometry() {
         return geometry;
     }
 
-    public void setGeometry(Geometry geometry) {
+    public void setGeometry(float[] geometry) {
         this.geometry = geometry;
     }
 
