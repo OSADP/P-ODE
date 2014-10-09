@@ -2,6 +2,7 @@ package com.leidos.ode.collector;
 
 import com.leidos.ode.agent.datatarget.ODEDataTarget.DataTargetException;
 import com.leidos.ode.collector.datasource.CollectorDataSource.DataSourceException;
+import com.leidos.ode.util.MongoUtils;
 import com.leidos.ode.util.ODEMessageType;
 import org.apache.log4j.Logger;
 import org.quartz.JobExecutionContext;
@@ -40,6 +41,15 @@ public class CollectorRunner extends QuartzJobBean {
         collectors = new ArrayList<ODECollector>();
         if (loadRunnerProperties()) {
             buildCollectors();
+        }
+        checkMongoDB();
+    }
+
+    private void checkMongoDB() {
+        if (MongoUtils.isMongoDBRunning()) {
+            getLogger().debug("MongoDB has been started.");
+        } else {
+            getLogger().warn("****Warning, MongoDB is not running. Exceptions will be thrown when using Mongo beans!****");
         }
     }
 
