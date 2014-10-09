@@ -34,49 +34,63 @@ import java.util.List;
  * Time: 3:21 PM
  * To change this template use File | Settings | File Templates.
  */
-public class RITISJsoup extends ODEJsoup {
+public class RITISJsoup extends ODEJsoup<RITISData> {
 
     private static final String TAG = "RITISJsoup";
     private static final String RITIS_SPEED_TAG = "ns8:detectorZoneData-RITIS";
     private static final String RITIS_WEATHER_TAG = "ns10:alertsData";
     private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.'Z'";
     private static Logger logger = Logger.getLogger(TAG);
+    private static RITISJsoup instance;
 
-    public static List<RITISData> parseRITISData(byte[] bytes) {
-        Document document = getMessageDocument(bytes);
-        Element bodyElement = document.body();
-        if (bodyElement != null) {
-            Elements elementChildren = bodyElement.children();
-            if (elementChildren != null) {
-                if (!elementChildren.isEmpty()) {
-                    Element firstChild = elementChildren.first();
-                    if (firstChild != null) {
-                        String firstChildTag = firstChild.tagName();
-                        if (firstChildTag.equalsIgnoreCase(RITIS_SPEED_TAG)) {
-                            logger.debug("Parsing RITISSpeed data");
-                            //Parse the RITISSpeed data using the CollectionPeriods which are the 3rd element
-                            return parseRITISSpeedData(document, firstChild.child(3));
-
-                        } else if (firstChildTag.equalsIgnoreCase(RITIS_WEATHER_TAG)) {
-                            logger.debug("Parsing RITISWeather data");
-                            return parseRITISWeatherData(elementChildren);
-                        }
-                    } else {
-                        logger.debug("Error parsing first child. First child was null.");
-                    }
-                } else {
-                    logger.debug("There is no data to be parsed.");
-                }
-            } else {
-                logger.debug("Error parsing elements. Body's children elements were null.");
-            }
-        } else {
-            logger.debug("Error parsing body element. Body element was null.");
+    public static RITISJsoup getInstance() {
+        if (instance == null) {
+            instance = new RITISJsoup();
         }
-        return null;
+        return instance;
     }
 
-    private static List<RITISData> parseRITISSpeedData(Document document, Element collectionPeriodElement) {
+    @Override
+    public ODEJsoupResponse<RITISData> parseData(byte[] bytes) {
+        Document document = getMessageDocument(bytes);
+        if (document != null) {
+            Element bodyElement = document.body();
+            if (bodyElement != null) {
+                Elements elementChildren = bodyElement.children();
+                if (elementChildren != null) {
+                    if (!elementChildren.isEmpty()) {
+                        Element firstChild = elementChildren.first();
+                        if (firstChild != null) {
+                            String firstChildTag = firstChild.tagName();
+                            if (firstChildTag.equalsIgnoreCase(RITIS_SPEED_TAG)) {
+                                logger.debug("Parsing RITISSpeed data");
+                                //Parse the RITISSpeed data using the CollectionPeriods which are the 3rd element
+                                return parseRITISSpeedData(document, firstChild.child(3));
+
+                            } else if (firstChildTag.equalsIgnoreCase(RITIS_WEATHER_TAG)) {
+                                logger.debug("Parsing RITISWeather data");
+                                return parseRITISWeatherData(elementChildren);
+                            }
+                        } else {
+                            logger.debug("Error parsing first child. First child was null.");
+                        }
+                    } else {
+                        logger.debug("There is no data to be parsed.");
+                        return new ODEJsoupResponse<RITISData>(null, JsoupReport.NO_RESULTS);
+                    }
+                } else {
+                    logger.debug("Error parsing elements. Body's children elements were null.");
+                }
+            } else {
+                logger.debug("Error parsing body element. Body element was null.");
+            }
+        } else {
+            return new ODEJsoupResponse<RITISData>(null, JsoupReport.DOCUMENT_PARSE_ERROR);
+        }
+        return new ODEJsoupResponse<RITISData>(null, JsoupReport.UNKNOWN);
+    }
+
+    private ODEJsoupResponse<RITISData> parseRITISSpeedData(Document document, Element collectionPeriodElement) {
         List<RITISData> ritisSpeedDataList = new ArrayList<RITISData>();
 
         List<CollectionPeriod> collectionPeriodList = parseCollectionPeriods(collectionPeriodElement);
@@ -101,10 +115,10 @@ public class RITISJsoup extends ODEJsoup {
             ritisSpeedData.setCollectionPeriod(collectionPeriod);
             ritisSpeedDataList.add(ritisSpeedData);
         }
-        return ritisSpeedDataList;
+        return buildJsoupResponseFromParsedData(ritisSpeedDataList);
     }
 
-    private static List<CollectionPeriod> parseCollectionPeriods(Element collectionPeriodElement) {
+    private List<CollectionPeriod> parseCollectionPeriods(Element collectionPeriodElement) {
         List<CollectionPeriod> collectionPeriodList = new ArrayList<CollectionPeriod>();
         String tagName = collectionPeriodElement.tagName();
         if (tagName.equals("collection-period")) {
@@ -143,7 +157,7 @@ public class RITISJsoup extends ODEJsoup {
         return collectionPeriodList;
     }
 
-    private static List<RITISData> parseRITISWeatherData(Elements element) {
+    private ODEJsoupResponse<RITISData> parseRITISWeatherData(Elements element) {
         List<RITISData> ritisWeatherDataList = new ArrayList<RITISData>();
 
         Elements elements = element.first().children();
@@ -160,7 +174,7 @@ public class RITISJsoup extends ODEJsoup {
                 ritisWeatherDataList.add(ritisWeatherData);
             }
         }
-        return ritisWeatherDataList;
+        return buildJsoupResponseFromParsedData(ritisWeatherDataList);
     }
 
     /**
@@ -169,7 +183,7 @@ public class RITISJsoup extends ODEJsoup {
      * @param headerElement
      * @return
      */
-    private static Header parseHeader(Element headerElement) {
+    private Header parseHeader(Element headerElement) {
         if (headerElement != null) {
             try {
                 String html = headerElement.outerHtml();
@@ -198,7 +212,7 @@ public class RITISJsoup extends ODEJsoup {
      * @param alertsElement
      * @return
      */
-    private static List<Alerts> parseAlerts(Element alertsElement) {
+    private List<Alerts> parseAlerts(Element alertsElement) {
         List<Alerts> alertsList = new ArrayList<Alerts>();
         if (alertsElement != null) {
             String tagName = alertsElement.tagName();
@@ -250,7 +264,7 @@ public class RITISJsoup extends ODEJsoup {
      * @param followingTag
      * @return
      */
-    private static String fixHtmlWithUnclosedTag(String html, String unclosedTag, String followingTag) {
+    private String fixHtmlWithUnclosedTag(String html, String unclosedTag, String followingTag) {
         if (html != null && unclosedTag != null && followingTag != null) {
 
             String unclosedEndTagHtml = new StringBuilder()

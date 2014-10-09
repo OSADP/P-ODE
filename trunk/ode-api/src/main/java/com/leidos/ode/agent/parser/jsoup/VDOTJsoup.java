@@ -23,47 +23,72 @@ import java.util.TimeZone;
  * Time: 12:17 PM
  * To change this template use File | Settings | File Templates.
  */
-public class VDOTJsoup extends ODEJsoup {
+public class VDOTJsoup extends ODEJsoup<VDOTData> {
 
     private static final String TAG = "VDOTJsoup";
     private static final String VDOT_SPEED_TAG = "orci:tss_detector_status";
     private static final String VDOT_TRAVEL_TIME_TAG = "orci:traveltimesegment";
     private static final String VDOT_WEATHER_TAG = "orci:vat_road_cond_point";
     private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+    private static final String VDOT_FEATURE_MEMBERS_TAG = "gml:featureMembers";
     private static final String TIME_ZONE_GMT = "GMT";
     private static Logger logger = Logger.getLogger(TAG);
+    private static VDOTJsoup instance;
 
-    public static List<VDOTData> parseVDOTData(byte[] bytes) {
+    public static VDOTJsoup getInstance() {
+        if (instance == null) {
+            instance = new VDOTJsoup();
+        }
+        return instance;
+    }
+
+    @Override
+    public ODEJsoupResponse<VDOTData> parseData(byte[] bytes) {
         Document document = getMessageDocument(bytes);
-        Elements featureMembers = document.getElementsByTag("gml:featureMembers");
-        if (featureMembers != null) {
-            if (!featureMembers.isEmpty()) {
-
-                Element firstChild = featureMembers.first().child(0);
-                String firstChildTag = firstChild.tagName();
-
-                if (firstChildTag.equalsIgnoreCase(VDOT_WEATHER_TAG)) {
+        if (document != null) {
+            Element featureMembers = parseDocumentForFeatureMembers(document);
+            if (featureMembers != null) {
+                String featureMembersTag = featureMembers.tagName();
+                if (featureMembersTag.equalsIgnoreCase(VDOT_WEATHER_TAG)) {
                     logger.debug("Parsing VDOTWeather data");
                     return parseVDOTWeatherData(document);
 
-                } else if (firstChildTag.equalsIgnoreCase(VDOT_SPEED_TAG)) {
+                } else if (featureMembersTag.equalsIgnoreCase(VDOT_SPEED_TAG)) {
                     logger.debug("Parsing VDOTSpeed data");
                     return parseVDOTSpeedData(document);
 
-                } else if (firstChildTag.equalsIgnoreCase(VDOT_TRAVEL_TIME_TAG)) {
+                } else if (featureMembersTag.equalsIgnoreCase(VDOT_TRAVEL_TIME_TAG)) {
                     logger.debug("Parsing VDOTTravelTime data");
                     return parseVDOTTravelTimeData(document);
+                }
+            } else {
+                return new ODEJsoupResponse<VDOTData>(null, JsoupReport.NO_RESULTS);
+            }
+        } else {
+            return new ODEJsoupResponse<VDOTData>(null, ODEJsoup.JsoupReport.DOCUMENT_PARSE_ERROR);
+        }
+        return new ODEJsoupResponse<VDOTData>(null, JsoupReport.UNKNOWN);
+    }
+
+    private Element parseDocumentForFeatureMembers(Document document) {
+        Elements featureMembers = document.getElementsByTag(VDOT_FEATURE_MEMBERS_TAG);
+        if (featureMembers != null) {
+            Element firstChild = featureMembers.first();
+            if (firstChild != null) {
+                Elements elementChildren = firstChild.children();
+                if (elementChildren != null) {
+                    return elementChildren.first();
                 }
             } else {
                 logger.debug("There is no data to be parsed.");
             }
         } else {
-            logger.debug("Error parsing feature members. Members were null.");
+            logger.debug("Error parsing feature members. Could not find a tag: " + VDOT_FEATURE_MEMBERS_TAG);
         }
         return null;
     }
 
-    private static List<VDOTData> parseVDOTWeatherData(Document document) {
+    private ODEJsoupResponse<VDOTData> parseVDOTWeatherData(Document document) {
         List<VDOTData> vdotWeatherDataList = new ArrayList<VDOTData>();
 
         Elements messageElements = document.getElementsByTag(VDOT_WEATHER_TAG);
@@ -82,10 +107,11 @@ public class VDOTJsoup extends ODEJsoup {
             }
             vdotWeatherDataList.add(vdotWeatherData);
         }
-        return vdotWeatherDataList;
+
+        return buildJsoupResponseFromParsedData(vdotWeatherDataList);
     }
 
-    private static List<VDOTData> parseVDOTSpeedData(Document document) {
+    private ODEJsoupResponse<VDOTData> parseVDOTSpeedData(Document document) {
         List<VDOTData> vdotSpeedDataList = new ArrayList<VDOTData>();
 
         Elements messageElements = document.getElementsByTag(VDOT_SPEED_TAG);
@@ -155,15 +181,14 @@ public class VDOTJsoup extends ODEJsoup {
                 }
                 if (tagName.equals("orci:nodeid")) {
                     vdotSpeedData.setNodeId(Integer.parseInt(value));
-                    continue;
                 }
             }
             vdotSpeedDataList.add(vdotSpeedData);
         }
-        return vdotSpeedDataList;
+        return buildJsoupResponseFromParsedData(vdotSpeedDataList);
     }
 
-    private static List<VDOTData> parseVDOTTravelTimeData(Document document) {
+    private ODEJsoupResponse<VDOTData> parseVDOTTravelTimeData(Document document) {
         List<VDOTData> vdotTravelTimeDataList = new ArrayList<VDOTData>();
 
         Elements messageElements = document.getElementsByTag(VDOT_SPEED_TAG);
@@ -197,15 +222,14 @@ public class VDOTJsoup extends ODEJsoup {
                 }
                 if (tagName.equals("orci:the_geom")) {
                     vdotTravelTimeData.setGeometry(parseGeometry(childElement));
-                    continue;
                 }
             }
             vdotTravelTimeDataList.add(vdotTravelTimeData);
         }
-        return vdotTravelTimeDataList;
+        return buildJsoupResponseFromParsedData(vdotTravelTimeDataList);
     }
 
-    private static float[] parseGeometry(Element element) {
+    private float[] parseGeometry(Element element) {
         Elements geometryElements = element.getElementsByTag("gml:Point");
 
         Elements geometryChildren = geometryElements.first().children();
@@ -227,7 +251,7 @@ public class VDOTJsoup extends ODEJsoup {
         return geometry;
     }
 
-    protected static Date parseDate(String dateString) {
+    protected Date parseDate(String dateString) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT);
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone(TIME_ZONE_GMT));
         try {

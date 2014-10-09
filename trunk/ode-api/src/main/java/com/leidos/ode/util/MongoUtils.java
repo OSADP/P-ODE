@@ -24,14 +24,13 @@ public class MongoUtils {
         if (SystemUtils.IS_OS_WINDOWS) {
             return isMongoDBRunningInWindows();
         }
-
         if (SystemUtils.IS_OS_LINUX) {
             return isMongoDBRunningInLinux();
         }
         return false;
     }
 
-    private static boolean isMongoDBRunningInWindows(){
+    private static boolean isMongoDBRunningInWindows() {
         try {
             String command = new StringBuilder()
                     .append(System.getenv("windir"))
@@ -54,7 +53,7 @@ public class MongoUtils {
         return false;
     }
 
-    private static boolean isMongoDBRunningInLinux(){
+    private static boolean isMongoDBRunningInLinux() {
         String logFile = "/var/log/mongodb/mongod.log";
         String findStr = "[initandlisten] waiting for connections on port ";
         String command = new StringBuilder()
