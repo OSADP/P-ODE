@@ -25,10 +25,10 @@ public class TestDataSourceController {
     private final String TAG = getClass().getSimpleName();
     private Logger logger = Logger.getLogger(TAG);
     @Autowired
-    @Qualifier("BasicVDOTCollector")
+    @Qualifier("basicVDOTCollector")
     private ODECollector vdotCollector;
     @Autowired
-    @Qualifier("BasicRITISCollector")
+    @Qualifier("basicRITISCollector")
     private ODECollector ritisCollector;
     private MessageListener listener;
 

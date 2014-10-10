@@ -7,6 +7,7 @@ import com.leidos.ode.util.ODEMessageType;
 import org.apache.log4j.Logger;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.scheduling.quartz.QuartzJobBean;
@@ -17,6 +18,7 @@ import java.util.*;
 public class CollectorRunner extends QuartzJobBean {
 
     private final String TAG = getClass().getSimpleName();
+    private final String APPLICATION_CONTEXT_FILE = "META-INF/ODE-Context.xml";
     private final String RUNNER_PROPERTIES = "/collector_runner.properties";
     private Logger logger = Logger.getLogger(TAG);
     private Properties runnerProperties;
@@ -34,12 +36,23 @@ public class CollectorRunner extends QuartzJobBean {
 
     private void initialize() {
         runnerProperties = new Properties();
-        setContext(new ClassPathXmlApplicationContext("META-INF/ODE-Context.xml"));
-        collectors = new ArrayList<ODECollector>();
-        if (loadRunnerProperties()) {
-            buildCollectors();
+        try {
+            setContext(new ClassPathXmlApplicationContext(APPLICATION_CONTEXT_FILE));
+            getLogger().debug("Using application context: " + APPLICATION_CONTEXT_FILE);
+
+            if (loadRunnerProperties()) {
+                //If the runner properties is successfully loaded, build the collectors
+                collectors = new ArrayList<ODECollector>();
+                buildCollectors();
+            } else {
+                getLogger().error("No properties file found with name: " + RUNNER_PROPERTIES);
+            }
+
+            checkMongoDB();
+        } catch (BeansException e) {
+            getLogger().warn("Application context file not found: " + APPLICATION_CONTEXT_FILE);
+            getLogger().error(e.getLocalizedMessage());
         }
-        checkMongoDB();
     }
 
     private void checkMongoDB() {
@@ -150,7 +163,6 @@ public class CollectorRunner extends QuartzJobBean {
 
     private void setContext(ApplicationContext context) {
         this.context = context;
-        getLogger().debug("Using application context: '" + context.getDisplayName() + "'.");
     }
 
     private List<ODECollector> getCollectors() {
