@@ -103,8 +103,8 @@ public class CollectorRunner extends QuartzJobBean {
 
             for (String odeCollectorBeanName : odeCollectorBeanNames) {
                 for (String enabledMessageTypeName : enabledMessageTypesNames) {
-                    String expectedCollectorName = enabledMessageTypeName + "Collector";
-                    if (odeCollectorBeanName.contains(expectedCollectorName)) {
+                    String expectedCollectorName = (enabledMessageTypeName + "Collector").toLowerCase();
+                    if (odeCollectorBeanName.toLowerCase().contains(expectedCollectorName)) {
                         ODECollector odeCollector = (ODECollector) getContext().getBean(odeCollectorBeanName);
                         if (odeCollector != null) {
                             getLogger().debug("Found collector with name: '" + odeCollectorBeanName + "'.");
