@@ -12,10 +12,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 public class CollectorRunner extends QuartzJobBean {
 
@@ -87,28 +84,48 @@ public class CollectorRunner extends QuartzJobBean {
 
     private void buildCollectors() {
         if (getRunnerProperties() != null) {
-            for (Map.Entry<Object, Object> propertyEntry : getRunnerProperties().entrySet()) {
-                String propertyKeyString = (String) propertyEntry.getKey();
-                if (propertyKeyString != null) {
-                    ODEMessageType odeMessageType = ODEMessageType.valueOf(propertyKeyString);
-                    if (odeMessageType != null) {
-                        String propertyValueString = (String) propertyEntry.getValue();
-                        if (isMessageTypeEnabled(odeMessageType, propertyValueString)) {
-                            getLogger().debug("Message type '" + odeMessageType.name() + "' is enabled.");
-                            ODECollector odeCollector = getODECollector(odeMessageType);
-                            if (odeCollector != null) {
-                                getCollectors().add(odeCollector);
-                                getLogger().debug("Added collector for message type '" + odeMessageType.name() + "'.");
-                            } else {
-                                getLogger().warn("Unable to add collector for message type '" + odeMessageType.name() + "'. Collector not found for this message type.");
-                            }
+            getLogger().debug("Building collectors...");
+            String[] odeCollectorBeanNames = getContext().getBeanNamesForType(ODECollector.class);
+            List<String> enabledMessageTypesNames = getEnabledMessageTypesNames();
+
+            for (String odeCollectorBeanName : odeCollectorBeanNames) {
+                for (String enabledMessageTypeName : enabledMessageTypesNames) {
+                    String expectedCollectorName = enabledMessageTypeName + "Collector";
+                    if (odeCollectorBeanName.contains(expectedCollectorName)) {
+                        ODECollector odeCollector = (ODECollector) getContext().getBean(odeCollectorBeanName);
+                        if (odeCollector != null) {
+                            getLogger().debug("Found collector with name: '" + odeCollectorBeanName + "'.");
+                            getCollectors().add(odeCollector);
+                            getLogger().debug("Added collector for message type '" + enabledMessageTypeName + "'.");
                         } else {
-                            getLogger().debug("Message type '" + odeMessageType.name() + "' is disabled.");
+                            getLogger().warn("Unable to find collector with name: '" + expectedCollectorName + "'.");
+                            getLogger().warn("Unable to add collector for message type '" + enabledMessageTypeName + "'. Collector not found for this message type.");
                         }
                     }
                 }
             }
         }
+    }
+
+    private List<String> getEnabledMessageTypesNames() {
+        List<String> enabledMessageTypesNames = new ArrayList<String>();
+        Set<Map.Entry<Object, Object>> propertyEntries = getRunnerProperties().entrySet();
+        for (Map.Entry<Object, Object> propertyEntry : propertyEntries) {
+            String propertyKeyString = (String) propertyEntry.getKey();
+            if (propertyKeyString != null) {
+                ODEMessageType odeMessageType = ODEMessageType.valueOf(propertyKeyString);
+                if (odeMessageType != null) {
+                    String propertyValueString = (String) propertyEntry.getValue();
+                    if (isMessageTypeEnabled(odeMessageType, propertyValueString)) {
+                        getLogger().debug("Message type '" + odeMessageType.name() + "' is enabled.");
+                        enabledMessageTypesNames.add(odeMessageType.name());
+                    } else {
+                        getLogger().debug("Message type '" + odeMessageType.name() + "' is disabled.");
+                    }
+                }
+            }
+        }
+        return enabledMessageTypesNames;
     }
 
     private boolean isMessageTypeEnabled(ODEMessageType odeMessageType, String stateString) {
@@ -117,24 +134,10 @@ public class CollectorRunner extends QuartzJobBean {
                 int stateInt = Integer.parseInt(stateString);
                 return stateInt == 1;
             } catch (NumberFormatException e) {
-                getLogger().warn("State uknown for message type '" + odeMessageType.name() + "'. Expected: '1' or '0', for enabled or disabled. Received: '" + stateString + "'.");
+                getLogger().warn("State unknown for message type '" + odeMessageType.name() + "'. Expected: '1' or '0', for enabled or disabled. Received: '" + stateString + "'.");
             }
         }
         return false;
-    }
-
-    private ODECollector getODECollector(ODEMessageType odeMessageType) {
-        if (odeMessageType != null) {
-            String collectorName = odeMessageType.name() + "Collector";
-            ODECollector odeCollector = (ODECollector) getContext().getBean(collectorName);
-            if (odeCollector != null) {
-                getLogger().debug("Found collector with name: '" + collectorName + "'.");
-                return odeCollector;
-            } else {
-                getLogger().warn("Unable to find collector with name: '" + collectorName + "'.");
-            }
-        }
-        return null;
     }
 
     private Properties getRunnerProperties() {

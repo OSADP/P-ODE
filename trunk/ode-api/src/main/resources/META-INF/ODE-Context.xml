@@ -262,8 +262,16 @@
         <property name="requestLimit" value="${leidos.ode.vdot.requestLimit}"/>
     </bean>
 
-    <bean id="VDOTWeather" parent="BasicVDOTDataSource">
+    <bean id="VDOTWeather_ShortTerm" parent="BasicVDOTDataSource">
         <property name="feedName" value="${leidos.ode.vdot.shorttermweatherevents.wfsurl}"/>
+    </bean>
+
+    <bean id="VDOTWeather_LongTerm" parent="BasicVDOTDataSource">
+        <property name="feedName" value="${leidos.ode.vdot.longtermweatherevents.wfsurl}"/>
+    </bean>
+
+    <bean id="VDOTWeather_LongTermDefaults" parent="BasicVDOTDataSource">
+        <property name="feedName" value="${leidos.ode.vdot.longtermweatherdefaults.wfsurl}"/>
     </bean>
 
     <bean id="VDOTSpeed" parent="BasicVDOTDataSource">
@@ -351,8 +359,18 @@
         <property name="agent" ref="BasicVDOTAgent"/>
     </bean>
 
-    <bean id="VDOTWeatherCollector" class="com.leidos.ode.collector.ODECollector">
-        <property name="dataSource" ref="VDOTWeather"/>
+    <bean id="VDOTWeatherCollector_ShortTerm" class="com.leidos.ode.collector.ODECollector">
+        <property name="dataSource" ref="VDOTWeather_ShortTerm"/>
+        <property name="agent" ref="VDOTWeatherAgent"/>
+    </bean>
+
+    <bean id="VDOTWeatherCollector_LongTerm" class="com.leidos.ode.collector.ODECollector">
+        <property name="dataSource" ref="VDOTWeather_LongTerm"/>
+        <property name="agent" ref="VDOTWeatherAgent"/>
+    </bean>
+
+    <bean id="VDOTWeatherCollector_LongTermDefaults" class="com.leidos.ode.collector.ODECollector">
+        <property name="dataSource" ref="VDOTWeather_LongTermDefaults"/>
         <property name="agent" ref="VDOTWeatherAgent"/>
     </bean>
 
