@@ -36,7 +36,7 @@ public class BasicODEAgent implements ODEAgent {
             createAgentInfo(getRegistrationResponse());
             getLogger().debug("Registration succeeded.");
         } else {
-            getLogger().error("Registration failed. Registration response was null.");
+            getLogger().warn("Registration failed. Registration response was null!");
         }
     }
 
