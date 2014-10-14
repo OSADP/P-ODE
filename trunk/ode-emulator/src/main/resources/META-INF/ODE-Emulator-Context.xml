@@ -26,9 +26,7 @@
         <constructor-arg value="MM-dd-YYYY"/>
     </bean>
 
-    <bean id="ODELogger" class="com.leidos.ode.logging.ODELogger">
-        <property name="mongoTemplate" ref="mongoTemplate"/>
-    </bean>
+    <bean id="ODELogger" class="com.leidos.ode.logging.ODELogger"/>
 
     <bean id="SubscribeODEAgent" class="com.leidos.ode.agent.BasicODEAgent"/>
 
@@ -44,16 +42,6 @@
 
     <bean id="BSMParser" class="com.leidos.ode.agent.parser.BSMParser"/>
 
-    <bean id="mongo" class="com.mongodb.Mongo">
-        <constructor-arg name="host" value="127.0.0.1"/>
-        <constructor-arg name="port" value="27017"/>
-    </bean>
-
-    <!-- Define the MongoTemplate which handles connectivity with MongoDB -->
-    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
-        <constructor-arg name="mongo" ref="mongo"/>
-        <constructor-arg name="databaseName" value="ode"/>
-    </bean>
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~VDOT Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->

@@ -21,25 +21,40 @@ public final class ODELogger {
      * @param odeStage
      * @param messageId
      */
-    public void start(ODEStage odeStage, String messageId) {
+    public void start(ODEStage odeStage, String messageId) throws ODELoggerException {
         Date startTime = new Date();
-        logBean = new LogBean(startTime, odeStage, messageId);
+        if (logBean == null) {
+            logBean = new LogBean(startTime, odeStage, messageId);
+        } else {
+            throw new ODELoggerException("Cannot start a log event when there is one that has not been finished.");
+        }
+    }
+
+    /**
+     * Cancels the active log message, if one exists.
+     */
+    public void cancel() {
+        if (logBean != null) {
+            logBean = null;
+        }
     }
 
     /**
      * Marks the completion point of a given ODEStage in the log message and saves the bean in Mongo.
      */
-    public void finish() {
+    public void finish() throws ODELoggerException {
         Date endTime = new Date();
         if (logBean != null) {
             logBean.setEndTime(endTime);
+            // save the log bean
             getMongoTemplate().save(logBean);
+            logBean = null;
         } else {
-            throw new Error("Cannot finish an event that has not been started.");
+            throw new ODELoggerException("Cannot finish a log event that has not been started.");
         }
     }
 
-    private MongoTemplate getMongoTemplate() {
+    public MongoTemplate getMongoTemplate() {
         return mongoTemplate;
     }
 
@@ -56,6 +71,20 @@ public final class ODELogger {
      */
     public enum ODEStage {
         PARSE, SANITIZE, ENCRYPT, SEND;
+    }
+
+    public static class ODELoggerException extends Exception {
+
+        public ODELoggerException() {
+        }
+
+        public ODELoggerException(Throwable cause) {
+            super(cause);
+        }
+
+        public ODELoggerException(String message) {
+            super(message);
+        }
     }
 
 }

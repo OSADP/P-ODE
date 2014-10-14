@@ -6,6 +6,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -79,7 +80,7 @@ public abstract class RestPullDataSource extends PullDataSource {
         return wfsFilter;
     }
 
-    public void setWfsFilter(String... wfsFilterParams) {
+    public void setWfsFilter(String[] wfsFilterParams) {
         StringBuilder stringBuilder = new StringBuilder();
         for (String wfsFilterParam : wfsFilterParams) {
             stringBuilder.append("&");

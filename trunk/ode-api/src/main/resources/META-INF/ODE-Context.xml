@@ -2,17 +2,23 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="
-        http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
         http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+        http://www.springframework.org/schema/context/spring-context-4.1.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util-4.1.xsd
+   	    http://www.springframework.org/schema/data/mongo
+        http://www.springframework.org/schema/data/mongo/spring-mongo.xsd">
 
     <description>
         This configuration file contains all beans that are essential to the ODE.
     </description>
 
     <context:component-scan base-package="com.leidos.ode"/>
+    <context:annotation-config/>
 
     <!--&lt;!&ndash; Load Properties file &ndash;&gt;-->
     <!--<bean id="properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean" scope="prototype">-->
@@ -38,6 +44,7 @@
                 <value>classpath:publisher.properties</value>
                 <value>classpath:ritis.properties</value>
                 <value>classpath:vdot.properties</value>
+                <value>classpath:mongo.properties</value>
             </list>
         </property>
         <!-- This means don't blow up if a property is not set -->
@@ -52,15 +59,11 @@
         <constructor-arg value="MM-dd-YYYY"/>
     </bean>
 
-    <bean id="mongo" class="com.mongodb.Mongo">
-        <constructor-arg name="host" value="127.0.0.1"/>
-        <constructor-arg name="port" value="27017"/>
-    </bean>
+    <mongo:mongo id="mongo" host="${leidos.ode.mongo.host}" port="${leidos.ode.mongo.port}"/>
 
-    <!-- Define the MongoTemplate which handles connectivity with MongoDB -->
     <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
-        <constructor-arg name="mongo" ref="mongo"/>
-        <constructor-arg name="databaseName" value="ode"/>
+        <constructor-arg type="com.mongodb.Mongo" ref="mongo"/>
+        <constructor-arg type="java.lang.String" value="${leidos.ode.mongo.repository.odelogs}"/>
     </bean>
 
     <bean id="odeLogger" class="com.leidos.ode.logging.ODELogger">
@@ -82,7 +85,7 @@
     <bean id="publishODEAgent" class="com.leidos.ode.agent.PublishODEAgent"/>
 
     <bean id="queueTarget" class="com.leidos.ode.agent.datatarget.ODEQueueTarget"/>
-    
+
     <bean id="restTarget" class="com.leidos.ode.agent.datatarget.ODERestTarget"/>
 
     <bean id="passthroughSanitizer" class="com.leidos.ode.agent.sanitizer.PassthroughSanitizer"/>
@@ -153,10 +156,10 @@
         <property name="registrationInformation" ref="bsmPubRegistrationInfo"/>
         <property name="odeLogger" ref="odeLogger"/>
     </bean>
-    
+
     <bean id="bsmUDPPushDataSource" class="com.leidos.ode.collector.datasource.UDPPushDataSource">
     </bean>
-    
+
     <bean id="bsmCollector" class="com.leidos.ode.collector.ODECollector">
         <property name="agent" ref="bsmPubAgent"/>
         <property name="dataSource" ref="bsmUDPPushDataSource"/>
@@ -179,7 +182,7 @@
 
     <bean id="ritisSpeed" parent="basicRITISDataSource">
         <property name="feedName" value="${leidos.ode.ritis.detector.url}"/>
-        <property name="wfsFilter" value="system=vdot_nova, box-lat=38.856259, box-lon=-77.35548, width=8321, height=2952"/>
+        <property name="wfsFilter" value="system=vdot_nova, ${leidos.ode.ritis.defaults.wfsfilter.boundingbox}"/>
     </bean>
 
     <bean id="ritisWeather_NWS" parent="basicRITISDataSource">
@@ -293,11 +296,20 @@
 
     <bean id="vdotSpeed" parent="basicVDOTDataSource">
         <property name="feedName" value="${leidos.ode.vdot.trafficsensorstations.wfsurl}"/>
+        <property name="wfsFilter" ref="vdotWFSFilter"/>
     </bean>
 
     <bean id="vdotTravelTime" parent="basicVDOTDataSource">
         <property name="feedName" value="${leidos.ode.vdot.traveltimesegments.wfsurl}"/>
+        <property name="wfsFilter" ref="vdotWFSFilter"/>
     </bean>
+
+    <!--The following util List is necessary because VDOT bounding box is formed using commas,
+    which are incorrectly split using the comma delimiter feature of Spring list injection. Using
+    a Collection prevents this from happening.-->
+    <util:list id="vdotWFSFilter" value-type="java.lang.String">
+        <value>${leidos.ode.vdot.defaults.wfsfilter.boundingbox}</value>
+    </util:list>
 
     <bean id="vdotWeatherPubRegistrationInfo" class="com.leidos.ode.agent.data.RegistrationInformation">
         <property name="messageType" value="${leidos.ode.reg.vdotweather.pub.messageType}"/>

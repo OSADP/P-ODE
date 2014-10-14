@@ -1,17 +1,14 @@
 package com.leidos.ode.logging;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
 /**
- * Class representing a log document in Mongo.
+ * Class representing a LogBean in MongoDB.
  *
  * @author lamde
  */
-
-@Document(collection = "logs")
 public class LogBean {
 
     @Id
@@ -30,7 +27,6 @@ public class LogBean {
     public LogBean(Date startTime, ODELogger.ODEStage odeStage, String messageId) {
         this(startTime, null, odeStage, messageId);
     }
-
 
     public String getId() {
         return id;
@@ -62,17 +58,17 @@ public class LogBean {
 
     @Override
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Log [id=");
-        stringBuilder.append(getId());
-        stringBuilder.append(", startTime=");
-        stringBuilder.append(getStartTime().getTime());
-        stringBuilder.append(", endTime=");
-        stringBuilder.append(getEndTime().getTime());
-        stringBuilder.append((", odeStage="));
-        stringBuilder.append(getOdeStage());
-        stringBuilder.append(", messageId=");
-        stringBuilder.append(getMessageId());
-        return stringBuilder.toString();
+        return new StringBuilder()
+                .append("Log [id=")
+                .append(getId())
+                .append(", startTime=")
+                .append(getStartTime().getTime())
+                .append(", endTime=")
+                .append(getEndTime().getTime())
+                .append((", odeStage="))
+                .append(getOdeStage())
+                .append(", messageId=")
+                .append(getMessageId())
+                .toString();
     }
 }

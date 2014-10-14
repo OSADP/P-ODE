@@ -188,6 +188,8 @@ public class BasicODEAgent implements ODEAgent {
                 getLogger().error(e.getLocalizedMessage());
             } catch (DataTargetException e) {
                 getLogger().error(e.getLocalizedMessage());
+            } catch (ODELogger.ODELoggerException e) {
+                getLogger().error(e.getLocalizedMessage());
             }
         }
 
