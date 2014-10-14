@@ -12,7 +12,7 @@ public class VDOTParser extends ODEDataParser {
         getLogger().debug("Parsing VDOT data.");
         ODEParserHelper.ODEHelperResponse response = VDOTParserHelper.getInstance().parseData(bytes);
         getLogger().debug("Parse response: " + response.getReport());
-        ODECollectedData data = response.getData();
+        Object data = response.getData();
 
         return new ODEAgentMessage().setFormattedMessage(data).setMessagePayload(bytes);
     }
