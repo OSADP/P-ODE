@@ -16,7 +16,7 @@ public class PublishODEAgent extends BasicODEAgent {
             getLogger().debug("Configuring data target with registration response.");
             getDataTarget().configure(getRegistrationResponse());
         } else {
-            getLogger().debug("Unable to configure data target. Registration response was null.");
+            getLogger().warn("Unable to configure data target. Registration response was null!");
         }
     }
 }

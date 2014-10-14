@@ -44,13 +44,18 @@ public class ODERestTarget implements ODEDataTarget {
     }
 
     public void sendMessage(ODEAgentMessage message) throws DataTargetException {
-        try {
-            httpResponse = httpClient.execute(httpPost);
-            HttpEntity responseEntity = httpResponse.getEntity();
-            String responseString = EntityUtils.toString(responseEntity);
-            logger.debug("Target response: " + responseString);
-        } catch (IOException e) {
-            logger.error(e.getLocalizedMessage());
+        if (httpPost != null) {
+            try {
+                logger.debug("Sending message to target.");
+                httpResponse = httpClient.execute(httpPost);
+                HttpEntity responseEntity = httpResponse.getEntity();
+                String responseString = EntityUtils.toString(responseEntity);
+                logger.debug("Target response: " + responseString);
+            } catch (IOException e) {
+                logger.error(e.getLocalizedMessage());
+            }
+        }else{
+            logger.warn("Unable to send message. Target has not been configured.");
         }
     }
 
