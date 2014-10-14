@@ -11,7 +11,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 //TODO Not sure at this point what the data looks like since the weather urls contain no data
-public class VDOTWeatherData implements VDOTData {
+public class VDOTWeatherData {
 
     private List<VDOTWeatherDataElement> vdotWeatherDataElements;
 

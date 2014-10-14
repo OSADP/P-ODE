@@ -11,7 +11,7 @@ import java.util.List;
  * Time: 11:15 AM
  * To change this template use File | Settings | File Templates.
  */
-public class VDOTSpeedData implements VDOTData {
+public class VDOTSpeedData {
 
     private List<VDOTSpeedDataElement> vdotSpeedDataElements;
 

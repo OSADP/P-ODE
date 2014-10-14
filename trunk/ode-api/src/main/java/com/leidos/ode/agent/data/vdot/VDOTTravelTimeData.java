@@ -11,11 +11,11 @@ import java.util.List;
  * Time: 11:15 AM
  * To change this template use File | Settings | File Templates.
  */
-public class VDOTTravelTimeData implements VDOTData {
+public class VDOTTravelTimeData {
 
     private List<VDOTTravelTimeDataElement> vdotTravelTimeDataElements;
 
-    public VDOTTravelTimeData(){
+    public VDOTTravelTimeData() {
         vdotTravelTimeDataElements = new ArrayList<VDOTTravelTimeDataElement>();
     }
 

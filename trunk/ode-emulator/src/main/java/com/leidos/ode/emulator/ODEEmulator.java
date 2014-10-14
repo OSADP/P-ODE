@@ -2,9 +2,7 @@ package com.leidos.ode.emulator;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
 import com.leidos.ode.agent.data.bsm.BSM;
-import com.leidos.ode.agent.data.ritis.RITISData;
 import com.leidos.ode.agent.data.ritis.RITISSpeedData;
-import com.leidos.ode.agent.data.vdot.VDOTData;
 import com.leidos.ode.agent.data.vdot.VDOTSpeedData;
 import com.leidos.ode.agent.datatarget.ODEDataTarget;
 import com.leidos.ode.collector.ODECollector;
@@ -121,19 +119,19 @@ public class ODEEmulator implements EmulatorDataListener {
         }
     }
 
-    public void ritisSpeedDataReceived(ODEAgentMessage data) {
-        RITISData ritisData = (RITISData) data.getFormattedMessage();
-        RITISSpeedData eastData = getRITISDataAverage(ritisData, "E");
-        RITISSpeedData westData = getRITISDataAverage(ritisData, "W");
+    public void ritisSpeedDataReceived(ODEAgentMessage odeAgentMessage) {
+        Object data = odeAgentMessage.getFormattedMessage();
+        RITISSpeedData eastData = getRITISDataAverage(data, "E");
+        RITISSpeedData westData = getRITISDataAverage(data, "W");
         //TODO: set values to correct directions in current data
 
     }
 
-    private RITISSpeedData getRITISDataAverage(RITISData ritisData, String direction) {
+    private RITISSpeedData getRITISDataAverage(Object data, String direction) {
         int count = 0;
         int avgSpeed = 0;
 
-        RITISSpeedData ritisSpeedData = (RITISSpeedData) ritisData;
+        RITISSpeedData ritisSpeedData = (RITISSpeedData) data;
         List<ZoneDataCollectionPeriodRITIS> zoneDataCollectionPeriodRITISList = ritisSpeedData.getZoneDetectorDataRITIS().getCollectionPeriod().getCollectionPeriodItem();
         for (ZoneDataCollectionPeriodRITIS zoneDataCollectionPeriodRITIS : zoneDataCollectionPeriodRITISList) {
             List<ZoneReportRITIS> zoneReportRITISList = zoneDataCollectionPeriodRITIS.getZoneReports().getZoneReport();
@@ -173,14 +171,14 @@ public class ODEEmulator implements EmulatorDataListener {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public void vdotSpeedDataReceived(ODEAgentMessage data) {
-        VDOTData vdotData = (VDOTData) data.getFormattedMessage();
-        VDOTSpeedData eastData = getVDOTSpeedDataAverage(vdotData, "E");
-        VDOTSpeedData westData = getVDOTSpeedDataAverage(vdotData, "W");
+    public void vdotSpeedDataReceived(ODEAgentMessage odeAgentMessage) {
+        Object data = odeAgentMessage.getFormattedMessage();
+        VDOTSpeedData eastData = getVDOTSpeedDataAverage(data, "E");
+        VDOTSpeedData westData = getVDOTSpeedDataAverage(data, "W");
         //TODO set values to current data.
     }
 
-    private VDOTSpeedData getVDOTSpeedDataAverage(VDOTData data, String direction) {
+    private VDOTSpeedData getVDOTSpeedDataAverage(Object data, String direction) {
         int avgSpeed = 0;
         int count = 0;
 

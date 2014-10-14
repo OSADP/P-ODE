@@ -9,7 +9,7 @@ import org.ritis.schema.tmdd_0_0_0.ZoneDetectorDataRITIS;
  * Time: 11:15 AM
  * To change this template use File | Settings | File Templates.
  */
-public class RITISSpeedData implements RITISData{
+public class RITISSpeedData {
 
     private ZoneDetectorDataRITIS zoneDetectorDataRITIS;
 
