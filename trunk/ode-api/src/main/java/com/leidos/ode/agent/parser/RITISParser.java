@@ -1,7 +1,6 @@
 package com.leidos.ode.agent.parser;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
-import com.leidos.ode.agent.data.ODECollectedData;
 import com.leidos.ode.agent.parser.helper.ODEParserHelper;
 import com.leidos.ode.agent.parser.helper.RITISParserHelper;
 
