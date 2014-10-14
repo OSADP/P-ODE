@@ -2,94 +2,71 @@ package com.leidos.ode.agent.datatarget;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
 import com.leidos.ode.core.data.ODERegistrationResponse;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
-import java.net.HttpURLConnection;
-import javax.ws.rs.client.Entity;
+import java.io.IOException;
 
 /**
- * @author cassadyja
+ * @author cassadyja, lamde
  */
 public class ODERestTarget implements ODEDataTarget {
 
     private final String TAG = getClass().getSimpleName();
     private Logger logger = Logger.getLogger(TAG);
-    private HttpURLConnection conn;
-    private WebTarget webTarget;
+    private CloseableHttpClient httpClient;
+    private CloseableHttpResponse httpResponse;
+    private HttpPost httpPost;
 
     public void configure(ODERegistrationResponse regInfo) throws DataTargetException {
         String hostURL = regInfo.getQueueHostURL();
         int hostPort = regInfo.getQueueHostPort();
         String queueName = regInfo.getQueueName();
 
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("http://").append(hostURL).append(":").append(hostPort).append("/").append(queueName);
-        String address = stringBuilder.toString();
-        logger.debug(TAG + "- Configuring ODERegistrationResponse with endpoint address: " + address);
+        String address = new StringBuilder()
+                .append("http://")
+                .append(hostURL)
+                .append(":")
+                .append(hostPort)
+                .append("/")
+                .append(queueName)
+                .toString();
 
-        Client client = ClientBuilder.newClient();
-        webTarget = client.target(UriBuilder.fromUri(address));
+        logger.debug("Configuring ODERegistrationResponse with endpoint address: " + address);
 
-
-//        try {
-//            URL url = new URL(hostURL);
-//            conn = (HttpURLConnection) url.openConnection();
-//            conn.setDoOutput(true);
-//            conn.setRequestMethod("POST");
-//            conn.setRequestProperty("Content-Type", "application/json");
-//            
-//        } catch (MalformedURLException ex) {
-//            throw new DataTargetException("Error connecting to host", ex);
-//        } catch (ProtocolException ex) {
-//            throw new DataTargetException("Error connecting to host", ex);
-//        } catch (IOException ex) {
-//            throw new DataTargetException("Error connecting to host", ex);
-//        }
+        httpClient = HttpClientBuilder.create().build();
+        httpPost = new HttpPost(address);
     }
 
     public void sendMessage(ODEAgentMessage message) throws DataTargetException {
-        Entity<ODEAgentMessage> e = Entity.xml(message);
-        Response response = webTarget.request().post(e);
-        String responseString = response.getEntity().toString();
-        System.out.println("Test " + responseString);
-//        ClientResponse response = webTarget.path("http://localhost:9090/ode-web").path("publish")
-//                                .type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
-//                                    .post(ClientResponse.class, message);
-
-//        OutputStream os = null;
-//        try {
-//            String input = "{\"qty\":100,\"name\":\"iPad 4\"}";
-//            os = conn.getOutputStream();
-//            os.write(input.getBytes());
-//            os.flush();
-//            if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
-//                throw new RuntimeException("Failed : HTTP error code : "
-//                        + conn.getResponseCode());
-//            }   
-//            BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
-//        String output;
-//            System.out.println("Output from Server .... \n");
-//            while ((output = br.readLine()) != null) {
-//                System.out.println(output);
-//            }        
-//        } catch (IOException ex) {
-//            Logger.getLogger(ODERestTarget.class.getName()).log(Level.SEVERE, null, ex);
-//        } finally {
-//            try {
-//                os.close();
-//            } catch (IOException ex) {
-//                Logger.getLogger(ODERestTarget.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        }
+        try {
+            httpResponse = httpClient.execute(httpPost);
+            HttpEntity responseEntity = httpResponse.getEntity();
+            String responseString = EntityUtils.toString(responseEntity);
+            logger.debug("Target response: " + responseString);
+        } catch (IOException e) {
+            logger.error(e.getLocalizedMessage());
+        }
     }
 
     public void close() {
+        try {
+            logger.debug("Closing target resources.");
 
+            if (httpClient != null) {
+                httpClient.close();
+            }
+            if (httpResponse != null) {
+                httpResponse.close();
+            }
+        } catch (IOException e) {
+            logger.error("Failed to close target resources.");
+            logger.error(e.getLocalizedMessage());
+        }
     }
-
 }
