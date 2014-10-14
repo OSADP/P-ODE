@@ -6,7 +6,6 @@
 
 package com.leidos.ode.emulator;
 
-import com.leidos.ode.agent.data.ODEAgentMessage;
 import com.leidos.ode.agent.data.bsm.BSM;
 import com.leidos.ode.agent.data.ritis.RITISSpeedData;
 import com.leidos.ode.agent.data.ritis.RITISWeatherDataNWS;
@@ -18,7 +17,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * @author cassadyja
@@ -33,46 +31,26 @@ public class CurrentDataSet {
     private Map<String, BSM> bsmDataWest = new HashMap<String, BSM>();
     
     private Date vdotWeatherLastUpdate;
-    @XmlTransient
-    private ODEAgentMessage vdotWeatherDataEast;
     private VDOTWeatherData vdotWeatherDataEastValue;
-    @XmlTransient
-    private ODEAgentMessage vdotWeatherDataWest;
     private VDOTWeatherData vdotWeatherDataWestValue;
     
     private Date vdotTravelLastUpdate;
-    @XmlTransient
-    private ODEAgentMessage vdotTravelDataEast;
     private VDOTTravelTimeData vdotTravelDataEastValue;
-    @XmlTransient    
-    private ODEAgentMessage vdotTravelDataWest;
     private VDOTTravelTimeData vdotTravelDataWestValue;
     
     
     private Date vdotSpeedLastUpdate;
     
-    @XmlTransient
-    private ODEAgentMessage vdotSpeedDataEast;
     private VDOTSpeedData vdotSpeedDataEastValue;
-    @XmlTransient
-    private ODEAgentMessage vdotSpeedDataWest;
     private VDOTSpeedData vdotSpeedDataWestValue;
     
     
     private Date ritisWeatherLastUpdate;
-    @XmlTransient
-    private ODEAgentMessage ritisWeatherDataEast;
     private RITISWeatherDataNWS ritisWeatherDataEastValue;
-    @XmlTransient
-    private ODEAgentMessage ritisWeatherDataWest;
     private RITISWeatherDataNWS ritisWeatherDataWestValue;
     
     private Date ritisSpeedLastUpdate;
-    @XmlTransient
-    private ODEAgentMessage ritisSpeedDataEast;
     private RITISSpeedData ritisSpeedDataEastValue;
-    @XmlTransient
-    private ODEAgentMessage ritisSpeedDataWest;
     private RITISSpeedData ritisSpeedDataWestValue;
 
     /**
@@ -187,196 +165,6 @@ public class CurrentDataSet {
         this.westBoundTravelTime = westBoundTravelTime;
     }
 
-    /**
-     * @return the vdotWeatherDataEast
-     */
-    public ODEAgentMessage getVdotWeatherDataEast() {
-        return vdotWeatherDataEast;
-    }
-
-    /**
-     * @param vdotWeatherDataEast the vdotWeatherDataEast to set
-     */
-    public void setVdotWeatherDataEast(ODEAgentMessage vdotWeatherDataEast) {
-        if (!this.vdotWeatherDataEast.getMessageId().equals(vdotWeatherDataEast.getMessageId())) {
-            this.vdotWeatherDataEast = vdotWeatherDataEast;
-            vdotWeatherDataEastValue = (VDOTWeatherData)vdotWeatherDataEast.getFormattedMessage();
-            recalculateEast();
-        }
-        setVdotWeatherLastUpdate(new Date());
-    }
-
-    /**
-     * @return the vdotWeatherDataWest
-     */
-    public ODEAgentMessage getVdotWeatherDataWest() {
-        return vdotWeatherDataWest;
-    }
-
-    /**
-     * @param vdotWeatherDataWest the vdotWeatherDataWest to set
-     */
-    public void setVdotWeatherDataWest(ODEAgentMessage vdotWeatherDataWest) {
-        if (!this.vdotWeatherDataWest.getMessageId().equals(vdotWeatherDataWest.getMessageId())) {
-            this.vdotWeatherDataWest = vdotWeatherDataWest;
-            vdotWeatherDataWestValue = (VDOTWeatherData)vdotWeatherDataWest.getFormattedMessage();
-            recalculateWest();
-        }
-        setVdotWeatherLastUpdate(new Date());
-
-    }
-
-    /**
-     * @return the vdotTravelDataEast
-     */
-    public ODEAgentMessage getVdotTravelDataEast() {
-        return vdotTravelDataEast;
-    }
-
-    /**
-     * @param vdotTravelDataEast the vdotTravelDataEast to set
-     */
-    public void setVdotTravelDataEast(ODEAgentMessage vdotTravelDataEast) {
-        if (!this.vdotTravelDataEast.getMessageId().equals(vdotTravelDataEast.getMessageId())) {
-            this.vdotTravelDataEast = vdotTravelDataEast;
-            vdotTravelDataEastValue = (VDOTTravelTimeData)vdotTravelDataEast.getFormattedMessage();
-            recalculateEast();
-        }
-        setVdotTravelLastUpdate(new Date());
-    }
-
-    /**
-     * @return the vdotTravelDataWest
-     */
-    public ODEAgentMessage getVdotTravelDataWest() {
-        return vdotTravelDataWest;
-    }
-
-    /**
-     * @param vdotTravelDataWest the vdotTravelDataWest to set
-     */
-    public void setVdotTravelDataWest(ODEAgentMessage vdotTravelDataWest) {
-        if (!this.vdotTravelDataWest.getMessageId().equals(vdotTravelDataWest.getMessageId())) {
-            this.vdotTravelDataWest = vdotTravelDataWest;
-            vdotTravelDataWestValue = (VDOTTravelTimeData)vdotTravelDataWest.getFormattedMessage();
-            recalculateWest();
-        }
-        setVdotTravelLastUpdate(new Date());
-    }
-
-    /**
-     * @return the vdotSpeedDataEast
-     */
-    public ODEAgentMessage getVdotSpeedDataEast() {
-        return vdotSpeedDataEast;
-    }
-
-    /**
-     * @param vdotSpeedDataEast the vdotSpeedDataEast to set
-     */
-    public void setVdotSpeedDataEast(ODEAgentMessage vdotSpeedDataEast) {
-        if (!this.vdotSpeedDataEast.getMessageId().equals(vdotSpeedDataEast.getMessageId())) {
-            this.vdotSpeedDataEast = vdotSpeedDataEast;
-            vdotSpeedDataEastValue = (VDOTSpeedData)vdotSpeedDataEast.getFormattedMessage();
-            recalculateEast();
-        }
-        setVdotSpeedLastUpdate(new Date());
-    }
-
-    /**
-     * @return the vdotSpeedDataWest
-     */
-    public ODEAgentMessage getVdotSpeedDataWest() {
-        return vdotSpeedDataWest;
-    }
-
-    /**
-     * @param vdotSpeedDataWest the vdotSpeedDataWest to set
-     */
-    public void setVdotSpeedDataWest(ODEAgentMessage vdotSpeedDataWest) {
-        if (!this.vdotSpeedDataWest.getMessageId().equals(vdotSpeedDataWest.getMessageId())) {
-            this.vdotSpeedDataWest = vdotSpeedDataWest;
-            vdotSpeedDataWestValue = (VDOTSpeedData)vdotSpeedDataWest.getFormattedMessage();
-            recalculateWest();
-        }
-        setVdotSpeedLastUpdate(new Date());
-    }
-
-    /**
-     * @return the ritisWeatherDataEast
-     */
-    public ODEAgentMessage getRitisWeatherDataEast() {
-        return ritisWeatherDataEast;
-    }
-
-    /**
-     * @param ritisWeatherDataEast the ritisWeatherDataEast to set
-     */
-    public void setRitisWeatherDataEast(ODEAgentMessage ritisWeatherDataEast) {
-        if (!this.ritisWeatherDataEast.getMessageId().equals(ritisWeatherDataEast.getMessageId())) {
-            this.ritisWeatherDataEast = ritisWeatherDataEast;
-            ritisWeatherDataEastValue = (RITISWeatherDataNWS)ritisWeatherDataEast.getFormattedMessage();
-            recalculateEast();
-        }
-        setRitisWeatherLastUpdate(new Date());
-    }
-
-    /**
-     * @return the ritisWeatherDataWest
-     */
-    public ODEAgentMessage getRitisWeatherDataWest() {
-        return ritisWeatherDataWest;
-    }
-
-    /**
-     * @param ritisWeatherDataWest the ritisWeatherDataWest to set
-     */
-    public void setRitisWeatherDataWest(ODEAgentMessage ritisWeatherDataWest) {
-        if (!this.ritisWeatherDataWest.getMessageId().equals(ritisWeatherDataWest.getMessageId())) {
-            this.ritisWeatherDataWest = ritisWeatherDataWest;
-            ritisWeatherDataWestValue = (RITISWeatherDataNWS)ritisWeatherDataWest.getFormattedMessage();
-            recalculateWest();
-        }
-        setRitisWeatherLastUpdate(new Date());
-    }
-
-    /**
-     * @return the ritisSpeedDataEast
-     */
-    public ODEAgentMessage getRitisSpeedDataEast() {
-        return ritisSpeedDataEast;
-    }
-
-    /**
-     * @param ritisSpeedDataEast the ritisSpeedDataEast to set
-     */
-    public void setRitisSpeedDataEast(ODEAgentMessage ritisSpeedDataEast) {
-        if (!this.ritisSpeedDataEast.getMessageId().equals(ritisSpeedDataEast.getMessageId())) {
-            this.ritisSpeedDataEast = ritisSpeedDataEast;
-            ritisSpeedDataEastValue = (RITISSpeedData)ritisSpeedDataEast.getFormattedMessage();
-            recalculateEast();
-        }
-        setRitisSpeedLastUpdate(new Date());
-    }
-
-    /**
-     * @return the ritisSpeedDataWest
-     */
-    public ODEAgentMessage getRitisSpeedDataWest() {
-        return ritisSpeedDataWest;
-    }
-
-    /**
-     * @param ritisSpeedDataWest the ritisSpeedDataWest to set
-     */
-    public void setRitisSpeedDataWest(ODEAgentMessage ritisSpeedDataWest) {
-        if (!this.ritisSpeedDataWest.getMessageId().equals(ritisSpeedDataWest.getMessageId())) {
-            this.ritisSpeedDataWest = ritisSpeedDataWest;
-            ritisSpeedDataWestValue = (RITISSpeedData)ritisSpeedDataWest.getFormattedMessage();
-            recalculateWest();
-        }
-        setRitisSpeedLastUpdate(new Date());
-    }
 
     /**
      * @return the bsmDataEast
@@ -456,6 +244,8 @@ public class CurrentDataSet {
      */
     public void setVdotWeatherDataEastValue(VDOTWeatherData vdotWeatherDataEastValue) {
         this.vdotWeatherDataEastValue = vdotWeatherDataEastValue;
+        setVdotWeatherLastUpdate(new Date());
+        
     }
 
     /**
@@ -470,6 +260,7 @@ public class CurrentDataSet {
      */
     public void setVdotWeatherDataWestValue(VDOTWeatherData vdotWeatherDataWestValue) {
         this.vdotWeatherDataWestValue = vdotWeatherDataWestValue;
+        setVdotWeatherLastUpdate(new Date());
     }
 
     /**
@@ -484,6 +275,8 @@ public class CurrentDataSet {
      */
     public void setVdotTravelDataEastValue(VDOTTravelTimeData vdotTravelDataEastValue) {
         this.vdotTravelDataEastValue = vdotTravelDataEastValue;
+         recalculateEast();
+        setVdotTravelLastUpdate(new Date());
     }
 
     /**
@@ -498,6 +291,8 @@ public class CurrentDataSet {
      */
     public void setVdotTravelDataWestValue(VDOTTravelTimeData vdotTravelDataWestValue) {
         this.vdotTravelDataWestValue = vdotTravelDataWestValue;
+        recalculateWest();
+        setVdotTravelLastUpdate(new Date());
     }
 
     /**
@@ -512,6 +307,8 @@ public class CurrentDataSet {
      */
     public void setVdotSpeedDataEastValue(VDOTSpeedData vdotSpeedDataEastValue) {
         this.vdotSpeedDataEastValue = vdotSpeedDataEastValue;
+        recalculateEast();
+        setVdotSpeedLastUpdate(new Date());
     }
 
     /**
@@ -526,6 +323,8 @@ public class CurrentDataSet {
      */
     public void setVdotSpeedDataWestValue(VDOTSpeedData vdotSpeedDataWestValue) {
         this.vdotSpeedDataWestValue = vdotSpeedDataWestValue;
+        recalculateWest();
+        setVdotSpeedLastUpdate(new Date());
     }
 
     /**
@@ -540,6 +339,7 @@ public class CurrentDataSet {
      */
     public void setRitisWeatherDataEastValue(RITISWeatherDataNWS ritisWeatherDataEastValue) {
         this.ritisWeatherDataEastValue = ritisWeatherDataEastValue;
+        setRitisWeatherLastUpdate(new Date());
     }
 
     /**
@@ -554,6 +354,7 @@ public class CurrentDataSet {
      */
     public void setRitisWeatherDataWestValue(RITISWeatherDataNWS ritisWeatherDataWestValue) {
         this.ritisWeatherDataWestValue = ritisWeatherDataWestValue;
+        setRitisWeatherLastUpdate(new Date());
     }
 
     /**
@@ -568,6 +369,8 @@ public class CurrentDataSet {
      */
     public void setRitisSpeedDataEastValue(RITISSpeedData ritisSpeedDataEastValue) {
         this.ritisSpeedDataEastValue = ritisSpeedDataEastValue;
+        recalculateEast();
+        setRitisSpeedLastUpdate(new Date());
     }
 
     /**
@@ -582,6 +385,8 @@ public class CurrentDataSet {
      */
     public void setRitisSpeedDataWestValue(RITISSpeedData ritisSpeedDataWestValue) {
         this.ritisSpeedDataWestValue = ritisSpeedDataWestValue;
+        recalculateWest();
+        setRitisSpeedLastUpdate(new Date());
     }
 
     

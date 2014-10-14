@@ -124,6 +124,8 @@ public class ODEEmulator implements EmulatorDataListener {
         RITISSpeedData eastData = getRITISDataAverage(data, "E");
         RITISSpeedData westData = getRITISDataAverage(data, "W");
         //TODO: set values to correct directions in current data
+        currentData.setRitisSpeedDataEastValue(eastData);
+        currentData.setRitisSpeedDataWestValue(westData);
 
     }
 
@@ -176,6 +178,8 @@ public class ODEEmulator implements EmulatorDataListener {
         VDOTSpeedData eastData = getVDOTSpeedDataAverage(data, "E");
         VDOTSpeedData westData = getVDOTSpeedDataAverage(data, "W");
         //TODO set values to current data.
+        currentData.setVdotSpeedDataEastValue(eastData);
+        currentData.setVdotSpeedDataWestValue(westData);
     }
 
     private VDOTSpeedData getVDOTSpeedDataAverage(Object data, String direction) {
@@ -200,11 +204,11 @@ public class ODEEmulator implements EmulatorDataListener {
     }
 
     public void vdotTravelTimeDataReceived(ODEAgentMessage data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO: finish weather
     }
 
     public void vdotWeatherDataReceived(ODEAgentMessage data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO: finish weather
     }
 
     public void bsmDataReceived(ODEAgentMessage data) {
