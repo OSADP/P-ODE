@@ -13,7 +13,10 @@ public class PublishODEAgent extends BasicODEAgent {
     public void startUp() throws DataTargetException {
         super.startUp();
         if (getRegistrationResponse() != null) {
+            getLogger().debug("Configuring data target with registration response.");
             getDataTarget().configure(getRegistrationResponse());
+        } else {
+            getLogger().debug("Unable to configure data target. Registration response was null.");
         }
     }
 }
