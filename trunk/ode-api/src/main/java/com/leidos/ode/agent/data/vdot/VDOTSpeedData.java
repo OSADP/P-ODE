@@ -1,6 +1,8 @@
 package com.leidos.ode.agent.data.vdot;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,130 +13,146 @@ import java.util.Date;
  */
 public class VDOTSpeedData implements VDOTData {
 
-    private String detectorId;
-    private String stationId;
-    private String deviceName;
-    private String laneDirection;
-    private String laneType;
-    private int laneNum;
-    private Date lastUpdated;
-    private double mileMarker;
-    private int occupancy;
-    private String routeName;
-    private int speed;
-    private float[] geometry;
-    private int volume;
-    private int nodeId;
+    private List<VDOTSpeedDataElement> vdotSpeedDataElements;
 
-    public String getDetectorId() {
-        return detectorId;
+    public VDOTSpeedData(){
+        vdotSpeedDataElements = new ArrayList<VDOTSpeedDataElement>();
     }
 
-    public void setDetectorId(String detectorId) {
-        this.detectorId = detectorId;
+    public List<VDOTSpeedDataElement> getVdotSpeedDataElements() {
+        return vdotSpeedDataElements;
     }
 
-    public String getDeviceName() {
-        return deviceName;
+    public void setVdotSpeedDataElements(List<VDOTSpeedDataElement> vdotSpeedDataElements) {
+        this.vdotSpeedDataElements = vdotSpeedDataElements;
     }
 
-    public void setDeviceName(String deviceName) {
-        this.deviceName = deviceName;
-    }
+    public static class VDOTSpeedDataElement {
+        private String detectorId;
+        private String stationId;
+        private String deviceName;
+        private String laneDirection;
+        private String laneType;
+        private int laneNum;
+        private Date lastUpdated;
+        private double mileMarker;
+        private int occupancy;
+        private String routeName;
+        private int speed;
+        private float[] geometry;
+        private int volume;
+        private int nodeId;
 
-    public float[] getGeometry() {
-        return geometry;
-    }
+        public String getDetectorId() {
+            return detectorId;
+        }
 
-    public void setGeometry(float[] geometry) {
-        this.geometry = geometry;
-    }
+        public void setDetectorId(String detectorId) {
+            this.detectorId = detectorId;
+        }
 
-    public String getLaneDirection() {
-        return laneDirection;
-    }
+        public String getDeviceName() {
+            return deviceName;
+        }
 
-    public void setLaneDirection(String laneDirection) {
-        this.laneDirection = laneDirection;
-    }
+        public void setDeviceName(String deviceName) {
+            this.deviceName = deviceName;
+        }
 
-    public int getLaneNum() {
-        return laneNum;
-    }
+        public float[] getGeometry() {
+            return geometry;
+        }
 
-    public void setLaneNum(int laneNum) {
-        this.laneNum = laneNum;
-    }
+        public void setGeometry(float[] geometry) {
+            this.geometry = geometry;
+        }
 
-    public String getLaneType() {
-        return laneType;
-    }
+        public String getLaneDirection() {
+            return laneDirection;
+        }
 
-    public void setLaneType(String laneType) {
-        this.laneType = laneType;
-    }
+        public void setLaneDirection(String laneDirection) {
+            this.laneDirection = laneDirection;
+        }
 
-    public Date getLastUpdated() {
-        return lastUpdated;
-    }
+        public int getLaneNum() {
+            return laneNum;
+        }
 
-    public void setLastUpdated(Date lastUpdated) {
-        this.lastUpdated = lastUpdated;
-    }
+        public void setLaneNum(int laneNum) {
+            this.laneNum = laneNum;
+        }
 
-    public double getMileMarker() {
-        return mileMarker;
-    }
+        public String getLaneType() {
+            return laneType;
+        }
 
-    public void setMileMarker(double mileMarker) {
-        this.mileMarker = mileMarker;
-    }
+        public void setLaneType(String laneType) {
+            this.laneType = laneType;
+        }
 
-    public int getNodeId() {
-        return nodeId;
-    }
+        public Date getLastUpdated() {
+            return lastUpdated;
+        }
 
-    public void setNodeId(int nodeId) {
-        this.nodeId = nodeId;
-    }
+        public void setLastUpdated(Date lastUpdated) {
+            this.lastUpdated = lastUpdated;
+        }
 
-    public int getOccupancy() {
-        return occupancy;
-    }
+        public double getMileMarker() {
+            return mileMarker;
+        }
 
-    public void setOccupancy(int occupancy) {
-        this.occupancy = occupancy;
-    }
+        public void setMileMarker(double mileMarker) {
+            this.mileMarker = mileMarker;
+        }
 
-    public String getRouteName() {
-        return routeName;
-    }
+        public int getNodeId() {
+            return nodeId;
+        }
 
-    public void setRouteName(String routeName) {
-        this.routeName = routeName;
-    }
+        public void setNodeId(int nodeId) {
+            this.nodeId = nodeId;
+        }
 
-    public int getSpeed() {
-        return speed;
-    }
+        public int getOccupancy() {
+            return occupancy;
+        }
 
-    public void setSpeed(int speed) {
-        this.speed = speed;
-    }
+        public void setOccupancy(int occupancy) {
+            this.occupancy = occupancy;
+        }
 
-    public String getStationId() {
-        return stationId;
-    }
+        public String getRouteName() {
+            return routeName;
+        }
 
-    public void setStationId(String stationId) {
-        this.stationId = stationId;
-    }
+        public void setRouteName(String routeName) {
+            this.routeName = routeName;
+        }
 
-    public int getVolume() {
-        return volume;
-    }
+        public int getSpeed() {
+            return speed;
+        }
 
-    public void setVolume(int volume) {
-        this.volume = volume;
+        public void setSpeed(int speed) {
+            this.speed = speed;
+        }
+
+        public String getStationId() {
+            return stationId;
+        }
+
+        public void setStationId(String stationId) {
+            this.stationId = stationId;
+        }
+
+        public int getVolume() {
+            return volume;
+        }
+
+        public void setVolume(int volume) {
+            this.volume = volume;
+        }
     }
 }

@@ -1,0 +1,2772 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema targetNamespace="http://cattlab.umd.edu/schema/ritisFilter"
+	xmlns="http://cattlab.umd.edu/schema/ritisFilter" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:ai="http://jaxb.dev.java.net/plugin/if_insertion"
+	jaxb:version="2.0" version="1.1.1" xmlns:gml="http://www.opengis.net/gml/3.2">
+
+	<xs:annotation>
+		<xs:appinfo>
+			<jaxb:schemaBindings>
+				<jaxb:package name="edu.umd.cattlab.schema.ritisFilter" />
+			</jaxb:schemaBindings>
+		</xs:appinfo>
+	</xs:annotation>
+	<xs:import namespace="http://www.opengis.net/gml/3.2"
+		schemaLocation="../gml_rf/gml/3.2.1/gml_rf.xsd" />
+
+	<xs:element name="trafficEvents" type="eventsType" />
+
+	<xs:complexType name="header">
+		<xs:annotation>
+			<xs:documentation>The is the header element for the whole document to
+				describe general information
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="sender" type="xs:normalizedString">
+				<xs:annotation>
+					<xs:documentation>The agency who is sending this document
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="timestamp" type="xs:dateTime">
+				<xs:annotation>
+					<xs:documentation> The time this document was created/generated
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="messageNumber" type="xs:long" minOccurs="0" />
+			<xs:element name="totalEntries" type="xs:nonNegativeInteger"
+				maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The total number of data entries that would
+						have
+						been
+						returned if no filters were applied
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="filteredEntries" type="xs:nonNegativeInteger"
+				maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The number of data entries filtered out (ie,
+						not
+						included in this document)
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="eventsType">
+		<xs:annotation>
+			<xs:documentation>This is the root element for listing events
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="header" type="header" />
+			<xs:element name="events">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="event" type="event" maxOccurs="unbounded"
+							minOccurs="0">
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="event">
+		<xs:annotation>
+			<xs:documentation>This element represents an event occurring
+				which
+				affects traffic and roadways
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="head" type="head" />
+			<xs:element name="plannedEvent" type="plannedEvent"
+				minOccurs="0" />
+			<xs:element name="internalErrors" type="internalErrors"
+				minOccurs="0" />
+			<xs:element name="cadMessage" type="cadMessage" maxOccurs="unbounded"
+				minOccurs="0" />
+			<xs:element name="locations">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="location" type="location" maxOccurs="unbounded"
+							minOccurs="1">
+							<xs:annotation>
+								<xs:documentation>
+									An event may have multiple locations such as
+									debris falling on
+									another road or weather events
+								</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="communications" type="communicationsType"
+				maxOccurs="1" minOccurs="0">
+			</xs:element>
+			<xs:element name="involved" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="vehicles" type="vehicles" maxOccurs="1"
+							minOccurs="0" />
+						<xs:element name="responders" type="responders"
+							maxOccurs="1" minOccurs="0">
+						</xs:element>
+						<xs:element name="materials" type="materialsType"
+							minOccurs="0">
+						</xs:element>
+						<xs:element name="devices" type="devicesType"
+							maxOccurs="1" minOccurs="0">
+						</xs:element>
+						<xs:element name="injuries" type="injuriesType"
+							minOccurs="0" />
+					</xs:sequence>
+				</xs:complexType>
+
+			</xs:element>
+			<xs:element name="associatedEvents" type="associatedEvents"
+				maxOccurs="1" minOccurs="0">
+			</xs:element>
+
+			<xs:element minOccurs="0" name="associatedDMS">
+				<xs:annotation>
+					<xs:documentation>This has any DMS that are associated with this
+						event
+					</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" name="dms" type="association" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="impact" minOccurs="0" type="eventImpactType">
+			</xs:element>
+			<xs:element name="media" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="item" type="mediaType" maxOccurs="unbounded">
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element minOccurs="0" name="contacts">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="contact" type="contactType"
+							maxOccurs="unbounded">
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element minOccurs="0" name="queueLength">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="length" type="valueUnitType" />
+						<xs:element name="expectedTravelTime" type="valueUnitType" />
+						<xs:element name="freeFlowTravelTime" type="valueUnitType" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="head">
+		<xs:annotation>
+			<xs:documentation>This is the header information about an event
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="id" type="xs:normalizedString"
+				minOccurs="1" />
+			<xs:element name="name" type="xs:normalizedString"
+				minOccurs="0" />
+			<xs:element minOccurs="0" name="description" type="xs:normalizedString" />
+			<xs:element name="reportingAgency" type="xs:normalizedString" />
+			<xs:element name="reportingSystem" type="xs:normalizedString" />
+			<xs:element name="opCenter" type="xs:normalizedString"
+				minOccurs="0" />
+			<xs:element name="detectionSource" type="detectionSource"
+				minOccurs="0" />
+			<xs:element name="agencyEventType" type="agencyEventType"
+				minOccurs="0" />
+			<xs:element name="eventType" type="eventType" />
+			<xs:element name="eventStatus" type="xs:normalizedString"
+				minOccurs="0" />
+			<xs:element name="dates" type="keyDates" />
+			<xs:element name="falseAlarm" type="xs:boolean" minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="internalErrors">
+		<xs:sequence>
+			<xs:element name="error" type="xs:string" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="detectionSource">
+		<xs:sequence>
+			<xs:element name="type" type="detectionSourceType" />
+			<xs:element name="description" type="xs:normalizedString" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="detectionSourceType">
+		<xs:annotation>
+			<xs:documentation>This is the simple type for detection source
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="unknown" />
+			<xs:enumeration value="other" />
+			<xs:enumeration value="highway support patrol" />
+			<xs:enumeration value="state police" />
+			<xs:enumeration value="local police" />
+			<xs:enumeration value="operations center" />
+			<xs:enumeration value="media" />
+			<xs:enumeration value="utility" />
+			<xs:enumeration value="device" />
+			<xs:enumeration value="citizen" />
+			<xs:enumeration value="maintenace" />
+			<xs:enumeration value="contractor" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="keyDates">
+		<xs:annotation>
+			<xs:documentation>This element represents the key dates
+				associated
+				with an event
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="created" type="xs:dateTime" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The time the event was created and stored
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="createdTimeZone" type="timeZoneType"
+				minOccurs="0" />
+			<xs:element name="started" type="xs:dateTime" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The time the event began (this is not the
+						start
+						time of a planned event, but rather the actual time it
+						started)
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="startedTimeZone" type="timeZoneType"
+				minOccurs="0" />
+			<xs:element name="confirmed" type="xs:dateTime" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The time the event was confirmed to exist or
+						to be
+						happening
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="confirmedTimeZone" type="timeZoneType"
+				minOccurs="0" />
+			<xs:element name="updated" type="xs:dateTime" maxOccurs="1"
+				minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>The time the event was last updated with new
+						or
+						changed information
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="systemUpdated" type="xs:dateTime" maxOccurs="1"
+				minOccurs="0">
+			</xs:element>
+			<xs:element name="updatedTimeZone" type="timeZoneType"
+				minOccurs="0" />
+			<xs:element minOccurs="0" name="canceled" type="xs:dateTime">
+				<xs:annotation>
+					<xs:documentation>The time the event was canceled, such as road
+						work being canceled
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="cleared" type="xs:dateTime" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The time the event was cleared from the travel
+						right of way
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="clearedTimeZone" type="timeZoneType"
+				minOccurs="0" />
+			<xs:element name="closed" type="xs:dateTime" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The time when the event was considered over
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="closedTimeZone" type="timeZoneType"
+				minOccurs="0" />
+			<xs:element name="expectedEndTime" type="xs:dateTime"
+				maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The time the event is expected to be completed
+						by
+						the reporting agency
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="expectedEndTimeZone" type="timeZoneType"
+				minOccurs="0" />
+			<xs:element name="predictedEndTime" type="xs:dateTime"
+				maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The time the event is predicted to end based
+						on
+						historical similar events
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="predictedEndTimeZone" type="timeZoneType"
+				minOccurs="0" />
+			<xs:element name="proposedStart" type="xs:dateTime"
+				maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The time a planned event is proposed to begin
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="proposedStartTimeZone" type="timeZoneType"
+				minOccurs="0" />
+			<xs:element name="proposedEnd" type="xs:dateTime"
+				maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The time a planned event is proposed to end
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="proposedEndTimeZone" type="timeZoneType"
+				minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="timeZoneType">
+		<xs:all>
+			<xs:element name="offset" type="xs:int" />
+			<xs:element name="name" type="xs:string" minOccurs="0" />
+		</xs:all>
+	</xs:complexType>
+	<xs:complexType name="cadMessage">
+		<xs:sequence>
+			<xs:element name="cadId" type="xs:normalizedString"
+				minOccurs="0" />
+			<xs:element name="message" type="xs:normalizedString"
+				minOccurs="0" />
+			<xs:element name="messageTStamp" type="xs:dateTime"
+				minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="plannedEvent">
+		<xs:annotation>
+			<xs:documentation>The element contains information specific to
+				planned events
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="permitNumber" type="xs:normalizedString"
+				minOccurs="0" />
+			<xs:element name="purpose" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is a free text description of the
+						overall
+						purpose of this planned event
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="closureSchedule" type="closureSchedule"
+				minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="closureSchedule">
+		<xs:annotation>
+			<xs:documentation>This represents a planned road closure schedule
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="startDate" type="xs:date" />
+			<xs:element name="endDate" type="xs:date" />
+			<xs:choice minOccurs="0">
+				<xs:element name="week">
+					<xs:annotation>
+						<xs:documentation>This is for a weekly schedule of closures
+						</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="day" type="weekClosure" maxOccurs="7" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="dates">
+					<xs:annotation>
+						<xs:documentation>This is for a list of specific dates of
+							closures
+						</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="date" type="dateClosure" maxOccurs="unbounded" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="times" type="dayType">
+					<xs:annotation>
+						<xs:documentation>This is to specify a time range for each date in
+							the date range. This means every day in the range has the same
+							schedule.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="weekClosure">
+		<xs:complexContent>
+			<xs:extension base="dayType">
+				<xs:annotation>
+					<xs:documentation>This is what day of the week the closure is
+						occurring on
+					</xs:documentation>
+				</xs:annotation>
+				<xs:attribute name="name" type="daysOfTheWeek" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="dateClosure">
+		<xs:complexContent>
+			<xs:extension base="dayType">
+				<xs:annotation>
+					<xs:documentation>This is what specific date the road will be
+						closed
+					</xs:documentation>
+				</xs:annotation>
+				<xs:attribute name="date" type="xs:date" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="dayType">
+		<xs:annotation>
+			<xs:documentation>This represents a day/date of closure of a
+				right of
+				way
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="startTime" type="xs:time" />
+			<xs:element name="endTime" type="xs:time" />
+			<xs:element name="interval" type="valueUnitType"
+				minOccurs="0" />
+			<xs:element name="lengthOfTime" type="valueUnitType"
+				minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="location">
+		<xs:annotation>
+			<xs:documentation>This element represents a location where an
+				event is
+				occurring
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="id" type="xs:normalizedString"
+				maxOccurs="1" />
+			<!-- description: -->
+			<xs:element name="linkId" type="xs:nonNegativeInteger"
+				minOccurs="0" />
+			<xs:element name="description" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation> A free text human readable description of the
+						location which should be a quick way for a person to determine the
+						event's location
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="center" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is the center point of this location.
+						This is
+						often useful for data consumers who need to quickly find a
+						location to put on a map.
+					</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="gml:Point" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:choice minOccurs="0">
+				<xs:element name="pointLocation" type="pointLocationType" />
+				<xs:element name="linkLocation" type="linkLocationType" />
+				<xs:element name="areaLocation" type="polygonLocationType" />
+			</xs:choice>
+			<xs:element name="roads" type="roadsType" minOccurs="0" />
+			<xs:element name="road-condition" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence minOccurs="1">
+						<xs:element name="weather" type="weatherTypeRestriction"
+							minOccurs="0">
+						</xs:element>
+						<xs:element name="road-status" type="roadStatusRestriction"
+							minOccurs="0">
+						</xs:element>
+						<xs:element minOccurs="0" name="nearestWeatherStations">
+							<xs:annotation>
+								<xs:documentation>This is a list of nearby weather station
+									IDs
+									which can be used to find out more information about road
+									conditions
+								</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element maxOccurs="unbounded" name="id"
+										type="xs:normalizedString" />
+								</xs:sequence>
+								<xs:attribute name="url" type="xs:anyURI" use="optional">
+									<xs:annotation>
+										<xs:documentation>A URL leading to more information on this
+											weather station
+										</xs:documentation>
+									</xs:annotation>
+								</xs:attribute>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="impact" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is the impact on the location the event
+						has
+					</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="queue" minOccurs="0" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>This is information about the queue build
+									up
+									following the event
+								</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element minOccurs="0" name="id" type="xs:normalizedString" />
+									<xs:element name="direction" type="directionType" />
+									<xs:element name="length" type="valueUnitType">
+										<xs:annotation>
+											<xs:documentation>This is how far back the queue is
+												building
+											</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="delay" type="valueUnitType">
+										<xs:annotation>
+											<xs:documentation>This is how long travelers can expect
+												to be
+												delayed due to the queue
+											</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="detour" minOccurs="0" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>This is a list of directions a traveler
+									could
+									follow to avoid the event at this location. It should
+									start with
+									how to get off the road the event in on
+								</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element ref="gml:LineString" />
+									<xs:element name="road" type="roadType" maxOccurs="unbounded">
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="pointLocationType">
+		<xs:annotation>
+			<xs:documentation>This represents a location in a single point
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="gml:Point" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is the geographic point where the event
+						is
+						occurring
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="onAddress" type="addressType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is what road the event is on
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="atAddress" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>This is the cross road where the event is
+						occurring
+					</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="addressType">
+							<xs:sequence>
+								<xs:element minOccurs="0" name="intersectionType"
+									type="intersectionType">
+									<xs:annotation>
+										<xs:documentation>This is the type of intersection where
+											onAddress and atAddress cross
+										</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="linkLocationType">
+		<xs:annotation>
+			<xs:documentation>This represents a location along a link. This
+				link
+				can be a closed loop, but the event is only occurring along
+				that loop
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="gml:LineString" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is the geographic link where the event
+						is
+						occurring
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="locationList" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is a list of pointLocations to specify
+						the
+						link
+					</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="2" maxOccurs="unbounded" type="pointLocationType"
+							name="pointLocation" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="polygonLocationType">
+		<xs:annotation>
+			<xs:documentation>This represents a location covering a whole
+				area
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="gml:Polygon" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is the geographic area that the event
+						covers
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="locationList" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is a list of points which mark out the area.
+						This could be a list of intersections to mark off the area for a
+						parade for example.
+					</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:choice minOccurs="3" maxOccurs="unbounded">
+						<xs:element name="pointLocation" type="pointLocationType">
+						</xs:element>
+					</xs:choice>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="area" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is to represent a geopolitical area
+						covered
+						by the event
+					</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:choice minOccurs="1" maxOccurs="unbounded">
+						<xs:element name="neighborhood" type="xs:normalizedString"
+							minOccurs="0" />
+						<xs:element name="district" type="xs:normalizedString"
+							minOccurs="0" />
+						<xs:element name="city" type="xs:normalizedString"
+							minOccurs="0" />
+						<xs:element name="region" type="xs:normalizedString"
+							minOccurs="0" />
+						<xs:element name="county" type="xs:normalizedString"
+							minOccurs="0" />
+						<xs:element name="state" type="state" minOccurs="0" />
+						<xs:element name="country" type="country" minOccurs="0" />
+					</xs:choice>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="addressType">
+		<xs:annotation>
+			<xs:documentation>This represents an address</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="road" type="roadType" minOccurs="0" />
+			<xs:element minOccurs="0" name="alternateRoads">
+				<xs:annotation>
+					<xs:documentation>Many road have multiple names/route numbers. The
+						alternate road information is here.
+					</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" name="road" type="roadType" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="city" type="xs:normalizedString"
+				minOccurs="0" />
+			<xs:element name="zipcode" type="zipcode" minOccurs="0" />
+			<xs:element name="county" type="xs:normalizedString"
+				minOccurs="0" />
+			<xs:element name="state" type="state" minOccurs="0" />
+			<xs:element name="country" type="country" minOccurs="0" />
+			<xs:element name="tmcCode" type="tmcType" minOccurs="0" />
+			<xs:element name="station" type="xs:normalizedString"
+				minOccurs="0">
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="roadsType">
+		<xs:annotation>
+			<xs:documentation>This contains information about the status of
+				the
+				roadways
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="road" type="roadLaneType" maxOccurs="unbounded"
+				minOccurs="1" />
+		</xs:sequence>
+		<xs:attribute name="direction" type="lettersAndDigits">
+			<xs:annotation>
+				<xs:documentation>This is single character encoded string of
+					each
+					part of the roadway's direction
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="type" type="lettersAndDigits">
+			<xs:annotation>
+				<xs:documentation>This is a single character encoded string of
+					each
+					part of the roadway's type
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="status" type="lettersAndDigits">
+			<xs:annotation>
+				<xs:documentation>This is a single character encoded string of
+					part
+					of the roadway's most recently known status
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="roadType">
+		<xs:annotation>
+			<xs:documentation>This represents a specific right of way
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="streetNumber" type="xs:normalizedString"
+				minOccurs="0" />
+			<xs:element name="prefix" minOccurs="0" type="xs:normalizedString">
+				<xs:annotation>
+					<xs:documentation>This is the route prefix such as I
+						(interstate) or
+						US (US highway)
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="route" type="xs:nonNegativeInteger"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is the route name which is typically a
+						number
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="suffix" minOccurs="0" type="xs:normalizedString">
+				<xs:annotation>
+					<xs:documentation>This is the route suffix (if applicable). It
+						is
+						not the direction.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="name" type="xs:normalizedString"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is the road's name which is typically a
+						locally defined name of the route
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="direction" type="directionType"
+				minOccurs="0" />
+			<xs:element name="milemarker" type="nonNegativeDecimal"
+				minOccurs="0" />
+			<xs:element name="exit" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="number" type="xs:normalizedString" />
+						<xs:element minOccurs="0" name="name" type="xs:normalizedString" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="type" type="roadTypeRestriction"
+				minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="roadLaneType">
+		<xs:annotation>
+			<xs:documentation>This represents the parts of a roadway in one
+				specific direction
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="lane" type="lane" maxOccurs="unbounded"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is a list of the individual parts of the
+						roadway including lanes, shoulders, medians, etc
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="direction" type="directionType" use="required">
+			<xs:annotation>
+				<xs:documentation>This is the direction of these parts of the
+					roadway
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="lane">
+		<xs:annotation>
+			<xs:documentation>This is an individual part of a roadway such as
+				a
+				lane or shoulder and the status over time
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="status" type="statusType" maxOccurs="unbounded"
+				minOccurs="1">
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="type" type="laneType" use="required" />
+		<xs:attribute name="side" type="laneSideRestriction" use="optional">
+			<xs:annotation>
+				<xs:documentation>This is the side of the road the lane is on
+					such as
+					right, left, or center
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="statusType">
+		<xs:annotation>
+			<xs:documentation>This is the status of a lane</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="statusRestriction">
+				<xs:attribute name="date" type="xs:dateTime" use="required">
+					<xs:annotation>
+						<xs:documentation>This is the time when the indicated status
+							began
+						</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:complexType name="communicationsType">
+		<xs:annotation>
+			<xs:documentation>This is a list of communications
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="communication" type="communicationType"
+				maxOccurs="unbounded" minOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="communicationType">
+		<xs:annotation>
+			<xs:documentation>This represents communication between two
+				parties
+				about this event
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="type" type="communicationTypeRestriction"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is the type of communication such as
+						email,
+						radio, or chat
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="from" type="comToFromType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is who sent the communication
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="to" type="comToFromType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is who the intended recipient was
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="timestamp" type="xs:dateTime">
+				<xs:annotation>
+					<xs:documentation>The time the communication occurred
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="message" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>The contents of the communication
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="0" name="notes" type="notesType">
+				<xs:annotation>
+					<xs:documentation>More information about the communication
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="comToFromType">
+		<xs:annotation>
+			<xs:documentation>This represents communication between two
+				people
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="user">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="username" type="xs:normalizedString"
+							minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>This is the username of the person
+									communicating typically for chat logs
+								</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="name" minOccurs="0" type="personNameType" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="center" type="xs:normalizedString"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is the location of the user typically
+						the
+						traffic center or press location
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="eventType">
+		<xs:annotation>
+			<xs:documentation>This represents the event's type
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="type" type="eventTypeRestriction">
+				<xs:annotation>
+					<xs:documentation>This is the higher level event type such as
+						accident or road work
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="attribute" type="eventAttributeRestriction"
+				maxOccurs="unbounded" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>These are various aspects to describe the
+						event in
+						greater detail
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="agencyEventType">
+		<xs:annotation>
+			<xs:documentation>This represents the event's type
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="type" type="xs:normalizedString"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is the event type for the specific agency.
+						Not all agencies may have this
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="subtype" type="xs:normalizedString"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is the event subtype for the specific
+						agency. Not all agencies may have this
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="vehicles">
+		<xs:annotation>
+			<xs:documentation>A list of vehicles</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="vehicle" type="vehicle" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="vehicle">
+		<xs:annotation>
+			<xs:documentation>This represents a vehicle involved in the event
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="id" type="xs:normalizedString" />
+			<!-- for Ritis Input -->
+			<xs:element name="vehicleDescription" type="xs:normalizedString"
+				minOccurs="0" />
+			<xs:element name="type" type="vehicleTypeRestriction"
+				minOccurs="0" />
+			<xs:element maxOccurs="unbounded" name="subtype"
+				type="vehicleSubtypeRestriction" minOccurs="0" />
+			<xs:element name="conditions" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is a list of conditions of the vehicle,
+						such
+						as damages or whether it is disabled
+					</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" name="condition"
+							type="vehicleConditionType" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="make" type="xs:normalizedString"
+				maxOccurs="1" minOccurs="0" />
+			<xs:element name="model" type="xs:normalizedString"
+				maxOccurs="1" minOccurs="0" />
+			<xs:element name="year" type="xs:gYear" maxOccurs="1"
+				minOccurs="0" />
+			<xs:element name="color" type="xs:normalizedString"
+				maxOccurs="1" minOccurs="0" />
+			<xs:element name="information" type="xs:normalizedString"
+				maxOccurs="1" minOccurs="0" />
+			<xs:element name="tag" type="xs:normalizedString"
+				maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is the license plate tag of the vehicle
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="0" name="passengers" type="peopleListType">
+				<xs:annotation>
+					<xs:documentation>This is a count and list of the passengers
+						who
+						were in the vehicle
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="notes" type="notesType" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is additional information about the
+						vehicle
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="location" type="referenceLocationType"
+				maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is the current location of the vehicle
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="0" name="times">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="added" type="xs:dateTime">
+							<xs:annotation>
+								<xs:documentation>The time when the vehicle was added (became
+									involved) to the event. This is often the start time of the
+									event.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element minOccurs="0" name="cleared" type="xs:dateTime">
+							<xs:annotation>
+								<xs:documentation>The time when the vehicle was cleared from the
+									scene.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element minOccurs="0" name="removed" type="xs:dateTime">
+							<xs:annotation>
+								<xs:documentation>The time when the vehicle was removed and no
+									longer assoicated with the event. This is used to denote that
+									the vehicle was never actually involved, but was reported
+									before that determination was made.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="responders">
+		<xs:annotation>
+			<xs:documentation>A list of responders</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="responder" type="responder" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="responder">
+		<xs:annotation>
+			<xs:documentation>This represents a responder to the event such
+				as
+				police, EMS, or towing
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="id" type="xs:normalizedString" />
+			<!-- for Ritis Input -->
+			<xs:element name="type" type="responderTypeRestriction">
+				<xs:annotation>
+					<xs:documentation>This is the general type of the responder
+						such as
+						law enforcement, EMS, or tow
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="group" type="xs:normalizedString"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The more specific group of the type of
+						responder
+						such as state police, ambulance unit, or private tow
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<!-- The subgroup is the specific unit, ie Ambulance Unit 123 -->
+			<xs:element name="subgroup" type="xs:normalizedString"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is the specific unit responding such as
+						Ambulance Unit 123 or the name of the towing company
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="person" type="personNameType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The person is the specific person who is
+						responding, generally the driver in a multiple passenger vehicle.
+						Additional responders of the same type can either be separate
+						responder elements or included in the vehicle/passenger element
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="vehicle" type="vehicle" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The vehicle which the responder is using
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="times" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This represents important dates and times
+						about
+						the responder
+					</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="notified" type="xs:dateTime"
+							minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>This is the time the responder was
+									notified
+									about the event
+								</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="acknowledged" type="xs:dateTime"
+							minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>This is the time the responder
+									acknowledged
+									receipt of the notification
+								</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="arrived" type="xs:dateTime"
+							minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>This is the time the responder arrives on
+									scene to the location of the event
+								</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="departed" type="xs:dateTime"
+							minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>This is the time the responder departed
+									from
+									the scene
+								</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="removed" type="xs:dateTime"
+							minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>This is the time the responder removed
+								</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="responded" type="xs:dateTime"
+							minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>This is the time the responder responded
+									to the
+									call
+								</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="actions" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is a list of actions which a responder
+						performed
+					</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="action" maxOccurs="unbounded"
+							minOccurs="1">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="type">
+										<xs:annotation>
+											<xs:documentation>This is the generic type of action a
+												responder performed
+											</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element minOccurs="0" maxOccurs="unbounded"
+										name="details" type="xs:string">
+										<xs:annotation>
+											<xs:documentation>This is specific details about that
+												actions
+											</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="location" type="referenceLocationType"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This represents the current location of the
+						responder
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="materialsType">
+		<xs:annotation>
+			<xs:documentation>This is a list of materials involved in the
+				event
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="material" type="materialType" maxOccurs="unbounded">
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="materialType">
+		<xs:annotation>
+			<xs:documentation>This represents a material which has spilled on
+				the
+				roadway
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="name" type="xs:normalizedString" />
+			<xs:element name="amount" type="valueUnitType" minOccurs="0" />
+			<xs:element name="hazardous" type="xs:boolean" minOccurs="0" />
+			<xs:element name="location" type="referenceLocationType" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="devicesType">
+		<xs:annotation>
+			<xs:documentation>A list of devices</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="device" type="deviceType" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<xs:complexType name="deviceType">
+		<xs:annotation>
+			<xs:documentation>This represents a device involved with the
+				event
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="type" type="deviceTypeRestriction" />
+			<xs:element name="id" type="xs:normalizedString" />
+			<xs:element minOccurs="0" name="url" type="xs:anyURI" />
+			<xs:element name="start-association" type="xs:dateTime"
+				minOccurs="0" />
+			<xs:element name="end-association" type="xs:dateTime"
+				minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="injuriesType">
+		<xs:annotation>
+			<xs:documentation>This is a list of injuries which occurred as a
+				result of the event
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" name="injury" type="injuryType" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="injuryType">
+		<xs:annotation>
+			<xs:documentation>This represents an injury that occurred
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="type" type="injuryTypeRestriction" />
+			<xs:element name="people" type="peopleListType">
+				<xs:annotation>
+					<xs:documentation>This is a list of people affected by the
+						injury
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="location" type="referenceLocationType" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="peopleListType">
+		<xs:annotation>
+			<xs:documentation>This is a list of people with a count
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="count" type="xs:nonNegativeInteger" />
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="name"
+				type="personNameType" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="associatedEvents">
+		<xs:annotation>
+			<xs:documentation>This is a list of events which are somehow
+				related
+				to this event
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="associatedEvent" maxOccurs="unbounded"
+				minOccurs="1" type="association">
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="eventImpactType">
+		<xs:annotation>
+			<xs:documentation>
+				This element represents the impact the event as a
+				whole
+				has
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="description" type="xs:string" minOccurs="0" />
+			<xs:element name="roadsAffected" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="road" type="roadType" maxOccurs="unbounded"
+							minOccurs="1">
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="damages" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						A list of free text which describe any damages
+						that have occurred to the roadway, environment,
+						surrounding area,
+						etc
+					</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="damage" type="xs:string" maxOccurs="unbounded"
+							minOccurs="1">
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="estimatedCost" type="estimatedCostType"
+				minOccurs="0">
+			</xs:element>
+			<xs:element minOccurs="0" name="regional" type="xs:boolean" />
+		</xs:sequence>
+
+	</xs:complexType>
+	<xs:complexType name="estimatedCostType">
+		<xs:annotation>
+			<xs:documentation>This represents real time estimates of the cost
+				of
+				the event
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="delays" type="valueUnitType" />
+			<xs:element name="lostTime" type="valueUnitType" />
+			<xs:element name="environmental" type="valueUnitType" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="mediaType">
+		<xs:annotation>
+			<xs:documentation>This represents further information about the
+				event
+				such as news reports or articles
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="id" type="xs:normalizedString" />
+			<xs:element minOccurs="0" name="description" type="xs:normalizedString" />
+			<xs:element name="uploadedTime" type="xs:dateTime" />
+			<xs:element name="uploader" type="emailType" />
+			<xs:element name="type" type="xs:normalizedString">
+				<xs:annotation>
+					<xs:documentation>This the type of data. It will typically be a
+						mimeType or 'url'.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice minOccurs="1">
+				<xs:element name="filename" type="xs:normalizedString"
+					minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>This is the filename of the file
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="url" type="xs:anyURI" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>This the URL if the media item is a link.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+			<xs:element minOccurs="0" name="originalSource" type="xs:anyURI" />
+			<xs:element minOccurs="0" name="size" type="xs:positiveInteger">
+				<xs:annotation>
+					<xs:documentation>This is the size of the file (if applicable).
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="contactType">
+		<xs:annotation>
+			<xs:documentation>This is a contact who can provide information
+				about
+				the event
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="name" type="personNameType" />
+			<xs:element name="agency" type="xs:normalizedString" />
+			<xs:element name="role" type="xs:normalizedString"
+				minOccurs="0" />
+			<xs:element name="phone" type="phoneNumberType" minOccurs="0" />
+			<xs:element name="email" type="emailType" minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="referenceLocationType">
+		<xs:annotation>
+			<xs:documentation>This element is used to reference a location
+				defined in the event's location or to specify a location for
+				specific parts of an event such as responders or vehicles
+			</xs:documentation>
+		</xs:annotation>
+		<xs:choice>
+			<xs:element ref="gml:Point" />
+			<xs:element name="location-id" type="xs:string" />
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="notesType">
+		<xs:annotation>
+			<xs:documentation>This is a list of notes for further details
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" name="note" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="personNameType">
+		<xs:annotation>
+			<xs:documentation>This represents a person</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="title" type="xs:normalizedString"
+				minOccurs="0" />
+			<xs:element name="firstName" type="xs:normalizedString"
+				minOccurs="1" />
+			<xs:element name="middleName" type="xs:normalizedString"
+				minOccurs="0" />
+			<xs:element name="lastName" type="xs:normalizedString"
+				minOccurs="1" />
+			<xs:element name="suffix" type="xs:normalizedString"
+				minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="valueUnitType">
+		<xs:annotation>
+			<xs:documentation>This holds a value and the units of that value
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="value" type="xs:double" />
+			<xs:element name="unit" type="unitRestriction" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="association">
+		<xs:sequence>
+			<xs:element name="id" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>This is the ID of the related item
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="relationship" type="relationshipRestriction"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is a description of how the items
+						are related
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="url" type="xs:anyURI" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is a link to find further information
+						about
+						the related item
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="startAssociation" type="xs:dateTime"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is the time the association between
+						the items
+						began
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="endAssociation" type="xs:dateTime"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is the time the associated between
+						the items
+						ended
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="relationshipRestriction">
+		<xs:annotation>
+			<xs:documentation>These are the types of relationships two
+				associated
+				events can have
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="parent">
+				<xs:annotation>
+					<xs:documentation>This item is the parent of the associated
+						item
+						meaning it is the higher level item
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="child">
+				<xs:annotation>
+					<xs:documentation>This item the child of the associated event
+						meaning it is more restrictive or more specific
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="sibling"/>
+			<xs:enumeration value="primary">
+				<xs:annotation>
+					<xs:documentation>This item is the primary event to the
+						associated
+						secondary item
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="secondary">
+				<xs:annotation>
+					<xs:documentation>This item in the secondary event to an
+						associated
+						item such as secondary accident
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="cause">
+				<xs:annotation>
+					<xs:documentation>This item directly caused the associated
+						item to
+						occur
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="caused by">
+				<xs:annotation>
+					<xs:documentation>This item was directly caused by the
+						associated
+						item
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="related">
+				<xs:annotation>
+					<xs:documentation>This item is generically related to the
+						associated event
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="other agency">
+				<xs:annotation>
+					<xs:documentation>This item is the same event as the
+						associated item
+						except it is reported by different agency
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="directionType">
+		<xs:annotation>
+			<xs:documentation>This represents the possible directions a right
+				of
+				way has
+			</xs:documentation>
+		</xs:annotation>
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="north" />
+					<xs:enumeration value="south" />
+					<xs:enumeration value="east" />
+					<xs:enumeration value="west" />
+					<xs:enumeration value="northeast" />
+					<xs:enumeration value="northwest" />
+					<xs:enumeration value="southeast" />
+					<xs:enumeration value="southwest" />
+					<xs:enumeration value="south/north" />
+					<xs:enumeration value="east/west" />
+					<xs:enumeration value="reversible" />
+					<xs:enumeration value="reversible hov" />
+					<xs:enumeration value="inner loop" />
+					<xs:enumeration value="outer loop" />
+					<xs:enumeration value="inner loop/outer loop" />
+					<xs:enumeration value="both" />
+					<xs:enumeration value="unknown" />
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:annotation>
+					<xs:documentation>These are the directions encoded as single
+						characters
+					</xs:documentation>
+				</xs:annotation>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="0" />
+					<xs:enumeration value="1" />
+					<xs:enumeration value="2" />
+					<xs:enumeration value="3" />
+					<xs:enumeration value="4" />
+					<xs:enumeration value="5" />
+					<xs:enumeration value="6" />
+					<xs:enumeration value="7" />
+					<xs:enumeration value="8" />
+					<xs:enumeration value="9" />
+					<xs:enumeration value="A" />
+					<xs:enumeration value="B" />
+					<xs:enumeration value="C" />
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:simpleType name="statusRestriction">
+		<xs:annotation>
+			<xs:documentation>These are types of lane statuses
+			</xs:documentation>
+		</xs:annotation>
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="open" />
+					<xs:enumeration value="blocked" />
+					<xs:enumeration value="closed" />
+					<xs:enumeration value="unknown" />
+					<xs:enumeration value="entrance closed" />
+					<xs:enumeration value="exit closed" />
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:annotation>
+					<xs:documentation>These are the lane statuses encoded as
+						single
+						characters
+					</xs:documentation>
+				</xs:annotation>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="0" />
+					<xs:enumeration value="1" />
+					<xs:enumeration value="2" />
+					<xs:enumeration value="3" />
+					<xs:enumeration value="4" />
+					<xs:enumeration value="5" />
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:simpleType name="laneType">
+		<xs:annotation>
+			<xs:documentation>These are the different types of lanes
+			</xs:documentation>
+		</xs:annotation>
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="lane" />
+					<xs:enumeration value="shoulder" />
+					<xs:enumeration value="median" />
+					<xs:enumeration value="exit ramp" />
+					<xs:enumeration value="entrance ramp" />
+					<xs:enumeration value="local lane" />
+					<xs:enumeration value="HOV lane" />
+					<xs:enumeration value="express lane" />
+					<xs:enumeration value="reversible lane" />
+					<xs:enumeration value="merge lane" />
+					<xs:enumeration value="merging lanes" />
+					<xs:enumeration value="escape ramp" />
+					<xs:enumeration value="double yellow" />
+					<xs:enumeration value="unknown" />
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:annotation>
+					<xs:documentation>These are the lane types encoded as single
+						characters
+					</xs:documentation>
+				</xs:annotation>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="0" />
+					<xs:enumeration value="1" />
+					<xs:enumeration value="2" />
+					<xs:enumeration value="3" />
+					<xs:enumeration value="4" />
+					<xs:enumeration value="5" />
+					<xs:enumeration value="6" />
+					<xs:enumeration value="7" />
+					<xs:enumeration value="8" />
+					<xs:enumeration value="9" />
+					<xs:enumeration value="A" />
+					<xs:enumeration value="B" />
+					<xs:enumeration value="C" />
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:simpleType name="unitRestriction">
+		<xs:annotation>
+			<xs:documentation>These are possible units for a particular
+				value
+			</xs:documentation>
+		</xs:annotation>
+		<xs:union>
+			<xs:simpleType>
+				<xs:annotation>
+					<xs:documentation>These are the unit abbreviations
+					</xs:documentation>
+				</xs:annotation>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="km/h" />
+					<xs:enumeration value="gal" />
+					<xs:enumeration value="l" />
+					<xs:enumeration value="oz" />
+					<xs:enumeration value="%" />
+					<xs:enumeration value="in" />
+					<xs:enumeration value="inHg" />
+					<xs:enumeration value="F" />
+					<xs:enumeration value="mph" />
+					<xs:enumeration value="deg" />
+					<xs:enumeration value="ft" />
+					<xs:enumeration value="mi" />
+					<xs:enumeration value="lb" />
+					<xs:enumeration value="W/m2" />
+					<xs:enumeration value="in/hr" />
+					<xs:enumeration value="s" />
+					<xs:enumeration value="min" />
+					<xs:enumeration value="mhos/ft" />
+					<xs:enumeration value="J/m2" />
+					<xs:enumeration value="mbar" />
+					<xs:enumeration value="m/s" />
+					<xs:enumeration value="C" />
+					<xs:enumeration value="cm" />
+					<xs:enumeration value="mm" />
+					<xs:enumeration value="kg/m2" />
+					<xs:enumeration value="cm/h" />
+					<xs:enumeration value="m" />
+					<xs:enumeration value="$" />
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:annotation>
+					<xs:documentation>These are the units</xs:documentation>
+				</xs:annotation>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="kilometers per hour" />
+					<xs:enumeration value="gallon" />
+					<xs:enumeration value="liter" />
+					<xs:enumeration value="ounce" />
+					<xs:enumeration value="percent" />
+					<xs:enumeration value="inches" />
+					<xs:enumeration value="inches of mercury" />
+					<xs:enumeration value="degrees Fahrenheit" />
+					<xs:enumeration value="miles per hour" />
+					<xs:enumeration value="degrees clockwise from true North" />
+					<xs:enumeration value="feet" />
+					<xs:enumeration value="miles" />
+					<xs:enumeration value="pounds" />
+					<xs:enumeration value="watts per square meter" />
+					<xs:enumeration value="inches per hour" />
+					<xs:enumeration value="seconds" />
+					<xs:enumeration value="minutes" />
+					<xs:enumeration value="siemens per foot" />
+					<xs:enumeration value="joule per square meter" />
+					<xs:enumeration value="millibars" />
+					<xs:enumeration value="meters per second" />
+					<xs:enumeration value="degrees Celsius" />
+					<xs:enumeration value="centimeters" />
+					<xs:enumeration value="millimeters" />
+					<xs:enumeration value="kilograms per square meter" />
+					<xs:enumeration value="centimeters per hour" />
+					<xs:enumeration value="meters" />
+					<xs:enumeration value="US dollars" />
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="\[[\w/]+\]" />
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:simpleType name="intersectionType">
+		<xs:annotation>
+			<xs:documentation>These are the types of intersections
+			</xs:documentation>
+		</xs:annotation>
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="simple">
+						<xs:annotation>
+							<xs:documentation>Two roads intersecting</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="simple with traffic signal">
+						<xs:annotation>
+							<xs:documentation>Two roads intersecting at a traffic signal
+							</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="complex">
+						<xs:annotation>
+							<xs:documentation>More than two roads intersecting
+							</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="complex with traffic signal">
+						<xs:annotation>
+							<xs:documentation>More than two roads intersecting at a
+								traffic
+								signal
+							</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="roundabout">
+						<xs:annotation>
+							<xs:documentation>This is a roundabout or circle
+							</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="square">
+						<xs:annotation>
+							<xs:documentation>This is an intersection of roads which form
+								a
+								square (similar to a roundabout)
+							</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="interchange">
+						<xs:annotation>
+							<xs:documentation>This is a series of entrance or exit ramps
+								between two roads
+							</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="overpass">
+						<xs:annotation>
+							<xs:documentation>This is two roads crossing at different
+								elevations
+							</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:simpleType name="vehicleTypeRestriction">
+		<xs:annotation>
+			<xs:documentation>These are the possible vehicle types
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="car" />
+			<xs:enumeration value="van" />
+			<xs:enumeration value="suv" />
+			<xs:enumeration value="pickup truck" />
+			<xs:enumeration value="truck" />
+			<xs:enumeration value="bus" />
+			<xs:enumeration value="motorhome" />
+			<xs:enumeration value="motorcycle" />
+			<xs:enumeration value="bicycle" />
+			<xs:enumeration value="pedestrian" />
+			<xs:enumeration value="unknown" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="vehicleSubtypeRestriction">
+		<xs:annotation>
+			<xs:documentation>These are the possible vehicle subtypes
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="minivan" />
+			<xs:enumeration value="box truck" />
+			<xs:enumeration value="metro bus" />
+			<xs:enumeration value="dump truck" />
+			<xs:enumeration value="cement truck" />
+			<xs:enumeration value="ups truck" />
+			<xs:enumeration value="work truck" />
+			<xs:enumeration value="utility truck" />
+			<xs:enumeration value="with camper" />
+			<xs:enumeration value="flatbed" />
+			<xs:enumeration value="u-haul truck" />
+			<xs:enumeration value="ice cream truck" />
+			<xs:enumeration value="tow truck" />
+			<xs:enumeration value="roll off dumpster truck" />
+			<xs:enumeration value="fed-ex truck" />
+			<xs:enumeration value="transport truck" />
+			<xs:enumeration value="tanker" />
+			<xs:enumeration value="fire truck" />
+			<xs:enumeration value="with oversize load" />
+			<xs:enumeration value="hybrid" />
+			<xs:enumeration value="charter bus" />
+			<xs:enumeration value="minivan" />
+			<xs:enumeration value="station wagon" />
+			<xs:enumeration value="hatchback" />
+			<xs:enumeration value="mobile camper" />
+			<xs:enumeration value="multipurpose vehicle" />
+			<xs:enumeration value="ambulance" />
+			<xs:enumeration value="work van" />
+			<xs:enumeration value="with boat" />
+			<xs:enumeration value="police cruiser" />
+			<xs:enumeration value="taxi" />
+			<xs:enumeration value="four wheel drive" />
+			<xs:enumeration value="two wheel drive" />
+			<xs:enumeration value="small" />
+			<xs:enumeration value="large" />
+			<xs:enumeration value="sedan" />
+
+			<xs:enumeration value="two door" />
+			<xs:enumeration value="four door" />
+			<xs:enumeration value="convertible" />
+			<xs:enumeration value="pickup" />
+			<xs:enumeration value="single unit truck" />
+			<xs:enumeration value="tractor trailer cab" />
+			<xs:enumeration value="straight" />
+			<xs:enumeration value="tractor trailer" />
+			<xs:enumeration value="double tractor trailer" />
+			<xs:enumeration value="school bus" />
+			<xs:enumeration value="commercial bus" />
+			<xs:enumeration value="with trailer" />
+			<xs:enumeration value="none" />
+			<xs:enumeration value="unknown" />
+
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="vehicleConditionType">
+		<xs:annotation>
+			<xs:documentation>These are the possible vehicle conditions
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="damaged" />
+			<xs:enumeration value="on fire" />
+			<xs:enumeration value="right side collision" />
+			<xs:enumeration value="left side collision" />
+			<xs:enumeration value="front end collision" />
+			<xs:enumeration value="rear collision" />
+			<xs:enumeration value="disabled" />
+			<xs:enumeration value="flat tire" />
+			<xs:enumeration value="tire change required" />
+			<xs:enumeration value="hot shot required" />
+			<xs:enumeration value="water required" />
+			<xs:enumeration value="gas required" />
+			<xs:enumeration value="directions needed" />
+			<xs:enumeration value="no assistance needed" />
+			<xs:enumeration value="call for service required" />
+			<xs:enumeration value="gone on arrival" />
+			<xs:enumeration value="abandoned vehicle" />
+			<xs:enumeration value="information relayed to another operator" />
+			<xs:enumeration value="other" />
+			<xs:enumeration value="dead battery" />
+			<xs:enumeration value="driveable" />
+			<xs:enumeration value="not driveable" />
+			<xs:enumeration value="crushed" />
+			<xs:enumeration value="unknown" />
+		</xs:restriction>
+
+	</xs:simpleType>
+
+	<xs:simpleType name="responderTypeRestriction">
+		<xs:annotation>
+			<xs:documentation>These are the different high level types of
+				responders
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="law enforcement" />
+			<xs:enumeration value="freeway service patrol" />
+			<xs:enumeration value="transportation response unit" />
+			<xs:enumeration value="hazmat unit" />
+			<xs:enumeration value="emergency medical service unit" />
+			<xs:enumeration value="fire unit" />
+			<xs:enumeration value="contractor" />
+			<xs:enumeration value="towing unit" />
+			<xs:enumeration value="other" />
+			<xs:enumeration value="unknown" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="eventTypeRestriction">
+		<xs:annotation>
+			<xs:documentation>These are the possible event types
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="incident" />
+			<xs:enumeration value="collision" />
+			<xs:enumeration value="roadwork" />
+			<xs:enumeration value="traffic conditions" />
+			<xs:enumeration value="obstructions" />
+			<xs:enumeration value="disturbances" />
+			<xs:enumeration value="special events" />
+			<xs:enumeration value="weather" />
+			<xs:enumeration value="unknown" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="eventAttributeRestriction">
+		<xs:annotation>
+			<xs:documentation>These are the possible event attributes
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="abandoned vehicle" />
+			<xs:enumeration value="alert" />
+			<xs:enumeration value="animal struck" />
+			<xs:enumeration value="animals on roadway" />
+			<xs:enumeration value="bomb exploded" />
+			<xs:enumeration value="bomb threat" />
+			<xs:enumeration value="bridge construction" />
+			<xs:enumeration value="bridge maintenance operations" />
+			<xs:enumeration value="car show" />
+			<xs:enumeration value="closure" />
+			<xs:enumeration value="concert" />
+			<xs:enumeration value="construction work" />
+			<xs:enumeration value="crime" />
+			<xs:enumeration value="debris" />
+			<xs:enumeration value="delays" />
+			<xs:enumeration value="disabled in roadway" />
+			<xs:enumeration value="disabled on shoulder" />
+			<xs:enumeration value="drawbridge open" />
+			<xs:enumeration value="driving wrong way" />
+			<xs:enumeration value="DUI/DWI involved" />
+			<xs:enumeration value="earthquake" />
+			<xs:enumeration value="emergency" />
+			<xs:enumeration value="fair" />
+			<xs:enumeration value="fallen tree" />
+			<xs:enumeration value="fatalities involved" />
+			<xs:enumeration value="fire" />
+			<xs:enumeration value="flood" />
+			<xs:enumeration value="fog" />
+			<xs:enumeration value="guardrail damaged" />
+			<xs:enumeration value="hazardous material spill" />
+			<xs:enumeration value="hurricane" />
+			<xs:enumeration value="ice" />
+			<xs:enumeration value="injuries involved" />
+			<xs:enumeration value="medical emergency" />
+			<xs:enumeration value="mudslide" />
+			<xs:enumeration value="overgrown plants" />
+			<xs:enumeration value="parade" />
+			<xs:enumeration value="paving operations" />
+			<xs:enumeration value="police at scene" />
+			<xs:enumeration value="police blockade" />
+			<xs:enumeration value="police chase" />
+			<xs:enumeration value="rain" />
+			<xs:enumeration value="riot" />
+			<xs:enumeration value="road closed" />
+			<xs:enumeration value="road construction" />
+			<xs:enumeration value="road maintenance operations" />
+			<xs:enumeration value="road marking operations" />
+			<xs:enumeration value="road widening" />
+			<xs:enumeration value="rockfall" />
+			<xs:enumeration value="security incident" />
+			<xs:enumeration value="sign damaged" />
+			<xs:enumeration value="sleet" />
+			<xs:enumeration value="snow" />
+			<xs:enumeration value="sporting event" />
+			<xs:enumeration value="strong winds" />
+			<xs:enumeration value="subsidence" />
+			<xs:enumeration value="terrorist activity" />
+			<xs:enumeration value="tornado" />
+			<xs:enumeration value="traffic congestion" />
+			<xs:enumeration value="traffic signal not working" />
+			<xs:enumeration value="utility work" />
+			<xs:enumeration value="vandalism" />
+			<xs:enumeration value="vehicle on fire" />
+			<xs:enumeration value="visibility reduced" />
+			<xs:enumeration value="volcanic eruption" />
+			<xs:enumeration value="water main work" />
+			<xs:enumeration value="wet pavement" />
+			<xs:enumeration value="work on underground services" />
+
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="weatherTypeRestriction">
+		<xs:annotation>
+			<xs:documentation>These are the possible weather types
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="clear" />
+			<xs:enumeration value="cloudy" />
+			<xs:enumeration value="sunny" />
+			<xs:enumeration value="snow" />
+			<xs:enumeration value="rain" />
+			<xs:enumeration value="icy" />
+			<xs:enumeration value="fog" />
+			<xs:enumeration value="sleet" />
+			<xs:enumeration value="hail" />
+			<xs:enumeration value="other" />
+			<xs:enumeration value="heat wave" />
+			<xs:enumeration value="unknown" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="roadTypeRestriction">
+		<xs:annotation>
+			<xs:documentation>These are the possible types of roads
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="unpaved" />
+			<xs:enumeration value="local" />
+			<xs:enumeration value="county" />
+			<xs:enumeration value="state" />
+			<xs:enumeration value="US" />
+			<xs:enumeration value="interstate" />
+			<xs:enumeration value="interchange" />
+			<xs:enumeration value="private" />
+			<xs:enumeration value="parking lot" />
+			<xs:enumeration value="unknown" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="communicationTypeRestriction">
+		<xs:annotation>
+			<xs:documentation>These are the types of communication
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="intra-agency chat" />
+			<xs:enumeration value="chat" />
+			<xs:enumeration value="radio" />
+			<xs:enumeration value="police radio" />
+			<xs:enumeration value="press release" />
+			<xs:enumeration value="phone call" />
+			<xs:enumeration value="email" />
+			<xs:enumeration value="text message" />
+			<xs:enumeration value="instant message" />
+			<xs:enumeration value="other" />
+			<xs:enumeration value="unknown" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="roadStatusRestriction">
+		<xs:annotation>
+			<xs:documentation>These are the type of road statuses
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="advisory" />
+			<xs:enumeration value="clear" />
+			<xs:enumeration value="closed" />
+			<xs:enumeration value="minor" />
+			<xs:enumeration value="moderate" />
+			<xs:enumeration value="severe" />
+			<xs:enumeration value="open" />
+			<xs:enumeration value="unspecified" />
+			<xs:enumeration value="dry" />
+			<xs:enumeration value="wet" />
+			<xs:enumeration value="icy" />
+			<xs:enumeration value="snow" />
+			<xs:enumeration value="wet; chemicals" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="laneSideRestriction">
+		<xs:annotation>
+			<xs:documentation>These are the possible lane sides
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="left" />
+			<xs:enumeration value="right" />
+			<xs:enumeration value="center" />
+			<xs:enumeration value="middle" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="deviceTypeRestriction">
+		<xs:annotation>
+			<xs:documentation>These are the possible device types for
+				associated
+				devices
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="dms" />
+			<xs:enumeration value="traffic detector" />
+			<xs:enumeration value="cctv" />
+			<xs:enumeration value="traffic signal" />
+			<xs:enumeration value="other" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="injuryTypeRestriction">
+		<xs:annotation>
+			<xs:documentation>These are the types of injuries
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="fatal" />
+			<xs:enumeration value="broken bone" />
+			<xs:enumeration value="cuts and scrapes" />
+			<xs:enumeration value="burns" />
+			<xs:enumeration value="other" />
+			<xs:enumeration value="unknown" />
+		</xs:restriction>
+
+	</xs:simpleType>
+	<xs:simpleType name="country">
+		<xs:annotation>
+			<xs:documentation>These the Alpha-3 codes for countries.
+				These values
+				were obtained from http://en.wikipedia.org/wiki/ISO_3166-1
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="AFG" />
+			<xs:enumeration value="ALA" />
+			<xs:enumeration value="ALB" />
+			<xs:enumeration value="DZA" />
+			<xs:enumeration value="ASM" />
+			<xs:enumeration value="AND" />
+			<xs:enumeration value="AGO" />
+			<xs:enumeration value="AIA" />
+			<xs:enumeration value="ATA" />
+			<xs:enumeration value="ATG" />
+			<xs:enumeration value="ARG" />
+			<xs:enumeration value="ARM" />
+			<xs:enumeration value="ABW" />
+			<xs:enumeration value="AUS" />
+			<xs:enumeration value="AUT" />
+			<xs:enumeration value="AZE" />
+			<xs:enumeration value="BHS" />
+			<xs:enumeration value="BHR" />
+			<xs:enumeration value="BGD" />
+			<xs:enumeration value="BRB" />
+			<xs:enumeration value="BLR" />
+			<xs:enumeration value="BEL" />
+			<xs:enumeration value="BLZ" />
+			<xs:enumeration value="BEN" />
+			<xs:enumeration value="BMU" />
+			<xs:enumeration value="BTN" />
+			<xs:enumeration value="BOL" />
+			<xs:enumeration value="BES" />
+			<xs:enumeration value="BIH" />
+			<xs:enumeration value="BWA" />
+			<xs:enumeration value="BVT" />
+			<xs:enumeration value="BRA" />
+			<xs:enumeration value="IOT" />
+			<xs:enumeration value="BRN" />
+			<xs:enumeration value="BGR" />
+			<xs:enumeration value="BFA" />
+			<xs:enumeration value="BDI" />
+			<xs:enumeration value="KHM" />
+			<xs:enumeration value="CMR" />
+			<xs:enumeration value="CAN" />
+			<xs:enumeration value="CPV" />
+			<xs:enumeration value="CYM" />
+			<xs:enumeration value="CAF" />
+			<xs:enumeration value="TCD" />
+			<xs:enumeration value="CHL" />
+			<xs:enumeration value="CHN" />
+			<xs:enumeration value="CXR" />
+			<xs:enumeration value="CCK" />
+			<xs:enumeration value="COL" />
+			<xs:enumeration value="COM" />
+			<xs:enumeration value="COG" />
+			<xs:enumeration value="COD" />
+			<xs:enumeration value="COK" />
+			<xs:enumeration value="CRI" />
+			<xs:enumeration value="CIV" />
+			<xs:enumeration value="HRV" />
+			<xs:enumeration value="CUB" />
+			<xs:enumeration value="CUW" />
+			<xs:enumeration value="CYP" />
+			<xs:enumeration value="CZE" />
+			<xs:enumeration value="DNK" />
+			<xs:enumeration value="DJI" />
+			<xs:enumeration value="DMA" />
+			<xs:enumeration value="DOM" />
+			<xs:enumeration value="ECU" />
+			<xs:enumeration value="EGY" />
+			<xs:enumeration value="SLV" />
+			<xs:enumeration value="GNQ" />
+			<xs:enumeration value="ERI" />
+			<xs:enumeration value="EST" />
+			<xs:enumeration value="ETH" />
+			<xs:enumeration value="FLK" />
+			<xs:enumeration value="FRO" />
+			<xs:enumeration value="FJI" />
+			<xs:enumeration value="FIN" />
+			<xs:enumeration value="FRA" />
+			<xs:enumeration value="GUF" />
+			<xs:enumeration value="PYF" />
+			<xs:enumeration value="ATF" />
+			<xs:enumeration value="GAB" />
+			<xs:enumeration value="GMB" />
+			<xs:enumeration value="GEO" />
+			<xs:enumeration value="DEU" />
+			<xs:enumeration value="GHA" />
+			<xs:enumeration value="GIB" />
+			<xs:enumeration value="GRC" />
+			<xs:enumeration value="GRL" />
+			<xs:enumeration value="GRD" />
+			<xs:enumeration value="GLP" />
+			<xs:enumeration value="GUM" />
+			<xs:enumeration value="GTM" />
+			<xs:enumeration value="GGY" />
+			<xs:enumeration value="GIN" />
+			<xs:enumeration value="GNB" />
+			<xs:enumeration value="GUY" />
+			<xs:enumeration value="HTI" />
+			<xs:enumeration value="HMD" />
+			<xs:enumeration value="VAT" />
+			<xs:enumeration value="HND" />
+			<xs:enumeration value="HKG" />
+			<xs:enumeration value="HUN" />
+			<xs:enumeration value="ISL" />
+			<xs:enumeration value="IND" />
+			<xs:enumeration value="IDN" />
+			<xs:enumeration value="IRN" />
+			<xs:enumeration value="IRQ" />
+			<xs:enumeration value="IRL" />
+			<xs:enumeration value="IMN" />
+			<xs:enumeration value="ISR" />
+			<xs:enumeration value="ITA" />
+			<xs:enumeration value="JAM" />
+			<xs:enumeration value="JPN" />
+			<xs:enumeration value="JEY" />
+			<xs:enumeration value="JOR" />
+			<xs:enumeration value="KAZ" />
+			<xs:enumeration value="KEN" />
+			<xs:enumeration value="KIR" />
+			<xs:enumeration value="PRK" />
+			<xs:enumeration value="KOR" />
+			<xs:enumeration value="KWT" />
+			<xs:enumeration value="KGZ" />
+			<xs:enumeration value="LAO" />
+			<xs:enumeration value="LVA" />
+			<xs:enumeration value="LBN" />
+			<xs:enumeration value="LSO" />
+			<xs:enumeration value="LBR" />
+			<xs:enumeration value="LBY" />
+			<xs:enumeration value="LIE" />
+			<xs:enumeration value="LTU" />
+			<xs:enumeration value="LUX" />
+			<xs:enumeration value="MAC" />
+			<xs:enumeration value="MKD" />
+			<xs:enumeration value="MDG" />
+			<xs:enumeration value="MWI" />
+			<xs:enumeration value="MYS" />
+			<xs:enumeration value="MDV" />
+			<xs:enumeration value="MLI" />
+			<xs:enumeration value="MLT" />
+			<xs:enumeration value="MHL" />
+			<xs:enumeration value="MTQ" />
+			<xs:enumeration value="MRT" />
+			<xs:enumeration value="MUS" />
+			<xs:enumeration value="MYT" />
+			<xs:enumeration value="MEX" />
+			<xs:enumeration value="FSM" />
+			<xs:enumeration value="MDA" />
+			<xs:enumeration value="MCO" />
+			<xs:enumeration value="MNG" />
+			<xs:enumeration value="MNE" />
+			<xs:enumeration value="MSR" />
+			<xs:enumeration value="MAR" />
+			<xs:enumeration value="MOZ" />
+			<xs:enumeration value="MMR" />
+			<xs:enumeration value="NAM" />
+			<xs:enumeration value="NRU" />
+			<xs:enumeration value="NPL" />
+			<xs:enumeration value="NLD" />
+			<xs:enumeration value="NCL" />
+			<xs:enumeration value="NZL" />
+			<xs:enumeration value="NIC" />
+			<xs:enumeration value="NER" />
+			<xs:enumeration value="NGA" />
+			<xs:enumeration value="NIU" />
+			<xs:enumeration value="NFK" />
+			<xs:enumeration value="MNP" />
+			<xs:enumeration value="NOR" />
+			<xs:enumeration value="OMN" />
+			<xs:enumeration value="PAK" />
+			<xs:enumeration value="PLW" />
+			<xs:enumeration value="PSE" />
+			<xs:enumeration value="PAN" />
+			<xs:enumeration value="PNG" />
+			<xs:enumeration value="PRY" />
+			<xs:enumeration value="PER" />
+			<xs:enumeration value="PHL" />
+			<xs:enumeration value="PCN" />
+			<xs:enumeration value="POL" />
+			<xs:enumeration value="PRT" />
+			<xs:enumeration value="PRI" />
+			<xs:enumeration value="QAT" />
+			<xs:enumeration value="REU" />
+			<xs:enumeration value="ROU" />
+			<xs:enumeration value="RUS" />
+			<xs:enumeration value="RWA" />
+			<xs:enumeration value="BLM" />
+			<xs:enumeration value="SHN" />
+			<xs:enumeration value="KNA" />
+			<xs:enumeration value="LCA" />
+			<xs:enumeration value="MAF" />
+			<xs:enumeration value="SPM" />
+			<xs:enumeration value="VCT" />
+			<xs:enumeration value="WSM" />
+			<xs:enumeration value="SMR" />
+			<xs:enumeration value="STP" />
+			<xs:enumeration value="SAU" />
+			<xs:enumeration value="SEN" />
+			<xs:enumeration value="SRB" />
+			<xs:enumeration value="SYC" />
+			<xs:enumeration value="SLE" />
+			<xs:enumeration value="SGP" />
+			<xs:enumeration value="SXM" />
+			<xs:enumeration value="SVK" />
+			<xs:enumeration value="SVN" />
+			<xs:enumeration value="SLB" />
+			<xs:enumeration value="SOM" />
+			<xs:enumeration value="ZAF" />
+			<xs:enumeration value="SGS" />
+			<xs:enumeration value="SSD" />
+			<xs:enumeration value="ESP" />
+			<xs:enumeration value="LKA" />
+			<xs:enumeration value="SDN" />
+			<xs:enumeration value="SUR" />
+			<xs:enumeration value="SJM" />
+			<xs:enumeration value="SWZ" />
+			<xs:enumeration value="SWE" />
+			<xs:enumeration value="CHE" />
+			<xs:enumeration value="SYR" />
+			<xs:enumeration value="TWN" />
+			<xs:enumeration value="TJK" />
+			<xs:enumeration value="TZA" />
+			<xs:enumeration value="THA" />
+			<xs:enumeration value="TLS" />
+			<xs:enumeration value="TGO" />
+			<xs:enumeration value="TKL" />
+			<xs:enumeration value="TON" />
+			<xs:enumeration value="TTO" />
+			<xs:enumeration value="TUN" />
+			<xs:enumeration value="TUR" />
+			<xs:enumeration value="TKM" />
+			<xs:enumeration value="TCA" />
+			<xs:enumeration value="TUV" />
+			<xs:enumeration value="UGA" />
+			<xs:enumeration value="UKR" />
+			<xs:enumeration value="ARE" />
+			<xs:enumeration value="GBR" />
+			<xs:enumeration value="USA" />
+			<xs:enumeration value="UMI" />
+			<xs:enumeration value="URY" />
+			<xs:enumeration value="UZB" />
+			<xs:enumeration value="VUT" />
+			<xs:enumeration value="VEN" />
+			<xs:enumeration value="VNM" />
+			<xs:enumeration value="VGB" />
+			<xs:enumeration value="VIR" />
+			<xs:enumeration value="WLF" />
+			<xs:enumeration value="ESH" />
+			<xs:enumeration value="YEM" />
+			<xs:enumeration value="ZMB" />
+			<xs:enumeration value="ZWE" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="state">
+		<xs:annotation>
+			<xs:documentation>These are the 50 states plus District of
+				Columbia
+				and other territories
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Alabama" />
+			<xs:enumeration value="Alaska" />
+			<xs:enumeration value="Arizona" />
+			<xs:enumeration value="Arkansas" />
+			<xs:enumeration value="California" />
+			<xs:enumeration value="Colorado" />
+			<xs:enumeration value="Connecticut" />
+			<xs:enumeration value="Delaware" />
+			<xs:enumeration value="Florida" />
+			<xs:enumeration value="Georgia" />
+			<xs:enumeration value="Hawaii" />
+			<xs:enumeration value="Idaho" />
+			<xs:enumeration value="Illinois" />
+			<xs:enumeration value="Indiana" />
+			<xs:enumeration value="Iowa" />
+			<xs:enumeration value="Kansas" />
+			<xs:enumeration value="Kentucky" />
+			<xs:enumeration value="Louisiana" />
+			<xs:enumeration value="Maine" />
+			<xs:enumeration value="Maryland" />
+			<xs:enumeration value="Massachusetts" />
+			<xs:enumeration value="Michigan" />
+			<xs:enumeration value="Minnesota" />
+			<xs:enumeration value="Mississippi" />
+			<xs:enumeration value="Missouri" />
+			<xs:enumeration value="Montana" />
+			<xs:enumeration value="Nebraska" />
+			<xs:enumeration value="Nevada" />
+			<xs:enumeration value="New Hampshire" />
+			<xs:enumeration value="New Jersey" />
+			<xs:enumeration value="New Mexico" />
+			<xs:enumeration value="New York" />
+			<xs:enumeration value="North Carolina" />
+			<xs:enumeration value="North Dakota" />
+			<xs:enumeration value="Ohio" />
+			<xs:enumeration value="Oklahoma" />
+			<xs:enumeration value="Oregon" />
+			<xs:enumeration value="Pennsylvania" />
+			<xs:enumeration value="Rhode Island" />
+			<xs:enumeration value="South Carolina" />
+			<xs:enumeration value="South Dakota" />
+			<xs:enumeration value="Tennessee" />
+			<xs:enumeration value="Texas" />
+			<xs:enumeration value="Utah" />
+			<xs:enumeration value="Vermont" />
+			<xs:enumeration value="Virginia" />
+			<xs:enumeration value="Washington" />
+			<xs:enumeration value="West Virginia" />
+			<xs:enumeration value="Wisconsin" />
+			<xs:enumeration value="Wyoming" />
+			<xs:enumeration value="American Samoa" />
+			<xs:enumeration value="District of Columbia" />
+			<xs:enumeration value="Federated States of Micronesia" />
+			<xs:enumeration value="Guam" />
+			<xs:enumeration value="Marshall Islands" />
+			<xs:enumeration value="Northern Mariana Islands" />
+			<xs:enumeration value="Palau" />
+			<xs:enumeration value="Puerto Rico" />
+			<xs:enumeration value="Virgin Islands" />
+			<xs:enumeration value="Unknown" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="daysOfTheWeek">
+		<xs:annotation>
+			<xs:documentation>These are the days of the week
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Sunday" />
+			<xs:enumeration value="Monday" />
+			<xs:enumeration value="Tuesday" />
+			<xs:enumeration value="Wednesday" />
+			<xs:enumeration value="Thursday" />
+			<xs:enumeration value="Friday" />
+			<xs:enumeration value="Saturday" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tmcType">
+		<xs:annotation>
+			<xs:documentation>This is a Traffic Message Channel Code for a
+				roadway
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\d{3}[\+\-NP]\d{5}" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="zipcode">
+		<xs:annotation>
+			<xs:documentation>This is a postal zip code</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\d{5}(-\d{4})?" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="emailType">
+		<xs:annotation>
+			<xs:documentation>This is an email address</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[\w.%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="phoneNumberType">
+		<xs:annotation>
+			<xs:documentation>This is a phone number in the format
+				1-123-456-7890
+				or 123-456-7890, possibly with an extension of 2-4 digits
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="(1\-)?\d{3}\-\d{3}\-\d{4}(x\d{2,4})?" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="lettersAndDigits">
+		<xs:annotation>
+			<xs:documentation>This is a string of uppercase and lowercase
+				letters
+				and digits
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9A-Za-z]+" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="nonNegativeDecimal">
+		<xs:annotation>
+			<xs:documentation>This is a decimal greater than or equal to 0
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:minInclusive value="0" />
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

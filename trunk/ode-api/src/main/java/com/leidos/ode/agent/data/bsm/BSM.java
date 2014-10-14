@@ -1,5 +1,7 @@
 package com.leidos.ode.agent.data.bsm;
 
+import com.leidos.ode.agent.data.ODECollectedData;
+import com.leidos.ode.util.ODEMessageType;
 import org.bson.types.ObjectId;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -14,7 +16,7 @@ import java.util.Date;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class BSM {
+public class BSM implements ODECollectedData {
     @XmlTransient
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private ObjectId mongoid;
@@ -282,5 +284,10 @@ public class BSM {
         pw.println(vehStatusData);
 
         return sw.getBuffer().toString();
+    }
+
+    @Override
+    public ODEMessageType getMessageType() {
+        return ODEMessageType.BSM;
     }
 }

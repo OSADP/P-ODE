@@ -246,7 +246,7 @@
         <property name="agent" ref="ritisWeatherAgent"/>
     </bean>
 
-    <bean id="ritiSpeedCollector" class="com.leidos.ode.collector.ODECollector">
+    <bean id="ritisSpeedCollector" class="com.leidos.ode.collector.ODECollector">
         <property name="dataSource" ref="ritisSpeed"/>
         <property name="agent" ref="ritisSpeedAgent"/>
     </bean>

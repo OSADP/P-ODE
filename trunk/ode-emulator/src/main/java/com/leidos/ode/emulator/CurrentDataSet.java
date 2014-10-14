@@ -9,7 +9,7 @@ package com.leidos.ode.emulator;
 import com.leidos.ode.agent.data.ODEAgentMessage;
 import com.leidos.ode.agent.data.bsm.BSM;
 import com.leidos.ode.agent.data.ritis.RITISSpeedData;
-import com.leidos.ode.agent.data.ritis.RITISWeatherData;
+import com.leidos.ode.agent.data.ritis.RITISWeatherDataNWS;
 import com.leidos.ode.agent.data.vdot.VDOTSpeedData;
 import com.leidos.ode.agent.data.vdot.VDOTTravelTimeData;
 import com.leidos.ode.agent.data.vdot.VDOTWeatherData;
@@ -62,10 +62,10 @@ public class CurrentDataSet {
     private Date ritisWeatherLastUpdate;
     @XmlTransient
     private ODEAgentMessage ritisWeatherDataEast;
-    private RITISWeatherData ritisWeatherDataEastValue;
+    private RITISWeatherDataNWS ritisWeatherDataEastValue;
     @XmlTransient
     private ODEAgentMessage ritisWeatherDataWest;
-    private RITISWeatherData ritisWeatherDataWestValue;
+    private RITISWeatherDataNWS ritisWeatherDataWestValue;
     
     private Date ritisSpeedLastUpdate;
     @XmlTransient
@@ -315,7 +315,7 @@ public class CurrentDataSet {
     public void setRitisWeatherDataEast(ODEAgentMessage ritisWeatherDataEast) {
         if (!this.ritisWeatherDataEast.getMessageId().equals(ritisWeatherDataEast.getMessageId())) {
             this.ritisWeatherDataEast = ritisWeatherDataEast;
-            ritisWeatherDataEastValue = (RITISWeatherData)ritisWeatherDataEast.getFormattedMessage();
+            ritisWeatherDataEastValue = (RITISWeatherDataNWS)ritisWeatherDataEast.getFormattedMessage();
             recalculateEast();
         }
         setRitisWeatherLastUpdate(new Date());
@@ -334,7 +334,7 @@ public class CurrentDataSet {
     public void setRitisWeatherDataWest(ODEAgentMessage ritisWeatherDataWest) {
         if (!this.ritisWeatherDataWest.getMessageId().equals(ritisWeatherDataWest.getMessageId())) {
             this.ritisWeatherDataWest = ritisWeatherDataWest;
-            ritisWeatherDataWestValue = (RITISWeatherData)ritisWeatherDataWest.getFormattedMessage();
+            ritisWeatherDataWestValue = (RITISWeatherDataNWS)ritisWeatherDataWest.getFormattedMessage();
             recalculateWest();
         }
         setRitisWeatherLastUpdate(new Date());
@@ -531,28 +531,28 @@ public class CurrentDataSet {
     /**
      * @return the ritisWeatherDataEastValue
      */
-    public RITISWeatherData getRitisWeatherDataEastValue() {
+    public RITISWeatherDataNWS getRitisWeatherDataEastValue() {
         return ritisWeatherDataEastValue;
     }
 
     /**
      * @param ritisWeatherDataEastValue the ritisWeatherDataEastValue to set
      */
-    public void setRitisWeatherDataEastValue(RITISWeatherData ritisWeatherDataEastValue) {
+    public void setRitisWeatherDataEastValue(RITISWeatherDataNWS ritisWeatherDataEastValue) {
         this.ritisWeatherDataEastValue = ritisWeatherDataEastValue;
     }
 
     /**
      * @return the ritisWeatherDataWestValue
      */
-    public RITISWeatherData getRitisWeatherDataWestValue() {
+    public RITISWeatherDataNWS getRitisWeatherDataWestValue() {
         return ritisWeatherDataWestValue;
     }
 
     /**
      * @param ritisWeatherDataWestValue the ritisWeatherDataWestValue to set
      */
-    public void setRitisWeatherDataWestValue(RITISWeatherData ritisWeatherDataWestValue) {
+    public void setRitisWeatherDataWestValue(RITISWeatherDataNWS ritisWeatherDataWestValue) {
         this.ritisWeatherDataWestValue = ritisWeatherDataWestValue;
     }
 

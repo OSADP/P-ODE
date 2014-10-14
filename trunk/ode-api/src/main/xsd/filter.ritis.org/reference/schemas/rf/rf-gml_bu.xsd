@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://www.opengis.net/gml/3.2"
+    xmlns="http://www.opengis.net/gml/3.2" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    jaxb:version="2.0" version="1.0"
+    >
+
+    <xs:annotation>
+        <xs:appinfo>
+            <jaxb:schemaBindings>
+                <jaxb:package name="edu.umd.cattlab.schema.ritisFilter.gml"/>
+            </jaxb:schemaBindings>
+        </xs:appinfo>
+    </xs:annotation>
+
+    <xs:element name="Point" type="pointType"/>
+    
+    <xs:complexType name="pointType">
+        <xs:sequence>
+            <xs:element name="pos" type="position"/>
+        </xs:sequence>
+        <xs:attribute name="srsName" type="xs:normalizedString"/>
+        <xs:attribute name="id" type="xs:ID"/>
+    </xs:complexType>
+    
+    <xs:complexType name="position">
+        <xs:simpleContent>
+            <xs:extension base="doubleList">
+                <xs:attribute name="srsDimension" type="xs:positiveInteger"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    
+    <xs:simpleType name="doubleList">
+        <xs:list itemType="xs:double"/>
+    </xs:simpleType>
+    
+    <xs:element name="LineString" type="lineStringType"/>
+    
+    <xs:complexType name="lineStringType">
+        <xs:sequence>
+            <xs:element name="posList" type="positionList"/>    
+        </xs:sequence>
+        <xs:attribute name="srsName" type="xs:normalizedString"/>
+        <xs:attribute name="id" type="xs:ID"/>
+    </xs:complexType>
+    
+    <xs:complexType name="positionList">
+        <xs:simpleContent>
+                <xs:extension base="doubleList">
+                    <xs:attribute name="srsDimension" type="xs:positiveInteger"/>
+                </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    
+    <xs:element name="Polygon" type="polygonType"/>
+    
+    <xs:complexType name="polygonType">
+        <xs:sequence>
+            <xs:element name="exterior" minOccurs="0" maxOccurs="1" type="linearRing"/>
+            <xs:element name="interior" minOccurs="0" maxOccurs="unbounded" type="linearRing"/>
+        </xs:sequence>
+        <xs:attribute name="srsName" type="xs:normalizedString"/>
+        <xs:attribute name="id" type="xs:ID"/>
+    </xs:complexType>
+       
+    
+    
+    <xs:complexType name="linearRing">
+        <xs:sequence>
+            <xs:choice>
+                <xs:element name="pos" type="position" minOccurs="4" maxOccurs="unbounded"/>
+                <xs:element name="posList" type="positionList"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>

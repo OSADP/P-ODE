@@ -146,6 +146,11 @@
                             <goal>xjc</goal>
                         </goals>
                         <phase>generate-sources</phase>
+                        <configuration>
+                            <schemaDirectory>${project.basedir}/src/main/xsd/filter.ritis.org/reference/schemas</schemaDirectory>
+                            <!--<schemaFiles>ritisFilterOutput.xsd,ritisFilterEventOutput.xsd</schemaFiles>-->
+                            <schemaFiles>rf/rf.xsd,RITIS_Global_Internal/TMDD.xsd</schemaFiles>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

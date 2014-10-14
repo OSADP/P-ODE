@@ -1,6 +1,8 @@
 package com.leidos.ode.agent.data.vdot;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,49 +13,65 @@ import java.util.Date;
  */
 public class VDOTTravelTimeData implements VDOTData {
 
-    private String segmentId;
-    private Date lastTimeUpdated;
-    private String segmentName;
-    private int travelTime;
-    private float[] geometry;
+    private List<VDOTTravelTimeDataElement> vdotTravelTimeDataElements;
 
-    public float[] getGeometry() {
-        return geometry;
+    public VDOTTravelTimeData(){
+        vdotTravelTimeDataElements = new ArrayList<VDOTTravelTimeDataElement>();
     }
 
-    public void setGeometry(float[] geometry) {
-        this.geometry = geometry;
+    public List<VDOTTravelTimeDataElement> getVdotTravelTimeDataElements() {
+        return vdotTravelTimeDataElements;
     }
 
-    public Date getLastTimeUpdated() {
-        return lastTimeUpdated;
+    public void setVdotTravelTimeDataElements(List<VDOTTravelTimeDataElement> vdotTravelTimeDataElements) {
+        this.vdotTravelTimeDataElements = vdotTravelTimeDataElements;
     }
 
-    public void setLastTimeUpdated(Date lastTimeUpdated) {
-        this.lastTimeUpdated = lastTimeUpdated;
-    }
+    public static class VDOTTravelTimeDataElement {
+        private String segmentId;
+        private Date lastTimeUpdated;
+        private String segmentName;
+        private int travelTime;
+        private float[] geometry;
 
-    public String getSegmentId() {
-        return segmentId;
-    }
+        public float[] getGeometry() {
+            return geometry;
+        }
 
-    public void setSegmentId(String segmentId) {
-        this.segmentId = segmentId;
-    }
+        public void setGeometry(float[] geometry) {
+            this.geometry = geometry;
+        }
 
-    public String getSegmentName() {
-        return segmentName;
-    }
+        public Date getLastTimeUpdated() {
+            return lastTimeUpdated;
+        }
 
-    public void setSegmentName(String segmentName) {
-        this.segmentName = segmentName;
-    }
+        public void setLastTimeUpdated(Date lastTimeUpdated) {
+            this.lastTimeUpdated = lastTimeUpdated;
+        }
 
-    public int getTravelTime() {
-        return travelTime;
-    }
+        public String getSegmentId() {
+            return segmentId;
+        }
 
-    public void setTravelTime(int travelTime) {
-        this.travelTime = travelTime;
+        public void setSegmentId(String segmentId) {
+            this.segmentId = segmentId;
+        }
+
+        public String getSegmentName() {
+            return segmentName;
+        }
+
+        public void setSegmentName(String segmentName) {
+            this.segmentName = segmentName;
+        }
+
+        public int getTravelTime() {
+            return travelTime;
+        }
+
+        public void setTravelTime(int travelTime) {
+            this.travelTime = travelTime;
+        }
     }
 }

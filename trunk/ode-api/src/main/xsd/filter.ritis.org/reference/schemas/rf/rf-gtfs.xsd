@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://cattlab.umd.edu/schema/ritisFilter/gtfs"
+    xmlns="http://cattlab.umd.edu/schema/ritisFilter/gtfs"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    xmlns:ai="http://jaxb.dev.java.net/plugin/if_insertion"
+    xmlns:rf="http://cattlab.umd.edu/schema/ritisFilter"
+    xmlns:rfo="http://cattlab.umd.edu/schema/ritisFilter/other" jaxb:version="2.0" version="1.0.0">
+
+    <xs:import namespace="http://cattlab.umd.edu/schema/ritisFilter"
+        schemaLocation="ritisFilterEventOutput.xsd"/>
+    <xs:import namespace="http://cattlab.umd.edu/schema/ritisFilter/other"
+        schemaLocation="ritisFilterOutput.xsd"/>
+
+    <xs:annotation>
+        <xs:appinfo>
+            <jaxb:schemaBindings>
+                <jaxb:package name="edu.umd.cattlab.schema.ritisFilter.gtfs"/>
+            </jaxb:schemaBindings>
+        </xs:appinfo>
+    </xs:annotation>
+
+
+    <xs:element name="gtfsRoutes" type="gtfsRoutesType"/>
+    <xs:complexType name="gtfsRoutesType">
+        <xs:sequence>
+            <xs:element name="header" type="rf:header"/>
+            <xs:element name="routes">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="route"
+                            type="routeType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="gtfsStops" type="gtfsStopsType"/>
+    <xs:complexType name="gtfsStopsType">
+        <xs:sequence>
+            <xs:element name="header" type="rf:header"/>
+            <xs:element name="stops">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="stop" type="stopType"
+                        />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="VehiclePositions" type="VehiclePositionsType"/>
+
+    <xs:complexType name="VehiclePositionsType">
+        <xs:sequence>
+            <xs:element name="header" type="rf:header"/>
+            <xs:element name="Positions">
+                <xs:annotation>
+                    <xs:documentation>This is an XML version of GTFS-realtime vehicle postions.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="VehiclePosition"
+                            type="VehiclePosition"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="VehiclePosition">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="trip" type="TripDescriptor"/>
+            <xs:element name="vehicle" type="VehicleDescriptor" minOccurs="0"/>
+            <xs:element minOccurs="0" name="position" type="Position"/>
+            <xs:element minOccurs="0" name="current_stop_sequence" type="xs:nonNegativeInteger"/>
+            <xs:element minOccurs="0" name="stop_id" type="xs:string"/>
+            <xs:element name="current_status" minOccurs="0" type="VehicleStopStatus"/>
+            <xs:element name="timestamp" type="xs:dateTime" minOccurs="0"/>
+            <xs:element name="congestion_level" minOccurs="0" type="CongestionLevel"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TripDescriptor">
+        <xs:sequence>
+            <xs:element name="trip_id" minOccurs="0" type="xs:string"/>
+            <xs:element name="route_id" minOccurs="0" type="xs:string"/>
+            <xs:element name="start_time" minOccurs="0" type="xs:string"/>
+            <xs:element name="start_date" minOccurs="0" type="xs:string"/>
+            <xs:element name="schedule_relationship" type="ScheduleRelationship" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="VehicleDescriptor">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="id" type="xs:string"/>
+            <xs:element minOccurs="0" name="label" type="xs:string"/>
+            <xs:element minOccurs="0" name="license_plate" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Position">
+        <xs:sequence>
+            <xs:element name="latitude" type="xs:double"/>
+            <xs:element name="longitude" type="xs:double"/>
+            <xs:element minOccurs="0" name="bearing" type="xs:double"/>
+            <xs:element minOccurs="0" name="odometer" type="xs:double"/>
+            <xs:element minOccurs="0" name="speed" type="xs:double"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="ScheduleRelationship">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="scheduled"/>
+            <xs:enumeration value="added"/>
+            <xs:enumeration value="unscheduled"/>
+            <xs:enumeration value="canceled"/>
+            <xs:enumeration value="replacement"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="VehicleStopStatus">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="incoming_to"/>
+            <xs:enumeration value="stopped_at"/>
+            <xs:enumeration value="in_transit_to"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="CongestionLevel">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="unknown"/>
+            <xs:enumeration value="running_smoothly"/>
+            <xs:enumeration value="stop_and_go"/>
+            <xs:enumeration value="congestion"/>
+            <xs:enumeration value="severe_congestion"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="routeType">
+        <xs:sequence>
+            <xs:element name="head">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="id" type="xs:normalizedString"/>
+                        <xs:element name="agency" type="xs:normalizedString"/>
+                        <xs:element name="shortName" type="xs:normalizedString"/>
+                        <xs:element name="longName" type="xs:normalizedString"/>
+                        <xs:element name="description" type="xs:normalizedString" minOccurs="0"/>
+                        <xs:element name="type" type="routeTypeRestriction"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="stops" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="2" maxOccurs="unbounded" name="stop" type="stopType"
+                        />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" name="url" type="xs:anyURI"/>
+            <xs:element minOccurs="0" name="color" default="FFFFFF" type="colorCode"/>
+            <xs:element minOccurs="0" name="textColor" default="000000" type="colorCode"/>
+            <xs:element name="geometry">
+                <xs:annotation>
+                    <xs:documentation>This contains the unique geometries of each possible trip. Most routes will only have 1 or 2 geometries.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="location" type="rf:location" maxOccurs="unbounded" minOccurs="0"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="stopType">
+        <xs:sequence>
+            <xs:element name="head">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="id" type="xs:normalizedString"/>
+                        <xs:element name="agency" type="xs:normalizedString"/>
+                        <xs:element name="code" minOccurs="0" type="xs:normalizedString"/>
+                        <xs:element name="name" type="xs:normalizedString"/>
+                        <xs:element name="description" minOccurs="0" type="xs:normalizedString"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="locationType" default="stop" type="locationTypeRestriction"/>
+            <xs:element name="location" type="rf:location"/>
+            <xs:element name="schedules" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="schedule" maxOccurs="unbounded" minOccurs="0"
+                            type="scheduleType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" name="url" type="xs:anyURI"/>
+            <xs:element name="parentStationID" minOccurs="0" type="xs:normalizedString"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="scheduleType">
+        <xs:sequence>
+            <xs:element name="tripID" type="xs:normalizedString"/>
+            <xs:element name="routeID" type="xs:normalizedString"/>
+            <xs:element minOccurs="0" name="vehicleID" type="xs:normalizedString"/>
+            <xs:element minOccurs="0" name="description" type="xs:normalizedString"/>
+            <xs:element name="arrivalTime" type="xs:dateTime">
+                <xs:annotation>
+                    <xs:documentation>This is the planned arrival time according the schedule.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="departureTime" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="estimatedArrival" type="xs:dateTime">
+                <xs:annotation>
+                    <xs:documentation>This is the estimated arrival time, which accounts for delays or early trips</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="routeTypeRestriction">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="unknown"/>
+            <xs:enumeration value="tram, streetcar, light rail"/>
+            <xs:enumeration value="subway, metro"/>
+            <xs:enumeration value="rail"/>
+            <xs:enumeration value="bus"/>
+            <xs:enumeration value="ferry"/>
+            <xs:enumeration value="cable car"/>
+            <xs:enumeration value="gondola, suspended cable car"/>
+            <xs:enumeration value="funicular"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:simpleType name="colorCode">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9A-F]{6}"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="locationTypeRestriction">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="stop"/>
+            <xs:enumeration value="station"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

@@ -39,11 +39,11 @@ public class VDOTDataSource extends RestPullDataSource {
             CloseableHttpResponse closeableHttpResponse = getHttpClient().execute(getHttpGet());
 
             int statusCode = closeableHttpResponse.getStatusLine().getStatusCode();
-            getLogger().debug("Using digest scheme. Initial status code: " + statusCode);
+//            getLogger().debug("Using digest scheme. Initial status code: " + statusCode);
 
             if (statusCode == HttpStatus.SC_UNAUTHORIZED) {
                 firstHeader = closeableHttpResponse.getFirstHeader(AUTH.WWW_AUTH);
-                getLogger().debug("authHeader: " + firstHeader);
+//                getLogger().debug("authHeader: " + firstHeader);
                 closeableHttpResponse.close();
                 executeDataSourceThread(collectorDataSourceListener);
             }

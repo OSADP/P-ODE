@@ -1,21 +1,19 @@
 package com.leidos.ode.agent.parser;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
-import com.leidos.ode.agent.data.vdot.VDOTData;
-import com.leidos.ode.agent.parser.jsoup.ODEJsoup;
-import com.leidos.ode.agent.parser.jsoup.VDOTJsoup;
-
-import java.util.List;
+import com.leidos.ode.agent.data.ODECollectedData;
+import com.leidos.ode.agent.parser.helper.ODEParserHelper;
+import com.leidos.ode.agent.parser.helper.VDOTParserHelper;
 
 public class VDOTParser extends ODEDataParser {
 
     @Override
     public ODEAgentMessage parseMessage(byte[] bytes) throws ODEParseException {
         getLogger().debug("Parsing VDOT data.");
-        ODEJsoup.ODEJsoupResponse<VDOTData> response = VDOTJsoup.getInstance().parseData(bytes);
-        getLogger().debug("Parse response: " + response.getJsoupReport());
-        List<VDOTData> vdotData = response.getData();
+        ODEParserHelper.ODEHelperResponse response = VDOTParserHelper.getInstance().parseData(bytes);
+        getLogger().debug("Parse response: " + response.getReport());
+        ODECollectedData data = response.getData();
 
-        return new ODEAgentMessage().setFormattedMessage(vdotData).setMessagePayload(bytes);
+        return new ODEAgentMessage().setFormattedMessage(data).setMessagePayload(bytes);
     }
 }

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified"
+   targetNamespace="http://www.ritis.org/schema/im-0-0-0" version="1"
+   xmlns="http://www.ritis.org/schema/im-0-0-0" xmlns:atis="http://www.ritis.org/schema/atis-3-0-76"
+   xmlns:itis="http://www.ritis.org/schema/itis-3-0-1"
+   xmlns:local="http://www.ritis.org/schema/local-0-0-0"
+   xmlns:tmdd="http://www.ritis.org/schema/tmdd-0-0-0" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+   xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0">
+
+   <xs:import namespace="http://www.ritis.org/schema/atis-3-0-76" schemaLocation="ATIS.xsd"/>
+   <xs:import namespace="http://www.ritis.org/schema/tmdd-0-0-0" schemaLocation="TMDD.xsd"/>
+   <xs:import namespace="http://www.ritis.org/schema/itis-3-0-1" schemaLocation="ITIS.xsd"/>
+   <xs:import namespace="http://www.ritis.org/schema/local-0-0-0" schemaLocation="local.xsd"/>
+
+   <xs:annotation>
+      <xs:appinfo>
+         <jaxb:schemaBindings>
+            <jaxb:package name="edu.umd.cattlab.schema.atis.im"/>
+         </jaxb:schemaBindings>
+      </xs:appinfo>
+   </xs:annotation>
+
+   <!--
+      RITIS\CATT IM Message Set Schema
+      
+      More Information Available at:
+      www.ritis.org
+      www.cattlab.umd.edu
+      
+      Questions\Comments to:
+      Jason Ellison
+      jjellso@umd.edu
+   -->
+
+   <xs:annotation>
+      <xs:documentation> IM1512 Types and Definitions used by the ATIS schema. </xs:documentation>
+   </xs:annotation>
+
+   <xs:complexType name="InjuryCounts">
+      <xs:annotation>
+         <xs:documentation> Count of injuries at set severity levels. Maximum is 100000. If > then
+            100000 injuries exist then 100000 is used. </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="injuryLevel">
+            <xs:simpleType>
+               <xs:union>
+                  <xs:simpleType>
+                     <xs:restriction base="xs:unsignedInt">
+                        <xs:minInclusive value="0"/>
+                        <xs:maxInclusive value="3"/>
+                     </xs:restriction>
+                  </xs:simpleType>
+                  <xs:simpleType>
+                     <xs:restriction base="xs:string">
+                        <xs:enumeration value="unknown"/>
+                        <xs:enumeration value="minor"/>
+                        <xs:enumeration value="major"/>
+                        <xs:enumeration value="fatal"/>
+                     </xs:restriction>
+                  </xs:simpleType>
+               </xs:union>
+            </xs:simpleType>
+         </xs:element>
+         <!-- Use the value 100000 if greater -->
+         <xs:element name="count">
+            <xs:simpleType>
+               <xs:restriction base="xs:unsignedInt">
+                  <xs:maxInclusive value="100000"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
+
+   <xs:simpleType name="SplitReason">
+      <xs:annotation>
+         <xs:documentation>Used by the pedigree list to describe event numbering changes.</xs:documentation>
+         <xs:appinfo> relatedEvent (0) responsibleEvent (1) -- the first action event previousEvent
+            (2) parentEvent (3) -- a split siblingEvent (4) mergedEvent (5) -- a join </xs:appinfo>
+      </xs:annotation>
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="0"/>
+               <xs:maxInclusive value="5"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration value="relatedEvent"/>
+               <xs:enumeration value="responsibleEvent"/>
+               <xs:enumeration value="previousEvent"/>
+               <xs:enumeration value="parentEvent"/>
+               <xs:enumeration value="siblingEvent"/>
+               <xs:enumeration value="mergedEvent"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+
+   <xs:simpleType name="Urgency">
+      <xs:restriction base="xs:unsignedByte">
+         <xs:maxInclusive value="5"/>
+      </xs:restriction>
+   </xs:simpleType>
+
+   <xs:simpleType name="FreeText">
+      <xs:annotation>
+         <xs:documentation> Assesment of urgency by the operator with 0 being the least.
+         </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:minLength value="1"/>
+         <xs:maxLength value="500"/>
+      </xs:restriction>
+   </xs:simpleType>
+
+   <xs:simpleType name="ReferenceID">
+      <xs:annotation>
+         <xs:documentation> A string that uniquely identifies an object. </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:minLength value="1"/>
+         <xs:maxLength value="64"/>
+      </xs:restriction>
+   </xs:simpleType>
+
+   <xs:complexType name="PedigreeList">
+      <xs:sequence maxOccurs="32" minOccurs="1">
+         <xs:element name="pedigree">
+            <xs:complexType>
+               <xs:sequence>
+                  <!-- A unique identifier for an organization within a region. -->
+                  <xs:element name="organizationId" type="tmdd:Organization-resource-identifier"/>
+                  <!-- the reference value to the event in the system -->
+                  <xs:element name="eventID" type="ReferenceID"/>
+                  <!-- a catagory and an item from that catagory
+                     Uses the same basic types as ITIS/ATIS/TMDD -->
+                  <xs:element name="typeEvent" type="itis:ITISEventType"/>
+                  <!-- reason of an event numbering change -->
+                  <xs:element minOccurs="0" name="reasonCode" type="SplitReason"/>
+                  <!-- any additional textual data -->
+                  <xs:element minOccurs="0" name="comment" type="FreeText"/>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
+
+   <xs:complexType name="LaneDescription">
+      <xs:sequence>
+         <!-- a count of the affected lanes -->
+         <xs:element minOccurs="0" name="lanesAffected" type="atis:LaneCount"/>
+         <!-- the number of nominal lanes for the link,
+            zero indicates the count is unknown -->
+         <xs:element minOccurs="0" name="laneTotalCnt" type="atis:LaneCount"/>
+
+         <xs:element minOccurs="0" name="types">
+            <xs:complexType>
+               <xs:sequence maxOccurs="8" minOccurs="1">
+                  <!-- the ITIS codes for various lane types such as: HOV,  left,  right,  all,  ramp,  bridge,  etc. -->
+                  <xs:element name="type" type="itis:LaneRoadway"/>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+
+         <!-- the ITIS code for generic locations beside a lane
+            such as: opposing lanes,  on ramps,  etc ... -->
+         <xs:element minOccurs="0" name="location" type="itis:GenericLocations"/>
+
+         <!-- the ITIS codes for various conditions for the lane
+            such as: blocked,  closed,  closed ahead,  clearing,  etc -->
+         <xs:element minOccurs="0" name="condition" type="itis:Closures"/>
+
+         <!-- set to indicate if this description pertains to both directions
+            on the link or just to one -->
+         <xs:element minOccurs="0" name="direction" type="atis:Direction"/>
+
+         <!-- the point in time when the above conditions are estimated to be
+            removed and the flow over the lane/link returned to normal -->
+         <xs:element minOccurs="0" name="estClearTime" type="atis:DateTimePair"/>
+
+         <!-- the type of barrier found between the lanes -->
+         <xs:element minOccurs="0" name="barrier" type="tmdd:Link-median-type"/>
+
+         <!-- if information on why the lane (s)  was closed,  or how the lane (s)
+            was closed,  or what will allow it to reopen is needed,  place such
+            data in free text here. Limit use to only lane inforamtion,  do not
+            use it for general event information.
+            When one of the above items does not apply  (i.e. would be represented as zero)
+            then it should not be sent. -->
+         <xs:element minOccurs="0" name="furtherInfo" type="FreeText"/>
+
+      </xs:sequence>
+   </xs:complexType>
+
+</xs:schema>

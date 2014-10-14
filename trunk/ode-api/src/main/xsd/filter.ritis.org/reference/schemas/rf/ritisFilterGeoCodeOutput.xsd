@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:rf="http://cattlab.umd.edu/schema/ritisFilter"
+	xmlns:rf2="http://cattlab.umd.edu/schema/ritisFilter/other"
+	targetNamespace="http://cattlab.umd.edu/schema/ritisFilter/geocode"
+	xmlns="http://cattlab.umd.edu/schema/ritisFilter/geocode"
+	jaxb:version="2.0" version="0.1.0" elementFormDefault="qualified">
+
+	<xs:annotation>
+		<xs:appinfo>
+			<jaxb:schemaBindings>
+				<jaxb:package name="edu.umd.cattlab.schema.ritisFilter.geocode" />
+			</jaxb:schemaBindings>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<xs:import namespace="http://cattlab.umd.edu/schema/ritisFilter"
+		schemaLocation="ritisFilterEventOutput.xsd" />
+	<xs:import namespace="http://cattlab.umd.edu/schema/ritisFilter/other"
+		schemaLocation="ritisFilterOutput.xsd" />
+
+	<xs:element name="geocodeResult" type="geocodeResultType">
+	</xs:element>
+	<xs:complexType name="geocodeResultType">
+		<xs:sequence>
+			<xs:element name="request">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="latitude" type="rf2:LatitudeType" />
+						<xs:element name="longitude" type="rf2:LongitudeType" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="results">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="result">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="linkId" type="xs:nonNegativeInteger" />
+									<xs:element name="functionalClass" type="functionalClassType" />
+									<xs:element name="distance" type="rf:nonNegativeDecimal">
+										<xs:annotation>
+											<xs:documentation>This is the minimum distance from the point
+												provide to this street.
+											</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="address" type="rf:addressType" />
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="functionalClassType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="0" />
+			<xs:maxInclusive value="5" />
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>
