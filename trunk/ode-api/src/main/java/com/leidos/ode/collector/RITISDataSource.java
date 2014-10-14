@@ -48,42 +48,62 @@ public class RITISDataSource extends RestPullDataSource {
     }
 
     @Override
-    protected String getWFSFilter() {
+    protected String buildWfsFilter() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(getFeedName());
         stringBuilder.append("?");
         stringBuilder.append(getApiKey());
-        stringBuilder.append("&");
-        //The system from which we query data (note detector requests only support 1 system).
-        //Possible values
-        if (getFeedName().equals("incidentevent") || getFeedName().equals("dms") || getFeedName().equals("detector")) {
-            stringBuilder.append("system=vdot_nova");
-            stringBuilder.append("&");
-            //Latitude of the lower left corner
-            stringBuilder.append("box-lat=38.856259");
-            stringBuilder.append("&");
-            //Longitude of the lower left corner
-            stringBuilder.append("box-lon=-77.35548");
-            stringBuilder.append("&");
-            //The width (in meters) of the box
-            stringBuilder.append("width=8321");
-            stringBuilder.append("&");
-            //The height (in meters) of the box
-            stringBuilder.append("height=2952");
-        }
-        if (getFeedName().equals("weather")){
-            stringBuilder.append("system=nws");
-            stringBuilder.append("&");
-            stringBuilder.append("type=alerts");
-            //For some reason, no results are ever returned when using the following state filter
-//            stringBuilder.append("&");
-//            stringBuilder.append("state=Virginia");
-        }
+//        stringBuilder.append("&");
+//        //The system from which we query data (note detector requests only support 1 system).
+//        //Possible values
+//        if (getFeedName().equals("incidentevent") || getFeedName().equals("dms") || getFeedName().equals("detector")) {
+//            stringBuilder.append("system=vdot_nova");
+////            stringBuilder.append(getEmulatorWFSbbox());
+//        }
+        //Append the WFS filter
+        stringBuilder.append(getWfsFilter());
+
+//        if (getFeedName().equals("weather")) {
+//            if (getWfsFilter().contains("system=nws")) {
+//                stringBuilder.append("&");
+//                stringBuilder.append("type=alerts");
+//                //For some reason, no results are ever returned when using the following state filter with NWS data
+////            stringBuilder.append("&");
+////            stringBuilder.append("state=Virginia");
+//            }
+//            if (getWfsFilter().contains("system=clarus")) {
+//                stringBuilder.append("&");
+//                stringBuilder.append("state=Virginia");
+//            }
+//        }
 
         //The road filter returns all data on the specified roads
 //        stringBuilder.append("road=I-66");
+
         return stringBuilder.toString();
     }
+
+//    /**
+//     * Returns the coordinate bounding box filter for the request.
+//     *
+//     * @return String representing bounding box.
+//     */
+//    private String getEmulatorWFSbbox() {
+//        return new StringBuilder()
+//                .append("&")
+//                        //Latitude of the lower left corner
+//                .append("box-lat=38.856259")
+//                .append("&")
+//                        //Longitude of the lower left corner
+//                .append("box-lon=-77.35548")
+//                .append("&")
+//                        //The width (in meters) of the box
+//                .append("width=8321")
+//                .append("&")
+//                        //The height (in meters) of the box
+//                .append("height=2952")
+//                .toString();
+//    }
 
     public String getApiKey() {
         return apiKey;

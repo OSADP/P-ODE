@@ -24,6 +24,7 @@ public abstract class RestPullDataSource extends PullDataSource {
     private CloseableHttpClient httpClient;
     private HttpGet httpGet;
     private int requestLimit;
+    private String wfsFilter;
 
     @Override
     public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) {
@@ -51,6 +52,8 @@ public abstract class RestPullDataSource extends PullDataSource {
 
     private String buildRequestString() {
         if (requestString == null) {
+            //Initialize WFS filter to empty string
+            wfsFilter = "";
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(getHostProtocol());
             stringBuilder.append("://");
@@ -59,7 +62,7 @@ public abstract class RestPullDataSource extends PullDataSource {
             stringBuilder.append(getBaseUrl());
             requestString = stringBuilder.toString();
         }
-        return new StringBuilder().append(requestString).append(getWFSFilter()).toString();
+        return new StringBuilder().append(requestString).append(buildWfsFilter()).toString();
     }
 
     protected final CloseableHttpClient getHttpClient() {
@@ -70,7 +73,20 @@ public abstract class RestPullDataSource extends PullDataSource {
         return httpGet;
     }
 
-    protected abstract String getWFSFilter();
+    protected abstract String buildWfsFilter();
+
+    public String getWfsFilter() {
+        return wfsFilter;
+    }
+
+    public void setWfsFilter(String... wfsFilterParams) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String wfsFilterParam : wfsFilterParams) {
+            stringBuilder.append("&");
+            stringBuilder.append(wfsFilterParam);
+        }
+        this.wfsFilter = stringBuilder.toString();
+    }
 
     public final String getBaseUrl() {
         return baseUrl;

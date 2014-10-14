@@ -179,10 +179,18 @@
 
     <bean id="ritisSpeed" parent="basicRITISDataSource">
         <property name="feedName" value="${leidos.ode.ritis.detector.url}"/>
+        <property name="wfsFilter" value="system=vdot_nova, box-lat=38.856259, box-lon=-77.35548, width=8321, height=2952"/>
     </bean>
 
-    <bean id="ritisWeather" parent="basicRITISDataSource">
+    <bean id="ritisWeather_NWS" parent="basicRITISDataSource">
         <property name="feedName" value="${leidos.ode.ritis.weather.url}"/>
+        <property name="wfsFilter" value="system=nws, type=alerts"/>
+    </bean>
+
+    <bean id="ritisWeather_Clarus" parent="basicRITISDataSource">
+        <property name="feedName" value="${leidos.ode.ritis.weather.url}"/>
+        <!--<property name="wfsFilter" value="system=clarus, state=Virginia"/>-->
+        <property name="wfsFilter" value="system=clarus"/>
     </bean>
 
     <bean id="ritisSpeedPubRegistrationInfo" class="com.leidos.ode.agent.data.RegistrationInformation">
@@ -241,8 +249,13 @@
         <property name="agent" ref="basicRITISAgent"/>
     </bean>
 
-    <bean id="ritisWeatherCollector" class="com.leidos.ode.collector.ODECollector">
-        <property name="dataSource" ref="ritisWeather"/>
+    <bean id="ritisWeatherCollector_NWS" class="com.leidos.ode.collector.ODECollector">
+        <property name="dataSource" ref="ritisWeather_NWS"/>
+        <property name="agent" ref="ritisWeatherAgent"/>
+    </bean>
+
+    <bean id="ritisWeatherCollector_Clarus" class="com.leidos.ode.collector.ODECollector">
+        <property name="dataSource" ref="ritisWeather_Clarus"/>
         <property name="agent" ref="ritisWeatherAgent"/>
     </bean>
 

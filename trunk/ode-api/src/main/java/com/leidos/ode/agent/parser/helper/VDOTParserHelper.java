@@ -4,8 +4,10 @@ import com.leidos.ode.agent.data.vdot.VDOTSpeedData;
 import com.leidos.ode.agent.data.vdot.VDOTTravelTimeData;
 import com.leidos.ode.agent.data.vdot.VDOTWeatherData;
 import org.apache.log4j.Logger;
+import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 import java.text.ParseException;
@@ -32,6 +34,7 @@ public class VDOTParserHelper extends ODEParserHelper {
     private static final String VDOT_WEATHER_LONG_TERM_DEFAULTS_TAG = "orci:vat_road_cond_area";
     private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final String VDOT_FEATURE_MEMBERS_TAG = "gml:featureMembers";
+    private static final String VDOT_EXCEPTION_REPORT_TAG = "ows:ExceptionReport";
     private static final String TIME_ZONE_GMT = "GMT";
     private static Logger logger = Logger.getLogger(TAG);
     private static VDOTParserHelper instance;
@@ -47,11 +50,72 @@ public class VDOTParserHelper extends ODEParserHelper {
     public ODEHelperResponse parseData(byte[] bytes) {
         Document document = getMessageDocument(bytes);
         if (document != null) {
-            return parseDocumentForFeatureMembers(document);
+            Elements exceptionReport = document.getElementsByTag(VDOT_EXCEPTION_REPORT_TAG);
+            if (exceptionReport != null && exceptionReport.size() > 0) {
+                return parseDocumentForExceptions(exceptionReport);
+            } else {
+                return parseDocumentForFeatureMembers(document);
+            }
         } else {
             logger.debug("Error parsing Document with Jsoup.");
             return new ODEHelperResponse(null, HelperReport.UNKNOWN_ERROR);
         }
+    }
+
+    private ODEHelperResponse parseDocumentForExceptions(Elements exceptionReport) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Error parsing VDOT Data Exception: '");
+        Element exceptionReports = exceptionReport.first();
+        if (exceptionReports != null) {
+            Elements exceptions = exceptionReports.children();
+            if (exceptions != null && exceptions.size() > 0) {
+                Element firstException = exceptions.first();
+                if (firstException.tagName().equalsIgnoreCase("ows:Exception")) {
+                    Elements exceptionChildren = firstException.children();
+                    if (exceptionChildren != null && exceptionChildren.size() > 0) {
+                        for (Element child : exceptionChildren) {
+                            if (child.tagName().equalsIgnoreCase("ows:exceptionText")) {
+                                List<TextNode> textNodes = child.textNodes();
+                                if (textNodes != null && textNodes.size() > 0) {
+                                    TextNode textNode = textNodes.get(0);
+                                    String exceptionText = textNode.text();
+                                    stringBuilder.append(exceptionText);
+                                    stringBuilder.append("'. ");
+                                } else {
+                                    stringBuilder.append("Unable to parse exception text nodes. There were none.");
+                                }
+                            } else {
+                                stringBuilder.append("Unable to parse type 'ows:exceptionText'. Tag not found.");
+                            }
+                        }
+                    } else {
+                        stringBuilder.append("Expected a list of type 'ows:Exception', but there were none.");
+                    }
+                    Attributes exceptionAttributes = firstException.attributes();
+                    if (exceptionAttributes != null && exceptionAttributes.size() > 0) {
+                        String exceptionCodeValue = exceptionAttributes.get("exceptioncode");
+                        String locatorValue = exceptionAttributes.get("locator");
+                        stringBuilder.append("Exception code: '");
+                        stringBuilder.append(exceptionCodeValue);
+                        stringBuilder.append("'. ");
+                        stringBuilder.append("Locator: '");
+                        stringBuilder.append(locatorValue);
+                        stringBuilder.append("'. ");
+                    } else {
+                        stringBuilder.append("Exception attributes were null or empty.");
+                    }
+                } else {
+                    stringBuilder.append("Expected type 'ows:Exception', but was not found.");
+                }
+            } else {
+                stringBuilder.append("Exceptions were empty or null.");
+            }
+        } else {
+            stringBuilder.append("Exception reports was empty or null.");
+        }
+
+        logger.debug(stringBuilder.toString());
+        return new ODEHelperResponse(null, HelperReport.DATA_SOURCE_SERVER_ERROR);
     }
 
     private ODEHelperResponse parseDocumentForFeatureMembers(Document document) {
