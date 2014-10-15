@@ -9,18 +9,17 @@ import java.util.Date;
 @XmlRootElement
 public class ODERegistrationRequest extends ODERegistrationInformation {
 
-    private String agentId;
     private Date startDate;
     private Date endDate;
     private String subscriptionReceiveAddress;
     private int subscriptionReceivePort;
 
-    public String getAgentId() {
-        return agentId;
+    public Date getEndDate() {
+        return endDate;
     }
 
-    public void setAgentId(String agentId) {
-        this.agentId = agentId;
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     public Date getStartDate() {
@@ -29,14 +28,6 @@ public class ODERegistrationRequest extends ODERegistrationInformation {
 
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
     }
 
     public String getSubscriptionReceiveAddress() {
