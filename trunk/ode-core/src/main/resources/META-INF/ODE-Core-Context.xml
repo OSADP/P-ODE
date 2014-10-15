@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.1.xsd">
+
+    <description>
+        This configuration file contains all beans that are essential to the ode-core.
+    </description>
+
+    <context:component-scan base-package="com.leidos.ode"/>
+    <context:annotation-config/>
+
+    <!--&lt;!&ndash; Load Properties file &ndash;&gt;-->
+    <!--<bean id="properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean" scope="prototype">-->
+    <!--<property name="ignoreResourceNotFound" value="true"/>-->
+    <!--&lt;!&ndash;-->
+    <!--Allow for the (optional) override of these properties-->
+    <!--&ndash;&gt;-->
+    <!--<property name="locations">-->
+    <!--<list>-->
+    <!--<value>classpath:META-INF/ODE-API-Context-Dev.properties</value>-->
+    <!--</list>-->
+    <!--</property>-->
+    <!--</bean>-->
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Common Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <bean id="propertyPlaceholderConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:publisher.properties</value>
+            </list>
+        </property>
+        <!-- This means don't blow up if a property is not set -->
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <!--
+        This means that any system properties set on the command line will take precedence over those set locally or in a properties file.
+        -->
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+    </bean>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Data Controllers~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <bean id="publishDataController" class="com.leidos.ode.core.controllers.PublishDataController" abstract="true">
+        <property name="hostAddress" value="${leidos.ode.publisher.hostaddress}"/>
+        <property name="hostPort" value="${leidos.ode.publisher.hostport}"/>
+        <property name="connectionFactoryName" value="${leidos.ode.publisher.connectionfactoryname}"/>
+    </bean>
+
+    <bean id="publishBSMDataController" class="com.leidos.ode.core.controllers.topics.PublishBSMDataController"
+          parent="publishDataController">
+        <property name="topicName" value="${leidos.ode.publisher.topic.bsm}"/>
+    </bean>
+
+    <bean id="publishVDOTWeatherDataController"
+          class="com.leidos.ode.core.controllers.topics.PublishVDOTWeatherDataController"
+          parent="publishDataController">
+        <property name="topicName" value="${leidos.ode.publisher.topic.vdotweather}"/>
+    </bean>
+
+    <bean id="publishVDOTTravelTimeDataController"
+          class="com.leidos.ode.core.controllers.topics.PublishVDOTTravelTimeDataController"
+          parent="publishDataController">
+        <property name="topicName" value="${leidos.ode.publisher.topic.vdottraveltime}"/>
+    </bean>
+
+    <bean id="publishVDOTSpdVolOccDataController"
+          class="com.leidos.ode.core.controllers.topics.PublishVDOTSpdVolOccDataController"
+          parent="publishDataController">
+        <property name="topicName" value="${leidos.ode.publisher.topic.vdotspdvolocc}"/>
+    </bean>
+
+    <bean id="publishRITISSpdVolOccDataController"
+          class="com.leidos.ode.core.controllers.topics.PublishRITISSpdVolOccDataController"
+          parent="publishDataController">
+        <property name="topicName" value="${leidos.ode.publisher.topic.ritisspdvolocc}"/>
+    </bean>
+
+    <bean id="publishRITISWeatherDataController"
+          class="com.leidos.ode.core.controllers.topics.PublishRITISWeatherDataController"
+          parent="publishDataController">
+        <property name="topicName" value="${leidos.ode.publisher.topic.ritisweather}"/>
+    </bean>
+</beans>
