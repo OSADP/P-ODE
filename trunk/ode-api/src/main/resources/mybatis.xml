@@ -5,7 +5,7 @@
 <configuration>
     <typeAliases>
         <typeAlias alias="RDEArchiveInfo" type="com.leidos.ode.core.rde.data.RDEArchiveInfo"/>
-        <typeAlias alias="RegistrationInformation" type="com.leidos.ode.core.registration.RegistrationInformation"/>
+        <typeAlias alias="RegistrationInformation" type="com.leidos.ode.agent.data.RegistrationInformation"/>
         <typeAlias alias="QueueInfo" type="com.leidos.ode.core.data.QueueInfo"/>
 
     </typeAliases>
