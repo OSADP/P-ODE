@@ -1,10 +1,10 @@
 package com.leidos.ode.agent.registration;
 
-import com.leidos.ode.core.data.ODERegistrationResponse;
-import com.leidos.ode.agent.data.RegistrationInformation;
+import com.leidos.ode.registration.request.ODERegistrationRequest;
+import com.leidos.ode.registration.response.ODERegistrationResponse;
 
 public interface ODERegistration {
 
-    public ODERegistrationResponse register(RegistrationInformation regInfo);
+    public ODERegistrationResponse register(ODERegistrationRequest registrationRequest);
 
 }

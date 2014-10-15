@@ -2,14 +2,13 @@ package com.leidos.ode.agent;
 
 import com.leidos.ode.agent.data.AgentInfo;
 import com.leidos.ode.agent.data.ODEAgentMessage;
-import com.leidos.ode.agent.data.RegistrationInformation;
 import com.leidos.ode.agent.datatarget.ODEDataTarget;
-import com.leidos.ode.agent.datatarget.ODEDataTarget.DataTargetException;
 import com.leidos.ode.agent.parser.ODEDataParser;
 import com.leidos.ode.agent.registration.ODERegistration;
 import com.leidos.ode.agent.sanitizer.ODESanitizer;
-import com.leidos.ode.core.data.ODERegistrationResponse;
 import com.leidos.ode.logging.ODELogger;
+import com.leidos.ode.registration.request.ODERegistrationRequest;
+import com.leidos.ode.registration.response.ODERegistrationResponse;
 import com.leidos.ode.util.SHAHasher;
 import org.apache.log4j.Logger;
 
@@ -23,15 +22,15 @@ public class BasicODEAgent implements ODEAgent {
     protected ODEDataParser parser;
     protected ODESanitizer sanitizer;
     protected ODEDataTarget dataTarget;
-    protected RegistrationInformation registrationInformation;
+    protected ODERegistrationRequest registrationRequest;
     protected ODERegistrationResponse registrationResponse;
     private int threadCount = 0;
     private ODELogger odeLogger;
     private MessageListener messageListener;
 
     @Override
-    public void startUp() throws DataTargetException {
-        registrationResponse = getRegistration().register(getRegistrationInformation());
+    public void startUp() throws ODEDataTarget.DataTargetException {
+        registrationResponse = getRegistration().register(getRegistrationRequest());
         if (getRegistrationResponse() != null) {
             createAgentInfo(getRegistrationResponse());
             getLogger().debug("Registration succeeded.");
@@ -41,7 +40,7 @@ public class BasicODEAgent implements ODEAgent {
     }
 
     @Override
-    public void startUp(MessageListener messageListener) throws DataTargetException {
+    public void startUp(MessageListener messageListener) throws ODEDataTarget.DataTargetException {
         this.messageListener = messageListener;
         startUp();
     }
@@ -114,12 +113,12 @@ public class BasicODEAgent implements ODEAgent {
         this.dataTarget = dataTarget;
     }
 
-    public RegistrationInformation getRegistrationInformation() {
-        return registrationInformation;
+    public ODERegistrationRequest getRegistrationRequest() {
+        return registrationRequest;
     }
 
-    public void setRegistrationInformation(RegistrationInformation registrationInformation) {
-        this.registrationInformation = registrationInformation;
+    public void setRegistrationRequest(ODERegistrationRequest registrationRequest) {
+        this.registrationRequest = registrationRequest;
     }
 
     protected ODERegistrationResponse getRegistrationResponse() {
@@ -186,7 +185,7 @@ public class BasicODEAgent implements ODEAgent {
                 getLogger().error(e.getLocalizedMessage());
             } catch (ODESanitizer.ODESanitizeException e) {
                 getLogger().error(e.getLocalizedMessage());
-            } catch (DataTargetException e) {
+            } catch (ODEDataTarget.DataTargetException e) {
                 getLogger().error(e.getLocalizedMessage());
             } catch (ODELogger.ODELoggerException e) {
                 getLogger().error(e.getLocalizedMessage());

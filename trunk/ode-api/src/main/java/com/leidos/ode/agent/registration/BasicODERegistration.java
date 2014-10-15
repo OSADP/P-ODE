@@ -1,7 +1,7 @@
 package com.leidos.ode.agent.registration;
 
-import com.leidos.ode.core.data.ODERegistrationResponse;
-import com.leidos.ode.agent.data.RegistrationInformation;
+import com.leidos.ode.registration.request.ODERegistrationRequest;
+import com.leidos.ode.registration.response.ODERegistrationResponse;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
@@ -36,14 +36,14 @@ public class BasicODERegistration implements ODERegistration {
     private String registrationEndpoint;
 
     @Override
-    public ODERegistrationResponse register(RegistrationInformation regInfo) {
+    public ODERegistrationResponse register(ODERegistrationRequest registrationRequest) {
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse closeableHttpResponse = null;
         try {
             StringWriter stringWriter = new StringWriter();
-            JAXBContext registrationInfoContext = JAXBContext.newInstance(RegistrationInformation.class);
+            JAXBContext registrationInfoContext = JAXBContext.newInstance(ODERegistrationRequest.class);
             Marshaller marshaller = registrationInfoContext.createMarshaller();
-            marshaller.marshal(regInfo, stringWriter);
+            marshaller.marshal(registrationRequest, stringWriter);
             httpClient = HttpClientBuilder.create().build();
             HttpPost httpPost = new HttpPost(getRegistrationUrl());
             httpPost.addHeader("Content-Type", "application/xml");

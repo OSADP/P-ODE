@@ -1,7 +1,7 @@
 package com.leidos.ode.agent.datatarget;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
-import com.leidos.ode.core.data.ODERegistrationResponse;
+import com.leidos.ode.registration.response.ODERegistrationResponse;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -23,10 +23,10 @@ public class ODERestTarget implements ODEDataTarget {
     private CloseableHttpResponse httpResponse;
     private HttpPost httpPost;
 
-    public void configure(ODERegistrationResponse regInfo) throws DataTargetException {
-        String hostURL = regInfo.getQueueHostURL();
-        int hostPort = regInfo.getQueueHostPort();
-        String queueName = regInfo.getQueueName();
+    public void configure(ODERegistrationResponse registrationResponse) throws DataTargetException {
+        String hostURL = registrationResponse.getQueueHostURL();
+        int hostPort = registrationResponse.getQueueHostPort();
+        String queueName = registrationResponse.getQueueName();
 
         String address = new StringBuilder()
                 .append("http://")

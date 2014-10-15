@@ -45,7 +45,7 @@
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~VDOT Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-    <bean id="VDOTWeatherRegistrationInfo" class="com.leidos.ode.agent.data.RegistrationInformation">
+    <bean id="VDOTWeatherRegistrationInfo" class="com.leidos.ode.registration.request.ODERegistrationRequest">
         <property name="messageType" value="${leidos.ode.emulator.vdotweather.messageType}"/>
         <property name="region" value="${leidos.ode.emulator.vdotweather.region}"/>
         <property name="registrationType" value="${leidos.ode.emulator.vdotweather.sub.registrationType}"/>
@@ -85,7 +85,7 @@
         <property name="parser" ref="VDOTParser"/>
         <property name="sanitizer" ref="PassthroughSanitizer"/>
         <property name="dataTarget" ref="VDOTWeatherDataTarget"/>
-        <property name="registrationInformation" ref="VDOTWeatherRegistrationInfo"/>
+        <property name="registrationRequest" ref="VDOTWeatherRegistrationInfo"/>
         <property name="odeLogger" ref="ODELogger"/>
     </bean>
 
@@ -94,7 +94,7 @@
         <property name="dataSource" ref="VDOTWeatherDataSource"/>
     </bean>
 
-    <bean id="VDOTSpeedRegistrationInfo" class="com.leidos.ode.agent.data.RegistrationInformation">
+    <bean id="VDOTSpeedRegistrationInfo" class="com.leidos.ode.registration.request.ODERegistrationRequest">
         <property name="messageType" value="${leidos.ode.emulator.vdotspeed.messageType}"/>
         <property name="region" value="${leidos.ode.emulator.vdotspeed.region}"/>
         <property name="registrationType" value="${leidos.ode.emulator.vdotspeed.sub.registrationType}"/>
@@ -136,7 +136,7 @@
         <property name="parser" ref="VDOTParser"/>
         <property name="sanitizer" ref="VDOTSpeedSanitize"/>
         <property name="dataTarget" ref="VDOTSpeedDataTarget"/>
-        <property name="registrationInformation" ref="VDOTSpeedRegistrationInfo"/>
+        <property name="registrationRequest" ref="VDOTSpeedRegistrationInfo"/>
     </bean>
 
     <bean id="VDOTSpeedCollector" class="com.leidos.ode.collector.ODECollector">
@@ -144,7 +144,7 @@
         <property name="dataSource" ref="VDOTSpeedDataSource"/>
     </bean>
 
-    <bean id="VDOTTravelRegistrationInfo" class="com.leidos.ode.agent.data.RegistrationInformation">
+    <bean id="VDOTTravelRegistrationInfo" class="com.leidos.ode.registration.request.ODERegistrationRequest">
         <property name="messageType" value="${leidos.ode.emulator.vdottravel.messageType}"/>
         <property name="region" value="${leidos.ode.emulator.vdottravel.region}"/>
         <property name="registrationType" value="${leidos.ode.emulator.vdottravel.sub.registrationType}"/>
@@ -184,7 +184,7 @@
         <property name="parser" ref="VDOTParser"/>
         <property name="sanitizer" ref="PassthroughSanitizer"/>
         <property name="dataTarget" ref="VDOTTravelDataTarget"/>
-        <property name="registrationInformation" ref="VDOTTravelRegistrationInfo"/>
+        <property name="registrationRequest" ref="VDOTTravelRegistrationInfo"/>
         <property name="odeLogger" ref="ODELogger"/>
     </bean>
 
@@ -195,7 +195,7 @@
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~RITIS Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-    <bean id="RITISSpeedRegistrationInfo" class="com.leidos.ode.agent.data.RegistrationInformation">
+    <bean id="RITISSpeedRegistrationInfo" class="com.leidos.ode.registration.request.ODERegistrationRequest">
         <property name="messageType" value="${leidos.ode.emulator.ritisspeed.messageType}"/>
         <property name="region" value="${leidos.ode.emulator.ritisspeed.region}"/>
         <property name="registrationType" value="${leidos.ode.emulator.ritisspeed.sub.registrationType}"/>
@@ -238,7 +238,7 @@
         <property name="parser" ref="RITISParser"/>
         <property name="sanitizer" ref="RITISSpeedSanitize"/>
         <property name="dataTarget" ref="RITISSpeedDataTarget"/>
-        <property name="registrationInformation" ref="RITISSpeedRegistrationInfo"/>
+        <property name="registrationRequest" ref="RITISSpeedRegistrationInfo"/>
         <property name="odeLogger" ref="ODELogger"/>
     </bean>
 
@@ -247,7 +247,7 @@
         <property name="dataSource" ref="RITISSpeedDataSource"/>
     </bean>
 
-    <bean id="RITISWeatherRegistrationInfo" class="com.leidos.ode.agent.data.RegistrationInformation">
+    <bean id="RITISWeatherRegistrationInfo" class="com.leidos.ode.registration.request.ODERegistrationRequest">
         <property name="messageType" value="${leidos.ode.emulator.ritisweather.messageType}"/>
         <property name="region" value="${leidos.ode.emulator.ritisweather.region}"/>
         <property name="registrationType" value="${leidos.ode.emulator.ritisweather.sub.registrationType}"/>
@@ -287,7 +287,7 @@
         <property name="parser" ref="RITISParser"/>
         <property name="sanitizer" ref="PassthroughSanitizer"/>
         <property name="dataTarget" ref="RITISWeatherDataTarget"/>
-        <property name="registrationInformation" ref="RITISWeatherRegistrationInfo"/>
+        <property name="registrationRequest" ref="RITISWeatherRegistrationInfo"/>
         <property name="odeLogger" ref="ODELogger"/>
     </bean>
 
@@ -298,7 +298,7 @@
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~BSM Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-    <bean id="BSMRegistrationInfo" class="com.leidos.ode.agent.data.RegistrationInformation">
+    <bean id="BSMRegistrationInfo" class="com.leidos.ode.registration.request.ODERegistrationRequest">
         <property name="messageType" value="${leidos.ode.emulator.bsm.messageType}"/>
         <property name="region" value="${leidos.ode.emulator.bsm.region}"/>
         <property name="registrationType" value="${leidos.ode.emulator.bsm.sub.registrationType}"/>
@@ -337,7 +337,7 @@
         <property name="parser" ref="BSMParser"/>
         <property name="sanitizer" ref="PassthroughSanitizer"/>
         <property name="dataTarget" ref="BSMDataTarget"/>
-        <property name="registrationInformation" ref="BSMRegistrationInfo"/>
+        <property name="registrationRequest" ref="BSMRegistrationInfo"/>
         <property name="odeLogger" ref="ODELogger"/>
     </bean>
 

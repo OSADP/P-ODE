@@ -1,7 +1,7 @@
 package com.leidos.ode.agent.datatarget;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
-import com.leidos.ode.core.data.ODERegistrationResponse;
+import com.leidos.ode.registration.response.ODERegistrationResponse;
 import org.apache.log4j.Logger;
 
 import java.io.FileOutputStream;
@@ -18,7 +18,7 @@ public class ODEFileDataTarget implements ODEDataTarget {
     private String filePath;
     private PrintStream out;
 
-    public void configure(ODERegistrationResponse regInfo) throws DataTargetException {
+    public void configure(ODERegistrationResponse registrationResponse) throws DataTargetException {
         try {
             out = new PrintStream(new FileOutputStream(filePath));
         } catch (IOException ex) {

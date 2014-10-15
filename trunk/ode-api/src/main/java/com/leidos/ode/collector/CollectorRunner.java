@@ -18,7 +18,7 @@ import java.util.*;
 public class CollectorRunner extends QuartzJobBean {
 
     private final String TAG = getClass().getSimpleName();
-    private final String APPLICATION_CONTEXT_FILE = "META-INF/ODE-Context.xml";
+    private final String APPLICATION_CONTEXT_FILE = "META-INF/ODE-API-Context.xml";
     private final String RUNNER_PROPERTIES = "/collector_runner.properties";
     private Logger logger = Logger.getLogger(TAG);
     private Properties runnerProperties;

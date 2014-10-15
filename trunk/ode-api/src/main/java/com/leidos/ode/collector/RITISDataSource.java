@@ -23,7 +23,7 @@ public class RITISDataSource extends RestPullDataSource {
     private String apiKey;
 
     @Override
-    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) {
+    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) throws DataSourceException {
         super.startDataSource(collectorDataSourceListener);
         executeDataSourceThread(collectorDataSourceListener);
     }

@@ -1,7 +1,7 @@
 package com.leidos.ode.agent.datatarget;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
-import com.leidos.ode.core.data.ODERegistrationResponse;
+import com.leidos.ode.registration.response.ODERegistrationResponse;
 import org.apache.log4j.Logger;
 
 import javax.jms.*;

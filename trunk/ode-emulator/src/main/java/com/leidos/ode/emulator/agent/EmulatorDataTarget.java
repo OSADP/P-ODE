@@ -8,20 +8,19 @@ package com.leidos.ode.emulator.agent;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
 import com.leidos.ode.agent.datatarget.ODEDataTarget;
-import com.leidos.ode.core.data.ODERegistrationResponse;
 import com.leidos.ode.emulator.EmulatorDataListener;
+import com.leidos.ode.registration.response.ODERegistrationResponse;
 
 /**
- *
  * @author cassadyja
  */
 public class EmulatorDataTarget implements ODEDataTarget {
 
     private EmulatorDataListener listener;
     private String messageType;
-    
-    public void configure(ODERegistrationResponse regInfo) throws DataTargetException {
-        
+
+    public void configure(ODERegistrationResponse odeRegistrationResponse) throws DataTargetException {
+
     }
 
     public void sendMessage(ODEAgentMessage message) throws DataTargetException {
@@ -29,7 +28,7 @@ public class EmulatorDataTarget implements ODEDataTarget {
     }
 
     public void close() {
-        
+
     }
 
     /**

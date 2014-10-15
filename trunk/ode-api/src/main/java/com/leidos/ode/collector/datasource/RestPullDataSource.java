@@ -6,7 +6,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -28,7 +27,7 @@ public abstract class RestPullDataSource extends PullDataSource {
     private String wfsFilter;
 
     @Override
-    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) {
+    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) throws DataSourceException {
         initializeHttpResources();
     }
 
@@ -53,8 +52,6 @@ public abstract class RestPullDataSource extends PullDataSource {
 
     private String buildRequestString() {
         if (requestString == null) {
-            //Initialize WFS filter to empty string
-            wfsFilter = "";
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(getHostProtocol());
             stringBuilder.append("://");
@@ -77,7 +74,8 @@ public abstract class RestPullDataSource extends PullDataSource {
     protected abstract String buildWfsFilter();
 
     public String getWfsFilter() {
-        return wfsFilter;
+        //Handle wfsFilter never being set
+        return wfsFilter != null ? wfsFilter : "";
     }
 
     public void setWfsFilter(String[] wfsFilterParams) {

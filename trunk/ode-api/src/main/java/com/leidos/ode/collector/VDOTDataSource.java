@@ -33,7 +33,7 @@ public class VDOTDataSource extends RestPullDataSource {
     private Header firstHeader;//Necessary to keep track of for Digest authentication
 
     @Override
-    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) {
+    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) throws DataSourceException {
         super.startDataSource(collectorDataSourceListener);
         try {
             CloseableHttpResponse closeableHttpResponse = getHttpClient().execute(getHttpGet());
