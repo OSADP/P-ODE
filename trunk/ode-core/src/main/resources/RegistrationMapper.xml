@@ -5,7 +5,7 @@
 <mapper namespace="com.leidos.ode.RegistrationMapper">
 
     <resultMap id="RegInfoMapper" type="RegistrationInformation">
-        <id property="id" column="ID"/>
+        <id property="registrationId" column="ID"/>
         <result property="messageType" column="MSG_TYPE"/>
         <result property="region" column="REGION"/>
         <result property="registrationType" column="REG_TYPE"/>
