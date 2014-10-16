@@ -84,6 +84,9 @@ public abstract class PublishDataController {
         try {
             //puts the message on the topic.
             logger.info("Preparing message for topic");
+            System.out.println("Preparing message for topic");
+            System.out.println("Formatted Message "+odeAgentMessage.getFormattedMessage());
+            System.out.println("RAW Message Size: "+odeAgentMessage.getMessagePayload().length);
             ObjectMessage msg = session.createObjectMessage();
             msg.setObject(odeAgentMessage);
 

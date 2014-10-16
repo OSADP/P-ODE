@@ -24,12 +24,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.xml.bind.DatatypeConverter;
 import java.util.List;
+import org.springframework.beans.factory.DisposableBean;
 
 /**
  * @author cassadyja
  */
 @Controller
-public class ODEEmulator implements EmulatorDataListener {
+public class ODEEmulator implements EmulatorDataListener, DisposableBean {
 
     private final String TAG = getClass().getSimpleName();
     private Logger logger = Logger.getLogger(TAG);
@@ -100,7 +101,19 @@ public class ODEEmulator implements EmulatorDataListener {
     CurrentDataSet getCurrentData() {
         return currentData;
     }
-
+    
+    @Override
+    public void destroy(){
+        System.out.println("Being destroyed!");
+        ritisWeatherCollector.stop();
+        ritisSpeedCollector.stop();
+        vdotSpeedCollector.stop();
+        vdotWeatherCollector.stop();
+        vdotTravelTimeCollector.stop();
+        bsmCollector.stop();
+        
+    }
+    
     public void dataReceived(String messageType, ODEAgentMessage data) {
         if (data != null) {
             if (ODEMessageType.BSM.equals(ODEMessageType.valueOf(messageType))) {
@@ -132,6 +145,8 @@ public class ODEEmulator implements EmulatorDataListener {
     private RITISSpeedData getRITISDataAverage(Object data, String direction) {
         int count = 0;
         int avgSpeed = 0;
+        int occ = 0;
+        int volume = 0;
 
         RITISSpeedData ritisSpeedData = (RITISSpeedData) data;
         List<ZoneDataCollectionPeriodRITIS> zoneDataCollectionPeriodRITISList = ritisSpeedData.getZoneDetectorDataRITIS().getCollectionPeriod().getCollectionPeriodItem();
@@ -142,12 +157,16 @@ public class ODEEmulator implements EmulatorDataListener {
                 for (ZoneDataRITIS zoneDataRITIS : zoneDataRITISList) {
                     //TODO: determine if this item is for the correct direction we are looking for.
                     avgSpeed += zoneDataRITIS.getZoneVehicleSpeed();
+                    occ += zoneDataRITIS.getOccupancy();
+                    volume += zoneDataRITIS.getZoneVehicleCount();
                     count++;
                 }
             }
         }
 
         avgSpeed = avgSpeed / count;
+        occ = occ / count;
+        volume = volume /count;
 
         RITISSpeedData returnRITISSpeedData = new RITISSpeedData();
         org.ritis.schema.tmdd_0_0_0.ObjectFactory objectFactory = new org.ritis.schema.tmdd_0_0_0.ObjectFactory();
@@ -155,11 +174,17 @@ public class ODEEmulator implements EmulatorDataListener {
         ZoneDetectorDataRITIS.CollectionPeriod collectionPeriod = objectFactory.createZoneDetectorDataRITISCollectionPeriod();
         zoneDataCollectionPeriodRITISList = collectionPeriod.getCollectionPeriodItem();
         ZoneDataCollectionPeriodRITIS zoneDataCollectionPeriodRITIS = objectFactory.createZoneDataCollectionPeriodRITIS();
+        ZoneDataCollectionPeriodRITIS.ZoneReports zps = new ZoneDataCollectionPeriodRITIS.ZoneReports();
+        zoneDataCollectionPeriodRITIS.setZoneReports(zps);
         List<ZoneReportRITIS> zoneReportRITISList = zoneDataCollectionPeriodRITIS.getZoneReports().getZoneReport();
         ZoneReportRITIS zoneReportRITIS = objectFactory.createZoneReportRITIS();
+        ZoneReportRITIS.ZoneData zd = new ZoneReportRITIS.ZoneData();
+        zoneReportRITIS.setZoneData(zd);
         List<ZoneDataRITIS> zoneDataRITISList = zoneReportRITIS.getZoneData().getZoneDataItem();
         ZoneDataRITIS zoneDataRITIS = objectFactory.createZoneDataRITIS();
         zoneDataRITIS.setZoneVehicleSpeed((short) avgSpeed);
+        zoneDataRITIS.setOccupancy((long)occ);
+        zoneDataRITIS.setZoneVehicleCount((long)volume);
         zoneDataRITISList.add(zoneDataRITIS);
         zoneReportRITISList.add(zoneReportRITIS);
         zoneDataCollectionPeriodRITISList.add(zoneDataCollectionPeriodRITIS);
@@ -186,21 +211,28 @@ public class ODEEmulator implements EmulatorDataListener {
     private VDOTSpeedData getVDOTSpeedDataAverage(Object data, String direction) {
         int avgSpeed = 0;
         int count = 0;
-
+        int occ = 0;
+        int volume = 0;
         VDOTSpeedData vdotSpeedData = (VDOTSpeedData) data;
         System.out.println("Emulator VDOT Speed data list Size: "+vdotSpeedData.getVdotSpeedDataElements().size());
         for (VDOTSpeedData.VDOTSpeedDataElement vdotSpeedDataElement : vdotSpeedData.getVdotSpeedDataElements()) {
             if (direction.equals(vdotSpeedDataElement.getLaneDirection())) {
                 avgSpeed += vdotSpeedDataElement.getSpeed();
+                volume += vdotSpeedDataElement.getVolume();
+                occ += vdotSpeedDataElement.getOccupancy();
             }
             count++;
         }
 
         avgSpeed = avgSpeed / count;
+        volume = volume /count;
+        occ = occ/count;
         VDOTSpeedData returnVDOTSpeedData = new VDOTSpeedData();
         VDOTSpeedData.VDOTSpeedDataElement vdotSpeedDataElement = new VDOTSpeedData.VDOTSpeedDataElement();
         vdotSpeedDataElement.setLaneDirection(direction);
         vdotSpeedDataElement.setSpeed(avgSpeed);
+        vdotSpeedDataElement.setVolume(volume);
+        vdotSpeedDataElement.setOccupancy(occ);
         returnVDOTSpeedData.getVdotSpeedDataElements().add(vdotSpeedDataElement);
         return returnVDOTSpeedData;
     }

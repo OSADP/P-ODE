@@ -50,6 +50,7 @@ public class DistributeDataController {
 
     @PreDestroy
     public void cleanup() {
+        System.out.println("Closing Distributors.");
         Iterator<String> it = distributors.keySet().iterator();
         while (it.hasNext()) {
             String key = it.next();

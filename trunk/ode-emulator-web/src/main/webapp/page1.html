@@ -28,17 +28,21 @@
                     dataType: 'json',
                     success: function(srvResp){
 //                        $("#").html();
-                        $("#ritisEastOcc").html();
-                        $("#ritisEastSpeed").html();
+                        if(srvResp.ritisSpeedDataEastValue != null){
+                            $("#ritisEastOcc").html(srvResp.ritisSpeedDataEastValue.zoneDetectorDataRITIS.collectionPeriod.collectionPeriodItem[0].zoneReports.zoneReport[0].zoneData.zoneDataItem[0].occupancy);
+                            $("#ritisEastSpeed").html(srvResp.ritisSpeedDataEastValue.zoneDetectorDataRITIS.collectionPeriod.collectionPeriodItem[0].zoneReports.zoneReport[0].zoneData.zoneDataItem[0].zoneVehicleSpeed);
+                            $("#ritisEastVol").html(srvResp.ritisSpeedDataEastValue.zoneDetectorDataRITIS.collectionPeriod.collectionPeriodItem[0].zoneReports.zoneReport[0].zoneData.zoneDataItem[0].zoneVehicleCount);
+                        }
                         $("#ritisEastTravel").html();
-                        $("#ritisEastVol").html();
                         $("#ritisEastWeather").html();
                         
-                        $("#vdotEastOcc").html();
-                        $("#vdotEastSpeed").html();
-                        $("#vdotEastTravel").html();
-                        $("#vdotEastVol").html();
-                        
+                        if(srvResp.vdotSpeedDataEastValue != null){
+                            $("#vdotEastOcc").html(srvResp.vdotSpeedDataEastValue.vdotSpeedDataElements[0].occupancy);
+                            $("#vdotEastSpeed").html(srvResp.vdotSpeedDataEastValue.vdotSpeedDataElements[0].speed);
+                            $("#vdotEastVol").html(srvResp.vdotSpeedDataEastValue.vdotSpeedDataElements[0].volume);
+                        }
+                            $("#vdotEastTravel").html();
+
                         $("#bsmEast1").html();
                         $("#bsmEast2").html();
                         $("#bsmEast3").html();
@@ -46,16 +50,20 @@
                         $("#blueFaxEast").html();
                         
                         
-                        $("#ritisWestOcc").html();
-                        $("#ritisWestSpeed").html();
+                        if(srvResp.ritisSpeedDataEastValue != null){
+                            $("#ritisWestOcc").html(srvResp.ritisSpeedDataWestValue.zoneDetectorDataRITIS.collectionPeriod.collectionPeriodItem[0].zoneReports.zoneReport[0].zoneData.zoneDataItem[0].occupancy);
+                            $("#ritisWestSpeed").html(srvResp.ritisSpeedDataWestValue.zoneDetectorDataRITIS.collectionPeriod.collectionPeriodItem[0].zoneReports.zoneReport[0].zoneData.zoneDataItem[0].zoneVehicleSpeed);
+                            $("#ritisWestVol").html(srvResp.ritisSpeedDataWestValue.zoneDetectorDataRITIS.collectionPeriod.collectionPeriodItem[0].zoneReports.zoneReport[0].zoneData.zoneDataItem[0].zoneVehicleCount);
+                        }
                         $("#ritisWestTravel").html();
-                        $("#ritisWestVol").html();
                         $("#ritisWestWeather").html();
                         
-                        $("#vdotWestOcc").html();
-                        $("#vdotWestSpeed").html();
-                        $("#vdotWestTravel").html();
-                        $("#vdotWestVol").html();
+                        if(srvResp.vdotSpeedDataEastValue != null){
+                            $("#vdotWestOcc").html(srvResp.vdotSpeedDataWestValue.vdotSpeedDataElements[0].occupancy);
+                            $("#vdotWestSpeed").html(srvResp.vdotSpeedDataWestValue.vdotSpeedDataElements[0].speed);
+                            $("#vdotWestVol").html(srvResp.vdotSpeedDataWestValue.vdotSpeedDataElements[0].volume);
+                        }
+                            $("#vdotWestTravel").html();
                         
                         $("#bsmWest1").html();
                         $("#bsmWest2").html();

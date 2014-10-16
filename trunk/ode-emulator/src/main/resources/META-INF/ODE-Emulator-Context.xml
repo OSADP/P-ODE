@@ -48,11 +48,6 @@
 
     <bean id="SubscribeODEAgent" class="com.leidos.ode.agent.BasicODEAgent"/>
 
-    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
-        <constructor-arg type="com.mongodb.Mongo" ref="mongo"/>
-        <constructor-arg type="java.lang.String" value="${leidos.ode.mongo.repository.odelogs}"/>
-    </bean>
-
     <bean id="odeLogger" class="com.leidos.ode.logging.ODELogger">
         <property name="mongoTemplate" ref="mongoTemplate"/>
     </bean>
@@ -106,7 +101,6 @@
     <bean id="bsmDataSource" class="com.leidos.ode.collector.datasource.UDPPushDataSource">
         <property name="hostAddress" value="${leidos.ode.emulator.bsm.hostAddress}"/>
         <property name="hostPort" value="${leidos.ode.emulator.bsm.hostPort}"/>
-        <property name="odeLogger" ref="ODELogger"/>
     </bean>
 
     <bean id="bsmCollector" class="com.leidos.ode.collector.ODECollector">
@@ -183,14 +177,14 @@
         <property name="odeLogger" ref="odeLogger"/>
     </bean>
 
-    <bean id="ritisSpeedSubAgent" parent="subscribeODEAgent">
+    <bean id="ritisSpeedSubAgent" parent="basicRITISAgent">
         <property name="registration" ref="ritisSpeedSubRegistration"/>
         <property name="sanitizer" ref="ritisSpeedSanitizer"/>
         <property name="dataTarget" ref="ritisSpeedDataTarget"/>
         <property name="registrationRequest" ref="ritisSpeedSubRegistrationRequest"/>
     </bean>
 
-    <bean id="ritisWeatherSubAgent" parent="subscribeODEAgent">
+    <bean id="ritisWeatherSubAgent" parent="basicRITISAgent">
         <property name="registration" ref="ritisWeatherSubRegistration"/>
         <property name="dataTarget" ref="ritisWeatherDataTarget"/>
         <property name="registrationRequest" ref="ritisWeatherSubRegistrationRequest"/>
@@ -324,6 +318,8 @@
         <property name="sanitizer" ref="vdotSpeedSanitizer"/>
         <property name="dataTarget" ref="vdotSpeedDataTarget"/>
         <property name="registrationRequest" ref="vdotSpeedSubRegistrationRequest"/>
+        <property name="odeLogger" ref="odeLogger"/>
+
     </bean>
 
     <bean id="vdotTravelTimeSubAgent" parent="subscribeODEAgent">
