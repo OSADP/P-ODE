@@ -42,13 +42,7 @@
         <constructor-arg type="java.lang.String" value="${leidos.ode.mongo.repository.odelogs}"/>
     </bean>
 
-    <bean id="ODELogger" class="com.leidos.ode.logging.ODELogger">
-        <property name="mongoTemplate" ref="mongoTemplate"/>
-    </bean>
-
-    <bean id="SubscribeODEAgent" class="com.leidos.ode.agent.BasicODEAgent"/>
-
-    <bean id="odeLogger" class="com.leidos.ode.logging.ODELogger">
+    <bean id="odeLogger" class="com.leidos.ode.logging.ODELogger" scope="prototype">
         <property name="mongoTemplate" ref="mongoTemplate"/>
     </bean>
 
@@ -110,10 +104,6 @@
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~RITIS Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-
-    <bean id="RITISSpeedLogger" class="com.leidos.ode.logging.ODELogger">
-        <property name="mongoTemplate" ref="mongoTemplate"/>
-    </bean>
 
     <bean id="ritisSpeedSubRegistration" class="com.leidos.ode.agent.registration.BasicODERegistration">
         <property name="registrationBaseUrl" value="${leidos.ode.reg.baseurl}"/>
@@ -178,7 +168,7 @@
     <bean id="basicRITISAgent" parent="subscribeODEAgent">
         <property name="parser" ref="ritisParser"/>
         <property name="sanitizer" ref="passthroughSanitizer"/>
-        <property name="odeLogger" ref="RITISSpeedLogger"/>
+        <property name="odeLogger" ref="odeLogger"/>
     </bean>
 
     <bean id="ritisSpeedSubAgent" parent="basicRITISAgent">
@@ -218,9 +208,6 @@
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~VDOT Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-    <bean id="VDOTSpeedLogger" class="com.leidos.ode.logging.ODELogger">
-        <property name="mongoTemplate" ref="mongoTemplate"/>
-    </bean>
 
     <bean id="vdotWeatherSubRegistration" class="com.leidos.ode.agent.registration.BasicODERegistration">
         <property name="registrationBaseUrl" value="${leidos.ode.reg.baseurl}"/>
@@ -325,7 +312,7 @@
         <property name="sanitizer" ref="vdotSpeedSanitizer"/>
         <property name="dataTarget" ref="vdotSpeedDataTarget"/>
         <property name="registrationRequest" ref="vdotSpeedSubRegistrationRequest"/>
-        <property name="odeLogger" ref="VDOTSpeedLogger"/>
+        <property name="odeLogger" ref="odeLogger"/>
 
     </bean>
 

@@ -65,7 +65,7 @@
         <constructor-arg type="java.lang.String" value="${leidos.ode.mongo.repository.odelogs}"/>
     </bean>
 
-    <bean id="odeLogger" class="com.leidos.ode.logging.ODELogger">
+    <bean id="odeLogger" class="com.leidos.ode.logging.ODELogger" scope="prototype">
         <property name="mongoTemplate" ref="mongoTemplate"/>
     </bean>
 
@@ -83,7 +83,7 @@
 
     <bean id="queueTarget" class="com.leidos.ode.agent.datatarget.ODEQueueTarget"/>
 
-    <bean id="restTarget" class="com.leidos.ode.agent.datatarget.ODERestTarget"/>
+    <bean id="restTarget" class="com.leidos.ode.agent.datatarget.ODERestTarget" scope="prototype"/>
 
     <bean id="passthroughSanitizer" class="com.leidos.ode.agent.sanitizer.PassthroughSanitizer"/>
 
@@ -203,14 +203,13 @@
     <bean id="ritisWeatherAgent" parent="basicRITISAgent">
         <property name="registrationRequest" ref="ritisWeatherPubRegistrationRequest"/>
     </bean>
-    <bean id="RITISSpeedRestTarget" class="com.leidos.ode.agent.datatarget.ODERestTarget"/>
 
     <bean id="ritisSpeedAgent" parent="basicRITISAgent">
         <property name="registrationRequest" ref="ritisSpeedPubRegistrationRequest"/>
-        <property name="dataTarget" ref="RITISSpeedRestTarget"/>
+        <property name="dataTarget" ref="restTarget"/>
     </bean>
 
-    <bean id="basicRITISDataSource" class="com.leidos.ode.collector.RITISDataSource">
+    <bean id="basicRITISDataSource" class="com.leidos.ode.collector.RITISDataSource" abstract="true">
         <property name="hostProtocol" value="${leidos.ode.ritis.protocol}"/>
         <property name="hostAddress" value="${leidos.ode.ritis.sourceaddress}"/>
         <property name="baseUrl" value="${leidos.ode.ritis.baseurl}"/>

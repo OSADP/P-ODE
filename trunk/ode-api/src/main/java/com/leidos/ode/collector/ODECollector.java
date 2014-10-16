@@ -1,35 +1,20 @@
 package com.leidos.ode.collector;
 
 import com.leidos.ode.agent.BasicODEAgent;
-import com.leidos.ode.agent.ODEAgent.MessageListener;
+import com.leidos.ode.agent.ODEAgent;
 import com.leidos.ode.agent.datatarget.ODEDataTarget.DataTargetException;
 import com.leidos.ode.collector.datasource.CollectorDataSource;
 import com.leidos.ode.collector.datasource.CollectorDataSource.CollectorDataSourceListener;
 import com.leidos.ode.collector.datasource.CollectorDataSource.DataSourceException;
 import org.apache.log4j.Logger;
 
-import javax.annotation.PostConstruct;
-
-public class ODECollector {
+public class ODECollector implements CollectorDataSourceListener {
 
     private final String TAG = getClass().getSimpleName();
     private Logger logger = Logger.getLogger(TAG);
     private BasicODEAgent agent;
     private CollectorDataSource dataSource;
-    private CollectorDataSourceListener odeCollectorDataSourceListener;
-    private MessageListener messageListener;
-
-    @PostConstruct
-    private void initialize() {
-        odeCollectorDataSourceListener = new CollectorDataSourceListener() {
-            @Override
-            public void onDataReceived(byte[] receivedData) {
-                if (getAgent() != null) {
-                    getAgent().processMessage(receivedData);
-                }
-            }
-        };
-    }
+    private ODEAgent.MessageListener messageListener;
 
     /**
      * Starts the collector. Data callbacks are only available to the collector.
@@ -48,16 +33,16 @@ public class ODECollector {
      * @throws DataSourceException
      * @throws DataTargetException
      */
-    public void startUp(MessageListener messageListener) throws DataSourceException, DataTargetException {
+    public void startUp(ODEAgent.MessageListener messageListener) throws DataSourceException, DataTargetException {
         this.messageListener = messageListener;
         startCollector();
     }
 
-    private void startCollector() throws DataSourceException, DataTargetException {
+    protected void startCollector() throws DataSourceException, DataTargetException {
         if (getAgent() != null) {
             getAgent().startUp(messageListener);
             if (getDataSource() != null) {
-                getDataSource().startDataSource(odeCollectorDataSourceListener);
+                getDataSource().startDataSource();
                 getLogger().debug("Started collector.");
             } else {
                 getLogger().error("Unable to start collector. Data source is null!");
@@ -94,4 +79,10 @@ public class ODECollector {
         return logger;
     }
 
+    @Override
+    public void onDataReceived(byte[] receivedData) {
+        if (getAgent() != null) {
+            getAgent().processMessage(receivedData);
+        }
+    }
 }

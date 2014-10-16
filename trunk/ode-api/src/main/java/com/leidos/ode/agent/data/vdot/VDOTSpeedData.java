@@ -1,11 +1,10 @@
 package com.leidos.ode.agent.data.vdot;
 
-import com.leidos.ode.agent.data.AgentFormattedMessage;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,11 +14,11 @@ import javax.xml.bind.annotation.XmlRootElement;
  * To change this template use File | Settings | File Templates.
  */
 @XmlRootElement
-public class VDOTSpeedData  implements Serializable{
+public class VDOTSpeedData implements Serializable {
 
     private List<VDOTSpeedDataElement> vdotSpeedDataElements;
 
-    public VDOTSpeedData(){
+    public VDOTSpeedData() {
         vdotSpeedDataElements = new ArrayList<VDOTSpeedDataElement>();
     }
 

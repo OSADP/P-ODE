@@ -13,7 +13,7 @@ public class UDPPushDataSource extends PushDataSource {
     private DatagramSocket datagramSocket;
 
     @Override
-    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) throws DataSourceException {
+    public void startDataSource() throws DataSourceException {
         try {
             InetAddress tmpAddress = InetAddress.getByName(getHostAddress());
             getLogger().info("TMP Host Address: " + tmpAddress.getHostAddress());
@@ -25,7 +25,7 @@ public class UDPPushDataSource extends PushDataSource {
             getLogger().info("Connecting datagram socket on port: " + getHostPort());
             datagramSocket = new DatagramSocket(getHostPort(), address);
             datagramSocket.setSoTimeout(10000);
-            executeDataSourceThread(collectorDataSourceListener);
+            executeDataSourceThread();
         } catch (UnknownHostException e) {
             throw new DataSourceException(e.getLocalizedMessage());
         } catch (SocketException e) {
@@ -34,7 +34,7 @@ public class UDPPushDataSource extends PushDataSource {
     }
 
     @Override
-    protected byte[] pollDataSource() {
+    public byte[] pollDataSource() {
         try {
             byte[] receiveData = new byte[75000];
             DatagramPacket packet = new DatagramPacket(receiveData, receiveData.length);

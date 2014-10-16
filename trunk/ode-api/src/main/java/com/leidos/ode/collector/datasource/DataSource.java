@@ -21,6 +21,7 @@ public abstract class DataSource implements CollectorDataSource {
     private String password;
     private boolean interrupted;
     private Thread dataSourceThread;
+    private CollectorDataSourceListener collectorDataSourceListener;
 
     public String getHostProtocol() {
         return hostProtocol;
@@ -62,12 +63,25 @@ public abstract class DataSource implements CollectorDataSource {
         this.password = password;
     }
 
-    private boolean isInterrupted() {
+    protected boolean isInterrupted() {
         return interrupted;
+    }
+
+    public CollectorDataSourceListener getCollectorDataSourceListener() {
+        return collectorDataSourceListener;
+    }
+
+    public void setCollectorDataSourceListener(CollectorDataSourceListener collectorDataSourceListener) {
+        if (getCollectorDataSourceListener() == null) {
+            this.collectorDataSourceListener = collectorDataSourceListener;
+        } else {
+            getLogger().warn("Cannot set listener. Listener has already been set for this data source.");
+        }
     }
 
     @Override
     public void stopDataSource() {
+        interrupted = true;
         stopDataSourceThread();
     }
 
@@ -79,7 +93,7 @@ public abstract class DataSource implements CollectorDataSource {
      *
      * @return the data from the source
      */
-    protected abstract byte[] pollDataSource();
+    public abstract byte[] pollDataSource();
 
     /**
      * Returns logger for the data source.
@@ -87,19 +101,18 @@ public abstract class DataSource implements CollectorDataSource {
      * @return
      */
     protected abstract Logger getLogger();
-    
+
     protected abstract void cleanUpConnections();
-    
+
     /**
      * Creates a new DataSource thread for retrieving data from the source;
      * then executes the thread. Only one thread per DataSource is allowed. Asynchronously
      * sends received data to the specified listener.
      *
-     * @param collectorDataSourceListener the listener for data received
      */
-    protected final void executeDataSourceThread(CollectorDataSourceListener collectorDataSourceListener) {
+    protected final void executeDataSourceThread() {
         stopDataSourceThread();
-        dataSourceThread = new Thread(new DataSourceRunnable(collectorDataSourceListener));
+        dataSourceThread = new Thread(new DataSourceRunnable(getCollectorDataSourceListener()));
         interrupted = false;
         dataSourceThread.start();
         logger.debug("Started data source thread.");
@@ -111,7 +124,6 @@ public abstract class DataSource implements CollectorDataSource {
     private void stopDataSourceThread() {
         if (dataSourceThread != null) {
             logger.debug("Stopping data source thread.");
-            interrupted = true;
             dataSourceThread.interrupt();
             dataSourceThread = null;
         }

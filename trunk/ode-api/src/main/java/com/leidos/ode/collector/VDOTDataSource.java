@@ -33,8 +33,8 @@ public class VDOTDataSource extends RestPullDataSource {
     private Header firstHeader;//Necessary to keep track of for Digest authentication
 
     @Override
-    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) throws DataSourceException {
-        super.startDataSource(collectorDataSourceListener);
+    public void startDataSource() throws DataSourceException {
+        super.startDataSource();
         try {
             CloseableHttpResponse closeableHttpResponse = getHttpClient().execute(getHttpGet());
 
@@ -45,7 +45,7 @@ public class VDOTDataSource extends RestPullDataSource {
                 firstHeader = closeableHttpResponse.getFirstHeader(AUTH.WWW_AUTH);
 //                getLogger().debug("authHeader: " + firstHeader);
                 closeableHttpResponse.close();
-                executeDataSourceThread(collectorDataSourceListener);
+                executeDataSourceThread();
             }
         } catch (ClientProtocolException e) {
             getLogger().error(e.getLocalizedMessage());
@@ -55,7 +55,7 @@ public class VDOTDataSource extends RestPullDataSource {
     }
 
     @Override
-    protected byte[] pollDataSource() {
+    public byte[] pollDataSource() {
         try {
             DigestScheme digestScheme = new DigestScheme();
             digestScheme.processChallenge(firstHeader);

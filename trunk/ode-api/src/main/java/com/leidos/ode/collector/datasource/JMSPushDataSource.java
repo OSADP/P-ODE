@@ -16,7 +16,7 @@ public class JMSPushDataSource extends PushDataSource implements ExceptionListen
     private Connection connection;
     private MessageConsumer consumer;
 
-    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) throws DataSourceException {
+    public void startDataSource() throws DataSourceException {
         try {
 
 //            Properties env = new Properties();
@@ -73,7 +73,7 @@ public class JMSPushDataSource extends PushDataSource implements ExceptionListen
     }
 
     @Override
-    protected byte[] pollDataSource() {
+    public byte[] pollDataSource() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

@@ -16,32 +16,34 @@ import java.io.IOException;
  *
  * @author lamde
  */
-public class RITISDataSource extends RestPullDataSource {
+public abstract class RITISDataSource extends RestPullDataSource {
 
     private final String TAG = getClass().getSimpleName();
     private Logger logger = Logger.getLogger(TAG);
     private String apiKey;
 
     @Override
-    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) throws DataSourceException {
-        super.startDataSource(collectorDataSourceListener);
+    public void startDataSource() throws DataSourceException {
+        super.startDataSource();
+        /* The following line of code is @Deprecated. Due to the request interval
+        restriction imposed by RITIS, each RITISDataSource is no longer responsible
+        for its own polling
         executeDataSourceThread(collectorDataSourceListener);
+        */
     }
 
     @Override
-    protected byte[] pollDataSource() {
+    public byte[] pollDataSource() {
         try {
+            logger.debug("Polling data source for feed: '" + getFeedName() + "'.");
             CloseableHttpResponse closeableHttpResponse = getHttpClient().execute(getHttpGet());
             HttpEntity responseEntity = closeableHttpResponse.getEntity();
             byte[] responseBytes = EntityUtils.toByteArray(responseEntity);
             EntityUtils.consume(responseEntity);
-            Thread.sleep(getRequestLimit());
             return responseBytes;
         } catch (ClientProtocolException e) {
             getLogger().error(e.getLocalizedMessage());
         } catch (IOException e) {
-            getLogger().error(e.getLocalizedMessage());
-        } catch (InterruptedException e) {
             getLogger().error(e.getLocalizedMessage());
         }
         return null;

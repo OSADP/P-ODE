@@ -15,10 +15,38 @@ package com.leidos.ode.util;
  * @author cassadyja, lamde
  */
 public enum ODEMessageType {
-    VDOTWeather,
-    VDOTSpeed,
-    VDOTTravelTime,
-    RITISSpeed,
-    RITISWeather,
-    BSM
+    VDOTWeather("VDOT", false),
+    VDOTSpeed("VDOT", false),
+    VDOTTravelTime("VDOT", false),
+    RITISSpeed("RITIS", true),
+    RITISWeather("RITIS", true),
+    BSM("BSM", false);
+    private String dataSource;
+    private boolean isHandleable;
+
+    private ODEMessageType(String dataSource, boolean isHandleable) {
+        this.dataSource = dataSource;
+        this.isHandleable = isHandleable;
+    }
+
+    /**
+     * Returns this message type's data source. Meaning,
+     * the provider of this message type.
+     *
+     * @return the data source of this message type
+     */
+    public String dataSource() {
+        return dataSource;
+    }
+
+    /**
+     * Returns whether this message type is "handleable". Meaning,
+     * the type belongs to a DataSource that requires a handler for
+     * more than one data type request.
+     *
+     * @return true if this message type is handleable
+     */
+    public boolean isHandleable() {
+        return isHandleable;
+    }
 }

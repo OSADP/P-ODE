@@ -3,7 +3,6 @@ package com.leidos.ode.collector.datasource;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.log4j.Logger;
 
 import java.io.IOException;
 
@@ -16,8 +15,6 @@ import java.io.IOException;
  */
 public abstract class RestPullDataSource extends PullDataSource {
 
-    private final String TAG = getClass().getSimpleName();
-    private Logger logger = Logger.getLogger(TAG);
     private String baseUrl;
     private String feedName;
     private String requestString;
@@ -27,7 +24,7 @@ public abstract class RestPullDataSource extends PullDataSource {
     private String wfsFilter;
 
     @Override
-    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) throws DataSourceException {
+    public void startDataSource() throws DataSourceException {
         initializeHttpResources();
     }
 
@@ -44,10 +41,14 @@ public abstract class RestPullDataSource extends PullDataSource {
     }
 
     private void initializeHttpResources() {
-        String requestString = buildRequestString();
-        httpClient = HttpClientBuilder.create().build();
-        httpGet = new HttpGet(requestString);
-        logger.debug("Getting data from " + requestString);
+        if (httpClient == null) {
+            String requestString = buildRequestString();
+            httpClient = HttpClientBuilder.create().build();
+            httpGet = new HttpGet(requestString);
+            getLogger().debug("Getting data from " + requestString);
+        } else {
+            getLogger().warn("Cannot initialize http resources. This can only be done once.");
+        }
     }
 
     private String buildRequestString() {
@@ -67,8 +68,32 @@ public abstract class RestPullDataSource extends PullDataSource {
         return httpClient;
     }
 
+    public final String getBaseUrl() {
+        return baseUrl;
+    }
+
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
+
+    public final String getFeedName() {
+        return feedName;
+    }
+
+    public void setFeedName(String feedName) {
+        this.feedName = feedName;
+    }
+
     protected final HttpGet getHttpGet() {
         return httpGet;
+    }
+
+    public final int getRequestLimit() {
+        return requestLimit;
+    }
+
+    public void setRequestLimit(String requestLimit) {
+        this.requestLimit = Integer.parseInt(requestLimit);
     }
 
     protected abstract String buildWfsFilter();
@@ -85,45 +110,6 @@ public abstract class RestPullDataSource extends PullDataSource {
             stringBuilder.append(wfsFilterParam);
         }
         this.wfsFilter = stringBuilder.toString();
-    }
-
-    public final String getBaseUrl() {
-        return baseUrl;
-    }
-
-    /**
-     * Sets the base url for this data source.
-     *
-     * @param baseUrl
-     */
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
-    }
-
-    public final String getFeedName() {
-        return feedName;
-    }
-
-    /**
-     * Sets the feed name for this data source.
-     *
-     * @param feedName
-     */
-    public void setFeedName(String feedName) {
-        this.feedName = feedName;
-    }
-
-    public final int getRequestLimit() {
-        return requestLimit;
-    }
-
-    /**
-     * Sets the request interval limit for this data source.
-     *
-     * @param requestLimit
-     */
-    public void setRequestLimit(String requestLimit) {
-        this.requestLimit = Integer.parseInt(requestLimit);
     }
 }
 
