@@ -24,7 +24,7 @@ public abstract class RestPullDataSource extends PullDataSource {
     private String wfsFilter;
 
     @Override
-    public void startDataSource() throws DataSourceException {
+    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) throws DataSourceException {
         initializeHttpResources();
     }
 

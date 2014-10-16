@@ -9,5 +9,4 @@ package com.leidos.ode.collector.datasource;
  * @author cassadyja
  */
 public abstract class PullDataSource extends DataSource {
-
 }

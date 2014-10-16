@@ -209,7 +209,7 @@
         <property name="dataTarget" ref="restTarget"/>
     </bean>
 
-    <bean id="basicRITISDataSource" class="com.leidos.ode.collector.RITISDataSource" abstract="true">
+    <bean id="basicRITISDataSource" class="com.leidos.ode.collector.RITISDataSource">
         <property name="hostProtocol" value="${leidos.ode.ritis.protocol}"/>
         <property name="hostAddress" value="${leidos.ode.ritis.sourceaddress}"/>
         <property name="baseUrl" value="${leidos.ode.ritis.baseurl}"/>

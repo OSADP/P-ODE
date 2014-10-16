@@ -19,10 +19,10 @@ public class HandleableRestPullDataSource extends RestPullDataSource {
     private int index;
 
     @Override
-    public void startDataSource() throws DataSourceException {
+    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) throws DataSourceException {
         if (getRestPullDataSources() != null && !getRestPullDataSources().isEmpty()) {
             for (RestPullDataSource restPullDataSource : getRestPullDataSources()) {
-                restPullDataSource.startDataSource();
+                restPullDataSource.startDataSource(null);
             }
         }
         /*Each data source in the list is responsible for its own listener, so execute

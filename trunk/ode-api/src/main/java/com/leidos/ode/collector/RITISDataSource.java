@@ -16,15 +16,15 @@ import java.io.IOException;
  *
  * @author lamde
  */
-public abstract class RITISDataSource extends RestPullDataSource {
+public class RITISDataSource extends RestPullDataSource {
 
     private final String TAG = getClass().getSimpleName();
     private Logger logger = Logger.getLogger(TAG);
     private String apiKey;
 
     @Override
-    public void startDataSource() throws DataSourceException {
-        super.startDataSource();
+    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) throws DataSourceException {
+        super.startDataSource(collectorDataSourceListener);
         /* The following line of code is @Deprecated. Due to the request interval
         restriction imposed by RITIS, each RITISDataSource is no longer responsible
         for its own polling

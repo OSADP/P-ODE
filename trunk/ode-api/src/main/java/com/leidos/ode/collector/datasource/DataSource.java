@@ -67,7 +67,7 @@ public abstract class DataSource implements CollectorDataSource {
         return interrupted;
     }
 
-    public CollectorDataSourceListener getCollectorDataSourceListener() {
+    protected CollectorDataSourceListener getCollectorDataSourceListener() {
         return collectorDataSourceListener;
     }
 
@@ -108,7 +108,6 @@ public abstract class DataSource implements CollectorDataSource {
      * Creates a new DataSource thread for retrieving data from the source;
      * then executes the thread. Only one thread per DataSource is allowed. Asynchronously
      * sends received data to the specified listener.
-     *
      */
     protected final void executeDataSourceThread() {
         stopDataSourceThread();

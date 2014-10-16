@@ -283,7 +283,10 @@ public class CollectorRunner extends QuartzJobBean {
                         //Determine if the data source we just stored is of type RestPullDataSource, since this is the only data source that can be handled
                         if (collectorDataSource instanceof RestPullDataSource) {
                             RestPullDataSource restPullDataSource = (RestPullDataSource) collectorDataSource;
-                            //Set the listener of this data source to the Collector it belongs to
+                            /*We must set the listener of this data source to the ODECollector it belongs to, since this
+                            CollectorRunner does not use the ODECollector start up method that requires a listener
+                            parameter.
+                             */
                             restPullDataSource.setCollectorDataSourceListener(entry.getKey());
                             //Add the data source to the list of RestPullDataSources
                             restPullDataSources.add(restPullDataSource);

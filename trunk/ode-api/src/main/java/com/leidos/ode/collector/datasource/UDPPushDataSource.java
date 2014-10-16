@@ -13,7 +13,7 @@ public class UDPPushDataSource extends PushDataSource {
     private DatagramSocket datagramSocket;
 
     @Override
-    public void startDataSource() throws DataSourceException {
+    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) throws DataSourceException {
         try {
             InetAddress tmpAddress = InetAddress.getByName(getHostAddress());
             getLogger().info("TMP Host Address: " + tmpAddress.getHostAddress());
