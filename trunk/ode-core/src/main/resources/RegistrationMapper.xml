@@ -25,7 +25,7 @@
         <result property="queueConnectionFactory" column="QUEUE_CONN_FACT"/>
         <result property="targetAddress" column="TARGET_ADDRESS"/>
         <result property="targetPort" column="TARGET_PORT"/>
-        <result property="wsHost" column="WS_URL"/>
+        <result property="wsHost" column="WS_HOST"/>
         <result property="wsURL" column="WS_URL"/>
     </resultMap>
 
@@ -48,7 +48,7 @@
 	</select>
 
 
-    <select id="selectQueueForRegistration" parameterType="RegistrationInformation" resultMap="QueueInfoMapper">
+    <select id="selectQueueForRegistration" parameterType="ODERegistrationRequest" resultMap="QueueInfoMapper">
 		select ID, MSG_TYPE, REGION, QUEUE_NAME, QUEUE_CONN_FACT, TARGET_ADDRESS, TARGET_PORT,WS_HOST,WS_URL
 		from MSG_QUEUE
 		where MSG_TYPE = #{messageType}
@@ -56,7 +56,7 @@
 	</select>
 
     <insert id="insertRegistration" parameterType="RDEArchiveInfo">
-        <selectKey resultType="int" keyProperty="id" order="AFTER">
+        <selectKey resultType="int" keyProperty="registrationId" order="AFTER">
             SELECT LAST_INSERT_ID();
         </selectKey>
         insert into ODE_REGISTRATION (AGENT_ID, REG_TYPE, REGION, MSG_TYPE, START_DATE, END_DATE, SUB_RECEIVE_ADDR,

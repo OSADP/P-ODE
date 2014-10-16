@@ -175,6 +175,7 @@ public class ODEEmulator implements EmulatorDataListener {
 
     public void vdotSpeedDataReceived(ODEAgentMessage odeAgentMessage) {
         Object data = odeAgentMessage.getFormattedMessage();
+        
         VDOTSpeedData eastData = getVDOTSpeedDataAverage(data, "E");
         VDOTSpeedData westData = getVDOTSpeedDataAverage(data, "W");
         //TODO set values to current data.
@@ -187,7 +188,7 @@ public class ODEEmulator implements EmulatorDataListener {
         int count = 0;
 
         VDOTSpeedData vdotSpeedData = (VDOTSpeedData) data;
-
+        System.out.println("Emulator VDOT Speed data list Size: "+vdotSpeedData.getVdotSpeedDataElements().size());
         for (VDOTSpeedData.VDOTSpeedDataElement vdotSpeedDataElement : vdotSpeedData.getVdotSpeedDataElements()) {
             if (direction.equals(vdotSpeedDataElement.getLaneDirection())) {
                 avgSpeed += vdotSpeedDataElement.getSpeed();
@@ -200,6 +201,7 @@ public class ODEEmulator implements EmulatorDataListener {
         VDOTSpeedData.VDOTSpeedDataElement vdotSpeedDataElement = new VDOTSpeedData.VDOTSpeedDataElement();
         vdotSpeedDataElement.setLaneDirection(direction);
         vdotSpeedDataElement.setSpeed(avgSpeed);
+        returnVDOTSpeedData.getVdotSpeedDataElements().add(vdotSpeedDataElement);
         return returnVDOTSpeedData;
     }
 

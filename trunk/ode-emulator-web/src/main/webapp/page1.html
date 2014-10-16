@@ -17,6 +17,65 @@
         <!--[if lt IE 9]>
             <script src="js/vendor/html5-3.6-respond-1.1.0.min.js"></script>
         <![endif]-->
+        <script src="js/media/js/jquery.js" type="text/javascript"></script>
+        <script src="js/jquery-ui-1.9.2.custom/js/jquery-ui-1_9_2_custom.js" type="text/javascript"></script>
+        
+        <script type="text/javascript">
+            $(document).ready(function() {
+                 $.ajax({
+                    url:  'resources/getCurrentData',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(srvResp){
+//                        $("#").html();
+                        $("#ritisEastOcc").html();
+                        $("#ritisEastSpeed").html();
+                        $("#ritisEastTravel").html();
+                        $("#ritisEastVol").html();
+                        $("#ritisEastWeather").html();
+                        
+                        $("#vdotEastOcc").html();
+                        $("#vdotEastSpeed").html();
+                        $("#vdotEastTravel").html();
+                        $("#vdotEastVol").html();
+                        
+                        $("#bsmEast1").html();
+                        $("#bsmEast2").html();
+                        $("#bsmEast3").html();
+                        
+                        $("#blueFaxEast").html();
+                        
+                        
+                        $("#ritisWestOcc").html();
+                        $("#ritisWestSpeed").html();
+                        $("#ritisWestTravel").html();
+                        $("#ritisWestVol").html();
+                        $("#ritisWestWeather").html();
+                        
+                        $("#vdotWestOcc").html();
+                        $("#vdotWestSpeed").html();
+                        $("#vdotWestTravel").html();
+                        $("#vdotWestVol").html();
+                        
+                        $("#bsmWest1").html();
+                        $("#bsmWest2").html();
+                        $("#bsmWest3").html();
+                        
+                        $("#blueFaxWest").html();
+                        
+                        
+                        
+//                        var boxes = "";
+//                        $.each(srvResp.collectors, function(index, name){
+//                            boxes += "<input type='checkbox' id='collectors' value='"+name+"' name='"+name+"'/>"+name+"<br/>";
+//                            
+//                        });
+//                        boxes += "<input type='button' id='submit' value='Start' name='Start' onClick='submitForm()'/>"+name+"<br/>";
+//                        $("#checkboxDiv").html(boxes);
+                    }
+                });
+            });
+        </script>        
     </head>
     <body>
       <!--[if lt IE 9]>
@@ -43,23 +102,23 @@
               <div class="col-md-8">
                 <div>
                   <strong>Volume:</strong>
-                  <span id="">Test Text</span>
+                  <span id="ritisEastVol">Test Text</span>
                 </div>
                 <div class="even">
                   <strong>Occupancy:</strong>
-                  <span id=""></span>
+                  <span id="ritisEastOcc"></span>
                 </div>
                 <div>
                   <strong>Speed:</strong>
-                  <span id=""></span>
+                  <span id="ritisEastSpeed"></span>
                 </div>
                 <div class="even">
                   <strong>Travel Time:</strong>
-                  <span id=""></span>
+                  <span id="ritisEastTravel"></span>
                 </div>
                 <div>
                   <strong>Weather:</strong>
-                  <span id=""></span>
+                  <span id="ritisEastWeather"></span>
                 </div>
               </div>
             </div>
@@ -71,19 +130,19 @@
               <div class="col-md-8 crimson">
                 <div class="even">
                   <strong>Volume:</strong>
-                  <span id=""></span>
+                  <span id="vdotEastVol"></span>
                 </div>
                 <div>
                   <strong>Occupancy:</strong>
-                  <span id=""></span>
+                  <span id="vdotEastOcc"></span>
                 </div>
                 <div class="even">
                   <strong>Speed:</strong>
-                  <span id=""></span>
+                  <span id="vdotEastSpeed"></span>
                 </div>
                 <div>
                   <strong>Travel Time:</strong>
-                  <span id=""></span>
+                  <span id="vdotEastTravel"></span>
                 </div>
               </div>
             </div>
@@ -95,15 +154,15 @@
               <div class="col-md-8 golden">
                 <div class="even">
                   <strong>RSU1:</strong>
-                  <span id=""></span>
+                  <span id="bsmEast1"></span>
                 </div>
                 <div>
                   <strong>RSU2:</strong>
-                  <span id=""></span>
+                  <span id="bsmEast2"></span>
                 </div>
                 <div class="even">
                   <strong>RSU3:</strong>
-                  <span id=""></span>
+                  <span id="bsmEast3"></span>
                 </div>
               </div>
             </div>
@@ -115,7 +174,7 @@
               <div class="col-md-8 sage">
                 <div>
                   <strong>Travel Time:</strong>
-                  <span id=""></span>
+                  <span id="blueFaxEast"></span>
                 </div>
               </div>
             </div>
@@ -131,23 +190,23 @@
               <div class="col-md-8">
                 <div>
                   <strong>Volume:</strong>
-                  <span id=""></span>
+                  <span id="ritisWestVol"></span>
                 </div>
                 <div class="even">
                   <strong>Occupancy:</strong>
-                  <span id=""></span>
+                  <span id="ritisWestOcc"></span>
                 </div>
                 <div>
                   <strong>Speed:</strong>
-                  <span id=""></span>
+                  <span id="ritisWestSpeed"></span>
                 </div>
                 <div class="even">
                   <strong>Travel Time:</strong>
-                  <span id=""></span>
+                  <span id="ritisWestTravel"></span>
                 </div>
                 <div>
                   <strong>Weather:</strong>
-                  <span id=""></span>
+                  <span id="ritisWestWeather"></span>
                 </div>
               </div>
             </div>
@@ -159,19 +218,19 @@
               <div class="col-md-8 crimson">
                 <div class="even">
                   <strong>Volume:</strong>
-                  <span id=""></span>
+                  <span id="vdotWestVol"></span>
                 </div>
                 <div>
                   <strong>Occupancy:</strong>
-                  <span id=""></span>
+                  <span id="vdotWestOcc"></span>
                 </div>
                 <div class="even">
                   <strong>Speed:</strong>
-                  <span id=""></span>
+                  <span id="vdotWestSpeed"></span>
                 </div>
                 <div>
                   <strong>Travel Time:</strong>
-                  <span id=""></span>
+                  <span id="vdotWestTravel"></span>
                 </div>
               </div>
             </div>
@@ -183,15 +242,15 @@
               <div class="col-md-8 golden">
                 <div class="even">
                   <strong>RSU1:</strong>
-                  <span id=""></span>
+                  <span id="bsmWest1"></span>
                 </div>
                 <div>
                   <strong>RSU2:</strong>
-                  <span id=""></span>
+                  <span id="bsmWest2"></span>
                 </div>
                 <div class="even">
                   <strong>RSU3:</strong>
-                  <span id=""></span>
+                  <span id="bmsWest3"></span>
                 </div>
               </div>
             </div>
@@ -203,7 +262,7 @@
               <div class="col-md-8 sage">
                 <div>
                   <strong>Travel Time:</strong>
-                  <span id=""></span>
+                  <span id="bluFaxWest"></span>
                 </div>
               </div>
             </div>

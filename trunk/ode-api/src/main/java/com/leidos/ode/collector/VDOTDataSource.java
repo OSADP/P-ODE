@@ -120,4 +120,9 @@ public class VDOTDataSource extends RestPullDataSource {
 //    private String getEmulatorPropertyNames() {
 //        return "orci:speed,orci:volume,orci:occupancy";
 //    }
+
+    @Override
+    protected void cleanUpConnections() {
+        
+    }
 }

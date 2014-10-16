@@ -17,7 +17,7 @@ public class PublicationRegistrationService {
     @Autowired
     private RegistrationDAO regDao;
 
-    @RequestMapping(value = "registerPublish", method = RequestMethod.POST)
+    @RequestMapping(value = "registerPublish", method = RequestMethod.POST, consumes  = "application/xml", produces = "application/xml")
     public
     @ResponseBody
     ODERegistrationResponse registerPublicationIntent(@RequestBody ODERegistrationRequest registrationRequest) {
@@ -43,7 +43,7 @@ public class PublicationRegistrationService {
         resp.setQueueName(qInfo.getQueueName());
         resp.setQueueHostURL(qInfo.getTargetAddress());
         resp.setQueueHostPort(qInfo.getTargetPort());
-        resp.setPublishWebServiceAddress(qInfo.getWsHost() + qInfo.getWsURL());
+        resp.setPublishWebServiceAddress(qInfo.getWsURL());
         return resp;
     }
 

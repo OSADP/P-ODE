@@ -1,8 +1,10 @@
 package com.leidos.ode.agent.data.vdot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,7 +13,8 @@ import java.util.List;
  * Time: 11:15 AM
  * To change this template use File | Settings | File Templates.
  */
-public class VDOTTravelTimeData {
+@XmlRootElement
+public class VDOTTravelTimeData  implements Serializable{
 
     private List<VDOTTravelTimeDataElement> vdotTravelTimeDataElements;
 

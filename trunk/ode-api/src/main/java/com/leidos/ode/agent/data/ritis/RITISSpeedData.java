@@ -1,5 +1,7 @@
 package com.leidos.ode.agent.data.ritis;
 
+import java.io.Serializable;
+import javax.xml.bind.annotation.XmlRootElement;
 import org.ritis.schema.tmdd_0_0_0.ZoneDetectorDataRITIS;
 
 /**
@@ -9,7 +11,8 @@ import org.ritis.schema.tmdd_0_0_0.ZoneDetectorDataRITIS;
  * Time: 11:15 AM
  * To change this template use File | Settings | File Templates.
  */
-public class RITISSpeedData {
+@XmlRootElement
+public class RITISSpeedData  implements Serializable{
 
     private ZoneDetectorDataRITIS zoneDetectorDataRITIS;
 

@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import org.apache.http.entity.ContentType;
 
 public class BasicODERegistration implements ODERegistration {
 
@@ -46,11 +48,16 @@ public class BasicODERegistration implements ODERegistration {
             marshaller.marshal(registrationRequest, stringWriter);
             httpClient = HttpClientBuilder.create().build();
             HttpPost httpPost = new HttpPost(getRegistrationUrl());
-            httpPost.addHeader("Content-Type", "application/xml");
+//            httpPost.addHeader("Content-Type", "application/xml");
+//            httpPost.addHeader("dataType", "application/xml");
+//            httpPost.addHeader("Accept", "application/xml");
+//            StringEntity entity = new StringEntity(stringWriter.getBuffer().toString(),ContentType.APPLICATION_XML);
             StringEntity entity = new StringEntity(stringWriter.getBuffer().toString());
+            entity.setContentType("application/xml");
+            
             httpPost.setEntity(entity);
             closeableHttpResponse = httpClient.execute(httpPost);
-
+            logger.debug(closeableHttpResponse.getStatusLine().getReasonPhrase());
             int statusCode = closeableHttpResponse.getStatusLine().getStatusCode();
             //If the request was unsuccessful return
             if (statusCode != HttpStatus.SC_OK) {

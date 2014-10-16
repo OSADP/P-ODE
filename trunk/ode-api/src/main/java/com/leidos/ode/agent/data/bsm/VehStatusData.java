@@ -2,10 +2,11 @@ package com.leidos.ode.agent.data.bsm;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.io.StringWriter;
 
 @XmlRootElement
-public class VehStatusData {
+public class VehStatusData  implements Serializable{
     private int bsmId;
     private int vehStatusLights;
     private int vehStatusLightBar;

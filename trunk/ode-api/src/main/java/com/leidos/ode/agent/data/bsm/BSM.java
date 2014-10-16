@@ -1,6 +1,6 @@
 package com.leidos.ode.agent.data.bsm;
 
-import com.leidos.ode.util.ODEMessageType;
+
 import org.bson.types.ObjectId;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -15,7 +16,7 @@ import java.util.Date;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class BSM {
+public class BSM  implements Serializable {
     @XmlTransient
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private ObjectId mongoid;

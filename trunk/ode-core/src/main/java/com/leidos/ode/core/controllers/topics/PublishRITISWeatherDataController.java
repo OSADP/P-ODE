@@ -2,6 +2,7 @@ package com.leidos.ode.core.controllers.topics;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
 import com.leidos.ode.core.controllers.PublishDataController;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +18,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 public class PublishRITISWeatherDataController extends PublishDataController {
-
+    @Value("${leidos.ode.publisher.topic.ritisweather}")
+    private String topicName;
+    
+    @Override
+    public String getTopicName() {
+        return topicName;
+    }
+    
+    
     @Override
     @RequestMapping(value = PublishEndpoints.RITIS_WEATHER, method = RequestMethod.POST)
     public @ResponseBody String publishData(@RequestBody ODEAgentMessage odeAgentMessage) {

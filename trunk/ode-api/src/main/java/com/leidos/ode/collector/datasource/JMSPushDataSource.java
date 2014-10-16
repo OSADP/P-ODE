@@ -81,4 +81,9 @@ public class JMSPushDataSource extends PushDataSource implements ExceptionListen
     protected Logger getLogger() {
         return logger;
     }
+
+    @Override
+    protected void cleanUpConnections() {
+        
+    }
 }

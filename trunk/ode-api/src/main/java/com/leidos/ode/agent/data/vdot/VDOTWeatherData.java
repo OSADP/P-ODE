@@ -1,7 +1,9 @@
 package com.leidos.ode.agent.data.vdot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,7 +13,8 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 //TODO Not sure at this point what the data looks like since the weather urls contain no data
-public class VDOTWeatherData {
+@XmlRootElement
+public class VDOTWeatherData  implements Serializable{
 
     private List<VDOTWeatherDataElement> vdotWeatherDataElements;
 

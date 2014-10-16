@@ -87,7 +87,9 @@ public abstract class DataSource implements CollectorDataSource {
      * @return
      */
     protected abstract Logger getLogger();
-
+    
+    protected abstract void cleanUpConnections();
+    
     /**
      * Creates a new DataSource thread for retrieving data from the source;
      * then executes the thread. Only one thread per DataSource is allowed. Asynchronously
@@ -143,6 +145,7 @@ public abstract class DataSource implements CollectorDataSource {
                     logger.debug("Data source response bytes was null!.");
                 }
             }
+            cleanUpConnections();
         }
     }
 }

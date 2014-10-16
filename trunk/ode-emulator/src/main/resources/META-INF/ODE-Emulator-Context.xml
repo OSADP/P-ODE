@@ -20,6 +20,7 @@
         <property name="locations">
             <list>
                 <value>classpath:META-INF/EmulatorContext-Dev.properties</value>
+                 <value>classpath:mongo.properties</value>
             </list>
         </property>
         <!-- This means don't blow up if a property is not set -->
@@ -35,6 +36,17 @@
     </bean>
 
     <mongo:mongo id="mongo" host="${leidos.ode.mongo.host}" port="${leidos.ode.mongo.port}"/>
+
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg type="com.mongodb.Mongo" ref="mongo"/>
+        <constructor-arg type="java.lang.String" value="${leidos.ode.mongo.repository.odelogs}"/>
+    </bean>
+
+    <bean id="ODELogger" class="com.leidos.ode.logging.ODELogger">
+        <property name="mongoTemplate" ref="mongoTemplate"/>
+    </bean>
+
+    <bean id="SubscribeODEAgent" class="com.leidos.ode.agent.BasicODEAgent"/>
 
     <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
         <constructor-arg type="com.mongodb.Mongo" ref="mongo"/>
@@ -94,6 +106,7 @@
     <bean id="bsmDataSource" class="com.leidos.ode.collector.datasource.UDPPushDataSource">
         <property name="hostAddress" value="${leidos.ode.emulator.bsm.hostAddress}"/>
         <property name="hostPort" value="${leidos.ode.emulator.bsm.hostPort}"/>
+        <property name="odeLogger" ref="ODELogger"/>
     </bean>
 
     <bean id="bsmCollector" class="com.leidos.ode.collector.ODECollector">

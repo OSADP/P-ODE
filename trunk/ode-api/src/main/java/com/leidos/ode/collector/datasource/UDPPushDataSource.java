@@ -62,4 +62,9 @@ public class UDPPushDataSource extends PushDataSource {
     protected Logger getLogger() {
         return logger;
     }
+
+    @Override
+    protected void cleanUpConnections() {
+        datagramSocket.close();
+    }
 }

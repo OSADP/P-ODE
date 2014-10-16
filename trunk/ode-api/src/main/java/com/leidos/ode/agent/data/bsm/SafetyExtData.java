@@ -1,12 +1,13 @@
 package com.leidos.ode.agent.data.bsm;
 
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.io.StringWriter;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class SafetyExtData {
+public class SafetyExtData  implements Serializable{
 	private int bsmId;
 	private Integer pathHistoryLength;
 	private Integer itemCount;

@@ -8,6 +8,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.util.Properties;
+import org.springframework.beans.factory.annotation.Value;
+
 
 public abstract class PublishDataController {
 
@@ -15,10 +17,16 @@ public abstract class PublishDataController {
     private Logger logger = Logger.getLogger(TAG);
     private Session session;
     private MessageProducer messageProducer;
-    private String hostAddress;
+//    private String hostAddress;
+//    private int hostPort;
+//    private String connectionFactoryName;
+    @Value("${leidos.ode.publisher.hostaddress}")
+    private  String hostAddress;
+    @Value("${leidos.ode.publisher.hostport}")
     private int hostPort;
+    @Value("${leidos.ode.publisher.connectionfactoryname}")
     private String connectionFactoryName;
-    private String topicName;
+    
 
     protected abstract String publishData(ODEAgentMessage odeAgentMessage);
 
@@ -28,9 +36,10 @@ public abstract class PublishDataController {
         return "OK";
     }
 
-    private void initTopicConnection() {
+    protected void initTopicConnection() {
         if (messageProducer == null) {
             try {
+                System.out.println("Looking up topic on host: "+getHostAddress());
                 Properties env = new Properties();
                 env.put(Context.SECURITY_PRINCIPAL, "admin");
                 env.put(Context.SECURITY_CREDENTIALS, "admin");
@@ -88,7 +97,7 @@ public abstract class PublishDataController {
         }
     }
 
-    private String getHostAddress() {
+    public String getHostAddress() {
         return hostAddress;
     }
 
@@ -96,7 +105,7 @@ public abstract class PublishDataController {
         this.hostAddress = hostAddress;
     }
 
-    private int getHostPort() {
+    public int getHostPort() {
         return hostPort;
     }
 
@@ -104,7 +113,7 @@ public abstract class PublishDataController {
         this.hostPort = hostPort;
     }
 
-    private String getConnectionFactoryName() {
+    public String getConnectionFactoryName() {
         return connectionFactoryName;
     }
 
@@ -112,13 +121,8 @@ public abstract class PublishDataController {
         this.connectionFactoryName = connectionFactoryName;
     }
 
-    private String getTopicName() {
-        return topicName;
-    }
+    public abstract String getTopicName() ;
 
-    public void setTopicName(String topicName) {
-        this.topicName = topicName;
-    }
 
     /**
      * Constants for Publish Controller endpoints.

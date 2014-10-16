@@ -1,9 +1,13 @@
 package com.leidos.ode.agent.data;
 
+import java.io.Serializable;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * @author cassadyja
  */
-public class AgentInfo {
+@XmlRootElement
+public class AgentInfo  implements Serializable{
     private int registrationId;
     private String messageType;
     private String region;

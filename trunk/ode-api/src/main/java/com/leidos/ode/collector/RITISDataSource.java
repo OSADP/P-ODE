@@ -117,4 +117,8 @@ public class RITISDataSource extends RestPullDataSource {
     protected Logger getLogger() {
         return logger;
     }
+
+    @Override
+    protected void cleanUpConnections() {
+    }
 }
