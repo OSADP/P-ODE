@@ -203,9 +203,11 @@
     <bean id="ritisWeatherAgent" parent="basicRITISAgent">
         <property name="registrationRequest" ref="ritisWeatherPubRegistrationRequest"/>
     </bean>
+    <bean id="RITISSpeedRestTarget" class="com.leidos.ode.agent.datatarget.ODERestTarget"/>
 
     <bean id="ritisSpeedAgent" parent="basicRITISAgent">
         <property name="registrationRequest" ref="ritisSpeedPubRegistrationRequest"/>
+        <property name="dataTarget" ref="RITISSpeedRestTarget"/>
     </bean>
 
     <bean id="basicRITISDataSource" class="com.leidos.ode.collector.RITISDataSource">

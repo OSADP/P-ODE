@@ -36,7 +36,7 @@ public class UDPPushDataSource extends PushDataSource {
     @Override
     protected byte[] pollDataSource() {
         try {
-            byte[] receiveData = new byte[16384];
+            byte[] receiveData = new byte[75000];
             DatagramPacket packet = new DatagramPacket(receiveData, receiveData.length);
             datagramSocket.receive(packet);
             if (packet.getLength() > 0) {

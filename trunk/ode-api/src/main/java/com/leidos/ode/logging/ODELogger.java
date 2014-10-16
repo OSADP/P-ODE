@@ -23,11 +23,11 @@ public final class ODELogger {
      */
     public void start(ODEStage odeStage, String messageId) throws ODELoggerException {
         Date startTime = new Date();
-        if (logBean == null) {
+//        if (logBean == null) {
             logBean = new LogBean(startTime, odeStage, messageId);
-        } else {
-            throw new ODELoggerException("Cannot start a log event when there is one that has not been finished.");
-        }
+//        } else {
+//            throw new ODELoggerException("Cannot start a log event when there is one that has not been finished.");
+//        }
     }
 
     /**

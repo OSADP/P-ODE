@@ -111,6 +111,10 @@
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~RITIS Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
+    <bean id="RITISSpeedLogger" class="com.leidos.ode.logging.ODELogger">
+        <property name="mongoTemplate" ref="mongoTemplate"/>
+    </bean>
+
     <bean id="ritisSpeedSubRegistration" class="com.leidos.ode.agent.registration.BasicODERegistration">
         <property name="registrationBaseUrl" value="${leidos.ode.reg.baseurl}"/>
         <property name="registrationEndpoint" value="${leidos.ode.reg.sub.endpoint}"/>
@@ -174,7 +178,7 @@
     <bean id="basicRITISAgent" parent="subscribeODEAgent">
         <property name="parser" ref="ritisParser"/>
         <property name="sanitizer" ref="passthroughSanitizer"/>
-        <property name="odeLogger" ref="odeLogger"/>
+        <property name="odeLogger" ref="RITISSpeedLogger"/>
     </bean>
 
     <bean id="ritisSpeedSubAgent" parent="basicRITISAgent">
@@ -214,6 +218,9 @@
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~VDOT Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <bean id="VDOTSpeedLogger" class="com.leidos.ode.logging.ODELogger">
+        <property name="mongoTemplate" ref="mongoTemplate"/>
+    </bean>
 
     <bean id="vdotWeatherSubRegistration" class="com.leidos.ode.agent.registration.BasicODERegistration">
         <property name="registrationBaseUrl" value="${leidos.ode.reg.baseurl}"/>
@@ -318,7 +325,7 @@
         <property name="sanitizer" ref="vdotSpeedSanitizer"/>
         <property name="dataTarget" ref="vdotSpeedDataTarget"/>
         <property name="registrationRequest" ref="vdotSpeedSubRegistrationRequest"/>
-        <property name="odeLogger" ref="odeLogger"/>
+        <property name="odeLogger" ref="VDOTSpeedLogger"/>
 
     </bean>
 

@@ -29,6 +29,7 @@ public class PublishRITISSpdVolOccDataController extends PublishDataController {
     @Override
     @RequestMapping(value = PublishEndpoints.RITIS_SPD_VOL_OCC, method = RequestMethod.POST)
     public @ResponseBody String publishData(@RequestBody ODEAgentMessage odeAgentMessage) {
+        System.out.println("RITIS Speed message received");
         return publish(odeAgentMessage);
     }
 }
