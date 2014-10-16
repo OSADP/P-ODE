@@ -33,7 +33,7 @@
     <!--</property>-->
     <!--</bean>-->
 
-    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Common Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Common Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
     <bean id="propertyPlaceholderConfigurer"
@@ -79,8 +79,6 @@
         <property name="registrationEndpoint" value="${leidos.ode.reg.pub.endpoint}"/>
     </bean>
 
-    <bean id="subscribeODEAgent" class="com.leidos.ode.agent.BasicODEAgent"/>
-
     <bean id="publishODEAgent" class="com.leidos.ode.agent.PublishODEAgent"/>
 
     <bean id="queueTarget" class="com.leidos.ode.agent.datatarget.ODEQueueTarget"/>
@@ -108,15 +106,7 @@
         <property name="subscriptionReceivePort" value="${leidos.ode.reg.test.sub.receivePort}"/>
     </bean>
 
-    <bean id="pushDataSource" class="com.leidos.ode.collector.datasource.PushDataSource" abstract="true"/>
-
-    <bean id="restPullDataSource" class="com.leidos.ode.collector.datasource.RestPullDataSource" abstract="true"/>
-
-    <bean id="udpPushDataSource" class="com.leidos.ode.collector.datasource.UDPPushDataSource" parent="pushDataSource">
-
-    </bean>
-
-    <bean id="jmsPushDataSource" class="com.leidos.ode.collector.datasource.JMSPushDataSource" parent="pushDataSource">
+    <bean id="jmsPushDataSource" class="com.leidos.ode.collector.datasource.JMSPushDataSource">
         <property name="hostProtocol" value="tcp://"/>
         <property name="hostAddress" value="localhost"/>
         <property name="hostPort" value="7847"/>
@@ -130,7 +120,7 @@
 
     <bean id="bsmParser" class="com.leidos.ode.agent.parser.BSMParser"/>
 
-    <bean id="bsmPubRegistrationInfo" class="com.leidos.ode.registration.request.ODERegistrationRequest">
+    <bean id="bsmPubRegistrationRequest" class="com.leidos.ode.registration.request.ODERegistrationRequest">
         <property name="messageType" value="${leidos.ode.reg.bsm.pub.messageType}"/>
         <property name="region" value="${leidos.ode.reg.bsm.pub.region}"/>
         <property name="registrationType" value="${leidos.ode.reg.bsm.pub.registrationType}"/>
@@ -152,16 +142,15 @@
         <property name="parser" ref="bsmParser"/>
         <property name="sanitizer" ref="passthroughSanitizer"/>
         <property name="dataTarget" ref="restTarget"/>
-        <property name="registrationRequest" ref="bsmPubRegistrationInfo"/>
+        <property name="registrationRequest" ref="bsmPubRegistrationRequest"/>
         <property name="odeLogger" ref="odeLogger"/>
     </bean>
 
-    <bean id="bsmUDPPushDataSource" class="com.leidos.ode.collector.datasource.UDPPushDataSource">
-    </bean>
+    <bean id="bsmDataSource" class="com.leidos.ode.collector.datasource.UDPPushDataSource"/>
 
     <bean id="bsmCollector" class="com.leidos.ode.collector.ODECollector">
         <property name="agent" ref="bsmPubAgent"/>
-        <property name="dataSource" ref="bsmUDPPushDataSource"/>
+        <property name="dataSource" ref="bsmDataSource"/>
     </bean>
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~RITIS Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
@@ -169,33 +158,7 @@
 
     <bean id="ritisParser" class="com.leidos.ode.agent.parser.RITISParser"/>
 
-    <bean id="basicRITISDataSource" class="com.leidos.ode.collector.RITISDataSource" parent="restPullDataSource">
-        <property name="hostProtocol" value="${leidos.ode.ritis.protocol}"/>
-        <property name="hostAddress" value="${leidos.ode.ritis.sourceaddress}"/>
-        <property name="baseUrl" value="${leidos.ode.ritis.baseurl}"/>
-        <property name="username" value="${leidos.ode.ritis.username}"/>
-        <property name="password" value="${leidos.ode.ritis.password}"/>
-        <property name="apiKey" value="${leidos.ode.ritis.apikey}"/>
-        <property name="requestLimit" value="${leidos.ode.ritis.requestlimit}"/>
-    </bean>
-
-    <bean id="ritisSpeed" parent="basicRITISDataSource">
-        <property name="feedName" value="${leidos.ode.ritis.detector.url}"/>
-        <property name="wfsFilter" value="system=vdot_nova, ${leidos.ode.ritis.defaults.wfsfilter.boundingbox}"/>
-    </bean>
-
-    <bean id="ritisWeather_NWS" parent="basicRITISDataSource">
-        <property name="feedName" value="${leidos.ode.ritis.weather.url}"/>
-        <property name="wfsFilter" value="system=nws, type=alerts"/>
-    </bean>
-
-    <bean id="ritisWeather_Clarus" parent="basicRITISDataSource">
-        <property name="feedName" value="${leidos.ode.ritis.weather.url}"/>
-        <!--<property name="wfsFilter" value="system=clarus, state=Virginia"/>-->
-        <property name="wfsFilter" value="system=clarus"/>
-    </bean>
-
-    <bean id="ritisSpeedPubRegistrationInfo" class="com.leidos.ode.registration.request.ODERegistrationRequest">
+    <bean id="ritisSpeedPubRegistrationRequest" class="com.leidos.ode.registration.request.ODERegistrationRequest">
         <property name="messageType" value="${leidos.ode.reg.ritisspeed.pub.messageType}"/>
         <property name="region" value="${leidos.ode.reg.ritisspeed.pub.region}"/>
         <property name="registrationType" value="${leidos.ode.reg.ritisspeed.pub.registrationType}"/>
@@ -212,8 +175,7 @@
         </property>
     </bean>
 
-
-    <bean id="ritisWeatherPubRegistrationInfo" class="com.leidos.ode.registration.request.ODERegistrationRequest">
+    <bean id="ritisWeatherPubRegistrationRequest" class="com.leidos.ode.registration.request.ODERegistrationRequest">
         <property name="messageType" value="${leidos.ode.reg.ritisweather.pub.messageType}"/>
         <property name="region" value="${leidos.ode.reg.ritisweather.pub.region}"/>
         <property name="registrationType" value="${leidos.ode.reg.ritisweather.pub.registrationType}"/>
@@ -239,31 +201,52 @@
     </bean>
 
     <bean id="ritisWeatherAgent" parent="basicRITISAgent">
-        <property name="registrationRequest" ref="ritisWeatherPubRegistrationInfo"/>
+        <property name="registrationRequest" ref="ritisWeatherPubRegistrationRequest"/>
     </bean>
 
     <bean id="ritisSpeedAgent" parent="basicRITISAgent">
-        <property name="registrationRequest" ref="ritisSpeedPubRegistrationInfo"/>
+        <property name="registrationRequest" ref="ritisSpeedPubRegistrationRequest"/>
     </bean>
 
-    <bean id="basicRITISCollector" class="com.leidos.ode.collector.ODECollector">
-        <property name="dataSource" ref="basicRITISDataSource"/>
-        <property name="agent" ref="basicRITISAgent"/>
+    <bean id="basicRITISDataSource" class="com.leidos.ode.collector.RITISDataSource">
+        <property name="hostProtocol" value="${leidos.ode.ritis.protocol}"/>
+        <property name="hostAddress" value="${leidos.ode.ritis.sourceaddress}"/>
+        <property name="baseUrl" value="${leidos.ode.ritis.baseurl}"/>
+        <property name="username" value="${leidos.ode.ritis.username}"/>
+        <property name="password" value="${leidos.ode.ritis.password}"/>
+        <property name="apiKey" value="${leidos.ode.ritis.apikey}"/>
+        <property name="requestLimit" value="${leidos.ode.ritis.requestlimit}"/>
     </bean>
 
-    <bean id="ritisWeatherCollector_NWS" class="com.leidos.ode.collector.ODECollector">
-        <property name="dataSource" ref="ritisWeather_NWS"/>
+    <bean id="ritisSpeedDataSource" parent="basicRITISDataSource">
+        <property name="feedName" value="${leidos.ode.ritis.detector.url}"/>
+        <property name="wfsFilter" value="system=vdot_nova, ${leidos.ode.ritis.defaults.wfsfilter.boundingbox}"/>
+    </bean>
+
+    <bean id="ritisWeatherNWSDataSource" parent="basicRITISDataSource">
+        <property name="feedName" value="${leidos.ode.ritis.weather.url}"/>
+        <property name="wfsFilter" value="system=nws, type=alerts"/>
+    </bean>
+
+    <bean id="ritisWeatherClarusDataSource" parent="basicRITISDataSource">
+        <property name="feedName" value="${leidos.ode.ritis.weather.url}"/>
+        <!--<property name="wfsFilter" value="system=clarus, state=Virginia"/>-->
+        <property name="wfsFilter" value="system=clarus"/>
+    </bean>
+
+    <bean id="ritisWeatherCollectorNWS" class="com.leidos.ode.collector.ODECollector">
         <property name="agent" ref="ritisWeatherAgent"/>
+        <property name="dataSource" ref="ritisWeatherNWSDataSource"/>
     </bean>
 
-    <bean id="ritisWeatherCollector_Clarus" class="com.leidos.ode.collector.ODECollector">
-        <property name="dataSource" ref="ritisWeather_Clarus"/>
+    <bean id="ritisWeatherCollectorClarus" class="com.leidos.ode.collector.ODECollector">
         <property name="agent" ref="ritisWeatherAgent"/>
+        <property name="dataSource" ref="ritisWeatherClarusDataSource"/>
     </bean>
 
     <bean id="ritisSpeedCollector" class="com.leidos.ode.collector.ODECollector">
-        <property name="dataSource" ref="ritisSpeed"/>
         <property name="agent" ref="ritisSpeedAgent"/>
+        <property name="dataSource" ref="ritisSpeedDataSource"/>
     </bean>
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~VDOT Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
@@ -271,46 +254,7 @@
 
     <bean id="vdotParser" class="com.leidos.ode.agent.parser.VDOTParser"/>
 
-    <bean id="basicVDOTDataSource" class="com.leidos.ode.collector.VDOTDataSource" parent="restPullDataSource">
-        <property name="hostProtocol" value="${leidos.ode.vdot.protocol}"/>
-        <property name="hostAddress" value="${leidos.ode.vdot.sourceaddress}"/>
-        <property name="baseUrl" value="${leidos.ode.vdot.wfsbaseurl}"/>
-        <!--<property name="xmlBaseUrl" value="${leidos.ode.vdot.xmlbaseurl}"/>-->
-        <property name="username" value="${leidos.ode.vdot.username}"/>
-        <property name="password" value="${leidos.ode.vdot.password}"/>
-        <property name="requestLimit" value="${leidos.ode.vdot.requestLimit}"/>
-    </bean>
-
-    <bean id="vdotWeather_ShortTerm" parent="basicVDOTDataSource">
-        <property name="feedName" value="${leidos.ode.vdot.shorttermweatherevents.wfsurl}"/>
-    </bean>
-
-    <bean id="vdotWeather_LongTerm" parent="basicVDOTDataSource">
-        <property name="feedName" value="${leidos.ode.vdot.longtermweatherevents.wfsurl}"/>
-    </bean>
-
-    <bean id="vdotWeather_LongTermDefaults" parent="basicVDOTDataSource">
-        <property name="feedName" value="${leidos.ode.vdot.longtermweatherdefaults.wfsurl}"/>
-    </bean>
-
-    <bean id="vdotSpeed" parent="basicVDOTDataSource">
-        <property name="feedName" value="${leidos.ode.vdot.trafficsensorstations.wfsurl}"/>
-        <property name="wfsFilter" ref="vdotWFSFilter"/>
-    </bean>
-
-    <bean id="vdotTravelTime" parent="basicVDOTDataSource">
-        <property name="feedName" value="${leidos.ode.vdot.traveltimesegments.wfsurl}"/>
-        <property name="wfsFilter" ref="vdotWFSFilter"/>
-    </bean>
-
-    <!--The following util List is necessary because VDOT bounding box is formed using commas,
-    which are incorrectly split using the comma delimiter feature of Spring list injection. Using
-    a Collection prevents this from happening.-->
-    <util:list id="vdotWFSFilter" value-type="java.lang.String">
-        <value>${leidos.ode.vdot.defaults.wfsfilter.boundingbox}</value>
-    </util:list>
-
-    <bean id="vdotWeatherPubRegistrationInfo" class="com.leidos.ode.registration.request.ODERegistrationRequest">
+    <bean id="vdotWeatherPubRegistrationRequest" class="com.leidos.ode.registration.request.ODERegistrationRequest">
         <property name="messageType" value="${leidos.ode.reg.vdotweather.pub.messageType}"/>
         <property name="region" value="${leidos.ode.reg.vdotweather.pub.region}"/>
         <property name="registrationType" value="${leidos.ode.reg.vdotweather.pub.registrationType}"/>
@@ -327,7 +271,7 @@
         </property>
     </bean>
 
-    <bean id="vdotSpeedPubRegistrationInfo" class="com.leidos.ode.registration.request.ODERegistrationRequest">
+    <bean id="vdotSpeedPubRegistrationRequest" class="com.leidos.ode.registration.request.ODERegistrationRequest">
         <property name="messageType" value="${leidos.ode.reg.vdotspeed.pub.messageType}"/>
         <property name="region" value="${leidos.ode.reg.vdotspeed.pub.region}"/>
         <property name="registrationType" value="${leidos.ode.reg.vdotspeed.pub.registrationType}"/>
@@ -344,7 +288,7 @@
         </property>
     </bean>
 
-    <bean id="vdotTravelTimePubRegistrationInfo" class="com.leidos.ode.registration.request.ODERegistrationRequest">
+    <bean id="vdotTravelTimePubRegistrationRequest" class="com.leidos.ode.registration.request.ODERegistrationRequest">
         <property name="messageType" value="${leidos.ode.reg.vdottraveltime.pub.messageType}"/>
         <property name="region" value="${leidos.ode.reg.vdottraveltime.pub.region}"/>
         <property name="registrationType" value="${leidos.ode.reg.vdottraveltime.pub.registrationType}"/>
@@ -371,44 +315,78 @@
     </bean>
 
     <bean id="vdotWeatherAgent" parent="basicVDOTAgent">
-        <property name="registrationRequest" ref="vdotWeatherPubRegistrationInfo"/>
+        <property name="registrationRequest" ref="vdotWeatherPubRegistrationRequest"/>
     </bean>
 
     <bean id="vdotSpeedAgent" parent="basicVDOTAgent">
-        <property name="registrationRequest" ref="vdotSpeedPubRegistrationInfo"/>
+        <property name="registrationRequest" ref="vdotSpeedPubRegistrationRequest"/>
     </bean>
 
     <bean id="vdotTravelTimeAgent" parent="basicVDOTAgent">
-        <property name="registrationRequest" ref="vdotTravelTimePubRegistrationInfo"/>
+        <property name="registrationRequest" ref="vdotTravelTimePubRegistrationRequest"/>
     </bean>
 
-    <bean id="basicVDOTCollector" class="com.leidos.ode.collector.ODECollector">
-        <property name="dataSource" ref="basicVDOTDataSource"/>
-        <property name="agent" ref="basicVDOTAgent"/>
+    <bean id="basicVDOTDataSource" class="com.leidos.ode.collector.VDOTDataSource">
+        <property name="hostProtocol" value="${leidos.ode.vdot.protocol}"/>
+        <property name="hostAddress" value="${leidos.ode.vdot.sourceaddress}"/>
+        <property name="baseUrl" value="${leidos.ode.vdot.wfsbaseurl}"/>
+        <!--<property name="xmlBaseUrl" value="${leidos.ode.vdot.xmlbaseurl}"/>-->
+        <property name="username" value="${leidos.ode.vdot.username}"/>
+        <property name="password" value="${leidos.ode.vdot.password}"/>
+        <property name="requestLimit" value="${leidos.ode.vdot.requestLimit}"/>
     </bean>
 
-    <bean id="vdotWeatherCollector_ShortTerm" class="com.leidos.ode.collector.ODECollector">
-        <property name="dataSource" ref="vdotWeather_ShortTerm"/>
+    <!--The following util List is necessary because VDOT bounding box is formed using commas,
+    which are incorrectly split using the comma delimiter feature of Spring list injection. Using
+    a Collection prevents this from happening.-->
+    <util:list id="vdotWFSFilter" value-type="java.lang.String">
+        <value>${leidos.ode.vdot.defaults.wfsfilter.boundingbox}</value>
+    </util:list>
+
+    <bean id="vdotWeatherShortTermDataSource" parent="basicVDOTDataSource">
+        <property name="feedName" value="${leidos.ode.vdot.shorttermweatherevents.wfsurl}"/>
+    </bean>
+
+    <bean id="vdotWeatherLongTermDataSource" parent="basicVDOTDataSource">
+        <property name="feedName" value="${leidos.ode.vdot.longtermweatherevents.wfsurl}"/>
+    </bean>
+
+    <bean id="vdotWeatherLongTermDefaultsDataSource" parent="basicVDOTDataSource">
+        <property name="feedName" value="${leidos.ode.vdot.longtermweatherdefaults.wfsurl}"/>
+    </bean>
+
+    <bean id="vdotSpeedDataSource" parent="basicVDOTDataSource">
+        <property name="feedName" value="${leidos.ode.vdot.trafficsensorstations.wfsurl}"/>
+        <property name="wfsFilter" ref="vdotWFSFilter"/>
+    </bean>
+
+    <bean id="vdotTravelTimeDataSource" parent="basicVDOTDataSource">
+        <property name="feedName" value="${leidos.ode.vdot.traveltimesegments.wfsurl}"/>
+        <property name="wfsFilter" ref="vdotWFSFilter"/>
+    </bean>
+
+    <bean id="vdotWeatherCollectorShortTerm" class="com.leidos.ode.collector.ODECollector">
         <property name="agent" ref="vdotWeatherAgent"/>
+        <property name="dataSource" ref="vdotWeatherShortTermDataSource"/>
     </bean>
 
-    <bean id="vdotWeatherCollector_LongTerm" class="com.leidos.ode.collector.ODECollector">
-        <property name="dataSource" ref="vdotWeather_LongTerm"/>
+    <bean id="vdotWeatherCollectorLongTerm" class="com.leidos.ode.collector.ODECollector">
         <property name="agent" ref="vdotWeatherAgent"/>
+        <property name="dataSource" ref="vdotWeatherLongTermDataSource"/>
     </bean>
 
-    <bean id="vdotWeatherCollector_LongTermDefaults" class="com.leidos.ode.collector.ODECollector">
-        <property name="dataSource" ref="vdotWeather_LongTermDefaults"/>
+    <bean id="vdotWeatherCollectorLongTermDefaults" class="com.leidos.ode.collector.ODECollector">
         <property name="agent" ref="vdotWeatherAgent"/>
+        <property name="dataSource" ref="vdotWeatherLongTermDefaultsDataSource"/>
     </bean>
 
     <bean id="vdotSpeedCollector" class="com.leidos.ode.collector.ODECollector">
-        <property name="dataSource" ref="vdotSpeed"/>
         <property name="agent" ref="vdotSpeedAgent"/>
+        <property name="dataSource" ref="vdotSpeedDataSource"/>
     </bean>
 
     <bean id="vdotTravelTimeCollector" class="com.leidos.ode.collector.ODECollector">
-        <property name="dataSource" ref="vdotTravelTime"/>
         <property name="agent" ref="vdotTravelTimeAgent"/>
+        <property name="dataSource" ref="vdotTravelTimeDataSource"/>
     </bean>
 </beans>

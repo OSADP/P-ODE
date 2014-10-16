@@ -14,8 +14,8 @@ public class ODECollector {
 
     private final String TAG = getClass().getSimpleName();
     private Logger logger = Logger.getLogger(TAG);
-    private CollectorDataSource dataSource;
     private BasicODEAgent agent;
+    private CollectorDataSource dataSource;
     private CollectorDataSourceListener odeCollectorDataSourceListener;
     private MessageListener messageListener;
 
@@ -74,20 +74,20 @@ public class ODECollector {
         }
     }
 
-    public CollectorDataSource getDataSource() {
-        return dataSource;
-    }
-
-    public void setDataSource(CollectorDataSource dataSource) {
-        this.dataSource = dataSource;
-    }
-
     public BasicODEAgent getAgent() {
         return agent;
     }
 
     public void setAgent(BasicODEAgent agent) {
         this.agent = agent;
+    }
+
+    public CollectorDataSource getDataSource() {
+        return dataSource;
+    }
+
+    public void setDataSource(CollectorDataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     private Logger getLogger() {

@@ -34,22 +34,22 @@ public class ODEEmulator implements EmulatorDataListener {
     private final String TAG = getClass().getSimpleName();
     private Logger logger = Logger.getLogger(TAG);
     @Autowired
-    @Qualifier("RITISWeatherCollector")
+    @Qualifier("ritisWeatherCollector")
     private ODECollector ritisWeatherCollector;
     @Autowired
-    @Qualifier("RITISSpeedCollector")
+    @Qualifier("ritisSpeedCollector")
     private ODECollector ritisSpeedCollector;
     @Autowired
-    @Qualifier("VDOTSpeedCollector")
+    @Qualifier("vdotSpeedCollector")
     private ODECollector vdotSpeedCollector;
     @Autowired
-    @Qualifier("VDOTWeatherCollector")
+    @Qualifier("vdotWeatherCollector")
     private ODECollector vdotWeatherCollector;
     @Autowired
-    @Qualifier("VDOTTravelCollector")
+    @Qualifier("vdotTravelTimeCollector")
     private ODECollector vdotTravelTimeCollector;
     @Autowired
-    @Qualifier("BSMCollector")
+    @Qualifier("bsmCollector")
     private ODECollector bsmCollector;
     private CurrentDataSet currentData = new CurrentDataSet();
 
