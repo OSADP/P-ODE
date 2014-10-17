@@ -19,6 +19,7 @@ public class ODECollector implements CollectorDataSourceListener {
     @Override
     public void onDataReceived(byte[] receivedData) {
         if (getAgent() != null) {
+            getLogger().debug("Data received. Processing message.");
             getAgent().processMessage(receivedData);
         }
     }
@@ -58,7 +59,6 @@ public class ODECollector implements CollectorDataSourceListener {
         } else {
             getLogger().warn("Did not start up the data source for this collector. Data source was null.");
         }
-
     }
 
     public void stop() {

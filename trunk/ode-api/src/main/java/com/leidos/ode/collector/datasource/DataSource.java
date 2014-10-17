@@ -157,8 +157,8 @@ public abstract class DataSource implements CollectorDataSource {
                     logger.debug("Data source response bytes was null!.");
                 }
                 logger.debug("Cleaning up connections.");
-                cleanUpConnections();
             }
+            cleanUpConnections();
         }
     }
 }
