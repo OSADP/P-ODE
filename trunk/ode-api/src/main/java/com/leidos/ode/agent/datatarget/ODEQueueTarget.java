@@ -77,6 +77,7 @@ public class ODEQueueTarget implements ODEDataTarget {
 
     }
 
+    @Override
     public void close() {
         try {
             logger.info("Closing queue connection");

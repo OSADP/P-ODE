@@ -19,7 +19,8 @@ import java.util.logging.Level;
  */
 public abstract class DataDistributor implements Runnable {
 
-    private static Logger logger = Logger.getLogger(DataDistributor.class);
+    private final String TAG = getClass().getSimpleName();
+    private final Logger logger = Logger.getLogger(TAG);
     protected String topicHostURL;
     protected int topicHostPort;
     protected String connFactName;

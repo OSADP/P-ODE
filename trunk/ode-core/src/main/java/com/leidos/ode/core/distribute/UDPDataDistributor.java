@@ -18,11 +18,9 @@ import java.net.*;
  * @author cassadyja
  */
 public class UDPDataDistributor extends DataDistributor {
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(UDPDataDistributor.class);
 
     private String targetURL;
     private int targetPort;
-
     private DatagramSocket socket;
 
     public UDPDataDistributor(String topicHostURL, int topicHostPort,
@@ -36,7 +34,6 @@ public class UDPDataDistributor extends DataDistributor {
         this.targetURL = targetURL;
         this.targetPort = targetPort;
     }
-
 
     @Override
     protected void connectTarget() throws DistributeException {

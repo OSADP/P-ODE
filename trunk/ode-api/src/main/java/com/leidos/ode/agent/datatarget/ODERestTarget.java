@@ -1,24 +1,22 @@
 package com.leidos.ode.agent.datatarget;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
-import com.leidos.ode.registration.request.ODERegistrationRequest;
 import com.leidos.ode.registration.response.ODERegistrationResponse;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
-import java.util.logging.Level;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import org.apache.http.entity.StringEntity;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 
 /**
  * @author cassadyja, lamde
@@ -31,6 +29,7 @@ public class ODERestTarget implements ODEDataTarget {
     private CloseableHttpResponse httpResponse;
     private HttpPost httpPost;
 
+    @Override
     public void configure(ODERegistrationResponse registrationResponse) throws DataTargetException {
         String hostURL = registrationResponse.getQueueHostURL();
         int hostPort = registrationResponse.getQueueHostPort();
@@ -52,6 +51,7 @@ public class ODERestTarget implements ODEDataTarget {
 
     }
 
+    @Override
     public void sendMessage(ODEAgentMessage message) throws DataTargetException {
         if (httpPost != null) {
             try {
@@ -66,17 +66,17 @@ public class ODERestTarget implements ODEDataTarget {
                 logger.error(e.getLocalizedMessage());
             } catch (JAXBException e) {
                 logger.error(e.toString());
-            } 
-        }else{
+            }
+        } else {
             logger.warn("Unable to send message. Target has not been configured.");
         }
     }
-    
-    private StringEntity createEntity(ODEAgentMessage message) throws JAXBException, UnsupportedEncodingException{
+
+    private StringEntity createEntity(ODEAgentMessage message) throws JAXBException, UnsupportedEncodingException {
         StringWriter stringWriter = new StringWriter();
 //        JAXBContext registrationInfoContext = JAXBContext.newInstance(ODEAgentMessage.class);
         JAXBContext registrationInfoContext = JAXBContext.newInstance("com.leidos.ode.agent.data:com.leidos.ode.agent.data.vdot:com.leidos.ode.agent.data.ritis:com.leidos.ode.agent.data.bsm");
-        
+
         Marshaller marshaller = registrationInfoContext.createMarshaller();
         marshaller.marshal(message, stringWriter);
         httpClient = HttpClientBuilder.create().build();
@@ -84,6 +84,7 @@ public class ODERestTarget implements ODEDataTarget {
         return entity;
     }
 
+    @Override
     public void close() {
         try {
             logger.debug("Closing target resources.");

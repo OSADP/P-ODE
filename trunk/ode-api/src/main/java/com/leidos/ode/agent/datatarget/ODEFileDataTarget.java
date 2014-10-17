@@ -18,20 +18,23 @@ public class ODEFileDataTarget implements ODEDataTarget {
     private String filePath;
     private PrintStream out;
 
+    @Override
     public void configure(ODERegistrationResponse registrationResponse) throws DataTargetException {
         try {
-            out = new PrintStream(new FileOutputStream(filePath));
+            out = new PrintStream(new FileOutputStream(getFilePath()));
         } catch (IOException ex) {
             throw new DataTargetException("Error creating file", ex);
         }
     }
 
+    @Override
     public void sendMessage(ODEAgentMessage message) throws DataTargetException {
         for (int i = 0; i < message.getMessagePayload().length; i++) {
             out.printf("%02X ", message.getMessagePayload()[i]);
         }
     }
 
+    @Override
     public void close() {
         out.flush();
         out.close();
