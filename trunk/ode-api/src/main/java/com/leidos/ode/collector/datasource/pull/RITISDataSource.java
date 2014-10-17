@@ -4,7 +4,6 @@ import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.util.EntityUtils;
-import org.apache.log4j.Logger;
 
 import java.io.IOException;
 
@@ -17,13 +16,11 @@ import java.io.IOException;
  */
 public class RITISDataSource extends RestPullDataSource {
 
-    private final String TAG = getClass().getSimpleName();
-    private Logger logger = Logger.getLogger(TAG);
     private String apiKey;
 
     @Override
-    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) throws DataSourceException {
-        super.startDataSource(collectorDataSourceListener);
+    public void startDataSource() {
+        super.startDataSource();
         /* The following line of code is @Deprecated. Due to the request interval
         restriction imposed by RITIS, each RITISDataSource is no longer responsible
         for its own polling
@@ -34,7 +31,7 @@ public class RITISDataSource extends RestPullDataSource {
     @Override
     public byte[] pollDataSource() {
         try {
-            logger.debug("Polling data source for feed: '" + getFeedName() + "'.");
+            getLogger().debug("Polling data source for feed: '" + getFeedName() + "'.");
             CloseableHttpResponse closeableHttpResponse = getHttpClient().execute(getHttpGet());
             HttpEntity responseEntity = closeableHttpResponse.getEntity();
             byte[] responseBytes = EntityUtils.toByteArray(responseEntity);
@@ -112,10 +109,5 @@ public class RITISDataSource extends RestPullDataSource {
 
     public void setApiKey(String apiKey) {
         this.apiKey = "api-key=" + apiKey;
-    }
-
-    @Override
-    protected Logger getLogger() {
-        return logger;
     }
 }

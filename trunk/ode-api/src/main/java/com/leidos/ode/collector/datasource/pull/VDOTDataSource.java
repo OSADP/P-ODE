@@ -14,7 +14,6 @@ import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.auth.DigestScheme;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.util.EntityUtils;
-import org.apache.log4j.Logger;
 
 import java.io.IOException;
 
@@ -27,13 +26,11 @@ import java.io.IOException;
  */
 public class VDOTDataSource extends RestPullDataSource {
 
-    private final String TAG = getClass().getSimpleName();
-    private Logger logger = Logger.getLogger(TAG);
     private Header firstHeader;//Necessary to keep track of for Digest authentication
 
     @Override
-    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) throws DataSourceException {
-        super.startDataSource(collectorDataSourceListener);
+    public void startDataSource() {
+        super.startDataSource();
         try {
             CloseableHttpResponse closeableHttpResponse = getHttpClient().execute(getHttpGet());
 
@@ -105,11 +102,6 @@ public class VDOTDataSource extends RestPullDataSource {
 //    private String getEmulatorWFSbbox() {
 //        return "38.856259,-77.35548,38.882853,-77.259612";
 //    }
-
-    @Override
-    protected Logger getLogger() {
-        return logger;
-    }
 
 //    /**
 //     * Returns the list of properties to return in the request.

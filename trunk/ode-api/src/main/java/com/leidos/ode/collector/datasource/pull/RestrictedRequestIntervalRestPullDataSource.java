@@ -1,7 +1,5 @@
 package com.leidos.ode.collector.datasource.pull;
 
-import org.apache.log4j.Logger;
-
 import java.util.List;
 
 /**
@@ -13,16 +11,14 @@ import java.util.List;
  */
 public class RestrictedRequestIntervalRestPullDataSource extends RestPullDataSource {
 
-    private final String TAG = getClass().getSimpleName();
-    private Logger logger = Logger.getLogger(TAG);
     private List<RestPullDataSource> restPullDataSources;
     private int index;
 
     @Override
-    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) throws DataSourceException {
+    public void startDataSource() {
         if (getRestPullDataSources() != null && !getRestPullDataSources().isEmpty()) {
             for (RestPullDataSource restPullDataSource : getRestPullDataSources()) {
-                restPullDataSource.startDataSource(null);
+                restPullDataSource.startDataSource();
             }
         }
         /*Each data source in the list is responsible for its own listener, so execute
@@ -73,11 +69,6 @@ public class RestrictedRequestIntervalRestPullDataSource extends RestPullDataSou
 
     public void setRestPullDataSources(List<RestPullDataSource> restPullDataSources) {
         this.restPullDataSources = restPullDataSources;
-    }
-
-    @Override
-    protected Logger getLogger() {
-        return logger;
     }
 
     @Override

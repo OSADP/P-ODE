@@ -1,11 +1,7 @@
 package com.leidos.ode.collector.datasource;
 
-import com.leidos.ode.collector.datasource.CollectorDataSource.DataSourceException;
 import com.leidos.ode.collector.datasource.push.JMSPushDataSource;
 import junit.framework.TestCase;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author cassadyja
@@ -38,13 +34,7 @@ public class TestJMSPushDataSource extends TestCase {
         ds.setUsername("leidos");
         ds.setPassword("H3SvjshHnNBX");
         ds.setQueueName("Clients.leidos.ATIS.Events");
-        try {
-            ds.startDataSource(null);
-        } catch (DataSourceException ex) {
-            Logger.getLogger(TestJMSPushDataSource.class.getName()).log(Level.SEVERE, null, ex);
-            ex.printStackTrace();
-            fail();
-        }
+        ds.startDataSource();
     }
 
 

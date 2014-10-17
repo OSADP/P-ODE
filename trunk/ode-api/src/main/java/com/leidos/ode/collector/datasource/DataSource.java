@@ -103,7 +103,9 @@ public abstract class DataSource implements CollectorDataSource {
      *
      * @return
      */
-    protected abstract Logger getLogger();
+    protected final Logger getLogger() {
+        return logger;
+    }
 
     /**
      * Creates a new DataSource thread for retrieving data from the source;

@@ -1,19 +1,15 @@
 package com.leidos.ode.collector.datasource.push;
 
-import org.apache.log4j.Logger;
-
 import java.io.IOException;
 import java.net.*;
 import java.util.Arrays;
 
 public class UDPPushDataSource extends PushDataSource {
 
-    private final String TAG = getClass().getSimpleName();
-    private Logger logger = Logger.getLogger(TAG);
     private DatagramSocket datagramSocket;
 
     @Override
-    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) throws DataSourceException {
+    public void startDataSource() {
         try {
             InetAddress tmpAddress = InetAddress.getByName(getHostAddress());
             getLogger().info("TMP Host Address: " + tmpAddress.getHostAddress());
@@ -27,9 +23,9 @@ public class UDPPushDataSource extends PushDataSource {
             datagramSocket.setSoTimeout(10000);
             executeDataSourceThread();
         } catch (UnknownHostException e) {
-            throw new DataSourceException(e.getLocalizedMessage());
+            getLogger().error(e.getLocalizedMessage());
         } catch (SocketException e) {
-            throw new DataSourceException(e.getLocalizedMessage());
+            getLogger().error(e.getLocalizedMessage());
         }
     }
 
@@ -56,11 +52,6 @@ public class UDPPushDataSource extends PushDataSource {
             }
         }
         return null;
-    }
-
-    @Override
-    protected Logger getLogger() {
-        return logger;
     }
 
     @Override

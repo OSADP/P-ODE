@@ -1,8 +1,6 @@
 package com.leidos.ode.collector.datasource.push;
 
-import com.leidos.ode.collector.datasource.CollectorDataSource;
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.log4j.Logger;
 
 import javax.jms.*;
 
@@ -11,15 +9,12 @@ import javax.jms.*;
  */
 public class JMSPushDataSource extends PushDataSource implements ExceptionListener {
 
-    private final String TAG = getClass().getSimpleName();
-    private Logger logger = Logger.getLogger(TAG);
     private Connection connection;
     private MessageConsumer consumer;
 
     @Override
-    public void startDataSource(CollectorDataSource.CollectorDataSourceListener collectorDataSourceListener) throws CollectorDataSource.DataSourceException {
+    public void startDataSource() {
         try {
-
 //            Properties env = new Properties();
 //            env.put(Context.SECURITY_PRINCIPAL, user);
 //            env.put(Context.SECURITY_CREDENTIALS, pass);
@@ -54,10 +49,9 @@ public class JMSPushDataSource extends PushDataSource implements ExceptionListen
 
 //        } catch (NamingException e) {
 //            throw new DataSourceException("Error connecting", e);
-        } catch (JMSException ex) {
-            throw new CollectorDataSource.DataSourceException("Error connecting", ex);
+        } catch (JMSException e) {
+            getLogger().error(e.getLocalizedMessage());
         }
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public void onException(JMSException jmse) {
@@ -67,11 +61,6 @@ public class JMSPushDataSource extends PushDataSource implements ExceptionListen
     @Override
     public byte[] pollDataSource() {
         throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    protected Logger getLogger() {
-        return logger;
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.leidos.ode.collector;
 import com.leidos.ode.agent.datatarget.ODEDataTarget.DataTargetException;
 import com.leidos.ode.collector.datasource.CollectorDataSource;
 import com.leidos.ode.collector.datasource.CollectorDataSource.DataSourceException;
+import com.leidos.ode.collector.datasource.DataSource;
 import com.leidos.ode.collector.datasource.pull.RestPullDataSource;
 import com.leidos.ode.collector.datasource.pull.RestrictedRequestIntervalRestPullDataSource;
 import com.leidos.ode.util.MongoUtils;
@@ -48,11 +49,16 @@ public class CollectorRunner extends QuartzJobBean {
             if (loadRunnerProperties()) {
                 //If the runner properties is successfully loaded, build the collectors
                 collectors = new HashMap<ODECollector, List<ODECollector>>();
-                Map<String, Map<ODEMessageType, ODECollector>> odeCollectorHashMap = buildCollectorsForEnabledMessageTypes();
-                Map<ODECollector, String> collectorsWithRestrictedRequestIntervalsAndDataSourcesMap = getcollectorsWithRestrictedRequestIntervalsAndDataSourcesMap(false, odeCollectorHashMap);
-                removeCollectorsRequiringRestrictedRequestIntervalCollectorsFromRunnerList(collectorsWithRestrictedRequestIntervalsAndDataSourcesMap.keySet());
-                Map<ODECollector, List<ODECollector>> restrictedRequestIntervalODECollectors = buildRestrictedRequestIntervalODECollectors(collectorsWithRestrictedRequestIntervalsAndDataSourcesMap);
-                addRestrictedRequestIntervalODECollectorsToRunnerList(restrictedRequestIntervalODECollectors);
+                //Get all enabled collectors
+                Map<String, Map<ODEMessageType, ODECollector>> enabledCollectors = buildCollectorsForEnabledMessageTypes();
+                //Get all collectors, and their specific data sources, that have restricted request intervals
+                Map<ODECollector, String> collectorsWithRestrictedRequestIntervals = getCollectorsWithRestrictedRequestIntervalsAndDataSourcesMap(false, enabledCollectors);
+                //Remove the collectors with restricted request intervals from the runner list, since they will be stored in their own collector and ran from there
+                removeRestrictedRequestIntervalsCollectorsFromRunnerList(collectorsWithRestrictedRequestIntervals.keySet());
+                //Build the collectors that will store the restricted request interval collectors of a specific data source
+                Map<ODECollector, List<ODECollector>> restrictedRequestIntervalCollectorManagers = buildRestrictedRequestIntervalCollectorManagers(collectorsWithRestrictedRequestIntervals);
+                //Add the collector managers that contain the restricted request interval collectors to the runner list
+                addRestrictedRequestIntervalCollectorManagersToRunnerList(restrictedRequestIntervalCollectorManagers);
             } else {
                 getLogger().error("No properties file found with name: " + RUNNER_PROPERTIES);
             }
@@ -112,8 +118,6 @@ public class CollectorRunner extends QuartzJobBean {
                 }
             }
             getLogger().debug("Started " + getCollectors().size() + " collector(s).");
-        } catch (DataSourceException e) {
-            getLogger().error(e.getLocalizedMessage());
         } catch (DataTargetException ex) {
             getLogger().error(ex.getLocalizedMessage());
         }
@@ -152,6 +156,19 @@ public class CollectorRunner extends QuartzJobBean {
                         ODECollector odeCollector = (ODECollector) getContext().getBean(odeCollectorBeanName);
                         if (odeCollector != null) {
                             getLogger().debug("Found collector with name: '" + odeCollectorBeanName + "'.");
+
+                            //Get the data source for this collector
+                            CollectorDataSource collectorDataSource = odeCollector.getDataSource();
+                            //Check if the collector data source is an instance of DataSource, so we can do a safe cast
+                            if (collectorDataSource instanceof DataSource) {
+                                //Cast the CollectorDataSource to DataSource
+                                DataSource dataSource = (DataSource) collectorDataSource;
+                                /*We must set the listener of this data source to the ODECollector it belongs to.
+                                This allows the data to be received by the collector and processed
+                                by its agent.
+                                */
+                                dataSource.setCollectorDataSourceListener(odeCollector);
+                            }
                             getCollectors().put(odeCollector, new ArrayList<ODECollector>());
                             Map<ODEMessageType, ODECollector> odeMessageTypeODECollectorMap = new HashMap<ODEMessageType, ODECollector>();
                             odeMessageTypeODECollectorMap.put(ODEMessageType.valueOf(enabledMessageTypeName), odeCollector);
@@ -168,7 +185,7 @@ public class CollectorRunner extends QuartzJobBean {
         return odeCollectorHashMap;
     }
 
-    private Map<ODECollector, String> getcollectorsWithRestrictedRequestIntervalsAndDataSourcesMap(boolean occurrencesFilter, Map<String, Map<ODEMessageType, ODECollector>> odeCollectorHashMap) {
+    private Map<ODECollector, String> getCollectorsWithRestrictedRequestIntervalsAndDataSourcesMap(boolean occurrencesFilter, Map<String, Map<ODEMessageType, ODECollector>> odeCollectorHashMap) {
         Map<ODECollector, String> collectorsWithRestrictedRequestIntervalsAndDataSourcesMap = new HashMap<ODECollector, String>();
         if (getRunnerProperties() != null && odeCollectorHashMap != null) {
             //Initialize the available data sources defined by ODEMessageType, and their occurrences to zero
@@ -233,17 +250,9 @@ public class CollectorRunner extends QuartzJobBean {
         return collectorsWithRestrictedRequestIntervalsAndDataSourcesMap;
     }
 
-    private void removeCollectorsRequiringRestrictedRequestIntervalCollectorsFromRunnerList(Set<ODECollector> collectorsRequiringRestrictedIntervalCollectors) {
-        if (getCollectors() != null && collectorsRequiringRestrictedIntervalCollectors != null) {
-            for (ODECollector odeCollector : collectorsRequiringRestrictedIntervalCollectors) {
-                getCollectors().remove(odeCollector);
-            }
-        }
-    }
-
-    private Map<ODECollector, List<ODECollector>> buildRestrictedRequestIntervalODECollectors(Map<ODECollector, String> collectorsRequiringRestrictedRequestIntervalCollectorsAndTheirDataSourcesMap) {
+    private Map<ODECollector, List<ODECollector>> buildRestrictedRequestIntervalCollectorManagers(Map<ODECollector, String> collectorsRequiringRestrictedRequestIntervalManagersAndTheirDataSourcesMap) {
         Map<ODECollector, List<ODECollector>> restrictedRequestIntervalCollectorsAndTheirCollectorsMap = new HashMap<ODECollector, List<ODECollector>>();
-        if (getContext() != null && collectorsRequiringRestrictedRequestIntervalCollectorsAndTheirDataSourcesMap != null) {
+        if (getContext() != null && collectorsRequiringRestrictedRequestIntervalManagersAndTheirDataSourcesMap != null) {
 
             String restrictedRequestIntervalCollectorRules = new StringBuilder()
                     .append(System.lineSeparator())
@@ -267,7 +276,7 @@ public class CollectorRunner extends QuartzJobBean {
 
             Map<String, ODECollector> restrictedRequestIntervalCollectorsMap = new HashMap<String, ODECollector>();
             //Iterate the collectors requiring restricted request interval collectors to create exactly (1) restricted request interval collector per data source
-            for (Map.Entry<ODECollector, String> entry : collectorsRequiringRestrictedRequestIntervalCollectorsAndTheirDataSourcesMap.entrySet()) {
+            for (Map.Entry<ODECollector, String> entry : collectorsRequiringRestrictedRequestIntervalManagersAndTheirDataSourcesMap.entrySet()) {
                 //Create a new restricted request interval collector for each data source
                 restrictedRequestIntervalCollectorsMap.put(entry.getValue(), new ODECollector());
             }
@@ -279,11 +288,11 @@ public class CollectorRunner extends QuartzJobBean {
                 List<RestPullDataSource> restPullDataSources = new ArrayList<RestPullDataSource>();
                 int requestLimit = 0;
                 List<ODECollector> temporaryCollectorList = new ArrayList<ODECollector>();
-                //Iterate the collectors requiring restricted request interval collectors, in order to add their data sources to the respective restricted request interval collector's data source
-                for (Map.Entry<ODECollector, String> entry : collectorsRequiringRestrictedRequestIntervalCollectorsAndTheirDataSourcesMap.entrySet()) {
-                    //Determine if the data source of the collector is equal to that of the restricted request interval collector
+                //Iterate the collectors requiring restricted request interval managers, in order to add their data sources to the respective restricted request interval collector's data source
+                for (Map.Entry<ODECollector, String> entry : collectorsRequiringRestrictedRequestIntervalManagersAndTheirDataSourcesMap.entrySet()) {
+                    //Determine if the data source of the collector is equal to that of the restricted request interval manager
                     if (entry.getValue().equals(restrictedRequestIntervalCollectorEntry.getKey())) {
-                        //This restricted collector's data source is equal to the collector requiring a restricted collector's data source
+                        //This restricted collector's data source is equal to the collector requiring a restricted manager's data source
                         //Add it to the temporary list of ODECollectors for this restricted collector
                         temporaryCollectorList.add(entry.getKey());
                         //Grab the data source of the given ODECollector
@@ -291,9 +300,8 @@ public class CollectorRunner extends QuartzJobBean {
                         //Determine if the data source we just stored is of type RestPullDataSource, since this is the only type of data source that is currently restricted
                         if (collectorDataSource instanceof RestPullDataSource) {
                             RestPullDataSource restPullDataSource = (RestPullDataSource) collectorDataSource;
-                            /*We must set the listener of this data source to the ODECollector it belongs to, since this
-                            CollectorRunner does not use the ODECollector start up method that requires a listener
-                            parameter. This allows the data to be received by the original collector, and processed
+                            /*We must set the listener of this data source to the ODECollector it belongs to.
+                            This allows the data to be received by the original collector, and processed
                             by its agent.
                              */
                             restPullDataSource.setCollectorDataSourceListener(entry.getKey());
@@ -325,9 +333,17 @@ public class CollectorRunner extends QuartzJobBean {
         return restrictedRequestIntervalCollectorsAndTheirCollectorsMap;
     }
 
-    private void addRestrictedRequestIntervalODECollectorsToRunnerList(Map<ODECollector, List<ODECollector>> restrictedRequestIntervalODECollectors) {
-        if (getCollectors() != null && restrictedRequestIntervalODECollectors != null) {
-            getCollectors().putAll(restrictedRequestIntervalODECollectors);
+    private void addRestrictedRequestIntervalCollectorManagersToRunnerList(Map<ODECollector, List<ODECollector>> restrictedRequestIntervalCollectorManagers) {
+        if (getCollectors() != null && restrictedRequestIntervalCollectorManagers != null) {
+            getCollectors().putAll(restrictedRequestIntervalCollectorManagers);
+        }
+    }
+
+    private void removeRestrictedRequestIntervalsCollectorsFromRunnerList(Set<ODECollector> restrictedRequestIntervalCollectors) {
+        if (getCollectors() != null && restrictedRequestIntervalCollectors != null) {
+            for (ODECollector odeCollector : restrictedRequestIntervalCollectors) {
+                getCollectors().remove(odeCollector);
+            }
         }
     }
 

@@ -5,7 +5,6 @@ import com.leidos.ode.agent.ODEAgent;
 import com.leidos.ode.agent.datatarget.ODEDataTarget.DataTargetException;
 import com.leidos.ode.collector.datasource.CollectorDataSource;
 import com.leidos.ode.collector.datasource.CollectorDataSource.CollectorDataSourceListener;
-import com.leidos.ode.collector.datasource.CollectorDataSource.DataSourceException;
 import org.apache.log4j.Logger;
 
 public class ODECollector implements CollectorDataSourceListener {
@@ -27,10 +26,9 @@ public class ODECollector implements CollectorDataSourceListener {
     /**
      * Starts the collector. Data callbacks are only available to the collector.
      *
-     * @throws DataSourceException
      * @throws DataTargetException
      */
-    public void startUp() throws DataSourceException, DataTargetException {
+    public void startUp() throws DataTargetException {
         startUp(null);
     }
 
@@ -38,10 +36,9 @@ public class ODECollector implements CollectorDataSourceListener {
      * Starts the collector with an external listener for callbacks.
      *
      * @param messageListener
-     * @throws DataSourceException
      * @throws DataTargetException
      */
-    public void startUp(ODEAgent.MessageListener messageListener) throws DataSourceException, DataTargetException {
+    public void startUp(ODEAgent.MessageListener messageListener) throws DataTargetException {
         this.messageListener = messageListener;
         startCollector();
     }
@@ -57,9 +54,9 @@ public class ODECollector implements CollectorDataSourceListener {
         return false;
     }
 
-    private boolean startCollectorDataSource() throws DataSourceException {
+    private boolean startCollectorDataSource() {
         if (getDataSource() != null) {
-            getDataSource().startDataSource(this);
+            getDataSource().startDataSource();
             getLogger().debug("Started data source.");
             return true;
         } else {
@@ -68,7 +65,7 @@ public class ODECollector implements CollectorDataSourceListener {
         return false;
     }
 
-    private void startCollector() throws DataSourceException, DataTargetException {
+    private void startCollector() throws DataTargetException {
         startCollectorAgent();
         startCollectorDataSource();
     }
