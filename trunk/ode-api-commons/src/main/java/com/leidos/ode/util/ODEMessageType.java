@@ -20,7 +20,10 @@ public enum ODEMessageType {
     VDOTTravelTime("VDOT", false),
     RITISSpeed("RITIS", true),
     RITISWeather("RITIS", true),
-    BSM("BSM", false);
+    BSM("BSM", false),
+    BluFaxSpeed("BluFaxSpeed", false),
+    BluFaxTravelTime("BluFaxTravelTime", false);
+
     private String dataSource;
     private boolean isRestrictedRequestInterval;
 

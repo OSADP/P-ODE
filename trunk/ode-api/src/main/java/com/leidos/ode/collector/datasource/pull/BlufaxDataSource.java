@@ -7,7 +7,7 @@ package com.leidos.ode.collector.datasource.pull;
  * Time: 1:21 PM
  * To change this template use File | Settings | File Templates.
  */
-public class BlufaxDataSource extends RestPullDataSource {
+public class BluFaxDataSource extends RestPullDataSource {
 
     private String clientId;
     private String token;
