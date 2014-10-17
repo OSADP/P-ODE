@@ -1,4 +1,4 @@
-package com.leidos.ode.collector.datasource;
+package com.leidos.ode.collector.datasource.pull;
 
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -29,8 +29,7 @@ public abstract class RestPullDataSource extends PullDataSource {
     }
 
     @Override
-    public void stopDataSource() {
-        super.stopDataSource();//Must call super here to stop the thread
+    protected void cleanUpConnections() {
         if (getHttpClient() != null) {
             try {
                 getHttpClient().close();//Close http client to avoid leaks

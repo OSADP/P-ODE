@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 public abstract class DataSource implements CollectorDataSource {
 
     private final String TAG = getClass().getSimpleName();
-    private Logger logger = Logger.getLogger(TAG);
+    private final Logger logger = Logger.getLogger(TAG);
     private String hostProtocol;
     private String hostAddress;
     private int hostPort;
@@ -23,73 +23,76 @@ public abstract class DataSource implements CollectorDataSource {
     private Thread dataSourceThread;
     private CollectorDataSourceListener collectorDataSourceListener;
 
-    public String getHostProtocol() {
+    protected final String getHostProtocol() {
         return hostProtocol;
     }
 
-    public void setHostProtocol(String hostProtocol) {
+    public final void setHostProtocol(String hostProtocol) {
         this.hostProtocol = hostProtocol;
     }
 
-    public String getHostAddress() {
+    protected final String getHostAddress() {
         return hostAddress;
     }
 
-    public void setHostAddress(String hostAddress) {
+    public final void setHostAddress(String hostAddress) {
         this.hostAddress = hostAddress;
     }
 
-    public int getHostPort() {
+    protected final int getHostPort() {
         return hostPort;
     }
 
-    public void setHostPort(int hostPort) {
+    public final void setHostPort(int hostPort) {
         this.hostPort = hostPort;
     }
 
-    public String getUsername() {
+    protected final String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
+    public final void setUsername(String username) {
         this.username = username;
     }
 
-    public String getPassword() {
+    protected final String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public final void setPassword(String password) {
         this.password = password;
     }
 
-    protected boolean isInterrupted() {
+    protected final boolean isInterrupted() {
         return interrupted;
     }
 
-    protected CollectorDataSourceListener getCollectorDataSourceListener() {
+    public final CollectorDataSourceListener getCollectorDataSourceListener() {
         return collectorDataSourceListener;
     }
 
-    public void setCollectorDataSourceListener(CollectorDataSourceListener collectorDataSourceListener) {
+    public final void setCollectorDataSourceListener(CollectorDataSourceListener collectorDataSourceListener) {
         if (getCollectorDataSourceListener() == null) {
             this.collectorDataSourceListener = collectorDataSourceListener;
+            getLogger().debug("Set collector data source listener for this data source.");
         } else {
             getLogger().warn("Cannot set listener. Listener has already been set for this data source.");
         }
     }
 
     @Override
-    public void stopDataSource() {
+    public final void stopDataSource() {
         interrupted = true;
         stopDataSourceThread();
     }
 
+    protected abstract void cleanUpConnections();
+
     /**
-     * Returns a byte array containing the data retrieve from the source. This method
-     * should not be called directly! For use by the DataSourceRunnable only. Data
+     * Returns a byte array containing the data retrieve from the source. Data
      * sources should implement this method with logic for retrieving data from the
-     * source.
+     * source. This method should not be called directly, unless by a
+     * RestrictedRequestIntervalRestPullDataSource. Otherwise, for use by the DataSourceRunnable only.
      *
      * @return the data from the source
      */
@@ -101,8 +104,6 @@ public abstract class DataSource implements CollectorDataSource {
      * @return
      */
     protected abstract Logger getLogger();
-
-    protected abstract void cleanUpConnections();
 
     /**
      * Creates a new DataSource thread for retrieving data from the source;
@@ -155,8 +156,9 @@ public abstract class DataSource implements CollectorDataSource {
                 } else {
                     logger.debug("Data source response bytes was null!.");
                 }
+                logger.debug("Cleaning up connections.");
+                cleanUpConnections();
             }
-            cleanUpConnections();
         }
     }
 }

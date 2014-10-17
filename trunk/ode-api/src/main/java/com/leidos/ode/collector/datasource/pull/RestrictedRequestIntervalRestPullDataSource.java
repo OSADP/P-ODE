@@ -1,4 +1,4 @@
-package com.leidos.ode.collector.datasource;
+package com.leidos.ode.collector.datasource.pull;
 
 import org.apache.log4j.Logger;
 
@@ -11,7 +11,7 @@ import java.util.List;
  * Time: 11:53 AM
  * To change this template use File | Settings | File Templates.
  */
-public class HandleableRestPullDataSource extends RestPullDataSource {
+public class RestrictedRequestIntervalRestPullDataSource extends RestPullDataSource {
 
     private final String TAG = getClass().getSimpleName();
     private Logger logger = Logger.getLogger(TAG);
@@ -82,7 +82,12 @@ public class HandleableRestPullDataSource extends RestPullDataSource {
 
     @Override
     protected void cleanUpConnections() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (getRestPullDataSources() != null && !getRestPullDataSources().isEmpty()) {
+            getLogger().debug("Cleaning up data source connections.");
+            for (RestPullDataSource restPullDataSource : getRestPullDataSources()) {
+                restPullDataSource.cleanUpConnections();
+            }
+        }
     }
 }
 

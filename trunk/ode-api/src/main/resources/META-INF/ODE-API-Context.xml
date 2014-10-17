@@ -106,7 +106,7 @@
         <property name="subscriptionReceivePort" value="${leidos.ode.reg.test.sub.receivePort}"/>
     </bean>
 
-    <bean id="jmsPushDataSource" class="com.leidos.ode.collector.datasource.JMSPushDataSource">
+    <bean id="jmsPushDataSource" class="com.leidos.ode.collector.datasource.push.JMSPushDataSource">
         <property name="hostProtocol" value="tcp://"/>
         <property name="hostAddress" value="localhost"/>
         <property name="hostPort" value="7847"/>
@@ -146,7 +146,7 @@
         <property name="odeLogger" ref="odeLogger"/>
     </bean>
 
-    <bean id="bsmDataSource" class="com.leidos.ode.collector.datasource.UDPPushDataSource"/>
+    <bean id="bsmDataSource" class="com.leidos.ode.collector.datasource.push.UDPPushDataSource"/>
 
     <bean id="bsmCollector" class="com.leidos.ode.collector.ODECollector">
         <property name="agent" ref="bsmPubAgent"/>
@@ -209,7 +209,7 @@
         <property name="dataTarget" ref="restTarget"/>
     </bean>
 
-    <bean id="basicRITISDataSource" class="com.leidos.ode.collector.RITISDataSource">
+    <bean id="basicRITISDataSource" class="com.leidos.ode.collector.datasource.pull.RITISDataSource">
         <property name="hostProtocol" value="${leidos.ode.ritis.protocol}"/>
         <property name="hostAddress" value="${leidos.ode.ritis.sourceaddress}"/>
         <property name="baseUrl" value="${leidos.ode.ritis.baseurl}"/>
@@ -327,7 +327,7 @@
         <property name="registrationRequest" ref="vdotTravelTimePubRegistrationRequest"/>
     </bean>
 
-    <bean id="basicVDOTDataSource" class="com.leidos.ode.collector.VDOTDataSource">
+    <bean id="basicVDOTDataSource" class="com.leidos.ode.collector.datasource.pull.VDOTDataSource">
         <property name="hostProtocol" value="${leidos.ode.vdot.protocol}"/>
         <property name="hostAddress" value="${leidos.ode.vdot.sourceaddress}"/>
         <property name="baseUrl" value="${leidos.ode.vdot.wfsbaseurl}"/>

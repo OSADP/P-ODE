@@ -1,6 +1,5 @@
-package com.leidos.ode.collector;
+package com.leidos.ode.collector.datasource.pull;
 
-import com.leidos.ode.collector.datasource.RestPullDataSource;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
@@ -121,8 +120,4 @@ public class VDOTDataSource extends RestPullDataSource {
 //        return "orci:speed,orci:volume,orci:occupancy";
 //    }
 
-    @Override
-    protected void cleanUpConnections() {
-        
-    }
 }

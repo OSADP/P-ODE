@@ -1,4 +1,6 @@
-package com.leidos.ode.collector.datasource;
+package com.leidos.ode.collector.datasource.pull;
+
+import com.leidos.ode.collector.datasource.DataSource;
 
 /**
  * This collector will go out and retrieve the data from the source.

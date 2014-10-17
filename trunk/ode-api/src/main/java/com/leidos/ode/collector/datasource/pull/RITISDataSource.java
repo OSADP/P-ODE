@@ -1,6 +1,5 @@
-package com.leidos.ode.collector;
+package com.leidos.ode.collector.datasource.pull;
 
-import com.leidos.ode.collector.datasource.RestPullDataSource;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -118,9 +117,5 @@ public class RITISDataSource extends RestPullDataSource {
     @Override
     protected Logger getLogger() {
         return logger;
-    }
-
-    @Override
-    protected void cleanUpConnections() {
     }
 }

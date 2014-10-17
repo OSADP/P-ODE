@@ -3,8 +3,8 @@ package com.leidos.ode.collector;
 import com.leidos.ode.agent.datatarget.ODEDataTarget.DataTargetException;
 import com.leidos.ode.collector.datasource.CollectorDataSource;
 import com.leidos.ode.collector.datasource.CollectorDataSource.DataSourceException;
-import com.leidos.ode.collector.datasource.HandleableRestPullDataSource;
-import com.leidos.ode.collector.datasource.RestPullDataSource;
+import com.leidos.ode.collector.datasource.pull.RestPullDataSource;
+import com.leidos.ode.collector.datasource.pull.RestrictedRequestIntervalRestPullDataSource;
 import com.leidos.ode.util.MongoUtils;
 import com.leidos.ode.util.ODEMessageType;
 import org.apache.log4j.Logger;
@@ -49,10 +49,10 @@ public class CollectorRunner extends QuartzJobBean {
                 //If the runner properties is successfully loaded, build the collectors
                 collectors = new ArrayList<ODECollector>();
                 Map<String, Map<ODEMessageType, ODECollector>> odeCollectorHashMap = buildCollectorsForEnabledMessageTypes();
-                Map<ODECollector, String> collectorsRequiringHandlersAndTheirDataSourcesMap = getCollectorsRequiringHandlersAndTheirDataSourcesMap(false, odeCollectorHashMap);
-                removeCollectorsRequiringHandlersFromRunnerList(collectorsRequiringHandlersAndTheirDataSourcesMap.keySet());
-                List<ODECollector> handlerODECollectors = buildHandlerODECollectors(collectorsRequiringHandlersAndTheirDataSourcesMap);
-                addHandlerODECollectorsToRunnerList(handlerODECollectors);
+                Map<ODECollector, String> collectorsWithRestrictedRequestIntervalsAndDataSourcesMap = getcollectorsWithRestrictedRequestIntervalsAndDataSourcesMap(false, odeCollectorHashMap);
+                removeCollectorsRequiringRestrictedRequestIntervalCollectorsFromRunnerList(collectorsWithRestrictedRequestIntervalsAndDataSourcesMap.keySet());
+                List<ODECollector> restrictedRequestIntervalODECollectors = buildRestrictedRequestIntervalODECollectors(collectorsWithRestrictedRequestIntervalsAndDataSourcesMap);
+                addRestrictedRequestIntervalODECollectorsToRunnerList(restrictedRequestIntervalODECollectors);
 
             } else {
                 getLogger().error("No properties file found with name: " + RUNNER_PROPERTIES);
@@ -154,8 +154,8 @@ public class CollectorRunner extends QuartzJobBean {
         return odeCollectorHashMap;
     }
 
-    private Map<ODECollector, String> getCollectorsRequiringHandlersAndTheirDataSourcesMap(boolean occurrencesFilter, Map<String, Map<ODEMessageType, ODECollector>> odeCollectorHashMap) {
-        Map<ODECollector, String> collectorsRequiringHandlersAndTheirDataSourcesMap = new HashMap<ODECollector, String>();
+    private Map<ODECollector, String> getcollectorsWithRestrictedRequestIntervalsAndDataSourcesMap(boolean occurrencesFilter, Map<String, Map<ODEMessageType, ODECollector>> odeCollectorHashMap) {
+        Map<ODECollector, String> collectorsWithRestrictedRequestIntervalsAndDataSourcesMap = new HashMap<ODECollector, String>();
         if (getRunnerProperties() != null && odeCollectorHashMap != null) {
             //Initialize the available data sources defined by ODEMessageType, and their occurrences to zero
             Map<String, Integer> dataSourcesOccurencesMap = new HashMap<String, Integer>();
@@ -191,96 +191,84 @@ public class CollectorRunner extends QuartzJobBean {
             //Iterate the nested hash map that contains the 1) name of the collector bean, 2) the message type
             //represented by this collector, and 3) the ODECollector object the bean creates.
             for (Map.Entry<String, Map<ODEMessageType, ODECollector>> entry : odeCollectorHashMap.entrySet()) {
-                //Based on the occurrences of each data source, determine which beans need a handler
+                //Based on the occurrences of each data source, determine which beans need a restricted collector
                 for (Map.Entry<ODEMessageType, ODECollector> innerEntry : entry.getValue().entrySet()) {
                     //Store the ODEMessageType for this collector
                     ODEMessageType messageType = innerEntry.getKey();
                     //Store the data source for this collector
                     String dataSource = messageType.dataSource();
-                    //Check if this message type is handleable
-                    if (messageType.isHandleable()) {
-                        /*If the occurrence filter is enabled, a collector will only need a handler if the occurrence of
-                        its data source is greater than one; otherwise, all collectors that are handleable need a handler.
+                    //Check if this message type is from a source with restricted request intervals
+                    if (messageType.restrictedRequestInterval()) {
+                        /*If the occurrence filter is enabled, a collector will only need a restricted collector if the occurrence of
+                        its data source is greater than one; otherwise, all collectors that are restricted need a restricted collector.
                          */
                         if (occurrencesFilter) {
                             int occurrences = dataSourcesOccurencesMap.get(dataSource);
-                            //This collector needs a handler if there is more than one occurrence of this data source
+                            //This collector needs a restricted collector if there is more than one occurrence of this data source
                             if (occurrences > 1) {
-                                collectorsRequiringHandlersAndTheirDataSourcesMap.put(innerEntry.getValue(), dataSource);
+                                collectorsWithRestrictedRequestIntervalsAndDataSourcesMap.put(innerEntry.getValue(), dataSource);
                             }
                         } else {
-                            //This collector needs a handler regardless of the occurrences of this data source
-                            collectorsRequiringHandlersAndTheirDataSourcesMap.put(innerEntry.getValue(), dataSource);
+                            //This collector needs a restricted collector regardless of the occurrences of this data source
+                            collectorsWithRestrictedRequestIntervalsAndDataSourcesMap.put(innerEntry.getValue(), dataSource);
                         }
                     }
                 }
             }
-
-//            for (Map.Entry<ODECollector, String> entry : collectorsRequiringHandlersAndTheirDataSourcesMap.entrySet()) {
-//                String debugStatement = new StringBuilder()
-//                        .append("Handler needed for '")
-//                        .append(entry.getValue())
-//                        .append("' data source collector '")
-//                        .append(entry.getKey())
-//                        .append("'.")
-//                        .toString();
-//                getLogger().debug(debugStatement);
-//            }
-
         }
-        return collectorsRequiringHandlersAndTheirDataSourcesMap;
+        return collectorsWithRestrictedRequestIntervalsAndDataSourcesMap;
     }
 
-    private void removeCollectorsRequiringHandlersFromRunnerList(Set<ODECollector> collectorsRequiringHandlers) {
-        if (getCollectors() != null && collectorsRequiringHandlers != null) {
-            getCollectors().removeAll(collectorsRequiringHandlers);
+    private void removeCollectorsRequiringRestrictedRequestIntervalCollectorsFromRunnerList(Set<ODECollector> collectorsRequiringRestrictedIntervalCollectors) {
+        if (getCollectors() != null && collectorsRequiringRestrictedIntervalCollectors != null) {
+            getCollectors().removeAll(collectorsRequiringRestrictedIntervalCollectors);
         }
     }
 
-    private List<ODECollector> buildHandlerODECollectors(Map<ODECollector, String> odeCollectorsRequiringHandlersAndTheirDataSourcesMap) {
-        List<ODECollector> handlerODECollectors = new ArrayList<ODECollector>();
-        if (getContext() != null && odeCollectorsRequiringHandlersAndTheirDataSourcesMap != null) {
+    private List<ODECollector> buildRestrictedRequestIntervalODECollectors(Map<ODECollector, String> collectorsRequiringRestrictedRequestIntervalCollectorsAndTheirDataSourcesMap) {
+        List<ODECollector> restrictedRequestIntervalCollectors = new ArrayList<ODECollector>();
+        if (getContext() != null && collectorsRequiringRestrictedRequestIntervalCollectorsAndTheirDataSourcesMap != null) {
 
-            String handlerRules = new StringBuilder()
+            String restrictedRequestIntervalCollectorRules = new StringBuilder()
                     .append(System.lineSeparator())
-                    .append("------------------------- Building handlers using the following rules: -------------------------")
+                    .append("------------------------- Building restricted interval collectors using the following rules: -------------------------")
                     .append(System.lineSeparator())
-                    .append("Rule 1: Handlers are needed for ALL data sources that are of a 'handleable' 'ODEMessageType'")
+                    .append("Rule 1: Restricted interval collectors are needed for ALL data sources that are of a restricted request interval 'ODEMessageType'")
                     .append(System.lineSeparator())
-                    .append("Rule 2: Handlers should NEVER be explicitly defined in the context. They are generated based on the configured data source beans.")
+                    .append("Rule 2: Restricted interval collectors should NEVER be explicitly defined in the context. They are generated based on the configured data source beans.")
                     .append(System.lineSeparator())
-                    .append("Rule 3: Handlers must only contain a 'DataSource' of type 'HandleableRestPullDataSource'.")
+                    .append("Rule 3: Restricted interval collectors must only contain a 'DataSource' of type 'RestrictedRequestIntervalRestPullDataSource'.")
                     .append(System.lineSeparator())
-                    .append("Rule 4: A handler's 'RestPullDataSource' should not be explicitly defined in the context. The list of 'RestPullDataSources' is automatically configured based on the configured data source beans.")
+                    .append("Rule 4: A restricted interval collectors's 'RestPullDataSource' should not be explicitly defined in the context. The list of 'RestPullDataSources' is automatically configured based on the configured data source beans.")
                     .append(System.lineSeparator())
-                    .append("Rule 5: A handler's 'CollectorDataSourceListener' is the collector itself. This does not have to be explicitly set.")
+                    .append("Rule 5: A restricted interval collectors's 'CollectorDataSourceListener' is the collector itself. This does not have to be explicitly set.")
                     .append(System.lineSeparator())
-                    .append("Rule 6: A 'HandleableRestPullDataSource' request limit is set to the maximum of its data source's request limits; or '0' if none are defined.")
+                    .append("Rule 6: A 'RestrictedRequestIntervalRestPullDataSource' request limit is set to the maximum of its data source's request limits; or '0' if none are defined.")
                     .append(System.lineSeparator())
-                    .append("-------------------------------------------------------------------------------------------------")
+                    .append("----------------------------------------------------------------------------------------------------------------------")
                     .toString();
-            getLogger().debug(handlerRules);
+            getLogger().debug(restrictedRequestIntervalCollectorRules);
 
-            Map<String, ODECollector> handlerODECollectorMap = new HashMap<String, ODECollector>();
-            //Iterate the collectors requiring handlers to create exactly (1) handler per data source
-            for (Map.Entry<ODECollector, String> entry : odeCollectorsRequiringHandlersAndTheirDataSourcesMap.entrySet()) {
-                //Create a new handler for each data source
-                handlerODECollectorMap.put(entry.getValue(), new ODECollector());
+            Map<String, ODECollector> restrictedRequestIntervalCollectorsMap = new HashMap<String, ODECollector>();
+            //Iterate the collectors requiring restricted request interval collectors to create exactly (1) restricted request interval collector per data source
+            for (Map.Entry<ODECollector, String> entry : collectorsRequiringRestrictedRequestIntervalCollectorsAndTheirDataSourcesMap.entrySet()) {
+                //Create a new restricted request interval collector for each data source
+                restrictedRequestIntervalCollectorsMap.put(entry.getValue(), new ODECollector());
             }
 
-            //Iterate the data source handler map we created
-            for (Map.Entry<String, ODECollector> handlerODECollectorEntry : handlerODECollectorMap.entrySet()) {
+            //Iterate the data source restricted request interval collector map we created
+            for (Map.Entry<String, ODECollector> restrictedRequestIntervalCollectorEntry : restrictedRequestIntervalCollectorsMap.entrySet()) {
                 //Create a temporary field for holding our list of RestPullDataSource(s)
-                HandleableRestPullDataSource handleableRestPullDataSource = new HandleableRestPullDataSource();
+                RestrictedRequestIntervalRestPullDataSource restrictedRequestIntervalRestPullDataSource = new RestrictedRequestIntervalRestPullDataSource();
                 List<RestPullDataSource> restPullDataSources = new ArrayList<RestPullDataSource>();
                 int requestLimit = 0;
-                //Iterate the collectors requiring handlers to add their data sources to the respective handler's data source handler
-                for (Map.Entry<ODECollector, String> entry : odeCollectorsRequiringHandlersAndTheirDataSourcesMap.entrySet()) {
-                    //Determine if the data source of the collector is equal to that of the handler
-                    if (entry.getValue().equals(handlerODECollectorEntry.getKey())) {
+                //Iterate the collectors requiring restricted request interval collectors, in order to add their data sources to the respective restricted request interval collector's data source
+                for (Map.Entry<ODECollector, String> entry : collectorsRequiringRestrictedRequestIntervalCollectorsAndTheirDataSourcesMap.entrySet()) {
+                    //Determine if the data source of the collector is equal to that of the restricted request interval collector
+                    if (entry.getValue().equals(restrictedRequestIntervalCollectorEntry.getKey())) {
                         //Grab the data source of the given ODECollector
                         CollectorDataSource collectorDataSource = entry.getKey().getDataSource();
-                        //Determine if the data source we just stored is of type RestPullDataSource, since this is the only data source that can be handled
+                        //Determine if the data source we just stored is of type RestPullDataSource, since this is the only type of data source that is currently restricted
                         if (collectorDataSource instanceof RestPullDataSource) {
                             RestPullDataSource restPullDataSource = (RestPullDataSource) collectorDataSource;
                             /*We must set the listener of this data source to the ODECollector it belongs to, since this
@@ -297,29 +285,29 @@ public class CollectorRunner extends QuartzJobBean {
                         }
                     }
                 }
-                //Set the list of RestPullDataSources in the HandleableRestPullDataSource
-                handleableRestPullDataSource.setRestPullDataSources(restPullDataSources);
+                //Set the list of RestPullDataSources in the RestrictedRequestIntervalRestPullDataSource
+                restrictedRequestIntervalRestPullDataSource.setRestPullDataSources(restPullDataSources);
                 //Set the request interval of the RestPullDataSource to the max limit of all of the sources
-                handleableRestPullDataSource.setRequestLimit(String.valueOf(requestLimit));
-                //Set the data source of the HandlerODECollector to the HandleableRestPullDataSource
-                handlerODECollectorEntry.getValue().setDataSource(handleableRestPullDataSource);
+                restrictedRequestIntervalRestPullDataSource.setRequestLimit(String.valueOf(requestLimit));
+                //Set the data source of the restricted request interval collector to the RestrictedRequestIntervalRestPullDataSource
+                restrictedRequestIntervalCollectorEntry.getValue().setDataSource(restrictedRequestIntervalRestPullDataSource);
             }
 
-            //Add all of our handlers
-            handlerODECollectors.addAll(handlerODECollectorMap.values());
+            //Add all of our restricted request interval collectors
+            restrictedRequestIntervalCollectors.addAll(restrictedRequestIntervalCollectorsMap.values());
 
-            if (handlerODECollectors.size() == 0) {
-                getLogger().debug("No handlers were necessary for the enabled message types.");
+            if (restrictedRequestIntervalCollectors.size() == 0) {
+                getLogger().debug("No restricted request interval collectors were necessary for the enabled message types.");
             } else {
-                getLogger().debug("Created '" + handlerODECollectors.size() + "' handler(s).");
+                getLogger().debug("Created '" + restrictedRequestIntervalCollectors.size() + "' restricted request interval collector(s).");
             }
         }
-        return handlerODECollectors;
+        return restrictedRequestIntervalCollectors;
     }
 
-    private void addHandlerODECollectorsToRunnerList(List<ODECollector> handlerODECollectors) {
-        if (getCollectors() != null && handlerODECollectors != null) {
-            getCollectors().addAll(handlerODECollectors);
+    private void addRestrictedRequestIntervalODECollectorsToRunnerList(List<ODECollector> restrictedRequestIntervalODECollectors) {
+        if (getCollectors() != null && restrictedRequestIntervalODECollectors != null) {
+            getCollectors().addAll(restrictedRequestIntervalODECollectors);
         }
     }
 

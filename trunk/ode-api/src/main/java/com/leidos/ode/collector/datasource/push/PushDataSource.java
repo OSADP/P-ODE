@@ -1,4 +1,6 @@
-package com.leidos.ode.collector.datasource;
+package com.leidos.ode.collector.datasource.push;
+
+import com.leidos.ode.collector.datasource.DataSource;
 
 /**
  * Data will be sent to this collector from the provider.

@@ -1,10 +1,10 @@
-package com.leidos.ode.collector.datasource;
+package com.leidos.ode.collector.datasource.push;
 
+import com.leidos.ode.collector.datasource.CollectorDataSource;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.log4j.Logger;
 
 import javax.jms.*;
-import java.util.logging.Level;
 
 /**
  * @author cassadyja
@@ -17,7 +17,7 @@ public class JMSPushDataSource extends PushDataSource implements ExceptionListen
     private MessageConsumer consumer;
 
     @Override
-    public void startDataSource(CollectorDataSourceListener collectorDataSourceListener) throws DataSourceException {
+    public void startDataSource(CollectorDataSource.CollectorDataSourceListener collectorDataSourceListener) throws CollectorDataSource.DataSourceException {
         try {
 
 //            Properties env = new Properties();
@@ -55,22 +55,13 @@ public class JMSPushDataSource extends PushDataSource implements ExceptionListen
 //        } catch (NamingException e) {
 //            throw new DataSourceException("Error connecting", e);
         } catch (JMSException ex) {
-            throw new DataSourceException("Error connecting", ex);
+            throw new CollectorDataSource.DataSourceException("Error connecting", ex);
         }
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public void onException(JMSException jmse) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public void stop() {
-        try {
-            connection.close();
-        } catch (JMSException ex) {
-            java.util.logging.Logger.getLogger(JMSPushDataSource.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
     }
 
     @Override
@@ -85,6 +76,15 @@ public class JMSPushDataSource extends PushDataSource implements ExceptionListen
 
     @Override
     protected void cleanUpConnections() {
-        
+        if (connection != null) {
+            try {
+                connection.close();
+                getLogger().debug("Closed connection.");
+            } catch (JMSException e) {
+                getLogger().error(e.getLocalizedMessage());
+            }
+        } else {
+            getLogger().warn("Unable to close connection. Connection was null.");
+        }
     }
 }

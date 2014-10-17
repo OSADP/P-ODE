@@ -1,4 +1,4 @@
-package com.leidos.ode.collector.datasource;
+package com.leidos.ode.collector.datasource.push;
 
 import org.apache.log4j.Logger;
 
@@ -65,6 +65,11 @@ public class UDPPushDataSource extends PushDataSource {
 
     @Override
     protected void cleanUpConnections() {
-        datagramSocket.close();
+        if (datagramSocket != null) {
+            datagramSocket.close();
+            getLogger().debug("Closed datagram socket.");
+        } else {
+            getLogger().warn("Unable to close datagram socket. Datagram socket was null.");
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.leidos.ode.collector.datasource;
 
 import com.leidos.ode.collector.datasource.CollectorDataSource.DataSourceException;
+import com.leidos.ode.collector.datasource.push.JMSPushDataSource;
 import junit.framework.TestCase;
 
 import java.util.logging.Level;

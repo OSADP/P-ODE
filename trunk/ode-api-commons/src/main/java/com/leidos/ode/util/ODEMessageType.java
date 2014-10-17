@@ -22,11 +22,11 @@ public enum ODEMessageType {
     RITISWeather("RITIS", true),
     BSM("BSM", false);
     private String dataSource;
-    private boolean isHandleable;
+    private boolean isRestrictedRequestInterval;
 
-    private ODEMessageType(String dataSource, boolean isHandleable) {
+    private ODEMessageType(String dataSource, boolean isRestrictedRequestInterval) {
         this.dataSource = dataSource;
-        this.isHandleable = isHandleable;
+        this.isRestrictedRequestInterval = isRestrictedRequestInterval;
     }
 
     /**
@@ -40,13 +40,12 @@ public enum ODEMessageType {
     }
 
     /**
-     * Returns whether this message type is "handleable". Meaning,
-     * the type belongs to a DataSource that requires a handler for
-     * more than one data type request.
+     * Returns whether this message type is from a data source that
+     * enforces restrictions on request intervals.
      *
-     * @return true if this message type is handleable
+     * @return true if there is a restricted request interval from this source
      */
-    public boolean isHandleable() {
-        return isHandleable;
+    public boolean restrictedRequestInterval() {
+        return isRestrictedRequestInterval;
     }
 }

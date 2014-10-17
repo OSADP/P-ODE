@@ -92,7 +92,7 @@
         <property name="odeLogger" ref="odeLogger"/>
     </bean>
 
-    <bean id="bsmDataSource" class="com.leidos.ode.collector.datasource.UDPPushDataSource">
+    <bean id="bsmDataSource" class="com.leidos.ode.collector.datasource.push.UDPPushDataSource">
         <property name="hostAddress" value="${leidos.ode.emulator.bsm.hostAddress}"/>
         <property name="hostPort" value="${leidos.ode.emulator.bsm.hostPort}"/>
     </bean>
@@ -184,13 +184,13 @@
         <property name="registrationRequest" ref="ritisWeatherSubRegistrationRequest"/>
     </bean>
 
-    <bean id="ritisSpeedDataSource" class="com.leidos.ode.collector.datasource.UDPPushDataSource">
+    <bean id="ritisSpeedDataSource" class="com.leidos.ode.collector.datasource.push.UDPPushDataSource">
         <property name="hostProtocol" value="${leidos.ode.emulator.ritisspeed.hostProtocol}"/>
         <property name="hostAddress" value="${leidos.ode.emulator.ritisspeed.hostAddress}"/>
         <property name="hostPort" value="${leidos.ode.emulator.ritisspeed.hostPort}"/>
     </bean>
 
-    <bean id="ritisWeatherDataSource" class="com.leidos.ode.collector.datasource.UDPPushDataSource">
+    <bean id="ritisWeatherDataSource" class="com.leidos.ode.collector.datasource.push.UDPPushDataSource">
         <property name="hostProtocol" value="${leidos.ode.emulator.ritisweather.hostProtocol}"/>
         <property name="hostAddress" value="${leidos.ode.emulator.ritisweather.hostAddress}"/>
         <property name="hostPort" value="${leidos.ode.emulator.ritisweather.hostPort}"/>
@@ -325,19 +325,19 @@
         <property name="odeLogger" ref="odeLogger"/>
     </bean>
 
-    <bean id="vdotWeatherDataSource" class="com.leidos.ode.collector.datasource.UDPPushDataSource">
+    <bean id="vdotWeatherDataSource" class="com.leidos.ode.collector.datasource.push.UDPPushDataSource">
         <property name="hostProtocol" value="${leidos.ode.emulator.vdotweather.hostProtocol}"/>
         <property name="hostAddress" value="${leidos.ode.emulator.vdotweather.hostAddress}"/>
         <property name="hostPort" value="${leidos.ode.emulator.vdotweather.hostPort}"/>
     </bean>
 
-    <bean id="vdotSpeedDataSource" class="com.leidos.ode.collector.datasource.UDPPushDataSource">
+    <bean id="vdotSpeedDataSource" class="com.leidos.ode.collector.datasource.push.UDPPushDataSource">
         <property name="hostProtocol" value="${leidos.ode.emulator.vdotspeed.hostProtocol}"/>
         <property name="hostAddress" value="${leidos.ode.emulator.vdotspeed.hostAddress}"/>
         <property name="hostPort" value="${leidos.ode.emulator.vdotspeed.hostPort}"/>
     </bean>
 
-    <bean id="vdotTravelTimeDataSource" class="com.leidos.ode.collector.datasource.UDPPushDataSource">
+    <bean id="vdotTravelTimeDataSource" class="com.leidos.ode.collector.datasource.push.UDPPushDataSource">
         <property name="hostProtocol" value="${leidos.ode.emulator.vdottraveltime.hostProtocol}"/>
         <property name="hostAddress" value="${leidos.ode.emulator.vdottraveltime.hostAddress}"/>
         <property name="hostPort" value="${leidos.ode.emulator.vdottraveltime.hostPort}"/>
