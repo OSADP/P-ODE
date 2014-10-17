@@ -12,6 +12,7 @@ import com.leidos.ode.agent.data.ritis.RITISWeatherDataNWS;
 import com.leidos.ode.agent.data.vdot.VDOTSpeedData;
 import com.leidos.ode.agent.data.vdot.VDOTTravelTimeData;
 import com.leidos.ode.agent.data.vdot.VDOTWeatherData;
+import java.text.NumberFormat;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
@@ -225,11 +226,43 @@ public class CurrentDataSet {
     }
 
     private void recalculateWest() {
-
+        int speed = 0;
+        int count = 0;
+        if(ritisSpeedDataWestValue != null){
+            speed += ritisSpeedDataWestValue.getZoneDetectorDataRITIS().getCollectionPeriod().getCollectionPeriodItem().get(0).getZoneReports()
+                        .getZoneReport().get(0).getZoneData().getZoneDataItem().get(0).getZoneVehicleSpeed();
+            count++;
+        }
+        
+        if(vdotSpeedDataWestValue != null){
+            speed += vdotSpeedDataWestValue.getVdotSpeedDataElements().get(0).getSpeed();
+            count++;
+        }
+        if(count > 0){
+            double speedAvg = (double)speed/count;
+            double tt = 5/speedAvg;
+            westBoundTravelTime = NumberFormat.getInstance().format(tt*60);
+        }
     }
 
     private void recalculateEast() {
-
+        int speed = 0;
+        int count = 0;
+        if(ritisSpeedDataEastValue != null){
+            speed += ritisSpeedDataEastValue.getZoneDetectorDataRITIS().getCollectionPeriod().getCollectionPeriodItem().get(0).getZoneReports()
+                        .getZoneReport().get(0).getZoneData().getZoneDataItem().get(0).getZoneVehicleSpeed();
+            count++;
+        }
+        
+        if(vdotSpeedDataEastValue != null){
+            speed += vdotSpeedDataEastValue.getVdotSpeedDataElements().get(0).getSpeed();
+            count++;
+        }
+        if(count > 0){
+            double speedAvg = (double)speed/count;
+            double tt = 5/speedAvg;
+            eastBoundTravelTime = NumberFormat.getInstance().format(tt*60);
+        }
     }
 
     /**

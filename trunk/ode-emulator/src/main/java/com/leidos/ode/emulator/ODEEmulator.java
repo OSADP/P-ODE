@@ -53,7 +53,9 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
     @Autowired
     @Qualifier("bsmCollector")
     private ODECollector bsmCollector;
+    
     private CurrentDataSet currentData = new CurrentDataSet();
+    private RITISZoneDirectionData ritisZoneDirData = new RITISZoneDirectionData();
 
     @RequestMapping(value = "startEmulator", method = RequestMethod.POST)
     public
@@ -162,6 +164,7 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
         int avgSpeed = 0;
         int occ = 0;
         int volume = 0;
+        
 
         RITISSpeedData ritisSpeedData = (RITISSpeedData) data;
         List<ZoneDataCollectionPeriodRITIS> zoneDataCollectionPeriodRITISList = ritisSpeedData.getZoneDetectorDataRITIS().getCollectionPeriod().getCollectionPeriodItem();
@@ -170,11 +173,12 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
             for (ZoneReportRITIS zoneReportRITIS : zoneReportRITISList) {
                 List<ZoneDataRITIS> zoneDataRITISList = zoneReportRITIS.getZoneData().getZoneDataItem();
                 for (ZoneDataRITIS zoneDataRITIS : zoneDataRITISList) {
-                    //TODO: determine if this item is for the correct direction we are looking for.
-                    avgSpeed += zoneDataRITIS.getZoneVehicleSpeed();
-                    occ += zoneDataRITIS.getOccupancy();
-                    volume += zoneDataRITIS.getZoneVehicleCount();
-                    count++;
+                    if(ritisZoneDirData.isInDirectionOfTravelRITIS(zoneDataRITIS.getZoneNumber(), direction) >=0){
+                        avgSpeed += zoneDataRITIS.getZoneVehicleSpeed();
+                        occ += zoneDataRITIS.getOccupancy();
+                        volume += zoneDataRITIS.getZoneVehicleCount();
+                        count++;
+                    }
                 }
             }
         }
@@ -209,8 +213,10 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
         return returnRITISSpeedData;
     }
 
+
+    
     public void ritisWeatherDataReceived(ODEAgentMessage data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO Implement
     }
 
     public void vdotSpeedDataReceived(ODEAgentMessage odeAgentMessage) {
@@ -218,7 +224,7 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
 
         VDOTSpeedData eastData = getVDOTSpeedDataAverage(data, "E");
         VDOTSpeedData westData = getVDOTSpeedDataAverage(data, "W");
-        //TODO set values to current data.
+        
         currentData.setVdotSpeedDataEastValue(eastData);
         currentData.setVdotSpeedDataWestValue(westData);
     }
@@ -253,7 +259,7 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
     }
 
     public void vdotTravelTimeDataReceived(ODEAgentMessage data) {
-        //TODO: finish weather
+        //TODO: finish travel time -- no data from VDOT
     }
 
     public void vdotWeatherDataReceived(ODEAgentMessage data) {
