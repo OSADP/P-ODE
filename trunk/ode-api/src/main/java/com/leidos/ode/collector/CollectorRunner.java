@@ -70,6 +70,9 @@ public class CollectorRunner extends QuartzJobBean {
         }
     }
 
+    /**
+     * Checks whether MongoDB is currently running, and logs the status.
+     */
     private void checkMongoDB() {
         if (MongoUtils.isMongoDBRunning()) {
             getLogger().debug("MongoDB has been started.");
@@ -78,6 +81,11 @@ public class CollectorRunner extends QuartzJobBean {
         }
     }
 
+    /**
+     * Loads the properties for this runner.
+     *
+     * @return True if successfully loaded, false otherwise.
+     */
     private boolean loadRunnerProperties() {
         try {
             getRunnerProperties().load(getClass().getResourceAsStream(RUNNER_PROPERTIES));
@@ -123,6 +131,13 @@ public class CollectorRunner extends QuartzJobBean {
         }
     }
 
+    /**
+     * Returns a map of data source names, and a map of the respective ODEMessageType and ODECollector. Note: The data source
+     * name is the key to the map, since for a given data source, there will be a map of ODEMessageTypes and ODECollectors.
+     * The inner map's key is the ODEMessageType, since there will only ever be a single ODECollector per ODEMessageType.
+     *
+     * @return
+     */
     private Map<String, Map<ODEMessageType, ODECollector>> buildCollectorsForEnabledMessageTypes() {
         Map<String, Map<ODEMessageType, ODECollector>> odeCollectorHashMap = new HashMap<String, Map<ODEMessageType, ODECollector>>();
         if (getRunnerProperties() != null && getContext() != null) {
@@ -185,6 +200,16 @@ public class CollectorRunner extends QuartzJobBean {
         return odeCollectorHashMap;
     }
 
+    /**
+     * Returns a map of collectors with restricted request intervals and their respective data sources.
+     *
+     * @param occurrencesFilter   If 'True', restricted request interval collectors will only need a manager ODECollector if the occurrence of its data
+     *                            source is greater than one. If 'False', all restricted request interval collectors require a manager ODECollector
+     * @param odeCollectorHashMap Map of data source names, and a map of the respective ODEMessageType and ODECollector. Note: The data source
+     *                            name is the key to the map, since for a given data source, there will be a map of ODEMessageTypes and ODECollectors.
+     *                            The inner map's key is the ODEMessageType, since there will only ever be a single ODECollector per ODEMessageType.
+     * @return Map of collectors with restricted request intervals and their respective data source names
+     */
     private Map<ODECollector, String> getCollectorsWithRestrictedRequestIntervalsAndDataSourcesMap(boolean occurrencesFilter, Map<String, Map<ODEMessageType, ODECollector>> odeCollectorHashMap) {
         Map<ODECollector, String> collectorsWithRestrictedRequestIntervalsAndDataSourcesMap = new HashMap<ODECollector, String>();
         if (getRunnerProperties() != null && odeCollectorHashMap != null) {
@@ -230,8 +255,8 @@ public class CollectorRunner extends QuartzJobBean {
                     String dataSource = messageType.dataSource();
                     //Check if this message type is from a source with restricted request intervals
                     if (messageType.restrictedRequestInterval()) {
-                        /*If the occurrence filter is enabled, a collector will only need a restricted collector if the occurrence of
-                        its data source is greater than one; otherwise, all collectors that are restricted need a restricted collector.
+                        /*If the occurrence filter is enabled, a collector will only need a manager ODECollector if the occurrence of
+                        its data source is greater than one; otherwise, all collectors that are restricted need a manager ODECollector.
                          */
                         if (occurrencesFilter) {
                             int occurrences = dataSourcesOccurencesMap.get(dataSource);
@@ -250,6 +275,15 @@ public class CollectorRunner extends QuartzJobBean {
         return collectorsWithRestrictedRequestIntervalsAndDataSourcesMap;
     }
 
+    /**
+     * Builds a map of manager ODECollectors and their respective lists of ODECollectors that they manage. The list of collectors each are from
+     * a data source matching that of the respective manager ODECollector. There is one manager ODECollector per data source with restricted
+     * request intervals.
+     *
+     * @param collectorsRequiringRestrictedRequestIntervalManagersAndTheirDataSourcesMap
+     *         Map of collectors with restricted request intervals, and their respective data source name
+     * @return A map of manager ODECollectors and the list ODECollectors for which the manager is responsible
+     */
     private Map<ODECollector, List<ODECollector>> buildRestrictedRequestIntervalCollectorManagers(Map<ODECollector, String> collectorsRequiringRestrictedRequestIntervalManagersAndTheirDataSourcesMap) {
         Map<ODECollector, List<ODECollector>> restrictedRequestIntervalCollectorsAndTheirCollectorsMap = new HashMap<ODECollector, List<ODECollector>>();
         if (getContext() != null && collectorsRequiringRestrictedRequestIntervalManagersAndTheirDataSourcesMap != null) {
@@ -333,12 +367,26 @@ public class CollectorRunner extends QuartzJobBean {
         return restrictedRequestIntervalCollectorsAndTheirCollectorsMap;
     }
 
+    /**
+     * Adds the manager ODECollectors to the runner's list of collectors. These collectors manage their own lists of restricted request interval
+     * ODECollectors.
+     *
+     * @param restrictedRequestIntervalCollectorManagers
+     *         Map of manager ODECollectors and their respective lists of ODECollectors that they manage
+     */
     private void addRestrictedRequestIntervalCollectorManagersToRunnerList(Map<ODECollector, List<ODECollector>> restrictedRequestIntervalCollectorManagers) {
         if (getCollectors() != null && restrictedRequestIntervalCollectorManagers != null) {
             getCollectors().putAll(restrictedRequestIntervalCollectorManagers);
         }
     }
 
+    /**
+     * Removes the ODECollectors with restricted request intervals from the runner's list of collectors. These collectors will
+     * be managed by their respective manager ODECollectors.
+     *
+     * @param restrictedRequestIntervalCollectors
+     *         Set of ODECollectors that have restricted request intervals
+     */
     private void removeRestrictedRequestIntervalsCollectorsFromRunnerList(Set<ODECollector> restrictedRequestIntervalCollectors) {
         if (getCollectors() != null && restrictedRequestIntervalCollectors != null) {
             for (ODECollector odeCollector : restrictedRequestIntervalCollectors) {
@@ -347,15 +395,26 @@ public class CollectorRunner extends QuartzJobBean {
         }
     }
 
+    /**
+     * Returns a list of enabled message type names derived from ODEMessageType, based on the runner properties config.
+     *
+     * @return list of String representing the enabled message type names
+     */
     private List<String> getEnabledMessageTypesNames() {
         List<String> enabledMessageTypesNames = new ArrayList<String>();
+        //Grab the property entries
         Set<Map.Entry<Object, Object>> propertyEntries = getRunnerProperties().entrySet();
+        //Iterate the property entries
         for (Map.Entry<Object, Object> propertyEntry : propertyEntries) {
+            //Case the property key to a string for comparisons
             String propertyKeyString = (String) propertyEntry.getKey();
             if (propertyKeyString != null) {
+                //Find the value of this key, or null if none exists
                 ODEMessageType odeMessageType = ODEMessageType.valueOf(propertyKeyString);
                 if (odeMessageType != null) {
+                    //Cast the value of this entry to a string for comparisons
                     String propertyValueString = (String) propertyEntry.getValue();
+                    //If this message type is enabled, add it to the list of enabled message types
                     if (isMessageTypeEnabled(odeMessageType, propertyValueString)) {
                         getLogger().debug("Message type '" + odeMessageType.name() + "' is enabled.");
                         enabledMessageTypesNames.add(odeMessageType.name());
@@ -370,6 +429,13 @@ public class CollectorRunner extends QuartzJobBean {
         return enabledMessageTypesNames;
     }
 
+    /**
+     * Returns whether the given ODEMessageType is enabled based on the state parameter.
+     *
+     * @param odeMessageType
+     * @param stateString
+     * @return
+     */
     private boolean isMessageTypeEnabled(ODEMessageType odeMessageType, String stateString) {
         if (odeMessageType != null && stateString != null) {
             try {
