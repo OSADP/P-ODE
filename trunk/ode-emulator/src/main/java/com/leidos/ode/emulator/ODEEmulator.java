@@ -7,6 +7,7 @@ import com.leidos.ode.agent.data.vdot.VDOTSpeedData;
 import com.leidos.ode.agent.datatarget.ODEDataTarget;
 import com.leidos.ode.collector.ODECollector;
 import com.leidos.ode.collector.datasource.CollectorDataSource;
+import com.leidos.ode.collector.datasource.DataSource;
 import com.leidos.ode.emulator.agent.EmulatorDataTarget;
 import com.leidos.ode.util.ODEMessageType;
 import org.apache.log4j.Logger;
@@ -14,6 +15,7 @@ import org.ritis.schema.tmdd_0_0_0.ZoneDataCollectionPeriodRITIS;
 import org.ritis.schema.tmdd_0_0_0.ZoneDataRITIS;
 import org.ritis.schema.tmdd_0_0_0.ZoneDetectorDataRITIS;
 import org.ritis.schema.tmdd_0_0_0.ZoneReportRITIS;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -24,7 +26,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.xml.bind.DatatypeConverter;
 import java.util.List;
-import org.springframework.beans.factory.DisposableBean;
 
 /**
  * @author cassadyja
@@ -64,35 +65,49 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
                 if (s.equalsIgnoreCase("RITISWeatherCollector")) {
                     ritisWeatherCollector.stop();
                     ((EmulatorDataTarget) ritisWeatherCollector.getAgent().getDataTarget()).setListener(this);
+                    setCollectorDataSourceListenerForCollectorsDataSource(ritisWeatherCollector);
                     ritisWeatherCollector.startUp();
                 } else if (s.equalsIgnoreCase("RITISSpeedCollector")) {
                     ritisSpeedCollector.stop();
                     ((EmulatorDataTarget) ritisSpeedCollector.getAgent().getDataTarget()).setListener(this);
+                    setCollectorDataSourceListenerForCollectorsDataSource(ritisSpeedCollector);
                     ritisSpeedCollector.startUp();
                 } else if (s.equalsIgnoreCase("VDOTSpeedCollector")) {
                     vdotSpeedCollector.stop();
                     ((EmulatorDataTarget) vdotSpeedCollector.getAgent().getDataTarget()).setListener(this);
+                    setCollectorDataSourceListenerForCollectorsDataSource(vdotSpeedCollector);
                     vdotSpeedCollector.startUp();
                 } else if (s.equalsIgnoreCase("VDOTWeatherCollector")) {
                     vdotWeatherCollector.stop();
                     ((EmulatorDataTarget) vdotWeatherCollector.getAgent().getDataTarget()).setListener(this);
+                    setCollectorDataSourceListenerForCollectorsDataSource(vdotWeatherCollector);
                     vdotWeatherCollector.startUp();
                 } else if (s.equalsIgnoreCase("VDOTTravelCollector")) {
                     vdotTravelTimeCollector.stop();
                     ((EmulatorDataTarget) vdotTravelTimeCollector.getAgent().getDataTarget()).setListener(this);
+                    setCollectorDataSourceListenerForCollectorsDataSource(vdotTravelTimeCollector);
                     vdotTravelTimeCollector.startUp();
                 } else if (s.equalsIgnoreCase("BSMCollector")) {
                     bsmCollector.stop();
                     ((EmulatorDataTarget) bsmCollector.getAgent().getDataTarget()).setListener(this);
+                    setCollectorDataSourceListenerForCollectorsDataSource(bsmCollector);
                     bsmCollector.startUp();
                 }
-            } catch (CollectorDataSource.DataSourceException ex) {
-                logger.error(ex.getLocalizedMessage());
             } catch (ODEDataTarget.DataTargetException ex) {
                 logger.error(ex.getLocalizedMessage());
             }
         }
         return "<response>started</response>";
+    }
+
+    private void setCollectorDataSourceListenerForCollectorsDataSource(ODECollector odeCollector) {
+        if (odeCollector != null) {
+            CollectorDataSource collectorDataSource = odeCollector.getDataSource();
+            if (collectorDataSource != null && collectorDataSource instanceof DataSource) {
+                DataSource dataSource = (DataSource) collectorDataSource;
+                dataSource.setCollectorDataSourceListener(odeCollector);
+            }
+        }
     }
 
     @RequestMapping(value = "getCurrentData", method = RequestMethod.GET)
@@ -101,9 +116,9 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
     CurrentDataSet getCurrentData() {
         return currentData;
     }
-    
+
     @Override
-    public void destroy(){
+    public void destroy() {
         System.out.println("Being destroyed!");
         ritisWeatherCollector.stop();
         ritisSpeedCollector.stop();
@@ -111,9 +126,9 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
         vdotWeatherCollector.stop();
         vdotTravelTimeCollector.stop();
         bsmCollector.stop();
-        
+
     }
-    
+
     public void dataReceived(String messageType, ODEAgentMessage data) {
         if (data != null) {
             if (ODEMessageType.BSM.equals(ODEMessageType.valueOf(messageType))) {
@@ -166,7 +181,7 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
 
         avgSpeed = avgSpeed / count;
         occ = occ / count;
-        volume = volume /count;
+        volume = volume / count;
 
         RITISSpeedData returnRITISSpeedData = new RITISSpeedData();
         org.ritis.schema.tmdd_0_0_0.ObjectFactory objectFactory = new org.ritis.schema.tmdd_0_0_0.ObjectFactory();
@@ -183,8 +198,8 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
         List<ZoneDataRITIS> zoneDataRITISList = zoneReportRITIS.getZoneData().getZoneDataItem();
         ZoneDataRITIS zoneDataRITIS = objectFactory.createZoneDataRITIS();
         zoneDataRITIS.setZoneVehicleSpeed((short) avgSpeed);
-        zoneDataRITIS.setOccupancy((long)occ);
-        zoneDataRITIS.setZoneVehicleCount((long)volume);
+        zoneDataRITIS.setOccupancy((long) occ);
+        zoneDataRITIS.setZoneVehicleCount((long) volume);
         zoneDataRITISList.add(zoneDataRITIS);
         zoneReportRITISList.add(zoneReportRITIS);
         zoneDataCollectionPeriodRITISList.add(zoneDataCollectionPeriodRITIS);
@@ -200,7 +215,7 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
 
     public void vdotSpeedDataReceived(ODEAgentMessage odeAgentMessage) {
         Object data = odeAgentMessage.getFormattedMessage();
-        
+
         VDOTSpeedData eastData = getVDOTSpeedDataAverage(data, "E");
         VDOTSpeedData westData = getVDOTSpeedDataAverage(data, "W");
         //TODO set values to current data.
@@ -214,7 +229,7 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
         int occ = 0;
         int volume = 0;
         VDOTSpeedData vdotSpeedData = (VDOTSpeedData) data;
-        System.out.println("Emulator VDOT Speed data list Size: "+vdotSpeedData.getVdotSpeedDataElements().size());
+        System.out.println("Emulator VDOT Speed data list Size: " + vdotSpeedData.getVdotSpeedDataElements().size());
         for (VDOTSpeedData.VDOTSpeedDataElement vdotSpeedDataElement : vdotSpeedData.getVdotSpeedDataElements()) {
             if (direction.equals(vdotSpeedDataElement.getLaneDirection())) {
                 avgSpeed += vdotSpeedDataElement.getSpeed();
@@ -225,8 +240,8 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
         }
 
         avgSpeed = avgSpeed / count;
-        volume = volume /count;
-        occ = occ/count;
+        volume = volume / count;
+        occ = occ / count;
         VDOTSpeedData returnVDOTSpeedData = new VDOTSpeedData();
         VDOTSpeedData.VDOTSpeedDataElement vdotSpeedDataElement = new VDOTSpeedData.VDOTSpeedDataElement();
         vdotSpeedDataElement.setLaneDirection(direction);
