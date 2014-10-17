@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- TMDD V3.0 - NTCIP 2306 C2C Support XML Schema -->
+<!-- Modeled after NTCIP 2306 - Message Administration Messages -->
+<xs:schema xmlns="http://www.ntcip.org/c2c-message-administration" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.ntcip.org/c2c-message-administration" elementFormDefault="unqualified" attributeFormDefault="unqualified" version="DRAFT">
+	<xs:annotation>
+		<xs:documentation>
+		  TMDD V3.0 Design - Manny Insignares, ConSysTec, May 29, 2006 
+	   </xs:documentation>
+	</xs:annotation>
+	<!-- InformationalText -->
+	<xs:simpleType name="InformationalText">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

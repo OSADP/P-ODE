@@ -83,33 +83,10 @@ public class VDOTDataSource extends RestPullDataSource {
 
     @Override
     protected String buildWfsFilter() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("&typeName=orci:");
-        stringBuilder.append(getFeedName());
-        stringBuilder.append(getWfsFilter());
-//        stringBuilder.append("&bbox=");
-//        stringBuilder.append(getEmulatorWFSbbox());
-//        stringBuilder.append("&propertyName=");
-//        stringBuilder.append(getEmulatorPropertyNames());
-        return stringBuilder.toString();
+        return new StringBuilder()
+                .append("&typeName=orci:")
+                .append(getFeedName())
+                .append(getWfsFilter())
+                .toString();
     }
-
-//    /**
-//     * Returns the coordinate bounding box filter for the request.
-//     *
-//     * @return String representing bounding box.
-//     */
-//    private String getEmulatorWFSbbox() {
-//        return "38.856259,-77.35548,38.882853,-77.259612";
-//    }
-
-//    /**
-//     * Returns the list of properties to return in the request.
-//     *
-//     * @return String representing properties to return
-//     */
-//    private String getEmulatorPropertyNames() {
-//        return "orci:speed,orci:volume,orci:occupancy";
-//    }
-
 }
