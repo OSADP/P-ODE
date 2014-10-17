@@ -46,19 +46,27 @@ public class ODECollector implements CollectorDataSourceListener {
         startCollector();
     }
 
-    protected void startCollector() throws DataSourceException, DataTargetException {
-        if (getAgent() != null) {
-            getAgent().startUp(messageListener);
+    private void startCollectorAgent(BasicODEAgent agent) throws DataTargetException {
+        if (agent != null) {
+            agent.startUp(messageListener);
             getLogger().debug("Started agent.");
         } else {
             getLogger().warn("Did not start up the agent for this collector. Agent was null.");
         }
-        if (getDataSource() != null) {
-            getDataSource().startDataSource(this);
+    }
+
+    private void startCollectorDataSource(CollectorDataSource collectorDataSource) throws DataSourceException {
+        if (collectorDataSource != null) {
+            collectorDataSource.startDataSource(this);
             getLogger().debug("Started data source.");
         } else {
             getLogger().warn("Did not start up the data source for this collector. Data source was null.");
         }
+    }
+
+    private void startCollector() throws DataSourceException, DataTargetException {
+        startCollectorAgent(getAgent());
+        startCollectorDataSource(getDataSource());
     }
 
     public void stop() {
