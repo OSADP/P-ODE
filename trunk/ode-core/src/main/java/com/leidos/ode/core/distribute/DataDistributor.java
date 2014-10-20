@@ -34,6 +34,7 @@ public abstract class DataDistributor implements Runnable {
     public void run() {
         try {
             logger.info("Starting Data Distributor");
+            System.out.println("Starting Data Distributor");
             connectTopic();
             connectTarget();
             while (!isInterrupted()) {
@@ -91,12 +92,14 @@ public abstract class DataDistributor implements Runnable {
         InitialContext ctx = new InitialContext(env);
 
         logger.info("Looking up Connection Factory: " + connFactName);
+        System.out.println("Looking up Connection Factory: " + connFactName);
         ConnectionFactory cf = (ConnectionFactory) ctx.lookup(connFactName);
 
         logger.info("Looking up Queue: " + topicName);
         topic = (Topic) ctx.lookup(topicName);
 
         logger.info("Getting connection");
+        System.out.println("Getting connection");
         connection = cf.createConnection();
         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
         consumer = session.createConsumer(topic);

@@ -38,6 +38,7 @@ public class UDPDataDistributor extends DataDistributor {
     @Override
     protected void connectTarget() throws DistributeException {
         try {
+            System.out.println("~~~~~~ UDP Distributor Connecting to socket.");
             socket = new DatagramSocket(targetPort);
             InetAddress address = InetAddress.getByName(targetURL);
             socket.connect(address, targetPort);
@@ -56,7 +57,7 @@ public class UDPDataDistributor extends DataDistributor {
             InetAddress address = InetAddress.getByName(targetURL);
             packet.setAddress(address);
             packet.setPort(targetPort);
-
+            System.out.println("Distributor sending message.");
             socket.send(packet);
         } catch (IOException ex) {
             throw new DistributeException("Error sending message", ex);

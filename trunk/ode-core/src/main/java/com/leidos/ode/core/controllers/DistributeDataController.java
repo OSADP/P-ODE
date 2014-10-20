@@ -35,6 +35,7 @@ public class DistributeDataController {
     @RequestMapping(value = "subscriptionNotification", method = RequestMethod.POST)
     public void receiveSubscriptionNotification(@RequestBody ODERegistrationResponse registrationResponse) {
         //Create a new DataDistributor with the info from the subscription.
+        System.out.println("New Subscription creating Distributor");
         DataDistributor dist = new UDPDataDistributor(registrationResponse.getQueueHostURL(), registrationResponse.getQueueHostPort(), registrationResponse.getQueueConnFact(), registrationResponse.getQueueName(), registrationResponse.getTargetAddress(), registrationResponse.getTargetPort());
 
         //Start up the distributor

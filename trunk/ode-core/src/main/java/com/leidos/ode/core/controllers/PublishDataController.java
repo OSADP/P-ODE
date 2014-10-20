@@ -31,6 +31,7 @@ public abstract class PublishDataController {
     protected abstract String publishData(ODEAgentMessage odeAgentMessage);
 
     protected final String publish(ODEAgentMessage odeAgentMessage) {
+        initTopicConnection();
         sendMessage(odeAgentMessage);
         return "OK";
     }
