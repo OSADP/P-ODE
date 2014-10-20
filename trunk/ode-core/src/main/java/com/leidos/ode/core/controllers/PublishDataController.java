@@ -137,5 +137,6 @@ public abstract class PublishDataController {
         public static final String VDOT_SPD_VOL_OCC = "publishVDOTSpdVolOcc";
         public static final String RITIS_SPD_VOL_OCC = "publishRITISSpdVolOcc";
         public static final String RITIS_WEATHER = "publishRITISWeather";
+        public static final String BLUFAX_SPD_WEATHER = "publishBluFaxSpeed";
     }
 }

@@ -18,6 +18,8 @@ public interface ODEAgent {
 
     public void processMessage(byte[] messageBytes);
 
+    public void stopAgent();
+    
     public interface MessageListener {
         void onMessageProcessed(ODEAgentMessage odeAgentMessage);
     }

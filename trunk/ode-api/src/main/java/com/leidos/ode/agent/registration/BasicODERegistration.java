@@ -88,6 +88,52 @@ public class BasicODERegistration implements ODERegistration {
         return null;
     }
 
+    public String unregister(ODERegistrationRequest registrationRequest) {
+        CloseableHttpClient httpClient = null;
+        CloseableHttpResponse closeableHttpResponse = null;
+        try {
+            StringWriter stringWriter = new StringWriter();
+            JAXBContext registrationInfoContext = JAXBContext.newInstance(ODERegistrationRequest.class);
+            Marshaller marshaller = registrationInfoContext.createMarshaller();
+            marshaller.marshal(registrationRequest, stringWriter);
+            httpClient = HttpClientBuilder.create().build();
+            HttpPost httpPost = new HttpPost(getRegistrationUrl());
+            StringEntity entity = new StringEntity(stringWriter.getBuffer().toString());
+            entity.setContentType("application/xml");
+            
+            httpPost.setEntity(entity);
+            closeableHttpResponse = httpClient.execute(httpPost);
+            logger.debug(closeableHttpResponse.getStatusLine().getReasonPhrase());
+            int statusCode = closeableHttpResponse.getStatusLine().getStatusCode();
+            //If the request was unsuccessful return
+            if (statusCode != HttpStatus.SC_OK) {
+                getLogger().error("Unregistration unsuccessful. Status code: " + statusCode);
+                return "ERROR "+ statusCode;
+            }        
+        } catch (UnsupportedEncodingException e) {
+            getLogger().error(e.getLocalizedMessage());
+        } catch (ClientProtocolException e) {
+            getLogger().error(e.getLocalizedMessage());
+        } catch (IOException e) {
+            getLogger().error(e.getLocalizedMessage());
+        } catch (JAXBException e) {
+            getLogger().error(e.getLocalizedMessage());
+        } finally {
+            try {
+                if (httpClient != null) {
+                    httpClient.close();
+                }
+                if (closeableHttpResponse != null) {
+                    closeableHttpResponse.close();
+                }
+            } catch (IOException e) {
+                getLogger().error(e.getLocalizedMessage());
+            }
+        }
+        return "OK";
+    }
+
+    
     private ODERegistrationResponse marshallRegistrationResponseFromHttpResponse(CloseableHttpResponse closeableHttpResponse) throws JAXBException, IOException {
         try {
             HttpEntity responseEntity = closeableHttpResponse.getEntity();
@@ -137,4 +183,5 @@ public class BasicODERegistration implements ODERegistration {
     private Logger getLogger() {
         return logger;
     }
+
 }

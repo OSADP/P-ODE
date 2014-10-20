@@ -7,4 +7,5 @@ public interface ODERegistration {
 
     public ODERegistrationResponse register(ODERegistrationRequest registrationRequest);
 
+    public String unregister(ODERegistrationRequest registrationRequest);
 }

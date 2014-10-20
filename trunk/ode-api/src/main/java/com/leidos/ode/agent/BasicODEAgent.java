@@ -31,6 +31,7 @@ public class BasicODEAgent implements ODEAgent {
     @Override
     public void startUp() throws ODEDataTarget.DataTargetException {
         registrationResponse = getRegistration().register(getRegistrationRequest());
+        getRegistrationRequest().setRegistrationId(getRegistrationResponse().getRegistrationId());
         if (getRegistrationResponse() != null) {
             createAgentInfo(getRegistrationResponse());
             getLogger().debug("Registration succeeded.");
@@ -139,6 +140,10 @@ public class BasicODEAgent implements ODEAgent {
 
     protected Logger getLogger() {
         return logger;
+    }
+
+    public void stopAgent() {
+        registration.unregister(registrationRequest);
     }
 
     private class MessageProcessor implements Runnable {

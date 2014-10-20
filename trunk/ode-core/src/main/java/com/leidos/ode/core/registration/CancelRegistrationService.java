@@ -13,30 +13,26 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-public class SubscriptionRegistrationService {
+public class CancelRegistrationService {
 
     @Autowired
     private DistributeDataController distributeDataController;
     @Autowired
     private RegistrationDAO registrationDAO;
 
-    @RequestMapping(value = "registerSubscribe", method = RequestMethod.POST)
+    @RequestMapping(value = "unregister", method = RequestMethod.POST)
     public
     @ResponseBody
-    ODERegistrationResponse registerSubscriptionIntent(@RequestBody ODERegistrationRequest registrationRequest) {
+    String registerSubscriptionIntent(@RequestBody ODERegistrationRequest registrationRequest) {
         ODERegistrationResponse response = null;
-        
-        registrationRequest = getRegistrationDAO().storeRegistration(registrationRequest);
-        QueueInfo queueInfo = getQueueNameForRegistration(registrationRequest);
-        if (queueInfo != null) {
-            response = createRegResponse(registrationRequest, queueInfo);
-            notifiyDistribute(response);
+        if("Subscribe".equalsIgnoreCase(registrationRequest.getRegistrationType())){
+            notifiyDistribute(registrationRequest);
         }
-        return response;
+        return "OK";
     }
 
-    private void notifiyDistribute(ODERegistrationResponse registrationResponse) {
-        getDistributeDataController().receiveSubscriptionNotification(registrationResponse);
+    private void notifiyDistribute(ODERegistrationRequest registrationRequest) {
+        getDistributeDataController().stopSubscription(registrationRequest.getAgentId());
     }
 
     private QueueInfo getQueueNameForRegistration(ODERegistrationRequest registrationRequest) {

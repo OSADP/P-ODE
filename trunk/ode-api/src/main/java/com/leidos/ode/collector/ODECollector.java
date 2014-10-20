@@ -75,6 +75,10 @@ public class ODECollector implements CollectorDataSourceListener {
             getDataSource().stopDataSource();
             getLogger().debug("Stopped data source.");
         }
+        if(getAgent() != null){
+            getAgent().stopAgent();
+            getLogger().debug("Stopped Agent.");
+        }
     }
 
     public BasicODEAgent getAgent() {
