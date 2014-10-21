@@ -1,8 +1,10 @@
 package com.leidos.ode.logging;
 
+import com.leidos.ode.util.MongoUtils;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.util.Date;
+import org.apache.log4j.Logger;
 
 /**
  * The class representing the ODE application logger. Used for logging component events in the database. Includes
@@ -11,10 +13,12 @@ import java.util.Date;
  * @author lamde
  */
 public final class ODELogger {
-
+    private final String TAG = getClass().getSimpleName();
+    private Logger logger = Logger.getLogger(TAG);
     private LogBean logBean;
     private MongoTemplate mongoTemplate;
-
+    private boolean connected = true;
+    
     /**
      * Marks the starting point of a given ODEStage in the log message.
      *
@@ -44,13 +48,18 @@ public final class ODELogger {
      */
     public void finish() throws ODELoggerException {
         Date endTime = new Date();
-        if (logBean != null) {
+        if (logBean != null && MongoUtils.isMongoDBRunning()) {
             logBean.setEndTime(endTime);
             // save the log bean
-            getMongoTemplate().save(logBean);
+            try{
+                getMongoTemplate().save(logBean);
+            }catch(Exception e){
+                logger.error("Cannot finish a log event. "+e.toString());
+            }
             logBean = null;
         } else {
-            throw new ODELoggerException("Cannot finish a log event that has not been started.");
+            logger.error("Cannot finish a log event that has not been started.");
+            
         }
     }
 
