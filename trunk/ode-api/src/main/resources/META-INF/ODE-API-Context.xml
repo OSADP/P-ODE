@@ -114,7 +114,10 @@
         <property name="odeLogger" ref="odeLogger"/>
     </bean>
 
-    <bean id="bsmDataSource" class="com.leidos.ode.collector.datasource.push.UDPPushDataSource"/>
+    <bean id="bsmDataSource" class="com.leidos.ode.collector.datasource.push.UDPPushDataSource">
+        <property name="hostAddress" value="${leidos.ode.reg.bsm.pub.hostAddress}"/>
+        <property name="hostPort" value="${leidos.ode.reg.bsm.pub.hostPort}"/>
+    </bean>
 
     <bean id="bsmCollector" class="com.leidos.ode.collector.ODECollector">
         <property name="agent" ref="bsmPubAgent"/>

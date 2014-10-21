@@ -15,7 +15,7 @@
             <transactionManager type="JDBC"/>
             <dataSource type="POOLED">
                 <property name="driver" value="com.mysql.jdbc.Driver"/>
-                <property name="url" value="jdbc:mysql://localhost:3306/ode"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/ODE"/>
                 <property name="username" value="ODESysUser"/>
                 <property name="password" value="Password*2"/>
                 <property name="poolMaximumIdleConnections" value="50"/>
