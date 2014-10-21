@@ -30,13 +30,17 @@ public class BasicODEAgent implements ODEAgent {
 
     @Override
     public void startUp() throws ODEDataTarget.DataTargetException {
-        registrationResponse = getRegistration().register(getRegistrationRequest());
-        getRegistrationRequest().setRegistrationId(getRegistrationResponse().getRegistrationId());
-        if (getRegistrationResponse() != null) {
-            createAgentInfo(getRegistrationResponse());
-            getLogger().debug("Registration succeeded.");
+        if (getRegistrationRequest() != null) {
+            registrationResponse = getRegistration().register(getRegistrationRequest());
+            if (getRegistrationResponse() != null) {
+                getRegistrationRequest().setRegistrationId(getRegistrationResponse().getRegistrationId());
+                createAgentInfo(getRegistrationResponse());
+                getLogger().debug("Registration succeeded.");
+            } else {
+                getLogger().error("Registration failed. Registration response was null.");
+            }
         } else {
-            getLogger().warn("Registration failed. Registration response was null!");
+            getLogger().error("Unable to register. Registration request is null.");
         }
     }
 

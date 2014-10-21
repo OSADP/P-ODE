@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.ritis.schema.tmdd_0_0_0.DetectorDataRITIS;
 import org.ritis.schema.tmdd_0_0_0.ZoneDetectorDataRITIS;
 
 import javax.xml.bind.JAXBContext;

@@ -2,28 +2,24 @@ package com.leidos.ode.collector;
 
 import com.leidos.ode.agent.datatarget.ODEDataTarget.DataTargetException;
 import com.leidos.ode.collector.datasource.CollectorDataSource;
-import com.leidos.ode.collector.datasource.CollectorDataSource.DataSourceException;
 import com.leidos.ode.collector.datasource.DataSource;
 import com.leidos.ode.collector.datasource.pull.RestPullDataSource;
 import com.leidos.ode.collector.datasource.pull.RestrictedRequestIntervalRestPullDataSource;
 import com.leidos.ode.util.MongoUtils;
 import com.leidos.ode.util.ODEMessageType;
 import org.apache.log4j.Logger;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.scheduling.quartz.QuartzJobBean;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
-public class CollectorRunner extends QuartzJobBean {
+public class CollectorRunner {
 
     private final String TAG = getClass().getSimpleName();
-    private final String APPLICATION_CONTEXT_FILE = "META-INF/ODE-API-Context.xml";
-    private final String RUNNER_PROPERTIES = "/collector_runner.properties";
+    private final String APPLICATION_CONTEXT_FILE = "classpath*:/META-INF/ODE-API-Context.xml";
     private final Class COLLECTOR_BEAN_CLASS = ODECollector.class;
     private final String COLLECTOR_BEAN_INDICATOR = "Collector";
     private Logger logger = Logger.getLogger(TAG);
@@ -31,22 +27,21 @@ public class CollectorRunner extends QuartzJobBean {
     private ApplicationContext context;
     private Map<ODECollector, List<ODECollector>> collectors;
 
-    public CollectorRunner() {
-        initialize();
-    }
-
-    public static void main(String[] args) throws DataSourceException, DataTargetException {
+    public static void main(String[] args) {
         CollectorRunner runner = new CollectorRunner();
-        runner.startUpCollectors();
+        if (args != null && args.length > 0) {
+            runner.initialize(args[0]);
+            runner.startUpCollectors();
+        } else {
+            runner.getLogger().error("Unable to start collectors. Properties file path argument undefined.");
+        }
     }
 
-    private void initialize() {
-        runnerProperties = new Properties();
+    private void initialize(String path) {
         try {
             setContext(new ClassPathXmlApplicationContext(APPLICATION_CONTEXT_FILE));
-            getLogger().debug("Using application context: " + APPLICATION_CONTEXT_FILE);
 
-            if (loadRunnerProperties()) {
+            if (loadRunnerProperties(path)) {
                 //If the runner properties is successfully loaded, build the collectors
                 collectors = new HashMap<ODECollector, List<ODECollector>>();
                 //Get all enabled collectors
@@ -60,7 +55,7 @@ public class CollectorRunner extends QuartzJobBean {
                 //Add the collector managers that contain the restricted request interval collectors to the runner list
                 addRestrictedRequestIntervalCollectorManagersToRunnerList(restrictedRequestIntervalCollectorManagers);
             } else {
-                getLogger().error("No properties file found with name: " + RUNNER_PROPERTIES);
+                getLogger().error("No properties file found at: '" + path + ".'");
             }
 
             checkMongoDB();
@@ -81,53 +76,48 @@ public class CollectorRunner extends QuartzJobBean {
         }
     }
 
-    /**
-     * Loads the properties for this runner.
-     *
-     * @return True if successfully loaded, false otherwise.
-     */
-    private boolean loadRunnerProperties() {
+    private boolean loadRunnerProperties(String path) {
+        runnerProperties = new Properties();
         try {
-            getRunnerProperties().load(getClass().getResourceAsStream(RUNNER_PROPERTIES));
-            getLogger().debug("Loaded collector runner properties file.");
+            runnerProperties.load(new FileInputStream(path));
+            getLogger().debug("Loaded collector runner properties file from path: " + path);
             return true;
         } catch (IOException e) {
-            getLogger().error("Unable to load collector runner properties file.");
+            getLogger().error(e.getLocalizedMessage());
+            return false;
         }
-        return false;
-    }
-
-    @Override
-    protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
-        startUpCollectors();
     }
 
     /**
      * Starts up the collectors for on the enabled message types in the properties file.
      */
     public final void startUpCollectors() {
-        try {
-            for (Map.Entry<ODECollector, List<ODECollector>> collectorEntry : getCollectors().entrySet()) {
-                if (collectorEntry.getKey() != null) {
-                    collectorEntry.getKey().startUp();
-                }
-                if (collectorEntry.getValue() != null) {
-                    for (ODECollector odeCollector : collectorEntry.getValue()) {
+        if (getCollectors() != null) {
+            try {
+                for (Map.Entry<ODECollector, List<ODECollector>> collectorEntry : getCollectors().entrySet()) {
+                    if (collectorEntry.getKey() != null) {
+                        collectorEntry.getKey().startUp();
+                    }
+                    if (collectorEntry.getValue() != null) {
+                        for (ODECollector odeCollector : collectorEntry.getValue()) {
                         /*Set the data source null because this collector's data source is a part of the restricted collector
                         and starting this collector with a non-null data source would be problematic based on the ODECollector
                         logic.
                          */
-                        odeCollector.setDataSource(null);
+                            odeCollector.setDataSource(null);
                         /*Start up this collector (which since we have nulled the data source, will hopefully only start this
                         collector's agent.
                          */
-                        odeCollector.startUp();
+                            odeCollector.startUp();
+                        }
                     }
                 }
+                getLogger().debug("Started " + getCollectors().size() + " collector(s).");
+            } catch (DataTargetException ex) {
+                getLogger().error(ex.getLocalizedMessage());
             }
-            getLogger().debug("Started " + getCollectors().size() + " collector(s).");
-        } catch (DataTargetException ex) {
-            getLogger().error(ex.getLocalizedMessage());
+        } else {
+            getLogger().warn("No collectors were started. Collectors were null.");
         }
     }
 
@@ -153,7 +143,7 @@ public class CollectorRunner extends QuartzJobBean {
                     .append(System.lineSeparator())
                     .append("Rule 4: Collectors are only added if the substring of the bean name, equal to the bean name without the indicator, matches an enabled 'ODEMessageType(s)'.")
                     .append(System.lineSeparator())
-                    .append("Rule 5: 'ODEMessageType(s)' should be enabled in the following properties file: '").append(RUNNER_PROPERTIES).append("'.")
+                    .append("Rule 5: 'ODEMessageType(s)' should be enabled in the runner properties file.'")
                     .append(System.lineSeparator())
                     .append("Rule 6: Only message types defined in 'com.leidos.ode.util.ODEMessageType' will be recognized as valid.")
                     .append(System.lineSeparator())

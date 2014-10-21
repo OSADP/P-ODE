@@ -20,19 +20,6 @@
     <context:component-scan base-package="com.leidos.ode"/>
     <context:annotation-config/>
 
-    <!--&lt;!&ndash; Load Properties file &ndash;&gt;-->
-    <!--<bean id="properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean" scope="prototype">-->
-    <!--<property name="ignoreResourceNotFound" value="true"/>-->
-    <!--&lt;!&ndash;-->
-    <!--Allow for the (optional) override of these properties-->
-    <!--&ndash;&gt;-->
-    <!--<property name="locations">-->
-    <!--<list>-->
-    <!--<value>classpath:META-INF/ODE-API-Context-Dev.properties</value>-->
-    <!--</list>-->
-    <!--</property>-->
-    <!--</bean>-->
-
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Common Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
@@ -40,7 +27,7 @@
           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
-                <value>classpath:META-INF/ODE-API-Context-Dev.properties</value>
+                <value>classpath:META-INF/ODE-API-Context.properties</value>
                 <value>classpath:ritis.properties</value>
                 <value>classpath:vdot.properties</value>
                 <value>classpath:mongo.properties</value>
@@ -86,25 +73,6 @@
     <bean id="restTarget" class="com.leidos.ode.agent.datatarget.ODERestTarget" scope="prototype"/>
 
     <bean id="passthroughSanitizer" class="com.leidos.ode.agent.sanitizer.PassthroughSanitizer"/>
-
-    <bean id="testRegistrationInfo" class="com.leidos.ode.registration.request.ODERegistrationRequest">
-        <property name="messageType" value="${leidos.ode.reg.test.pub.messageType}"/>
-        <property name="region" value="${leidos.ode.reg.test.pub.region}"/>
-        <property name="registrationType" value="${leidos.ode.reg.test.pub.registrationType}"/>
-        <property name="agentId" value="${leidos.ode.reg.test.pub.agentId}"/>
-        <property name="startDate">
-            <bean factory-bean="dateFormat" factory-method="parse">
-                <constructor-arg value="${leidos.ode.reg.test.pub.startDate}"/>
-            </bean>
-        </property>
-        <property name="endDate">
-            <bean factory-bean="dateFormat" factory-method="parse">
-                <constructor-arg value="${leidos.ode.reg.test.pub.endDate}"/>
-            </bean>
-        </property>
-        <property name="subscriptionReceiveAddress" value="${leidos.ode.reg.test.sub.receiveAddress}"/>
-        <property name="subscriptionReceivePort" value="${leidos.ode.reg.test.sub.receivePort}"/>
-    </bean>
 
     <bean id="jmsPushDataSource" class="com.leidos.ode.collector.datasource.push.JMSPushDataSource">
         <property name="hostProtocol" value="tcp://"/>
@@ -311,7 +279,6 @@
         <property name="parser" ref="vdotParser"/>
         <property name="sanitizer" ref="passthroughSanitizer"/>
         <property name="dataTarget" ref="restTarget"/>
-        <property name="registrationRequest" ref="testRegistrationInfo"/>
         <property name="odeLogger" ref="odeLogger"/>
     </bean>
 
