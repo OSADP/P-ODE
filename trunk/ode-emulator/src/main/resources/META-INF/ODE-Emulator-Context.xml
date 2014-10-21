@@ -19,7 +19,7 @@
           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
-                <value>classpath:META-INF/EmulatorContext-Dev.properties</value>
+                <value>classpath:META-INF/EmulatorContext.properties</value>
                  <value>classpath:mongo.properties</value>
             </list>
         </property>

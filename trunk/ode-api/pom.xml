@@ -164,7 +164,7 @@
 
     <profiles>
         <profile>
-            <id>ode-production</id>
+            <id>ode-api-production</id>
             <build>
                 <resources>
                     <resource>
@@ -200,7 +200,7 @@
             </build>
         </profile>
         <profile>
-            <id>ode-development</id>
+            <id>ode-api-development</id>
             <build>
                 <resources>
                     <resource>

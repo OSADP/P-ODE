@@ -27,8 +27,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import org.apache.http.entity.ContentType;
 
 public class BasicODERegistration implements ODERegistration {
 
