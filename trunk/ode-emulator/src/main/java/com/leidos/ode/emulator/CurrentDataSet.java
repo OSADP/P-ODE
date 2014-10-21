@@ -17,6 +17,7 @@ import java.text.NumberFormat;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -27,6 +28,9 @@ public class CurrentDataSet {
 
     private String eastBoundTravelTime;
     private String westBoundTravelTime;
+    private String eastBoundBSMTime;
+    private String westBoundBSMTime;
+    
     private Date bsmLastUpdate;
     private Map<String, BSM> bsmDataEast = new HashMap<String, BSM>();
     private Map<String, BSM> bsmDataWest = new HashMap<String, BSM>();
@@ -201,11 +205,11 @@ public class CurrentDataSet {
             if (existing.getMessageCount() != data.getMessageCount()
                     && !existing.getBsmMessageId().equalsIgnoreCase(data.getBsmMessageId())) {
                 getBsmDataWest().put(ip, data);
-                recalculateWest();
+                recalculateBSMWest();
             }
         } else {
             getBsmDataWest().put(ip, data);
-            recalculateWest();
+            recalculateBSMWest();
         }
         setBsmLastUpdate(new Date());
     }
@@ -216,15 +220,51 @@ public class CurrentDataSet {
             if (existing.getMessageCount() != data.getMessageCount()
                     && !existing.getBsmMessageId().equalsIgnoreCase(data.getBsmMessageId())) {
                 getBsmDataEast().put(ip, data);
-                recalculateEast();
+                recalculateBSMEast();
             }
         } else {
             getBsmDataEast().put(ip, data);
-            recalculateEast();
+            recalculateBSMEast();
         }
         setBsmLastUpdate(new Date());
     }
 
+    
+    private void recalculateBSMEast(){
+        Iterator<String> it = getBsmDataEast().keySet().iterator();
+        double speed = 0;
+        int count = 0;
+        while(it.hasNext()){
+            String key = it.next();
+            BSM bsm = getBsmDataEast().get(key);
+            speed += bsm.getSpeed();
+            count++;
+        }
+        if(count > 0){
+            double speedAvg = (double)speed/count;
+            double tt = .6/speedAvg;
+            eastBoundBSMTime = NumberFormat.getInstance().format(tt*60);
+        }
+    }
+    
+    
+    private void recalculateBSMWest(){
+        Iterator<String> it = getBsmDataWest().keySet().iterator();
+        double speed = 0;
+        int count = 0;
+        while(it.hasNext()){
+            String key = it.next();
+            BSM bsm = getBsmDataWest().get(key);
+            speed += bsm.getSpeed();
+            count++;
+        }
+        if(count > 0){
+            double speedAvg = (double)speed/count;
+            double tt = .6/speedAvg;
+            westBoundBSMTime = NumberFormat.getInstance().format(tt*60);
+        }
+    }
+    
     private void recalculateWest() {
         int speed = 0;
         int count = 0;
@@ -420,6 +460,34 @@ public class CurrentDataSet {
         this.ritisSpeedDataWestValue = ritisSpeedDataWestValue;
         recalculateWest();
         setRitisSpeedLastUpdate(new Date());
+    }
+
+    /**
+     * @return the eastBoundBSMTime
+     */
+    public String getEastBoundBSMTime() {
+        return eastBoundBSMTime;
+    }
+
+    /**
+     * @param eastBoundBSMTime the eastBoundBSMTime to set
+     */
+    public void setEastBoundBSMTime(String eastBoundBSMTime) {
+        this.eastBoundBSMTime = eastBoundBSMTime;
+    }
+
+    /**
+     * @return the westBoundBSMTime
+     */
+    public String getWestBoundBSMTime() {
+        return westBoundBSMTime;
+    }
+
+    /**
+     * @param westBoundBSMTime the westBoundBSMTime to set
+     */
+    public void setWestBoundBSMTime(String westBoundBSMTime) {
+        this.westBoundBSMTime = westBoundBSMTime;
     }
 
     
