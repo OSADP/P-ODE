@@ -31,6 +31,8 @@ public abstract class DataDistributor implements Runnable {
     private Topic topic;
     private MessageConsumer consumer;
 
+    protected abstract void cleanup();
+    
     public void run() {
         try {
             logger.info("Starting Data Distributor");
@@ -71,6 +73,7 @@ public abstract class DataDistributor implements Runnable {
             }
             logger.info("Distributor Stopped.");
             setStopped(true);
+            cleanup();
         }
     }
 

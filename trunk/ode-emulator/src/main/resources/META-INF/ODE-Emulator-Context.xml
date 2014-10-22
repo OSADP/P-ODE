@@ -56,6 +56,7 @@
     <bean id="bsmSubRegistration" class="com.leidos.ode.agent.registration.BasicODERegistration">
         <property name="registrationBaseUrl" value="${leidos.ode.reg.baseurl}"/>
         <property name="registrationEndpoint" value="${leidos.ode.reg.sub.endpoint}"/>
+        <property name="unregisterEndpoint" value="${leidos.ode.reg.un.endpoint}"/>
     </bean>
 
     <bean id="bsmParser" class="com.leidos.ode.agent.parser.BSMParser"/>
@@ -108,11 +109,13 @@
     <bean id="ritisSpeedSubRegistration" class="com.leidos.ode.agent.registration.BasicODERegistration">
         <property name="registrationBaseUrl" value="${leidos.ode.reg.baseurl}"/>
         <property name="registrationEndpoint" value="${leidos.ode.reg.sub.endpoint}"/>
+        <property name="unregisterEndpoint" value="${leidos.ode.reg.un.endpoint}"/>
     </bean>
 
     <bean id="ritisWeatherSubRegistration" class="com.leidos.ode.agent.registration.BasicODERegistration">
         <property name="registrationBaseUrl" value="${leidos.ode.reg.baseurl}"/>
         <property name="registrationEndpoint" value="${leidos.ode.reg.sub.endpoint}"/>
+        <property name="unregisterEndpoint" value="${leidos.ode.reg.un.endpoint}"/>
     </bean>
 
     <bean id="ritisParser" class="com.leidos.ode.agent.parser.RITISParser"/>
@@ -212,16 +215,19 @@
     <bean id="vdotWeatherSubRegistration" class="com.leidos.ode.agent.registration.BasicODERegistration">
         <property name="registrationBaseUrl" value="${leidos.ode.reg.baseurl}"/>
         <property name="registrationEndpoint" value="${leidos.ode.reg.sub.endpoint}"/>
+        <property name="unregisterEndpoint" value="${leidos.ode.reg.un.endpoint}"/>
     </bean>
 
     <bean id="vdotSpeedSubRegistration" class="com.leidos.ode.agent.registration.BasicODERegistration">
         <property name="registrationBaseUrl" value="${leidos.ode.reg.baseurl}"/>
         <property name="registrationEndpoint" value="${leidos.ode.reg.sub.endpoint}"/>
+        <property name="unregisterEndpoint" value="${leidos.ode.reg.un.endpoint}"/>
     </bean>
 
     <bean id="vdotTravelTimeSubRegistration" class="com.leidos.ode.agent.registration.BasicODERegistration">
         <property name="registrationBaseUrl" value="${leidos.ode.reg.baseurl}"/>
         <property name="registrationEndpoint" value="${leidos.ode.reg.sub.endpoint}"/>
+        <property name="unregisterEndpoint" value="${leidos.ode.reg.un.endpoint}"/>
     </bean>
 
     <bean id="vdotParser" class="com.leidos.ode.agent.parser.VDOTParser"/>

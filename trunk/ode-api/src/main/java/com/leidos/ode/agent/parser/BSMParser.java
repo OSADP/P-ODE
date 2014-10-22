@@ -62,7 +62,7 @@ public class BSMParser extends ODEDataParser {
     private BSM decodeBSM(byte[] inputBytes) {
         BSM bsm = null;
         String hex = convertBytesToHex(inputBytes);
-        log("Processing: " + hex);
+        log("Processing BSM: " + hex);
 
         int bsmStart = hex.indexOf("80010281");
         if (bsmStart > -1) {
@@ -70,35 +70,24 @@ public class BSMParser extends ODEDataParser {
             bsmStart = bsmStart + 4;
             bsm.setDateReceived(new Timestamp(System.currentTimeMillis()));
 
-            log("" + bsmStart);
-            log("BSM Message ID: " + hex.substring(bsmStart, bsmStart + 2));
             bsm.setBsmMessageId(hex.substring(bsmStart, bsmStart + 2));
 
             int blobLen = Integer.parseInt(hex.substring(bsmStart + 4, bsmStart + 6), 16);
-            log("Blob length" + blobLen);
-
-            log("Message Count: " + Integer.parseInt(hex.substring(bsmStart + MESSAGE_COUNT_START, bsmStart + MESSAGE_COUNT_END), 16));
             bsm.setMessageCount(Integer.parseInt(hex.substring(bsmStart + MESSAGE_COUNT_START, bsmStart + MESSAGE_COUNT_END), 16));
 
-            log("ID: " + hex.substring(bsmStart + ID_START, bsmStart + ID_END));
             bsm.setId(hex.substring(bsmStart + ID_START, bsmStart + ID_END));
 
-            log("SecMark: " + Integer.parseInt(hex.substring(bsmStart + SECMARK_START, bsmStart + SECMARK_END), 16));
             bsm.setSecMark(Integer.parseInt(hex.substring(bsmStart + SECMARK_START, bsmStart + SECMARK_END), 16));
 
             int lat = new BigInteger(hex.substring(bsmStart + LAT_START, bsmStart + LAT_END), 16).intValue();
-            log("Latitude: " + (lat / 10000000.0));
             bsm.setLatitude((lat / 10000000.0));
 
             int longitude = new BigInteger(hex.substring(bsmStart + LONG_START, bsmStart + LONG_END), 16).intValue();
-            log("Longitude: " + (longitude / 10000000.0));
             bsm.setLongitude((longitude / 10000000.0));
 
             int ele = new BigInteger(hex.substring(bsmStart + ELEVATION_START, bsmStart + ELEVATION_END), 16).intValue();
-            log("Elevation: " + (ele / 10.0));
             bsm.setElevation((ele / 10.0));
 
-            log("Accuracy: " + hex.substring(bsmStart + ACCURACY_START, bsmStart + ACCURACY_END));
             bsm.setAccuracy(hex.substring(bsmStart + ACCURACY_START, bsmStart + ACCURACY_END));
 
             String speedTrans = hex.substring(bsmStart + SPEED_TRANS_START, bsmStart + SPEED_TRANS_END);
@@ -110,43 +99,34 @@ public class BSMParser extends ODEDataParser {
             }
             String transBin = stBin.substring(0, 3);
             int trans = Integer.parseInt(transBin, 2);
-            log("Trans: " + trans);
             bsm.setTrans(trans);
 
             String speedBin = stBin.substring(3, 16);
 
             int speed = Integer.parseInt(speedBin, 2);
-            log("Speed: " + speed * .02);
             bsm.setSpeed(speed * .02);
 
             String heading = hex.substring(bsmStart + HEADING_START, bsmStart + HEADING_END);
             int headingInt = new BigInteger(heading, 16).intValue();
-            log("Heading: " + headingInt * .0125);
             bsm.setHeading(headingInt * .0125);
 
             int angle = new BigInteger(hex.substring(bsmStart + ANGLE_START, bsmStart + ANGLE_END), 16).intValue();
             if (angle == 127) {
-                log("Angle: Unavailable (127)");
             } else {
-                log("Angle: " + angle);
                 bsm.setAngle(angle);
             }
 
             String accelLong = hex.substring(bsmStart + ACCEL_LONG_START, bsmStart + ACCEL_LONG_END);
             int accelLongInt = new BigInteger(accelLong, 16).intValue();
             if (accelLongInt == 2001) {
-                log("Acceleration Long: Unavailable");
             } else {
-                log("Acceleration Long: " + Integer.valueOf(accelLong, 16).shortValue() * .01);
                 bsm.setAccelLong(Integer.valueOf(accelLong, 16).shortValue() * .01);
             }
 
             String accelLat = hex.substring(bsmStart + ACCEL_LAT_START, bsmStart + ACCEL_LAT_END);
             int accelLatInt = new BigInteger(accelLat, 16).intValue();
             if (accelLatInt == 2001) {
-                log("Acceleration Lat: Unavailable");
             } else {
-                log("Acceleration Lat: " + Integer.valueOf(accelLat, 16).shortValue() * .01);
                 bsm.setAccelLat(Integer.valueOf(accelLat, 16).shortValue() * .01);
             }
 
@@ -156,16 +136,13 @@ public class BSMParser extends ODEDataParser {
             if (accelVertInt < 50) {
                 accelVertCon = accelVertCon * -1;
             }
-            log("Acceleration Verticle: " + accelVertCon);
             bsm.setAccelVert(accelVertCon);
 
             String accelYaw = hex.substring(bsmStart + ACCEL_YAW_START, bsmStart + ACCEL_YAW_END);
             int accelYawInt = Integer.parseInt(accelYaw, 16);
-            log("Acceleration Yaw: " + accelYawInt * .01);
             bsm.setAccelYaw(accelYawInt * .01);
 
             String brakes = hex.substring(bsmStart + BRAKES_START, bsmStart + BRAKES_END);
-            log("Brakes: " + brakes);
             bsm.setBrakes(brakes);
 
             String widthLength = hex.substring(bsmStart + WIDTH_LENGTH_START, bsmStart + WIDTH_LENGTH_END);
@@ -178,12 +155,10 @@ public class BSMParser extends ODEDataParser {
 
             String widthBin = wlBin.substring(0, 10);
             int width = Integer.parseInt(widthBin, 2);
-            log("Width: " + width);
             bsm.setWidth(width);
 
             String lenBin = wlBin.substring(10, 24);
             int length = Integer.parseInt(lenBin, 2);
-            log("Length: " + length);
             bsm.setLength(length);
 
             if (hex.length() > bsmStart + SAFETY_EXT_END) {
@@ -212,7 +187,6 @@ public class BSMParser extends ODEDataParser {
     }
 
     private int handleExtData(String hex, int start, BSM bsm) {
-        log("Safety EXT Data");
         SafetyExtData extData = new SafetyExtData();
         String safetyExtLength = null;
         int safetyExtStart = start + 2;
@@ -227,7 +201,6 @@ public class BSMParser extends ODEDataParser {
             safetyExtStart = start + 2;
 
         }
-        log(safetyExtLength);
         int safetyExtLengthInt = new BigInteger(safetyExtLength, 16).intValue();
         int nextContextStart = safetyExtStart;
         int prevNextContextStart = nextContextStart;
@@ -252,11 +225,9 @@ public class BSMParser extends ODEDataParser {
                 }
 
                 if (nextContext.equalsIgnoreCase("A3")) {
-                    log("RTCMPackage");
                     nextContextStart = handleRTCMPackage(hex, nextContextStart + 2, extData);
                 }
                 if (nextContextStart == prevNextContextStart) {
-                    log("Unknown Safety EXT tag: " + nextContext + " skipping");
                     nextContextStart += 2;
                 }
 
@@ -290,7 +261,6 @@ public class BSMParser extends ODEDataParser {
             int curveRadiusLengthInt = Integer.parseInt(curveRadiusLength, 16);
             String curveRadius = hex.substring(a2NextTag, a2NextTag += (2 * curveRadiusLengthInt));
             int curveRadiusInt = Integer.parseInt(curveRadius, 16);
-            log("Radius of Curve: " + curveRadiusInt);
             extData.setCurveRadius(curveRadiusInt);
 
             //Skip path predict tag
@@ -299,7 +269,6 @@ public class BSMParser extends ODEDataParser {
             int confidenceLengthInt = Integer.parseInt(confidenceLength, 16);
             String confidence = hex.substring(a2NextTag, a2NextTag += (2 * confidenceLengthInt));
             int confidenceInt = Integer.parseInt(confidence, 16);
-            log("Confidence: " + confidenceInt);
             extData.setCurveConfidence(confidenceInt);
         }
         return a2NextTag;
@@ -347,7 +316,6 @@ public class BSMParser extends ODEDataParser {
                 itemCountStart = itemCountStart + (2 * itemCountLengthInt);
 
                 int itemCountInt = new BigInteger(itemCount, 16).intValue();
-                log("Item Count: " + itemCountInt);
                 extData.setItemCount(itemCountInt);
                 nextContextStart = itemCountStart;
             }
@@ -365,9 +333,7 @@ public class BSMParser extends ODEDataParser {
                 a3NextTagStart += 2;
                 String crumbDataLength = hex.substring(a3NextTagStart, a3NextTagStart += 2);
                 int crumbDataLengthInt = Integer.parseInt(crumbDataLength, 16);
-                log("CrumbDataLengthHex: " + crumbDataLength + " CrumbDataLength: " + crumbDataLengthInt);
                 String pathHistory = hex.substring(a3NextTagStart, a3NextTagStart + (2 * crumbDataLengthInt));
-                log(pathHistory);
                 extData.setPathHistory(pathHistory);
 
                 nextContextStart = a3NextTagStart + (2 * crumbDataLengthInt);
@@ -381,8 +347,6 @@ public class BSMParser extends ODEDataParser {
     private int handlePathHistFullPositionVector(String hex, int start, SafetyExtData extData) {
         //Skip Inital Pos Len
         int nextContextStart = start + 2;
-        log(hex.substring(nextContextStart));
-        log("Initial Position Data");
         String nextContext = hex.substring(nextContextStart, nextContextStart + 2);
 
         if (nextContext.equalsIgnoreCase("A0")) {
@@ -396,7 +360,6 @@ public class BSMParser extends ODEDataParser {
                 int yearLenInt = Integer.parseInt(yearLen, 16);
                 String year = hex.substring(nextContextStart, nextContextStart += (2 * yearLenInt));
                 int yearInt = new BigInteger(year, 16).intValue();
-                log("Year: " + yearInt);
                 extData.setInitPosYear(yearInt);
 
                 //Skip month tag
@@ -405,7 +368,6 @@ public class BSMParser extends ODEDataParser {
                 int monthLenInt = Integer.parseInt(monthLen, 16);
                 String month = hex.substring(nextContextStart, nextContextStart += (2 * monthLenInt));
                 int monthInt = new BigInteger(month, 16).intValue();
-                log("Month: " + monthInt);
                 extData.setInitPosMonth(monthInt);
 
                 //Skip day tag
@@ -414,7 +376,6 @@ public class BSMParser extends ODEDataParser {
                 int dayLenInt = Integer.parseInt(dayLen, 16);
                 String day = hex.substring(nextContextStart, nextContextStart += (2 * dayLenInt));
                 int dayInt = new BigInteger(day, 16).intValue();
-                log("Day: " + dayInt);
                 extData.setInitPosDay(dayInt);
 
                 //Skip hour tag
@@ -423,7 +384,6 @@ public class BSMParser extends ODEDataParser {
                 int hourLenInt = Integer.parseInt(hourLen, 16);
                 String hour = hex.substring(nextContextStart, nextContextStart += (2 * hourLenInt));
                 int hourInt = new BigInteger(hour, 16).intValue();
-                log("Hour: " + hourInt);
                 extData.setInitPosHour(hourInt);
 
                 //Skip minute tag
@@ -432,7 +392,6 @@ public class BSMParser extends ODEDataParser {
                 int minuteLenInt = Integer.parseInt(minuteLen, 16);
                 String minute = hex.substring(nextContextStart, nextContextStart += (2 * minuteLenInt));
                 int minuteInt = new BigInteger(minute, 16).intValue();
-                log("Minute: " + minuteInt);
                 extData.setInitPosMinute(minuteInt);
 
                 //Skip second tag
@@ -441,7 +400,6 @@ public class BSMParser extends ODEDataParser {
                 int secondLenInt = Integer.parseInt(secondLen, 16);
                 String second = hex.substring(nextContextStart, nextContextStart += (2 * secondLenInt));
                 int secondInt = new BigInteger(second, 16).intValue();
-                log("Second: " + secondInt);
                 extData.setInitPosSecond(secondInt);
             }
         }
@@ -454,7 +412,6 @@ public class BSMParser extends ODEDataParser {
             int longLenInt = Integer.parseInt(longLen, 16);
             String lon = hex.substring(nextContextStart, nextContextStart += (2 * longLenInt));
             int lonInt = new BigInteger(lon, 16).intValue();
-            log("Long: " + (lonInt / 10000000.0));
             extData.setInitPosLong((lonInt / 10000000.0));
         }
 
@@ -466,7 +423,6 @@ public class BSMParser extends ODEDataParser {
             int latLenInt = Integer.parseInt(latLen, 16);
             String a0lat = hex.substring(nextContextStart, nextContextStart += (2 * latLenInt));
             int a0latInt = new BigInteger(a0lat, 16).intValue();
-            log("Lat: " + (a0latInt / 10000000.0));
             extData.setInitPosLat((a0latInt / 10000000.0));
         }
 
@@ -476,7 +432,6 @@ public class BSMParser extends ODEDataParser {
             nextContextStart += 2;
             String elevation = hex.substring(nextContextStart, nextContextStart += 4);
             int ele = new BigInteger(elevation, 16).intValue();
-            log("Elevation: " + (ele / 10.0));
             extData.setElevation((ele / 10.0));
         }
 
@@ -486,7 +441,6 @@ public class BSMParser extends ODEDataParser {
             nextContextStart += 2;
             String heading = hex.substring(nextContextStart, nextContextStart += 4);
             int headingInt = new BigInteger(heading, 16).intValue();
-            log("Heading: " + headingInt * .0125);
             extData.setHeading(headingInt * .0125);
 
         }
@@ -504,12 +458,10 @@ public class BSMParser extends ODEDataParser {
             }
             String transBin = stBin.substring(0, 3);
             int trans = Integer.parseInt(transBin, 2);
-            log("Trans: " + trans);
             extData.setTrans(trans);
 
             String speedBin = stBin.substring(3, 16);
             int speed = Integer.parseInt(speedBin, 2);
-            log("Speed: " + speed * .02);
             extData.setSpeed(speed * .02);
 
         }
@@ -558,7 +510,6 @@ public class BSMParser extends ODEDataParser {
         int lightsLenInt = Integer.parseInt(lightsLen, 16);
         String lights = hex.substring(start, start += (2 * lightsLenInt));
         int lightsInt = new BigInteger(lights, 16).intValue();
-        log("Lights: " + lightsInt);
         statusData.setVehStatusLights(lightsInt);
         return start;
     }
@@ -568,7 +519,6 @@ public class BSMParser extends ODEDataParser {
         int lightsLenInt = Integer.parseInt(lightsLen, 16);
         String lights = hex.substring(start, start += (2 * lightsLenInt));
         int lightsInt = new BigInteger(lights, 16).intValue();
-        log("Lights: " + lightsInt);
         statusData.setVehStatusLightBar(lightsInt);
         return start;
     }
@@ -628,7 +578,6 @@ public class BSMParser extends ODEDataParser {
         int lenInt = Integer.parseInt(len, 16);
         String value = hex.substring(start, start += (2 * lenInt));
         int valInt = new BigInteger(value, 16).intValue();
-        log("Coefficient of Friction: " + valInt);
         statusData.setCoefficientOfFriction(valInt);
         return start;
     }
@@ -638,7 +587,6 @@ public class BSMParser extends ODEDataParser {
         int lenInt = Integer.parseInt(len, 16);
         String value = hex.substring(start, start += (2 * lenInt));
         int valInt = new BigInteger(value, 16).intValue();
-        log("Sun Sensor: " + valInt);
         statusData.setSunSensor(valInt);
         return start;
     }
@@ -648,7 +596,6 @@ public class BSMParser extends ODEDataParser {
         int lenInt = Integer.parseInt(len, 16);
         String value = hex.substring(start, start += (2 * lenInt));
         int valInt = new BigInteger(value, 16).intValue();
-        log("Rain Sensor: " + valInt);
         statusData.setRainSensor(valInt);
         return start;
     }
@@ -658,7 +605,6 @@ public class BSMParser extends ODEDataParser {
         int lenInt = Integer.parseInt(len, 16);
         String value = hex.substring(start, start += (2 * lenInt));
         int valInt = new BigInteger(value, 16).intValue();
-        log("Air Temp: " + valInt);
         statusData.setAirTemp(valInt);
         return start;
     }
@@ -668,7 +614,6 @@ public class BSMParser extends ODEDataParser {
         int lenInt = Integer.parseInt(len, 16);
         String value = hex.substring(start, start += (2 * lenInt));
         int valInt = new BigInteger(value, 16).intValue();
-        log("Air Pressure: " + valInt);
         statusData.setAirPressure(valInt);
         return start;
     }
@@ -829,7 +774,6 @@ public class BSMParser extends ODEDataParser {
                                 int yearLenInt = Integer.parseInt(yearLen, 16);
                                 String year = dateString.substring(nextDateContextStart, nextDateContextStart += (2 * yearLenInt));
                                 int yearInt = new BigInteger(year, 16).intValue();
-                                log("Year: " + yearInt);
                                 statusData.setInitPosYear(yearInt);
                             }
                             if (nextDateContext.equalsIgnoreCase("81")) {
@@ -837,7 +781,6 @@ public class BSMParser extends ODEDataParser {
                                 int monthLenInt = Integer.parseInt(monthLen, 16);
                                 String month = dateString.substring(nextDateContextStart, nextDateContextStart += (2 * monthLenInt));
                                 int monthInt = new BigInteger(month, 16).intValue();
-                                log("Month: " + monthInt);
                                 statusData.setInitPosMonth(monthInt);
                             }
                             if (nextDateContext.equalsIgnoreCase("82")) {
@@ -845,7 +788,6 @@ public class BSMParser extends ODEDataParser {
                                 int dayLenInt = Integer.parseInt(dayLen, 16);
                                 String day = dateString.substring(nextDateContextStart, nextDateContextStart += (2 * dayLenInt));
                                 int dayInt = new BigInteger(day, 16).intValue();
-                                log("Day: " + dayInt);
                                 statusData.setInitPosDay(dayInt);
                             }
                             if (nextDateContext.equalsIgnoreCase("83")) {
@@ -853,7 +795,6 @@ public class BSMParser extends ODEDataParser {
                                 int hourLenInt = Integer.parseInt(hourLen, 16);
                                 String hour = dateString.substring(nextDateContextStart, nextDateContextStart += (2 * hourLenInt));
                                 int hourInt = new BigInteger(hour, 16).intValue();
-                                log("Hour: " + hourInt);
                                 statusData.setInitPosHour(hourInt);
                             }
                             if (nextDateContext.equalsIgnoreCase("84")) {
@@ -861,7 +802,6 @@ public class BSMParser extends ODEDataParser {
                                 int minuteLenInt = Integer.parseInt(minuteLen, 16);
                                 String minute = dateString.substring(nextDateContextStart, nextDateContextStart += (2 * minuteLenInt));
                                 int minuteInt = new BigInteger(minute, 16).intValue();
-                                log("Minute: " + minuteInt);
                                 statusData.setInitPosMinute(minuteInt);
                             }
                             if (nextDateContext.equalsIgnoreCase("85")) {
@@ -869,7 +809,6 @@ public class BSMParser extends ODEDataParser {
                                 int secondLenInt = Integer.parseInt(secondLen, 16);
                                 String second = dateString.substring(nextDateContextStart, nextDateContextStart += (2 * secondLenInt));
                                 int secondInt = new BigInteger(second, 16).intValue();
-                                log("Second: " + secondInt);
                                 statusData.setInitPosSecond(secondInt);
                             }
                         }
@@ -882,7 +821,6 @@ public class BSMParser extends ODEDataParser {
                     int longLenInt = Integer.parseInt(longLen, 16);
                     String lon = vectString.substring(nextContextStart, nextContextStart += (2 * longLenInt));
                     int lonInt = new BigInteger(lon, 16).intValue();
-                    log("Long: " + (lonInt / 10000000.0));
                     statusData.setInitPosLong((lonInt / 10000000.0));
                 }
 
@@ -891,7 +829,6 @@ public class BSMParser extends ODEDataParser {
                     int latLenInt = Integer.parseInt(latLen, 16);
                     String a0lat = vectString.substring(nextContextStart, nextContextStart += (2 * latLenInt));
                     int a0latInt = new BigInteger(a0lat, 16).intValue();
-                    log("Lat: " + (a0latInt / 10000000.0));
                     statusData.setInitPosLat((a0latInt / 10000000.0));
                 }
 
@@ -900,7 +837,6 @@ public class BSMParser extends ODEDataParser {
                     lenInt = Integer.parseInt(len, 16);
                     String elevation = vectString.substring(nextContextStart, nextContextStart += 4);
                     int ele = new BigInteger(elevation, 16).intValue();
-                    log("Elevation: " + (ele / 10.0));
                     statusData.setElevation((ele / 10.0));
                 }
 
@@ -909,7 +845,6 @@ public class BSMParser extends ODEDataParser {
                     lenInt = Integer.parseInt(len, 16);
                     String heading = vectString.substring(nextContextStart, nextContextStart += 4);
                     int headingInt = new BigInteger(heading, 16).intValue();
-                    log("Heading: " + headingInt * .0125);
                     statusData.setHeading(headingInt * .0125);
 
                 }
@@ -918,24 +853,17 @@ public class BSMParser extends ODEDataParser {
                     len = vectString.substring(nextContextStart, nextContextStart += 2);
                     lenInt = Integer.parseInt(len, 16);
                     String speedTrans = vectString.substring(nextContextStart, nextContextStart += 4);
-                    log("SpeedTrans: " + speedTrans);
                     int st = new BigInteger(speedTrans, 16).intValue();
                     String stBin = Integer.toBinaryString(st);
                     while (stBin.length() < 16) {
                         stBin += "0";
                     }
-                    log("stBin: " + stBin);
                     String transBin = stBin.substring(0, 3);
-                    log("TransBin: " + transBin);
                     int trans = Integer.parseInt(transBin, 2);
-                    log("Trans: " + trans);
                     statusData.setTrans(trans);
 
                     String speedBin = stBin.substring(3, 16);
-                    log("SpeedBin: " + speedBin);
                     int speed = Integer.parseInt(speedBin, 2);
-                    log("Speed Raw: " + speed);
-                    log("Speed: " + speed * .02);
                     statusData.setSpeed(speed * .02);
 
                 }
@@ -980,7 +908,6 @@ public class BSMParser extends ODEDataParser {
         int throttleLenInt = Integer.parseInt(throttleLen, 16);
         String throttle = hex.substring(start, start += (2 * throttleLenInt));
         int throttleInt = new BigInteger(throttle, 16).intValue();
-        log("Throttle: " + throttleInt);
         statusData.setVehStatusThrottle(throttleInt);
         return start;
     }
@@ -1013,7 +940,6 @@ public class BSMParser extends ODEDataParser {
             int vehHeightLenInt = Integer.parseInt(vehHeightLen, 16);
             String vehHeight = hex.substring(start, start += (2 * vehHeightLenInt));
             int vehHeightInt = new BigInteger(vehHeight, 16).intValue();
-            log("Height: " + vehHeightInt);
             statusData.setVehStatusHeight(vehHeightInt);
 
             //Skip bumper tag,bumper len, bumper front tag
@@ -1022,7 +948,6 @@ public class BSMParser extends ODEDataParser {
             int bumperFrontLenInt = Integer.parseInt(bumperFrontLen, 16);
             String bumperFront = hex.substring(start, start += (2 * bumperFrontLenInt));
             int bumperFrontInt = new BigInteger(bumperFront, 16).intValue();
-            log("Bumper Front: " + bumperFrontInt);
             statusData.setVehStatusBumperFront(bumperFrontInt);
 
             //Skip bumper rear tag
@@ -1031,7 +956,6 @@ public class BSMParser extends ODEDataParser {
             int bumperRearLenInt = Integer.parseInt(bumperRearLen, 16);
             String bumperRear = hex.substring(start, start += (2 * bumperRearLenInt));
             int bumperRearInt = new BigInteger(bumperRear, 16).intValue();
-            log("Bumper Rear: " + bumperRearInt);
             statusData.setVehStatusBumperRear(bumperRearInt);
 
             //Skip veh mass tag
@@ -1040,7 +964,6 @@ public class BSMParser extends ODEDataParser {
             int vehMassLenInt = Integer.parseInt(vehMassLen, 16);
             String vehMass = hex.substring(start, start += (2 * vehMassLenInt));
             int vehMassInt = new BigInteger(vehMass, 16).intValue();
-            log("Vehicle Mass: " + vehMassInt);
             statusData.setVehStatusMass(vehMassInt);
 
             //skip trailer weight tag
@@ -1049,7 +972,6 @@ public class BSMParser extends ODEDataParser {
             int trailerWeightLenInt = Integer.parseInt(trailerWeightLen, 16);
             String trailerWeight = hex.substring(start, start += (2 * trailerWeightLenInt));
             int trailerWeightInt = new BigInteger(trailerWeight, 16).intValue();
-            log("Trailer Weight: " + trailerWeightInt);
             statusData.setVehStatusTrailerWeight(trailerWeightInt);
 
             //skip veh type tag
@@ -1058,7 +980,6 @@ public class BSMParser extends ODEDataParser {
             int vehTypeLenInt = Integer.parseInt(vehTypeLen, 16);
             String vehType = hex.substring(start, start += (2 * vehTypeLenInt));
             int vehTypeInt = new BigInteger(vehType, 16).intValue();
-            log("Vehicle Type: " + vehTypeInt);
             statusData.setVehStatusType(vehTypeInt);
 
         }
@@ -1081,7 +1002,6 @@ public class BSMParser extends ODEDataParser {
         int v2vHeightLenInt = Integer.parseInt(v2vHeightLen, 16);
         String v2vHeight = hex.substring(start, start += (2 * v2vHeightLenInt));
         int v2vHeightInt = new BigInteger(v2vHeight, 16).intValue();
-        log("Height: " + v2vHeightInt);
         statusData.setV2vHeight(v2vHeightInt);
 
         String bfa1 = hex.substring(start, start + 2);
@@ -1093,7 +1013,6 @@ public class BSMParser extends ODEDataParser {
             int bumerFrntLenInt = Integer.parseInt(bumerFrntLen, 16);
             String bumperFrnt = hex.substring(start, start += (2 * bumerFrntLenInt));
             int bumperFrntInt = Integer.parseInt(bumperFrnt, 16);
-            log("Bumper Front: " + bumperFrntInt);
             statusData.setV2vBumperFront(bumperFrntInt);
 
             //skip v2v bumper rear tag
@@ -1102,7 +1021,6 @@ public class BSMParser extends ODEDataParser {
             int bumerRearLenInt = Integer.parseInt(bumerRearLen, 16);
             String bumperRear = hex.substring(start, start += (2 * bumerRearLenInt));
             int bumperRearInt = Integer.parseInt(bumperRear, 16);
-            log("Bumper Rear: " + bumperRearInt);
             statusData.setV2vBumperRear(bumperRearInt);
 
             //skip v2v mass tag
@@ -1111,7 +1029,6 @@ public class BSMParser extends ODEDataParser {
             int massLenInt = Integer.parseInt(massLen, 16);
             String mass = hex.substring(start, start += (2 * massLenInt));
             int massInt = Integer.parseInt(mass, 16);
-            log("Mass: " + massInt);
             statusData.setV2vMass(massInt);
 
             //skip v2v type tag
@@ -1120,7 +1037,6 @@ public class BSMParser extends ODEDataParser {
             int typeLenInt = Integer.parseInt(typeLen, 16);
             String type = hex.substring(start, start += (2 * typeLenInt));
             int typeInt = Integer.parseInt(type, 16);
-            log("Type: " + typeInt);
             statusData.setV2vType(typeInt);
 
         }
@@ -1129,7 +1045,6 @@ public class BSMParser extends ODEDataParser {
     }
 
     private int handleStatusData(String hex, int start, BSM bsm) {
-        log("Vehicle Status:");
 
         VehStatusData statusData = new VehStatusData();
 
@@ -1249,12 +1164,10 @@ public class BSMParser extends ODEDataParser {
                 }
 
                 if (nextContext.equalsIgnoreCase("BF")) {
-                    log("Vehicle to Vehicle Data");
                     nextContextStart = handleV2VData(hex, nextContextStart + 2, statusData);
                 }
 
                 if (nextContextStart == prevNextContextStart) {
-                    log("Unknown Veh Status tag: " + nextContext + " aborting Veh Status");
                     String lenHex = hex.substring(nextContextStart + 2, nextContextStart + 4);
 //					int unknownContextLen = Integer.parseInt(lenHex,16);
 

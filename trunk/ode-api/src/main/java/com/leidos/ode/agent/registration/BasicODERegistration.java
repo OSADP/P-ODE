@@ -34,6 +34,7 @@ public class BasicODERegistration implements ODERegistration {
     private final Logger logger = Logger.getLogger(TAG);
     private String registrationBaseUrl;
     private String registrationEndpoint;
+    private String unregisterEndpoint;
 
     @Override
     public ODERegistrationResponse register(ODERegistrationRequest registrationRequest) {
@@ -95,7 +96,7 @@ public class BasicODERegistration implements ODERegistration {
             Marshaller marshaller = registrationInfoContext.createMarshaller();
             marshaller.marshal(registrationRequest, stringWriter);
             httpClient = HttpClientBuilder.create().build();
-            HttpPost httpPost = new HttpPost(getRegistrationUrl());
+            HttpPost httpPost = new HttpPost(getUnRegisterUrl());
             StringEntity entity = new StringEntity(stringWriter.getBuffer().toString());
             entity.setContentType("application/xml");
             
@@ -161,6 +162,14 @@ public class BasicODERegistration implements ODERegistration {
         stringBuilder.append(getRegistrationEndpoint());
         return stringBuilder.toString();
     }
+    
+    private String getUnRegisterUrl() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(getRegistrationBaseUrl());
+        stringBuilder.append("/");
+        stringBuilder.append(getUnregisterEndpoint());
+        return stringBuilder.toString();
+    }    
 
     public String getRegistrationBaseUrl() {
         return registrationBaseUrl;
@@ -180,6 +189,20 @@ public class BasicODERegistration implements ODERegistration {
 
     private Logger getLogger() {
         return logger;
+    }
+
+    /**
+     * @return the unregisterEndpoint
+     */
+    public String getUnregisterEndpoint() {
+        return unregisterEndpoint;
+    }
+
+    /**
+     * @param unregisterEndpoint the unregisterEndpoint to set
+     */
+    public void setUnregisterEndpoint(String unregisterEndpoint) {
+        this.unregisterEndpoint = unregisterEndpoint;
     }
 
 }

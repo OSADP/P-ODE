@@ -40,9 +40,7 @@ and open the template in the editor.
                     i++;
                   }
                 });
-                console.log(JSON.stringify(checkedArray));
                 var postData = '{"collectors":'+JSON.stringify(checkedArray)+'}';
-                console.log(postData);
                  $.ajax({
                     url:  'resources/startEmulator',
                     type: 'POST',
@@ -51,7 +49,7 @@ and open the template in the editor.
                     Accept: 'application/json',
                     data: postData,
                     success: function(srvResp){
-                        console.log(srvResp);
+                        
                     }
                     
                 });

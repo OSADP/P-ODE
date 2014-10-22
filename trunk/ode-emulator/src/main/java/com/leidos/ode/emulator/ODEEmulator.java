@@ -61,36 +61,38 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
     public
     @ResponseBody
     String startEmulator(@RequestBody EmulatorCollectorList collectors) {
+        ritisWeatherCollector.stop();
+        ritisSpeedCollector.stop();
+        vdotSpeedCollector.stop();
+        vdotWeatherCollector.stop();
+        vdotTravelTimeCollector.stop();
+        bsmCollector.stop();
+
         for (String s : collectors.getCollectors()) {
-            System.out.println(s);
+            
+
             try {
                 if (s.equalsIgnoreCase("RITISWeatherCollector")) {
-                    ritisWeatherCollector.stop();
                     ((EmulatorDataTarget) ritisWeatherCollector.getAgent().getDataTarget()).setListener(this);
                     setCollectorDataSourceListenerForCollectorsDataSource(ritisWeatherCollector);
                     ritisWeatherCollector.startUp();
                 } else if (s.equalsIgnoreCase("RITISSpeedCollector")) {
-                    ritisSpeedCollector.stop();
                     ((EmulatorDataTarget) ritisSpeedCollector.getAgent().getDataTarget()).setListener(this);
                     setCollectorDataSourceListenerForCollectorsDataSource(ritisSpeedCollector);
                     ritisSpeedCollector.startUp();
                 } else if (s.equalsIgnoreCase("VDOTSpeedCollector")) {
-                    vdotSpeedCollector.stop();
                     ((EmulatorDataTarget) vdotSpeedCollector.getAgent().getDataTarget()).setListener(this);
                     setCollectorDataSourceListenerForCollectorsDataSource(vdotSpeedCollector);
                     vdotSpeedCollector.startUp();
                 } else if (s.equalsIgnoreCase("VDOTWeatherCollector")) {
-                    vdotWeatherCollector.stop();
                     ((EmulatorDataTarget) vdotWeatherCollector.getAgent().getDataTarget()).setListener(this);
                     setCollectorDataSourceListenerForCollectorsDataSource(vdotWeatherCollector);
                     vdotWeatherCollector.startUp();
                 } else if (s.equalsIgnoreCase("VDOTTravelCollector")) {
-                    vdotTravelTimeCollector.stop();
                     ((EmulatorDataTarget) vdotTravelTimeCollector.getAgent().getDataTarget()).setListener(this);
                     setCollectorDataSourceListenerForCollectorsDataSource(vdotTravelTimeCollector);
                     vdotTravelTimeCollector.startUp();
                 } else if (s.equalsIgnoreCase("BSMCollector")) {
-                    bsmCollector.stop();
                     ((EmulatorDataTarget) bsmCollector.getAgent().getDataTarget()).setListener(this);
                     setCollectorDataSourceListenerForCollectorsDataSource(bsmCollector);
                     bsmCollector.startUp();

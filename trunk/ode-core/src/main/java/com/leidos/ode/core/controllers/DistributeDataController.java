@@ -15,12 +15,14 @@ import javax.annotation.PreDestroy;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import org.springframework.beans.factory.DisposableBean;
 
 @Controller
-public class DistributeDataController {
+public class DistributeDataController implements  DisposableBean{
 
     private Map<String, DataDistributor> distributors = new HashMap<String, DataDistributor>();
-
+    private int startingServerPort = 12000;
+    
     public DistributeDataController() {
 
     }
@@ -36,7 +38,7 @@ public class DistributeDataController {
     public void receiveSubscriptionNotification(@RequestBody ODERegistrationResponse registrationResponse) {
         //Create a new DataDistributor with the info from the subscription.
         System.out.println("New Subscription creating Distributor");
-        DataDistributor dist = new UDPDataDistributor(registrationResponse.getQueueHostURL(), registrationResponse.getQueueHostPort(), registrationResponse.getQueueConnFact(), registrationResponse.getQueueName(), registrationResponse.getTargetAddress(), registrationResponse.getTargetPort());
+        DataDistributor dist = new UDPDataDistributor(registrationResponse.getQueueHostURL(), registrationResponse.getQueueHostPort(), registrationResponse.getQueueConnFact(), registrationResponse.getQueueName(), registrationResponse.getTargetAddress(), registrationResponse.getTargetPort(), startingServerPort++);
 
         //Start up the distributor
         new Thread(dist).start();
@@ -45,8 +47,11 @@ public class DistributeDataController {
 
     @RequestMapping(value = "subscriptionCancel", method = RequestMethod.POST)
     public void stopSubscription(@RequestBody String agentId) {
-        distributors.get(agentId).setInterrupted(true);
-        distributors.remove(agentId);
+        if(distributors.get(agentId) != null){
+            distributors.get(agentId).setInterrupted(true);
+            distributors.remove(agentId);
+        }
+        
     }
 
     @PreDestroy
@@ -57,6 +62,10 @@ public class DistributeDataController {
             String key = it.next();
             distributors.get(key).setInterrupted(true);
         }
+    }
+
+    public void destroy() throws Exception {
+        cleanup();
     }
 
 }

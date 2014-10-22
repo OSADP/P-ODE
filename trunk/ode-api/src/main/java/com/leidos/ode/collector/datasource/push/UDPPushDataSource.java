@@ -38,10 +38,8 @@ public class UDPPushDataSource extends PushDataSource {
             if (packet.getLength() > 0) {
                 getLogger().debug(packet.getLength());
                 byte[] sourceAddress = packet.getAddress().getAddress();
-
-                getLogger().debug(packet.getAddress().getHostName());
-
                 byte[] resized = Arrays.copyOf(packet.getData(), packet.getLength());
+                getLogger().info("UDP packet received by DataSource, size ["+resized.length+"]");
                 return resized;
             }
         } catch (IOException e) {
@@ -57,8 +55,9 @@ public class UDPPushDataSource extends PushDataSource {
     @Override
     protected void cleanUpConnections() {
         if (datagramSocket != null) {
+            datagramSocket.disconnect();
             datagramSocket.close();
-            getLogger().debug("Closed datagram socket.");
+            getLogger().info("Closed datagram socket.");
         } else {
             getLogger().warn("Unable to close datagram socket. Datagram socket was null.");
         }

@@ -13,18 +13,22 @@ import javax.jms.Message;
 import javax.jms.ObjectMessage;
 import java.io.IOException;
 import java.net.*;
+import org.apache.log4j.Logger;
 
 /**
  * @author cassadyja
  */
 public class UDPDataDistributor extends DataDistributor {
+    private final String TAG = getClass().getSimpleName();
+    private final Logger logger = Logger.getLogger(TAG);
 
     private String targetURL;
     private int targetPort;
     private DatagramSocket socket;
+    private int serverPort;
 
     public UDPDataDistributor(String topicHostURL, int topicHostPort,
-                              String connFactName, String topicName, String targetURL, int targetPort) {
+                              String connFactName, String topicName, String targetURL, int targetPort, int serverPort) {
 
         setTopicHostURL(topicHostURL);
         setTopicHostPort(topicHostPort);
@@ -39,13 +43,13 @@ public class UDPDataDistributor extends DataDistributor {
     protected void connectTarget() throws DistributeException {
         try {
             System.out.println("~~~~~~ UDP Distributor Connecting to socket.");
-            socket = new DatagramSocket(targetPort);
-            InetAddress address = InetAddress.getByName(targetURL);
-            socket.connect(address, targetPort);
+            socket = new DatagramSocket();
+//            InetAddress address = InetAddress.getByName(targetURL);
+//            socket.connect();
         } catch (SocketException ex) {
             throw new DistributeException("Error connecting to UDP socket", ex);
-        } catch (UnknownHostException ex) {
-            throw new DistributeException("Error connecting to UDP socket", ex);
+//        } catch (UnknownHostException ex) {
+//            throw new DistributeException("Error connecting to UDP socket", ex);
         }
     }
 
@@ -57,7 +61,7 @@ public class UDPDataDistributor extends DataDistributor {
             InetAddress address = InetAddress.getByName(targetURL);
             packet.setAddress(address);
             packet.setPort(targetPort);
-            System.out.println("Distributor sending message.");
+            logger.info("Distributor sending message.");
             socket.send(packet);
         } catch (IOException ex) {
             throw new DistributeException("Error sending message", ex);
@@ -92,6 +96,14 @@ public class UDPDataDistributor extends DataDistributor {
      */
     public void setTargetPort(int targetPort) {
         this.targetPort = targetPort;
+    }
+
+    @Override
+    protected void cleanup() {
+        if(socket != null){
+            socket.disconnect();
+            socket.close();
+        }
     }
 
 }
