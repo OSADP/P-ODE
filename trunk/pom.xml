@@ -10,7 +10,6 @@
     <modules>
         <module>ode-api-commons</module>
         <module>ode-api</module>
-        <module>ode-api-web</module>
         <module>ode-api-test</module>
         <module>ode-core</module>
         <module>ode-core-web</module>

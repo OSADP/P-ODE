@@ -10,8 +10,6 @@
     <artifactId>ode-core-web</artifactId>
     <packaging>war</packaging>
 
-    <name>ode-core-web</name>
-
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>

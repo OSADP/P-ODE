@@ -12,8 +12,6 @@
     <artifactId>ode-emulator-web</artifactId>
     <packaging>war</packaging>
 
-    <name>ode-emulator-web</name>
-
     <dependencies>
         <dependency>
             <groupId>com.leidos.ode</groupId>

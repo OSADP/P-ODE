@@ -11,8 +11,6 @@
 
     <artifactId>ode-core-test</artifactId>
 
-    <name>ode-core-test</name>
-
     <dependencies>
         <dependency>
             <groupId>junit</groupId>

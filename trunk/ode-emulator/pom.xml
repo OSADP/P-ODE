@@ -12,9 +12,12 @@
     <artifactId>ode-emulator</artifactId>
     <packaging>jar</packaging>
 
-    <name>ode-emulator</name>
-
     <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.leidos.ode</groupId>
             <artifactId>ode-api</artifactId>

@@ -12,6 +12,4 @@
     <artifactId>ode-api-commons</artifactId>
     <packaging>jar</packaging>
 
-    <name>ode-api-commons</name>
-
 </project>
