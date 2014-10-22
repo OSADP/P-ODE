@@ -57,7 +57,7 @@ public class MongoUtils {
         String logFile = "/var/log/mongodb/mongod.log";
         String findStr = "[initandlisten] waiting for connections on port ";
         String command = new StringBuilder()
-                .append("grep -Fxq")
+                .append("grep -Fxq ")
                 .append("\"").append(findStr).append("\"")
                 .append(logFile)
                 .toString();
