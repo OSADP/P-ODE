@@ -54,41 +54,49 @@ public class MongoUtils {
     }
 
     private static boolean isMongoDBRunningInLinux() {
-        String logFile = "/var/log/mongodb/mongod.log";
-        String findStr = "[initandlisten] waiting for connections on port ";
+//        String logFile = "/var/log/mongodb/mongod.log";
+//        String findStr = "[initandlisten] waiting for connections on port ";
+//        String command = new StringBuilder()
+//                .append("grep -Fxq")
+//                .append(" ")
+//                .append("\"").append(findStr).append("\"")
+//                .append(" ")
+//                .append(logFile)
+//                .toString();
         String command = new StringBuilder()
-                .append("grep -Fxq")
-                .append(" ")
-                .append("\"").append(findStr).append("\"")
-                .append(" ")
-                .append(logFile)
+                .append("pgrep mongod")
                 .toString();
-        Process process = executeCommand(command);
-        return process != null && process.exitValue() == 0;
+        ProcessResponse processResponse = executeCommand(command);
+        return processResponse != null && processResponse.getResponse() != null && !processResponse.getResponse().isEmpty();
     }
 
-    private static Process executeCommand(String... command) {
+    private static ProcessResponse executeCommand(String... command) {
         try {
-            ProcessBuilder ps = new ProcessBuilder(command);
+            ProcessBuilder processBuilder = new ProcessBuilder(command);
 
             //From the DOC:  Initially, this property is false, meaning that the
             //standard output and error output of a subprocess are sent to two
             //separate streams
-            ps.redirectErrorStream(true);
+            processBuilder.redirectErrorStream(true);
 
-            Process pr = ps.start();
+            Process process = processBuilder.start();
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+            BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            StringBuilder builder = new StringBuilder();
             String line;
             while ((line = in.readLine()) != null) {
-                getLogger().debug(line);
+                builder.append(line);
+                builder.append(System.lineSeparator());
             }
-            pr.waitFor();
-            getLogger().debug("Successfully executed command.");
+            String response = builder.toString();
+
+            process.waitFor();
+
+            getLogger().debug("Successfully executed command. Response: " + response);
 
             in.close();
             System.exit(0);
-            return pr;
+            return new ProcessResponse(process, response);
         } catch (IOException e) {
             getLogger().error(e.getLocalizedMessage());
         } catch (InterruptedException e) {
@@ -115,5 +123,24 @@ public class MongoUtils {
 
     private static Logger getLogger() {
         return logger;
+    }
+
+    private static class ProcessResponse {
+
+        private Process process;
+        private String response;
+
+        public ProcessResponse(Process process, String response) {
+            this.process = process;
+            this.response = response;
+        }
+
+        private Process getProcess() {
+            return process;
+        }
+
+        private String getResponse() {
+            return response;
+        }
     }
 }
