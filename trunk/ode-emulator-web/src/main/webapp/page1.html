@@ -30,6 +30,11 @@
 //                        $("#").html();
                         $("#ebI66Time").html(srvResp.eastBoundTravelTime);
                         $("#wbI66Time").html(srvResp.westBoundTravelTime);
+                        
+                        $("#ebTurnerTime").html(srvResp.eastBoundBSMTime);
+                        $("#wbTurnerTime").html(srvResp.westBoundBSMTime);
+                        
+                        
                         if(srvResp.ritisSpeedDataEastValue != null){
                             $("#ritisEastOcc").html(srvResp.ritisSpeedDataEastValue.zoneDetectorDataRITIS.collectionPeriod.collectionPeriodItem[0].zoneReports.zoneReport[0].zoneData.zoneDataItem[0].occupancy);
                             $("#ritisEastSpeed").html(srvResp.ritisSpeedDataEastValue.zoneDetectorDataRITIS.collectionPeriod.collectionPeriodItem[0].zoneReports.zoneReport[0].zoneData.zoneDataItem[0].zoneVehicleSpeed);
@@ -45,9 +50,21 @@
                         }
                             $("#vdotEastTravel").html();
 
-                        $("#bsmEast1").html();
-                        $("#bsmEast2").html();
-                        $("#bsmEast3").html();
+                        if(srvResp.bsmDataEast != null){
+                            if(srvResp.bsmDataEast['20010470000711220000000000000002'] != null){
+                                $("#bsmEast1").html(srvResp.bsmDataEast['20010470000711220000000000000002'].speed);        
+                            }
+                            if(srvResp.bsmDataEast['20010470000710620000000000000002'] != null){
+                                $("#bsmEast2").html(srvResp.bsmDataEast['20010470000710620000000000000002'].speed);
+                            }
+                            if(srvResp.bsmDataEast['20010470000710350000000000000002'] != null){
+                                $("#bsmEast3").html(srvResp.bsmDataEast['20010470000710350000000000000002'].speed);
+                            }
+                        }
+                        
+
+                        
+                        
                         
                         $("#blueFaxEast").html();
                         
@@ -66,11 +83,20 @@
                             $("#vdotWestVol").html(srvResp.vdotSpeedDataWestValue.vdotSpeedDataElements[0].volume);
                         }
                             $("#vdotWestTravel").html();
+                            
+                        if(srvResp.bsmDataWest != null){
+                            if(srvResp.bsmDataWest['20010470000711220000000000000002'] != null){
+                                $("#bsmWest1").html(srvResp.bsmDataWest['20010470000711220000000000000002'].speed);        
+                            }
+                            if(srvResp.bsmDataWest['20010470000710620000000000000002'] != null){
+                                $("#bsmWest2").html(srvResp.bsmDataWest['20010470000710620000000000000002'].speed);
+                            }
+                            if(srvResp.bsmDataWest['20010470000710350000000000000002'] != null){
+                                $("#bsmWest3").html(srvResp.bsmDataWest['20010470000710350000000000000002'].speed);
+                            }
+                        }                        
                         
-                        $("#bsmWest1").html();
-                        $("#bsmWest2").html();
-                        $("#bsmWest3").html();
-                        
+                       
                         $("#blueFaxWest").html();
                         
                         

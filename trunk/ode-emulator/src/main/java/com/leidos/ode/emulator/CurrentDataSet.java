@@ -202,11 +202,11 @@ public class CurrentDataSet {
     public void addBSMWestData(String ip, BSM data) {
         BSM existing = getBsmDataWest().get(ip);
         if (existing != null) {
-            if (existing.getMessageCount() != data.getMessageCount()
-                    && !existing.getBsmMessageId().equalsIgnoreCase(data.getBsmMessageId())) {
+//            if (existing.getMessageCount() != data.getMessageCount()
+//                    && !existing.getBsmMessageId().equalsIgnoreCase(data.getBsmMessageId())) {
                 getBsmDataWest().put(ip, data);
                 recalculateBSMWest();
-            }
+//            }
         } else {
             getBsmDataWest().put(ip, data);
             recalculateBSMWest();
@@ -217,11 +217,11 @@ public class CurrentDataSet {
     public void addBSMEastData(String ip, BSM data) {
         BSM existing = getBsmDataEast().get(ip);
         if (existing != null) {
-            if (existing.getMessageCount() != data.getMessageCount()
-                    && !existing.getBsmMessageId().equalsIgnoreCase(data.getBsmMessageId())) {
+//            if (existing.getMessageCount() != data.getMessageCount()
+//                    && !existing.getBsmMessageId().equalsIgnoreCase(data.getBsmMessageId())) {
                 getBsmDataEast().put(ip, data);
                 recalculateBSMEast();
-            }
+//            }
         } else {
             getBsmDataEast().put(ip, data);
             recalculateBSMEast();

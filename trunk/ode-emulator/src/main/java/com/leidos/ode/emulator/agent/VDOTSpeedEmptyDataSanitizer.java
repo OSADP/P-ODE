@@ -19,22 +19,24 @@ public class VDOTSpeedEmptyDataSanitizer implements ODESanitizer {
 
     public ODEAgentMessage sanitizeMessage(ODEAgentMessage message) throws ODESanitizeException {
         VDOTSpeedData vdotSpeedData = (VDOTSpeedData) message.getFormattedMessage();
-        List<VDOTSpeedData.VDOTSpeedDataElement> vdotSpeedDataElements = vdotSpeedData.getVdotSpeedDataElements();
+        if(vdotSpeedData != null){
+            List<VDOTSpeedData.VDOTSpeedDataElement> vdotSpeedDataElements = vdotSpeedData.getVdotSpeedDataElements();
 
-        List<VDOTSpeedData.VDOTSpeedDataElement> zeroOccupancyElements = new ArrayList<VDOTSpeedData.VDOTSpeedDataElement>();
+            List<VDOTSpeedData.VDOTSpeedDataElement> zeroOccupancyElements = new ArrayList<VDOTSpeedData.VDOTSpeedDataElement>();
 
-        //Iterate the VDOTSpeed data elements
-        System.out.println("Have VDOT Total Elements of: "+vdotSpeedDataElements.size());
-        for (VDOTSpeedData.VDOTSpeedDataElement vdotSpeedDataElement : vdotSpeedDataElements) {
-            //If the element's Volume is zero, then add it to the list of zero occupancy elements
-            System.out.println("Have VDOT Volume of: "+vdotSpeedDataElement.getVolume());
-            if (vdotSpeedDataElement.getVolume()== 0) {
-                System.out.println("Removing");    
-                zeroOccupancyElements.add(vdotSpeedDataElement);
+            //Iterate the VDOTSpeed data elements
+            System.out.println("Have VDOT Total Elements of: "+vdotSpeedDataElements.size());
+            for (VDOTSpeedData.VDOTSpeedDataElement vdotSpeedDataElement : vdotSpeedDataElements) {
+                //If the element's Volume is zero, then add it to the list of zero occupancy elements
+                System.out.println("Have VDOT Volume of: "+vdotSpeedDataElement.getVolume());
+                if (vdotSpeedDataElement.getVolume()== 0) {
+                    System.out.println("Removing");    
+                    zeroOccupancyElements.add(vdotSpeedDataElement);
+                }
             }
+            //Remove all elements with a occupancy value of zero
+            vdotSpeedDataElements.removeAll(zeroOccupancyElements);
         }
-        //Remove all elements with a occupancy value of zero
-        vdotSpeedDataElements.removeAll(zeroOccupancyElements);
         return message;
     }
 }
