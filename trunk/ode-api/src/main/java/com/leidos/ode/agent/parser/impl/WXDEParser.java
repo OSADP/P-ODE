@@ -57,6 +57,7 @@ public class WXDEParser extends ODEDataParser {
 
     @Override
     protected ODEDataParserResponse parse(byte[] bytes) {
+        getLogger().debug("Parsing WXDE Data.");
         Document document = getMessageDocument(bytes);
         if (document != null) {
             Element body = document.body();
