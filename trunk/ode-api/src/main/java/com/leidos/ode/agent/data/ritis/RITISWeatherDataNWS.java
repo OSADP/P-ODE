@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * To change this template use File | Settings | File Templates.
  */
 @XmlRootElement
-public class RITISWeatherDataNWS  implements Serializable{
+public class RITISWeatherDataNWS implements Serializable{
 
     private AlertsData alertsData;
 

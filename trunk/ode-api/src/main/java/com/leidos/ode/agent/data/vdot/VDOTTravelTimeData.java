@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * To change this template use File | Settings | File Templates.
  */
 @XmlRootElement
-public class VDOTTravelTimeData  implements Serializable{
+public class VDOTTravelTimeData implements Serializable{
 
     private List<VDOTTravelTimeDataElement> vdotTravelTimeDataElements;
 

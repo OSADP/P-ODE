@@ -16,7 +16,7 @@ import java.util.Date;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class BSM  implements Serializable {
+public class BSM implements Serializable {
     @XmlTransient
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private ObjectId mongoid;

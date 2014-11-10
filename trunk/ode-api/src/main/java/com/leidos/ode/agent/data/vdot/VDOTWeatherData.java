@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 //TODO Not sure at this point what the data looks like since the weather urls contain no data
 @XmlRootElement
-public class VDOTWeatherData  implements Serializable{
+public class VDOTWeatherData implements Serializable{
 
     private List<VDOTWeatherDataElement> vdotWeatherDataElements;
 

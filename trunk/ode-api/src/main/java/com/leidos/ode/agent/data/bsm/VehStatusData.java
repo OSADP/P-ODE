@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.io.StringWriter;
 
 @XmlRootElement
-public class VehStatusData  implements Serializable{
+public class VehStatusData implements Serializable{
     private int bsmId;
     private int vehStatusLights;
     private int vehStatusLightBar;

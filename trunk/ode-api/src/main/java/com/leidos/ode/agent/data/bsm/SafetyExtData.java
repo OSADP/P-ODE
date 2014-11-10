@@ -7,7 +7,7 @@ import java.io.StringWriter;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class SafetyExtData  implements Serializable{
+public class SafetyExtData implements Serializable{
 	private int bsmId;
 	private Integer pathHistoryLength;
 	private Integer itemCount;
