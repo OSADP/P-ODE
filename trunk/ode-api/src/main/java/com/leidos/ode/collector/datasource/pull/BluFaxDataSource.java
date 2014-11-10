@@ -1,5 +1,12 @@
 package com.leidos.ode.collector.datasource.pull;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.util.EntityUtils;
+
+import java.io.IOException;
+
 /**
  * Created with IntelliJ IDEA.
  * User: LAMDE
@@ -13,8 +20,30 @@ public class BluFaxDataSource extends RestPullDataSource {
     private String token;
 
     @Override
+    public void startDataSource() {
+        super.startDataSource();
+        executeDataSourceThread();
+    }
+
+    @Override
     public byte[] pollDataSource() {
-        return new byte[0];  //To change body of implemented methods use File | Settings | File Templates.
+        try {
+            getLogger().debug("Polling data source for feed: '" + getFeedName() + "'.");
+            CloseableHttpResponse closeableHttpResponse = getHttpClient().execute(getHttpGet());
+            HttpEntity responseEntity = closeableHttpResponse.getEntity();
+            byte[] responseBytes = EntityUtils.toByteArray(responseEntity);
+            EntityUtils.consume(responseEntity);
+            closeableHttpResponse.close();
+            Thread.sleep(getRequestLimit());
+            return responseBytes;
+        } catch (ClientProtocolException e) {
+            getLogger().error(e.getLocalizedMessage());
+        } catch (IOException e) {
+            getLogger().error(e.getLocalizedMessage());
+        } catch (InterruptedException e) {
+            getLogger().error(e.getLocalizedMessage());
+        }
+        return null;
     }
 
     @Override

@@ -43,50 +43,27 @@ public class RITISParserHelper extends ODEParserHelper {
 
     @Override
     public ODEHelperResponse parseData(byte[] bytes) {
-        Document document = getMessageDocument(bytes);
-        if (document != null) {
-            Element headElement = document.head();
-            Element bodyElement = document.body();
-            if (bodyElement != null) {
-                Elements bodyChildren = bodyElement.children();
-                if (bodyChildren != null) {
-                    Element element = bodyChildren.first();
-                    if (element != null) {
-                        String elementTag = element.tagName();
-                        if (elementTag != null) {
-                            if (elementTag.equalsIgnoreCase(RITIS_SPEED_TAG)) {
-                                logger.debug("Parsing RITISSpeed data");
-                                return parseRITISSpeedData(bytes);
+        return parseDocumentByTag(bytes);
+    }
 
-                            } else if (elementTag.equalsIgnoreCase(RITIS_WEATHER_NWS_TAG)) {
-                                logger.debug("Parsing RITISWeather data from NWS");
-                                return parseRITISWeatherNWS(bytes);
-
-                            } else if (elementTag.equalsIgnoreCase(RITIS_WEATHER_CLARUS_TAG)) {
-                                logger.debug("Parsing RITISWeather data from Clarus");
-                                return parseRITISWeatherClarus(bytes);
-                            } else if (elementTag.equalsIgnoreCase(RITIS_ERROR_TAG)) {
-                                logger.debug("Parsing RITIS Error!");
-                                return parseRITISError(element);
-                            } else {
-                                logger.debug("Unknown data type for tag: " + elementTag);
-                                return new ODEHelperResponse(null, HelperReport.DATA_TYPE_UNKNOWN);
-                            }
-                        } else {
-                            logger.debug("Unable to parse tag name. Data type unknown.");
-                        }
-                    } else {
-                        return new ODEHelperResponse(null, HelperReport.NO_DATA);
-                    }
-                } else {
-                    logger.debug("Unable to parse body elements. Body element has no children.");
-                }
-            } else {
-                logger.debug("Unable to parse body element. Document body was null..");
-            }
+    @Override
+    protected ODEHelperResponse parseDocumentByTag(String tag, byte[] bytes) {
+        if (tag.equalsIgnoreCase(RITIS_SPEED_TAG)) {
+            logger.debug("Parsing RITISSpeed data");
+            return parseRITISSpeedData(bytes);
+        } else if (tag.equalsIgnoreCase(RITIS_WEATHER_NWS_TAG)) {
+            logger.debug("Parsing RITISWeather data from NWS");
+            return parseRITISWeatherNWS(bytes);
+        } else if (tag.equalsIgnoreCase(RITIS_WEATHER_CLARUS_TAG)) {
+            logger.debug("Parsing RITISWeather data from Clarus");
+            return parseRITISWeatherClarus(bytes);
+        } else if (tag.equalsIgnoreCase(RITIS_ERROR_TAG)) {
+            logger.debug("Parsing RITIS Error!");
+            return parseRITISError(bytes);
+        } else {
+            logger.debug("Unknown data type for tag: " + tag);
+            return new ODEHelperResponse(null, HelperReport.DATA_TYPE_UNKNOWN);
         }
-        ;
-        return new ODEHelperResponse(null, HelperReport.UNEXPECTED_DATA_FORMAT);
     }
 
     private Object unmarshalBytes(byte[] bytes, Class objectFactoryForContext) {
@@ -133,20 +110,32 @@ public class RITISParserHelper extends ODEParserHelper {
         return new ODEHelperResponse(null, HelperReport.PARSE_ERROR);
     }
 
-    private ODEHelperResponse parseRITISError(Element error) {
-        if (error != null) {
-            Elements errorChildren = error.children();
-            if (errorChildren != null) {
-                Element errorChild = errorChildren.first();
-                if (errorChild != null) {
-                    String errorText = errorChild.ownText();
-                    logger.error("Error requesting RITIS data. Response from server: '" + errorText + "'.");
-                    return new ODEHelperResponse(null, HelperReport.DATA_SOURCE_SERVER_ERROR);
+    private ODEHelperResponse parseRITISError(byte[] bytes) {
+        Document document = getMessageDocument(bytes);
+        if (document != null) {
+            if (document != null) {
+                Element headElement = document.head();
+                Element bodyElement = document.body();
+                if (bodyElement != null) {
+                    Elements bodyChildren = bodyElement.children();
+                    if (bodyChildren != null) {
+                        Element error = bodyChildren.first();
+                        if (error != null) {
+                            Elements errorChildren = error.children();
+                            if (errorChildren != null) {
+                                Element errorChild = errorChildren.first();
+                                if (errorChild != null) {
+                                    String errorText = errorChild.ownText();
+                                    logger.error("Error requesting RITIS data. Response from server: '" + errorText + "'.");
+                                    return new ODEHelperResponse(null, HelperReport.DATA_SOURCE_SERVER_ERROR);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
         return new ODEHelperResponse(null, HelperReport.UNKNOWN_ERROR);
     }
-
 }
 

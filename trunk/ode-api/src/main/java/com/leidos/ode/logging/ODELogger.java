@@ -17,7 +17,6 @@ public final class ODELogger {
     private Logger logger = Logger.getLogger(TAG);
     private LogBean logBean;
     private MongoTemplate mongoTemplate;
-    private boolean connected = true;
     
     /**
      * Marks the starting point of a given ODEStage in the log message.

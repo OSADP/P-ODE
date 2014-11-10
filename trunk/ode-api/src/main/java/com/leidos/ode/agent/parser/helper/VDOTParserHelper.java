@@ -62,6 +62,11 @@ public class VDOTParserHelper extends ODEParserHelper {
         }
     }
 
+    @Override
+    protected ODEHelperResponse parseDocumentByTag(String tag, byte[] bytes) {
+        return null;
+    }
+
     private ODEHelperResponse parseDocumentForExceptions(Elements exceptionReport) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Error parsing VDOT Data Exception: '");

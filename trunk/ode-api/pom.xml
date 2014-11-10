@@ -110,10 +110,10 @@
                         </goals>
                         <phase>generate-sources</phase>
                         <configuration>
-                            <schemaDirectory>${project.basedir}/src/main/xsd/filter.ritis.org/reference/schemas
+                            <schemaDirectory>${project.basedir}/src/main/xsd/
                             </schemaDirectory>
                             <!--<schemaFiles>ritisFilterOutput.xsd,ritisFilterEventOutput.xsd</schemaFiles>-->
-                            <schemaFiles>rf/rf.xsd,RITIS_Global_Internal/TMDD.xsd</schemaFiles>
+                            <schemaFiles>filter.ritis.org/reference/schemas/rf/rf.xsd,filter.ritis.org/reference/schemas/RITIS_Global_Internal/TMDD.xsd,blufax/TMDD.xsd</schemaFiles>
                         </configuration>
                     </execution>
                 </executions>

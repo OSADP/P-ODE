@@ -30,6 +30,8 @@
                 <value>classpath:META-INF/ODE-API-Context.properties</value>
                 <value>classpath:ritis.properties</value>
                 <value>classpath:vdot.properties</value>
+                <value>classpath:blufax.properties</value>
+                <value>classpath:wxde.properties</value>
                 <value>classpath:mongo.properties</value>
             </list>
         </property>
@@ -359,5 +361,134 @@
     <bean id="vdotTravelTimeCollector" class="com.leidos.ode.collector.ODECollector">
         <property name="agent" ref="vdotTravelTimeAgent"/>
         <property name="dataSource" ref="vdotTravelTimeDataSource"/>
+    </bean>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~BluFax Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <bean id="bluFaxParser" class="com.leidos.ode.agent.parser.BluFaxParser"/>
+
+    <bean id="bluFaxLinkPubRegistrationRequest" class="com.leidos.ode.registration.request.ODERegistrationRequest">
+        <property name="messageType" value="${leidos.ode.reg.blufaxlink.pub.messageType}"/>
+        <property name="region" value="${leidos.ode.reg.blufaxlink.pub.region}"/>
+        <property name="registrationType" value="${leidos.ode.reg.blufaxlink.pub.registrationType}"/>
+        <property name="agentId" value="${leidos.ode.reg.blufaxlink.pub.agentId}"/>
+        <property name="startDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.reg.blufaxlink.pub.startDate}"/>
+            </bean>
+        </property>
+        <property name="endDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.reg.blufaxlink.pub.endDate}"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="bluFaxRoutePubRegistrationRequest" class="com.leidos.ode.registration.request.ODERegistrationRequest">
+        <property name="messageType" value="${leidos.ode.reg.blufaxroute.pub.messageType}"/>
+        <property name="region" value="${leidos.ode.reg.blufaxroute.pub.region}"/>
+        <property name="registrationType" value="${leidos.ode.reg.blufaxroute.pub.registrationType}"/>
+        <property name="agentId" value="${leidos.ode.reg.blufaxroute.pub.agentId}"/>
+        <property name="startDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.reg.blufaxroute.pub.startDate}"/>
+            </bean>
+        </property>
+        <property name="endDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.reg.blufaxroute.pub.endDate}"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="basicBluFaxAgent" class="com.leidos.ode.agent.PublishODEAgent">
+        <property name="registration" ref="basicPubRegistration"/>
+        <property name="parser" ref="bluFaxParser"/>
+        <property name="sanitizer" ref="passthroughSanitizer"/>
+        <property name="dataTarget" ref="restTarget"/>
+        <property name="odeLogger" ref="odeLogger"/>
+    </bean>
+
+    <bean id="bluFaxLinkAgent" parent="basicBluFaxAgent">
+        <property name="registrationRequest" ref="bluFaxLinkPubRegistrationRequest"/>
+    </bean>
+
+    <bean id="bluFaxRouteAgent" parent="basicBluFaxAgent">
+        <property name="registrationRequest" ref="bluFaxRoutePubRegistrationRequest"/>
+    </bean>
+
+    <bean id="basicBluFaxDataSource" class="com.leidos.ode.collector.datasource.pull.BluFaxDataSource">
+        <property name="hostProtocol" value="${leidos.ode.blufax.protocol}"/>
+        <property name="hostAddress" value="${leidos.ode.blufax.sourceaddress}"/>
+        <property name="baseUrl" value="${leidos.ode.blufax.baseurl}"/>
+        <property name="clientId" value="${leidos.ode.blufax.clientid}"/>
+        <property name="token" value="${leidos.ode.blufax.token}"/>
+        <property name="requestLimit" value="${leidos.ode.blufax.requestlimit}"/>
+    </bean>
+
+    <bean id="bluFaxLinkDataSource" parent="basicBluFaxDataSource">
+        <property name="feedName" value="${leidos.ode.blufax.linkstatus.url}"/>
+    </bean>
+
+    <bean id="bluFaxRouteDataSource" parent="basicBluFaxDataSource">
+        <property name="feedName" value="${leidos.ode.blufax.routestatus.url}"/>
+    </bean>
+
+    <bean id="bluFaxLinkCollector" class="com.leidos.ode.collector.ODECollector">
+        <property name="agent" ref="bluFaxLinkAgent"/>
+        <property name="dataSource" ref="bluFaxLinkDataSource"/>
+    </bean>
+
+    <bean id="bluFaxRouteCollector" class="com.leidos.ode.collector.ODECollector">
+        <property name="agent" ref="bluFaxRouteAgent"/>
+        <property name="dataSource" ref="bluFaxRouteDataSource"/>
+    </bean>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~WXDE Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <bean id="wxdeParser" class="com.leidos.ode.agent.parser.WXDEParser"/>
+
+    <bean id="wxdePubRegistrationRequest" class="com.leidos.ode.registration.request.ODERegistrationRequest">
+        <property name="messageType" value="${leidos.ode.reg.wxde.pub.messageType}"/>
+        <property name="region" value="${leidos.ode.reg.wxde.pub.region}"/>
+        <property name="registrationType" value="${leidos.ode.reg.wxde.pub.registrationType}"/>
+        <property name="agentId" value="${leidos.ode.reg.wxde.pub.agentId}"/>
+        <property name="startDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.reg.wxde.pub.startDate}"/>
+            </bean>
+        </property>
+        <property name="endDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.reg.wxde.pub.endDate}"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="basicWXDEAgent" class="com.leidos.ode.agent.PublishODEAgent">
+        <property name="registration" ref="basicPubRegistration"/>
+        <property name="parser" ref="wxdeParser"/>
+        <property name="sanitizer" ref="passthroughSanitizer"/>
+        <property name="dataTarget" ref="restTarget"/>
+        <property name="odeLogger" ref="odeLogger"/>
+    </bean>
+
+    <bean id="wxdeAgent" parent="basicWXDEAgent">
+        <property name="registrationRequest" ref="wxdePubRegistrationRequest"/>
+    </bean>
+
+    <bean id="wxdeDataSource" class="com.leidos.ode.collector.datasource.pull.WXDEDataSource">
+        <property name="hostProtocol" value="${leidos.ode.wxde.protocol}"/>
+        <property name="hostAddress" value="${leidos.ode.wxde.sourceaddress}"/>
+        <property name="baseUrl" value="${leidos.ode.wxde.baseurl}"/>
+        <property name="uuid" value="${leidos.ode.wxde.uuid}"/>
+        <property name="requestLimit" value="${leidos.ode.wxde.requestlimit}"/>
+    </bean>
+
+    <bean id="wxdeCollector" class="com.leidos.ode.collector.ODECollector">
+        <property name="agent" ref="wxdeAgent"/>
+        <property name="dataSource" ref="wxdeDataSource"/>
     </bean>
 </beans>

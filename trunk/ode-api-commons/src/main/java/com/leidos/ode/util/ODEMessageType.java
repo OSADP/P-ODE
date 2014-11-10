@@ -21,8 +21,9 @@ public enum ODEMessageType {
     RITISSpeed("RITIS", true),
     RITISWeather("RITIS", true),
     BSM("BSM", false),
-    BluFaxSpeed("BluFaxSpeed", false),
-    BluFaxTravelTime("BluFaxTravelTime", false);
+    BluFaxLink("BLUFAX", false),
+    BluFaxRoute("BLUFAX", false),
+    WXDE("WXDE", false);
 
     private String dataSource;
     private boolean isRestrictedRequestInterval;
