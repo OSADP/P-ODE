@@ -19,13 +19,13 @@ import java.io.ByteArrayInputStream;
 public abstract class JAXBEnabledParser extends ODEDataParser {
 
     @Override
-    protected ParserResponse parse(byte[] bytes) {
+    protected ODEDataParserResponse parse(byte[] bytes) {
         return parseDocumentByTag(bytes);
     }
 
-    protected abstract ParserResponse parseDocumentByTag(String tag, byte[] bytes);
+    protected abstract ODEDataParserResponse parseDocumentByTag(String tag, byte[] bytes);
 
-    protected final ParserResponse parseDocumentByTag(byte[] bytes) {
+    protected final ODEDataParserResponse parseDocumentByTag(byte[] bytes) {
         Document document = getMessageDocument(bytes);
         if (document != null) {
             if (document != null) {
@@ -41,7 +41,7 @@ public abstract class JAXBEnabledParser extends ODEDataParser {
                                 return parseDocumentByTag(elementTag, bytes);
                             }
                         } else {
-                            return new ParserResponse(null, ParserReportCode.NO_DATA);
+                            return new ODEDataParserResponse(null, ODEDataParserReportCode.NO_DATA);
                         }
                     } else {
                         getLogger().debug("Unable to parse body elements. Body element has no children.");
@@ -50,7 +50,7 @@ public abstract class JAXBEnabledParser extends ODEDataParser {
                     getLogger().debug("Unable to parse body element. Document body was null..");
                 }
             }
-            return new ParserResponse(null, ParserReportCode.UNEXPECTED_DATA_FORMAT);
+            return new ODEDataParserResponse(null, ODEDataParserReportCode.UNEXPECTED_DATA_FORMAT);
         }
         return null;
     }

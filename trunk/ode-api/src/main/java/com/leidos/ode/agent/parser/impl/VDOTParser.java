@@ -30,7 +30,7 @@ public class VDOTParser extends ODEDataParser {
     private static final String TIME_ZONE_GMT = "GMT";
 
     @Override
-    public ParserResponse parse(byte[] bytes) {
+    public ODEDataParserResponse parse(byte[] bytes) {
         Document document = getMessageDocument(bytes);
         if (document != null) {
             Elements exceptionReport = document.getElementsByTag(VDOT_EXCEPTION_REPORT_TAG);
@@ -41,11 +41,11 @@ public class VDOTParser extends ODEDataParser {
             }
         } else {
             getLogger().debug("Error parsing Document with Jsoup.");
-            return new ParserResponse(null, ParserReportCode.UNKNOWN_ERROR);
+            return new ODEDataParserResponse(null, ODEDataParserReportCode.UNKNOWN_ERROR);
         }
     }
 
-    private ParserResponse parseDocumentForExceptions(Elements exceptionReport) {
+    private ODEDataParserResponse parseDocumentForExceptions(Elements exceptionReport) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Error parsing VDOT Data Exception: '");
         Element exceptionReports = exceptionReport.first();
@@ -98,10 +98,10 @@ public class VDOTParser extends ODEDataParser {
         }
 
         getLogger().debug(stringBuilder.toString());
-        return new ParserResponse(null, ParserReportCode.DATA_SOURCE_SERVER_ERROR);
+        return new ODEDataParserResponse(null, ODEDataParserReportCode.DATA_SOURCE_SERVER_ERROR);
     }
 
-    private ParserResponse parseDocumentForFeatureMembers(Document document) {
+    private ODEDataParserResponse parseDocumentForFeatureMembers(Document document) {
         Elements featureMembers = document.getElementsByTag(VDOT_FEATURE_MEMBERS_TAG);
         if (featureMembers != null) {
             Element firstChild = featureMembers.first();
@@ -120,7 +120,7 @@ public class VDOTParser extends ODEDataParser {
                         }
                     } else {
                         getLogger().debug("There is no data to be parsed.");
-                        return new ParserResponse(null, ParserReportCode.NO_DATA);
+                        return new ODEDataParserResponse(null, ODEDataParserReportCode.NO_DATA);
                     }
                 } else {
                     getLogger().debug("Unable to parse feature elements.");
@@ -131,10 +131,10 @@ public class VDOTParser extends ODEDataParser {
         } else {
             getLogger().debug("Error parsing feature members. Could not find a tag: " + VDOT_FEATURE_MEMBERS_TAG);
         }
-        return new ParserResponse(null, ParserReportCode.UNEXPECTED_DATA_FORMAT);
+        return new ODEDataParserResponse(null, ODEDataParserReportCode.UNEXPECTED_DATA_FORMAT);
     }
 
-    private ParserResponse determineDataTypeAndParse(Document document, String featureMembersTag) {
+    private ODEDataParserResponse determineDataTypeAndParse(Document document, String featureMembersTag) {
         if (featureMembersTag.equalsIgnoreCase(VDOT_WEATHER_SHORT_TERM_TAG)) {
             getLogger().debug("Parsing VDOTWeather short term data");
             return parseVDOTWeatherDataShortTerm(document);
@@ -152,11 +152,11 @@ public class VDOTParser extends ODEDataParser {
             return parseVDOTTravelTimeData(document);
         }
         getLogger().debug("Unknown data type for tag: " + featureMembersTag);
-        return new ParserResponse(null, ParserReportCode.DATA_TYPE_UNKNOWN);
+        return new ODEDataParserResponse(null, ODEDataParserReportCode.DATA_TYPE_UNKNOWN);
     }
 
     //TODO Figure out what weather data looks like
-    private ParserResponse parseVDOTWeatherDataShortTerm(Document document) {
+    private ODEDataParserResponse parseVDOTWeatherDataShortTerm(Document document) {
         VDOTWeatherData vdotWeatherData = new VDOTWeatherData();
         List<VDOTWeatherData.VDOTWeatherDataElement> vdotWeatherDataElements = new ArrayList<VDOTWeatherData.VDOTWeatherDataElement>();
 
@@ -178,11 +178,11 @@ public class VDOTParser extends ODEDataParser {
         }
         vdotWeatherData.setVdotWeatherDataElements(vdotWeatherDataElements);
 
-        return new ParserResponse(vdotWeatherData, ParserReportCode.PARSE_SUCCESS);
+        return new ODEDataParserResponse(vdotWeatherData, ODEDataParserReportCode.PARSE_SUCCESS);
     }
 
     //TODO Figure out what weather data looks like
-    private ParserResponse parseVDOTWeatherDataLongTerm(Document document) {
+    private ODEDataParserResponse parseVDOTWeatherDataLongTerm(Document document) {
         VDOTWeatherData vdotWeatherData = new VDOTWeatherData();
         List<VDOTWeatherData.VDOTWeatherDataElement> vdotWeatherDataElements = new ArrayList<VDOTWeatherData.VDOTWeatherDataElement>();
 
@@ -204,11 +204,11 @@ public class VDOTParser extends ODEDataParser {
         }
         vdotWeatherData.setVdotWeatherDataElements(vdotWeatherDataElements);
 
-        return new ParserResponse(vdotWeatherData, ParserReportCode.PARSE_SUCCESS);
+        return new ODEDataParserResponse(vdotWeatherData, ODEDataParserReportCode.PARSE_SUCCESS);
     }
 
     //TODO Figure out what weather data looks like
-    private ParserResponse parseVDOTWeatherDataLongTermDefaults(Document document) {
+    private ODEDataParserResponse parseVDOTWeatherDataLongTermDefaults(Document document) {
         VDOTWeatherData vdotWeatherData = new VDOTWeatherData();
         List<VDOTWeatherData.VDOTWeatherDataElement> vdotWeatherDataElements = new ArrayList<VDOTWeatherData.VDOTWeatherDataElement>();
 
@@ -230,10 +230,10 @@ public class VDOTParser extends ODEDataParser {
         }
         vdotWeatherData.setVdotWeatherDataElements(vdotWeatherDataElements);
 
-        return new ParserResponse(vdotWeatherData, ParserReportCode.PARSE_SUCCESS);
+        return new ODEDataParserResponse(vdotWeatherData, ODEDataParserReportCode.PARSE_SUCCESS);
     }
 
-    private ParserResponse parseVDOTSpeedData(Document document) {
+    private ODEDataParserResponse parseVDOTSpeedData(Document document) {
         VDOTSpeedData vdotSpeedData = new VDOTSpeedData();
         List<VDOTSpeedData.VDOTSpeedDataElement> vdotSpeedDataElements = new ArrayList<VDOTSpeedData.VDOTSpeedDataElement>();
 
@@ -310,10 +310,10 @@ public class VDOTParser extends ODEDataParser {
         }
         vdotSpeedData.setVdotSpeedDataElements(vdotSpeedDataElements);
 
-        return new ParserResponse(vdotSpeedData, ParserReportCode.PARSE_SUCCESS);
+        return new ODEDataParserResponse(vdotSpeedData, ODEDataParserReportCode.PARSE_SUCCESS);
     }
 
-    private ParserResponse parseVDOTTravelTimeData(Document document) {
+    private ODEDataParserResponse parseVDOTTravelTimeData(Document document) {
         VDOTTravelTimeData vdotTravelTimeData = new VDOTTravelTimeData();
         List<VDOTTravelTimeData.VDOTTravelTimeDataElement> vdotTravelTimeDataElements = new ArrayList<VDOTTravelTimeData.VDOTTravelTimeDataElement>();
 
@@ -354,7 +354,7 @@ public class VDOTParser extends ODEDataParser {
         }
         vdotTravelTimeData.setVdotTravelTimeDataElements(vdotTravelTimeDataElements);
 
-        return new ParserResponse(vdotTravelTimeData, ParserReportCode.PARSE_SUCCESS);
+        return new ODEDataParserResponse(vdotTravelTimeData, ODEDataParserReportCode.PARSE_SUCCESS);
     }
 
     private float[] parseGeometry(Element element) {

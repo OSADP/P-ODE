@@ -50,12 +50,12 @@ public class BSMParser extends ODEDataParser {
     private static Logger logger = Logger.getLogger(BSMParser.class);
 
     @Override
-    public ParserResponse parse(byte[] bytes) {
+    public ODEDataParserResponse parse(byte[] bytes) {
         BSM bsm = decodeBSM(bytes);
         if (bsm != null) {
-            return new ParserResponse(bsm, ParserReportCode.PARSE_SUCCESS);
+            return new ODEDataParserResponse(bsm, ODEDataParserReportCode.PARSE_SUCCESS);
         } else {
-            return new ParserResponse(null, ParserReportCode.PARSE_ERROR);
+            return new ODEDataParserResponse(null, ODEDataParserReportCode.PARSE_ERROR);
         }
     }
 

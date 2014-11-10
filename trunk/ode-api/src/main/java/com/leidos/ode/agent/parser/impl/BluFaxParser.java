@@ -19,7 +19,7 @@ public class BluFaxParser extends JAXBEnabledParser {
     private static final String BLUFAX_ROUTE_TAG = "tmdd:routeStatusMsg";
 
     @Override
-    protected ParserResponse parseDocumentByTag(String tag, byte[] bytes) {
+    protected ODEDataParserResponse parseDocumentByTag(String tag, byte[] bytes) {
         if (tag.equalsIgnoreCase(BLUFAX_LINK_TAG)) {
             getLogger().debug("Parsing BluFax Link Status Message.");
             return parseBluFaxLinkStatusMessage(bytes);
@@ -28,27 +28,27 @@ public class BluFaxParser extends JAXBEnabledParser {
             return parseBluFaxRouteStatusMessage(bytes);
         } else {
             getLogger().debug("Unknown data type for tag: " + tag);
-            return new ParserResponse(null, ParserReportCode.DATA_TYPE_UNKNOWN);
+            return new ODEDataParserResponse(null, ODEDataParserReportCode.DATA_TYPE_UNKNOWN);
         }
     }
 
-    private ParserResponse parseBluFaxLinkStatusMessage(byte[] bytes) {
+    private ODEDataParserResponse parseBluFaxLinkStatusMessage(byte[] bytes) {
         LinkStatusMsg linkStatusMsg = (LinkStatusMsg) unmarshalBytes(bytes, org.tmdd._3.messages.ObjectFactory.class);
         if (linkStatusMsg != null) {
             BluFaxLinkData bluFaxLinkData = new BluFaxLinkData();
             bluFaxLinkData.setLinkStatusMsg(linkStatusMsg);
-            return new ParserResponse(bluFaxLinkData, ParserReportCode.PARSE_SUCCESS);
+            return new ODEDataParserResponse(bluFaxLinkData, ODEDataParserReportCode.PARSE_SUCCESS);
         }
-        return new ParserResponse(null, ParserReportCode.PARSE_ERROR);
+        return new ODEDataParserResponse(null, ODEDataParserReportCode.PARSE_ERROR);
     }
 
-    private ParserResponse parseBluFaxRouteStatusMessage(byte[] bytes) {
+    private ODEDataParserResponse parseBluFaxRouteStatusMessage(byte[] bytes) {
         RouteStatusMsg routeStatusMsg = (RouteStatusMsg) unmarshalBytes(bytes, org.tmdd._3.messages.ObjectFactory.class);
         if (routeStatusMsg != null) {
             BluFaxRouteData bluFaxRouteData = new BluFaxRouteData();
             bluFaxRouteData.setRouteStatusMsg(routeStatusMsg);
-            return new ParserResponse(bluFaxRouteData, ParserReportCode.PARSE_SUCCESS);
+            return new ODEDataParserResponse(bluFaxRouteData, ODEDataParserReportCode.PARSE_SUCCESS);
         }
-        return new ParserResponse(null, ParserReportCode.PARSE_ERROR);
+        return new ODEDataParserResponse(null, ODEDataParserReportCode.PARSE_ERROR);
     }
 }

@@ -10,12 +10,12 @@ public abstract class ODEDataParser {
     private final String TAG = getClass().getSimpleName();
     private final Logger logger = Logger.getLogger(TAG);
 
-    protected abstract ParserResponse parse(byte[] bytes);
+    protected abstract ODEDataParserResponse parse(byte[] bytes);
 
     public final ODEAgentMessage parseMessage(byte[] bytes) throws ODEParseException {
         getLogger().debug("Parsing data.");
-        ParserResponse response = parse(bytes);
-        getLogger().debug("Parse response: " + response.getParserReportCode());
+        ODEDataParserResponse response = parse(bytes);
+        getLogger().debug("Parse response: " + response.getReportCode());
         Object data = response.getData();
 
         return new ODEAgentMessage().setFormattedMessage(data).setMessagePayload(bytes);
@@ -33,26 +33,26 @@ public abstract class ODEDataParser {
         return logger;
     }
 
-    public enum ParserReportCode {
+    public enum ODEDataParserReportCode {
         PARSE_SUCCESS, PARSE_ERROR, DATA_TYPE_UNKNOWN, NO_DATA, UNEXPECTED_DATA_FORMAT, DATA_SOURCE_SERVER_ERROR, UNKNOWN_ERROR
     }
 
-    public final class ParserResponse {
+    public final class ODEDataParserResponse {
 
         private Object data;
-        private ParserReportCode parserReportCode;
+        private ODEDataParserReportCode reportCode;
 
-        public ParserResponse(Object data, ParserReportCode parserReportCode) {
+        public ODEDataParserResponse(Object data, ODEDataParserReportCode reportCode) {
             this.data = data;
-            this.parserReportCode = parserReportCode;
+            this.reportCode = reportCode;
         }
 
         public Object getData() {
             return data;
         }
 
-        public ParserReportCode getParserReportCode() {
-            return parserReportCode;
+        public ODEDataParserReportCode getReportCode() {
+            return reportCode;
         }
     }
 

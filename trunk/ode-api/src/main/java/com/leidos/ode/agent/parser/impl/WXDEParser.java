@@ -12,7 +12,7 @@ import com.leidos.ode.agent.parser.ODEDataParser;
 public class WXDEParser extends ODEDataParser {
 
     @Override
-    protected ParserResponse parse(byte[] bytes) {
+    protected ODEDataParserResponse parse(byte[] bytes) {
         return null;
     }
 }

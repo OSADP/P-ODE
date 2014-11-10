@@ -4,7 +4,6 @@ import com.leidos.ode.agent.data.ritis.RITISSpeedData;
 import com.leidos.ode.agent.data.ritis.RITISWeatherDataClarus;
 import com.leidos.ode.agent.data.ritis.RITISWeatherDataNWS;
 import com.leidos.ode.agent.parser.JAXBEnabledParser;
-import com.leidos.ode.agent.parser.helper.ODEParserHelper;
 import edu.umd.cattlab.schema.ritisFilter.other.AlertsData;
 import edu.umd.cattlab.schema.ritisFilter.other.ClarusData;
 import org.jsoup.nodes.Document;
@@ -22,7 +21,7 @@ public class RITISParser extends JAXBEnabledParser {
     private static final String RITIS_ERROR_TAG = "errors";
 
     @Override
-    protected ODEParserHelper.ParserResponse parseDocumentByTag(String tag, byte[] bytes) {
+    protected ODEDataParserResponse parseDocumentByTag(String tag, byte[] bytes) {
         if (tag.equalsIgnoreCase(RITIS_SPEED_TAG)) {
             getLogger().debug("Parsing RITISSpeed data");
             return parseRITISSpeedData(bytes);
@@ -37,41 +36,41 @@ public class RITISParser extends JAXBEnabledParser {
             return parseRITISError(bytes);
         } else {
             getLogger().debug("Unknown data type for tag: " + tag);
-            return new ODEParserHelper.ParserResponse(null, ODEParserHelper.HelperReport.DATA_TYPE_UNKNOWN);
+            return new ODEDataParserResponse(null, ODEDataParserReportCode.DATA_TYPE_UNKNOWN);
         }
     }
 
-    private ODEParserHelper.ParserResponse parseRITISSpeedData(byte[] bytes) {
+    private ODEDataParserResponse parseRITISSpeedData(byte[] bytes) {
         JAXBElement<ZoneDetectorDataRITIS> zoneDetectorDataRITIS = (JAXBElement<ZoneDetectorDataRITIS>) unmarshalBytes(bytes, org.ritis.schema.tmdd_0_0_0.ObjectFactory.class);
         if (zoneDetectorDataRITIS != null) {
             RITISSpeedData ritisSpeedData = new RITISSpeedData();
             ritisSpeedData.setZoneDetectorDataRITIS(zoneDetectorDataRITIS.getValue());
-            return new ODEParserHelper.ParserResponse(ritisSpeedData, ODEParserHelper.HelperReport.PARSE_SUCCESS);
+            return new ODEDataParserResponse(ritisSpeedData, ODEDataParserReportCode.PARSE_SUCCESS);
         }
-        return new ODEParserHelper.ParserResponse(null, ODEParserHelper.HelperReport.PARSE_ERROR);
+        return new ODEDataParserResponse(null, ODEDataParserReportCode.PARSE_ERROR);
     }
 
-    private ODEParserHelper.ParserResponse parseRITISWeatherNWS(byte[] bytes) {
+    private ODEDataParserResponse parseRITISWeatherNWS(byte[] bytes) {
         JAXBElement<AlertsData> alertsData = (JAXBElement<AlertsData>) unmarshalBytes(bytes, edu.umd.cattlab.schema.ritisFilter.other.ObjectFactory.class);
         if (alertsData != null) {
             RITISWeatherDataNWS ritisWeatherDataNWS = new RITISWeatherDataNWS();
             ritisWeatherDataNWS.setAlertsData(alertsData.getValue());
-            return new ODEParserHelper.ParserResponse(ritisWeatherDataNWS, ODEParserHelper.HelperReport.PARSE_SUCCESS);
+            return new ODEDataParserResponse(ritisWeatherDataNWS, ODEDataParserReportCode.PARSE_SUCCESS);
         }
-        return new ODEParserHelper.ParserResponse(null, ODEParserHelper.HelperReport.PARSE_ERROR);
+        return new ODEDataParserResponse(null, ODEDataParserReportCode.PARSE_ERROR);
     }
 
-    private ODEParserHelper.ParserResponse parseRITISWeatherClarus(byte[] bytes) {
+    private ODEDataParserResponse parseRITISWeatherClarus(byte[] bytes) {
         JAXBElement<ClarusData> clarusData = (JAXBElement<ClarusData>) unmarshalBytes(bytes, edu.umd.cattlab.schema.ritisFilter.other.ObjectFactory.class);
         if (clarusData != null) {
             RITISWeatherDataClarus ritisWeatherDataClarus = new RITISWeatherDataClarus();
             ritisWeatherDataClarus.setClarusData(clarusData.getValue());
-            return new ODEParserHelper.ParserResponse(ritisWeatherDataClarus, ODEParserHelper.HelperReport.PARSE_SUCCESS);
+            return new ODEDataParserResponse(ritisWeatherDataClarus, ODEDataParserReportCode.PARSE_SUCCESS);
         }
-        return new ODEParserHelper.ParserResponse(null, ODEParserHelper.HelperReport.PARSE_ERROR);
+        return new ODEDataParserResponse(null, ODEDataParserReportCode.PARSE_ERROR);
     }
 
-    private ODEParserHelper.ParserResponse parseRITISError(byte[] bytes) {
+    private ODEDataParserResponse parseRITISError(byte[] bytes) {
         Document document = getMessageDocument(bytes);
         if (document != null) {
             if (document != null) {
@@ -88,7 +87,7 @@ public class RITISParser extends JAXBEnabledParser {
                                 if (errorChild != null) {
                                     String errorText = errorChild.ownText();
                                     getLogger().error("Error requesting RITIS data. Response from server: '" + errorText + "'.");
-                                    return new ODEParserHelper.ParserResponse(null, ODEParserHelper.HelperReport.DATA_SOURCE_SERVER_ERROR);
+                                    return new ODEDataParserResponse(null, ODEDataParserReportCode.DATA_SOURCE_SERVER_ERROR);
                                 }
                             }
                         }
@@ -96,6 +95,6 @@ public class RITISParser extends JAXBEnabledParser {
                 }
             }
         }
-        return new ODEParserHelper.ParserResponse(null, ODEParserHelper.HelperReport.UNKNOWN_ERROR);
+        return new ODEDataParserResponse(null, ODEDataParserReportCode.UNKNOWN_ERROR);
     }
 }
