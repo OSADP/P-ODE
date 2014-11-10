@@ -59,7 +59,7 @@
         <property name="unregisterEndpoint" value="${leidos.ode.reg.un.endpoint}"/>
     </bean>
 
-    <bean id="bsmParser" class="com.leidos.ode.agent.parser.BSMParser"/>
+    <bean id="bsmParser" class="com.leidos.ode.agent.parser.impl.BSMParser"/>
 
     <bean id="bsmDataTarget" class="com.leidos.ode.emulator.agent.EmulatorDataTarget">
         <property name="messageType" value="${leidos.ode.emulator.bsm.datatarget.messageType}"/>
@@ -118,7 +118,7 @@
         <property name="unregisterEndpoint" value="${leidos.ode.reg.un.endpoint}"/>
     </bean>
 
-    <bean id="ritisParser" class="com.leidos.ode.agent.parser.RITISParser"/>
+    <bean id="ritisParser" class="com.leidos.ode.agent.parser.impl.RITISParser"/>
 
     <bean id="ritisSpeedSanitizer" class="com.leidos.ode.emulator.agent.RITISSpeedEmptySanitizer"/>
 
@@ -230,7 +230,7 @@
         <property name="unregisterEndpoint" value="${leidos.ode.reg.un.endpoint}"/>
     </bean>
 
-    <bean id="vdotParser" class="com.leidos.ode.agent.parser.VDOTParser"/>
+    <bean id="vdotParser" class="com.leidos.ode.agent.parser.impl.VDOTParser"/>
 
     <bean id="vdotSpeedSanitizer" class="com.leidos.ode.emulator.agent.VDOTSpeedEmptyDataSanitizer"/>
 

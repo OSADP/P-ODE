@@ -88,7 +88,7 @@
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~BSM Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
-    <bean id="bsmParser" class="com.leidos.ode.agent.parser.BSMParser"/>
+    <bean id="bsmParser" class="com.leidos.ode.agent.parser.impl.BSMParser"/>
 
     <bean id="bsmPubRegistrationRequest" class="com.leidos.ode.registration.request.ODERegistrationRequest">
         <property name="messageType" value="${leidos.ode.reg.bsm.pub.messageType}"/>
@@ -129,7 +129,7 @@
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~RITIS Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
-    <bean id="ritisParser" class="com.leidos.ode.agent.parser.RITISParser"/>
+    <bean id="ritisParser" class="com.leidos.ode.agent.parser.impl.RITISParser"/>
 
     <bean id="ritisSpeedPubRegistrationRequest" class="com.leidos.ode.registration.request.ODERegistrationRequest">
         <property name="messageType" value="${leidos.ode.reg.ritisspeed.pub.messageType}"/>
@@ -226,7 +226,7 @@
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~VDOT Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
-    <bean id="vdotParser" class="com.leidos.ode.agent.parser.VDOTParser"/>
+    <bean id="vdotParser" class="com.leidos.ode.agent.parser.impl.VDOTParser"/>
 
     <bean id="vdotWeatherPubRegistrationRequest" class="com.leidos.ode.registration.request.ODERegistrationRequest">
         <property name="messageType" value="${leidos.ode.reg.vdotweather.pub.messageType}"/>
@@ -366,7 +366,7 @@
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~BluFax Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
-    <bean id="bluFaxParser" class="com.leidos.ode.agent.parser.BluFaxParser"/>
+    <bean id="bluFaxParser" class="com.leidos.ode.agent.parser.impl.BluFaxParser"/>
 
     <bean id="bluFaxLinkPubRegistrationRequest" class="com.leidos.ode.registration.request.ODERegistrationRequest">
         <property name="messageType" value="${leidos.ode.reg.blufaxlink.pub.messageType}"/>
@@ -448,7 +448,7 @@
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~WXDE Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
-    <bean id="wxdeParser" class="com.leidos.ode.agent.parser.WXDEParser"/>
+    <bean id="wxdeParser" class="com.leidos.ode.agent.parser.impl.WXDEParser"/>
 
     <bean id="wxdePubRegistrationRequest" class="com.leidos.ode.registration.request.ODERegistrationRequest">
         <property name="messageType" value="${leidos.ode.reg.wxde.pub.messageType}"/>

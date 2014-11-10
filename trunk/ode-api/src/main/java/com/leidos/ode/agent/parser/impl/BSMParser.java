@@ -1,19 +1,18 @@
-package com.leidos.ode.agent.parser;
+package com.leidos.ode.agent.parser.impl;
 
-import com.leidos.ode.agent.data.ODEAgentMessage;
 import com.leidos.ode.agent.data.bsm.BSM;
 import com.leidos.ode.agent.data.bsm.SafetyExtData;
 import com.leidos.ode.agent.data.bsm.VehStatusData;
+import com.leidos.ode.agent.parser.ODEDataParser;
+import org.apache.log4j.Logger;
+
+import javax.xml.bind.DatatypeConverter;
 import java.math.BigInteger;
 import java.sql.Timestamp;
-import javax.xml.bind.DatatypeConverter;
-import org.apache.log4j.Logger;
 
 public class BSMParser extends ODEDataParser {
 
-    private static Logger logger = Logger.getLogger(BSMParser.class);
     private static final String BSM_START_CHARS = "80010281";
-
     private static final int MESSAGE_COUNT_START = 6;
     private static final int MESSAGE_COUNT_END = 8;
     private static final int ID_START = 8;
@@ -48,15 +47,16 @@ public class BSMParser extends ODEDataParser {
     private static final int WIDTH_LENGTH_END = 82;
     private static final int SAFETY_EXT_START = 82;
     private static final int SAFETY_EXT_END = 84;
+    private static Logger logger = Logger.getLogger(BSMParser.class);
 
     @Override
-    public ODEAgentMessage parseMessage(byte[] bytes) throws ODEParseException {
+    public ParserResponse parse(byte[] bytes) {
         BSM bsm = decodeBSM(bytes);
-        ODEAgentMessage message = new ODEAgentMessage();
-        message.setFormattedMessage(bsm);
-        message.setMessagePayload(bytes);
-
-        return message;
+        if (bsm != null) {
+            return new ParserResponse(bsm, ParserReportCode.PARSE_SUCCESS);
+        } else {
+            return new ParserResponse(null, ParserReportCode.PARSE_ERROR);
+        }
     }
 
     private BSM decodeBSM(byte[] inputBytes) {
@@ -190,7 +190,7 @@ public class BSMParser extends ODEDataParser {
         SafetyExtData extData = new SafetyExtData();
         String safetyExtLength = null;
         int safetyExtStart = start + 2;
-		//Not sure if this section is right.  If there are flags, we need to
+        //Not sure if this section is right.  If there are flags, we need to
         //take the length of the flags into consideration.
         if (hex.substring(start, start + 2).equalsIgnoreCase("81")) {
 //			String safetyExtTag = hex.substring(start, start+2);
@@ -244,7 +244,7 @@ public class BSMParser extends ODEDataParser {
     private int handleRTCMPackage(String hex, int start, SafetyExtData extData) {
         String len = hex.substring(start, start += 2);
         int lenInt = Integer.parseInt(len, 16);
-		//TODO: Implement
+        //TODO: Implement
 
         return start + (2 * lenInt);
     }
@@ -301,7 +301,7 @@ public class BSMParser extends ODEDataParser {
 
             nextContext = hex.substring(nextContextStart, nextContextStart + 2);
             if (nextContext.equalsIgnoreCase("A1")) {
-				//do GPSStatus
+                //do GPSStatus
                 //TODO: Implement
 
             }
@@ -530,8 +530,10 @@ public class BSMParser extends ODEDataParser {
             String wiperString = hex.substring(start, start + (2 * wipersLenInt));
             int wipersStart = 0;
             while (wipersStart < (2 * wipersLenInt)) {
-                String tag = wiperString.substring(wipersStart, wipersStart + 2);;
-                String value = wiperString.substring(wipersStart + 4, wipersStart + 6);;
+                String tag = wiperString.substring(wipersStart, wipersStart + 2);
+                ;
+                String value = wiperString.substring(wipersStart + 4, wipersStart + 6);
+                ;
                 int valInt = Integer.parseInt(value, 16);
                 if (tag.equalsIgnoreCase("80")) {
                     //80 front stat
@@ -625,8 +627,10 @@ public class BSMParser extends ODEDataParser {
             String string = hex.substring(start, start + (2 * lenInt));
             int sectionStart = 0;
             while (start < (2 * lenInt)) {
-                String tag = string.substring(sectionStart, sectionStart + 2);;
-                String value = string.substring(sectionStart + 4, sectionStart + 6);;
+                String tag = string.substring(sectionStart, sectionStart + 2);
+                ;
+                String value = string.substring(sectionStart + 4, sectionStart + 6);
+                ;
                 int valInt = Integer.parseInt(value, 16);
                 if (tag.equalsIgnoreCase("80")) {
                     //80 angle
@@ -727,7 +731,7 @@ public class BSMParser extends ODEDataParser {
     private int handleWeather(String hex, int start, VehStatusData statusData) {
         String len = hex.substring(start, start += 2);
         int lenInt = Integer.parseInt(len, 16);
-		//TODO: Implement
+        //TODO: Implement
 
         return start + (2 * lenInt);
     }
@@ -735,7 +739,7 @@ public class BSMParser extends ODEDataParser {
     private int handleJ1939(String hex, int start, VehStatusData statusData) {
         String len = hex.substring(start, start += 2);
         int lenInt = Integer.parseInt(len, 16);
-		//TODO: Implement
+        //TODO: Implement
 
         return start + (2 * lenInt);
     }
@@ -743,7 +747,7 @@ public class BSMParser extends ODEDataParser {
     private int handleGPS(String hex, int start, VehStatusData statusData) {
         String len = hex.substring(start, start += 2);
         int lenInt = Integer.parseInt(len, 16);
-		//TODO: Implement
+        //TODO: Implement
 
         return start + (2 * lenInt);
     }
@@ -915,7 +919,7 @@ public class BSMParser extends ODEDataParser {
     private int handleSpeedHeadingThrottleConf(String hex, int start, VehStatusData statusData) {
         String len = hex.substring(start, start += 2);
         int lenInt = Integer.parseInt(len, 16);
-		//TODO: Implement
+        //TODO: Implement
 
         return start + (2 * lenInt);
     }
@@ -923,7 +927,7 @@ public class BSMParser extends ODEDataParser {
     private int handleSpeedConfidence(String hex, int start, VehStatusData statusData) {
         String len = hex.substring(start, start += 2);
         int lenInt = Integer.parseInt(len, 16);
-		//TODO: Implement
+        //TODO: Implement
 
         return start + (2 * lenInt);
     }
@@ -1006,7 +1010,7 @@ public class BSMParser extends ODEDataParser {
 
         String bfa1 = hex.substring(start, start + 2);
         if (bfa1.equalsIgnoreCase("A1")) {
-			// bumper and other vehicle data
+            // bumper and other vehicle data
             //skip v2v bumpers tag, v2v bumpers len, v2v bumper frnt tag
             start += 6;
             String bumerFrntLen = hex.substring(start, start += 2);

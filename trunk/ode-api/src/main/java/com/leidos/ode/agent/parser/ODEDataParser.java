@@ -2,19 +2,61 @@ package com.leidos.ode.agent.parser;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
 import org.apache.log4j.Logger;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 public abstract class ODEDataParser {
 
     private final String TAG = getClass().getSimpleName();
     private final Logger logger = Logger.getLogger(TAG);
 
-    public abstract ODEAgentMessage parseMessage(byte[] bytes) throws ODEParseException;
+    protected abstract ParserResponse parse(byte[] bytes);
 
-    protected Logger getLogger(){
+    public final ODEAgentMessage parseMessage(byte[] bytes) throws ODEParseException {
+        getLogger().debug("Parsing data.");
+        ParserResponse response = parse(bytes);
+        getLogger().debug("Parse response: " + response.getParserReportCode());
+        Object data = response.getData();
+
+        return new ODEAgentMessage().setFormattedMessage(data).setMessagePayload(bytes);
+    }
+
+    protected final Document getMessageDocument(byte[] bytes) {
+        if (bytes != null) {
+            String messageString = new String(bytes);
+            return Jsoup.parse(messageString);
+        }
+        return null;
+    }
+
+    protected final Logger getLogger() {
         return logger;
     }
 
-    public class ODEParseException extends Exception {
+    public enum ParserReportCode {
+        PARSE_SUCCESS, PARSE_ERROR, DATA_TYPE_UNKNOWN, NO_DATA, UNEXPECTED_DATA_FORMAT, DATA_SOURCE_SERVER_ERROR, UNKNOWN_ERROR
+    }
+
+    public final class ParserResponse {
+
+        private Object data;
+        private ParserReportCode parserReportCode;
+
+        public ParserResponse(Object data, ParserReportCode parserReportCode) {
+            this.data = data;
+            this.parserReportCode = parserReportCode;
+        }
+
+        public Object getData() {
+            return data;
+        }
+
+        public ParserReportCode getParserReportCode() {
+            return parserReportCode;
+        }
+    }
+
+    public final class ODEParseException extends Exception {
 
         private static final long serialVersionUID = 1L;
 
