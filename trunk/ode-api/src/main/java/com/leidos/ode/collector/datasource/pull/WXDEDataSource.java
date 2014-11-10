@@ -60,6 +60,7 @@ public class WXDEDataSource extends RestPullDataSource {
                     .append("&")
                     .append("file=")
                     .append(getFilename())
+                    .append(".xml")
                     .toString();
             URI newURI = new URI(newUriString);
             getHttpGet().setURI(newURI);
