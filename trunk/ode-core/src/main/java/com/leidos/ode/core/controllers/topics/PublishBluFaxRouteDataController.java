@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * To change this template use File | Settings | File Templates.
  */
 @Controller
-public class PublishBluFaxSpeedDataController extends PublishDataController {
+public class PublishBluFaxRouteDataController extends PublishDataController {
     
-    @Value("${leidos.ode.publisher.topic.blufaxspeed}")
+    @Value("${leidos.ode.publisher.topic.blufaxroute}")
     private String topicName;
     
     @Override
@@ -28,7 +28,7 @@ public class PublishBluFaxSpeedDataController extends PublishDataController {
     }
 
     @Override
-    @RequestMapping(value = PublishEndpoints.BLUFAX_SPD_WEATHER, method = RequestMethod.POST)
+    @RequestMapping(value = PublishEndpoints.BLUFAX_ROUTE, method = RequestMethod.POST)
     public @ResponseBody String publishData(@RequestBody ODEAgentMessage odeAgentMessage) {
         return publish(odeAgentMessage);
     }
