@@ -63,10 +63,17 @@
                         }
                         
 
+                        if(srvResp.blufaxLinkEast  != null){
+                            $("#blueFaxLnkSpdEast").html(srvResp.blufaxLinkEast.speedAverage);
+                            $("#blueFaxLnkTTEast").html(srvResp.blufaxLinkEast.travelTime);
+                        }
+                        if(srvResp.blufaxRouteEast != null){
+                            $("#blueFaxRtSpdEast").html(srvResp.blufaxRouteEast.speedAverage);
+                            $("#blueFaxRtTTEast").html(srvResp.blufaxRouteEast.travelTime);
+                        }
                         
                         
                         
-                        $("#blueFaxEast").html();
                         
                         
                         if(srvResp.ritisSpeedDataEastValue != null){
@@ -98,7 +105,14 @@
                         
                        
                         $("#blueFaxWest").html();
-                        
+                        if(srvResp.blufaxLinkWest  != null){
+                            $("#blueFaxLnkSpdWest").html(srvResp.blufaxLinkWest.speedAverage);
+                            $("#blueFaxLnkTTWest").html(srvResp.blufaxLinkWest.travelTime);
+                        }
+                        if(srvResp.blufaxRouteWest != null){
+                            $("#blueFaxRtSpdWest").html(srvResp.blufaxRouteWest.speedAverage);
+                            $("#blueFaxRtTTWest").html(srvResp.blufaxRouteWest.travelTime);
+                        }                        
                         
                         
 //                        var boxes = "";
@@ -224,8 +238,20 @@
               </div>
               <div class="col-md-8 sage">
                 <div>
-                  <strong>Travel Time:</strong>
-                  <span id="blueFaxEast">No Data</span>
+                  <strong>Link Speed:</strong>
+                  <span id="blueFaxLnkSpdEast">No Data</span>
+                </div>
+                <div class="even">
+                  <strong>Link Travel Time:</strong>
+                  <span id="blueFaxLnkTTEast">No Data</span>
+                </div>
+                <div>
+                  <strong>Route Speed:</strong>
+                  <span id="blueFaxRtSpdEast">No Data</span>
+                </div>
+                <div class="even">
+                  <strong>Route Travel Time:</strong>
+                  <span id="blueFaxRtTTEast">No Data</span>
                 </div>
               </div>
             </div>
@@ -327,8 +353,20 @@
               </div>
               <div class="col-md-8 sage">
                 <div>
-                  <strong>Travel Time:</strong>
-                  <span id="bluFaxWest">No Data</span>
+                  <strong>Link Speed:</strong>
+                  <span id="blueFaxLnkSpdWest">No Data</span>
+                </div>
+                <div class="even">
+                  <strong>Link Travel Time:</strong>
+                  <span id="blueFaxLnkTTWest">No Data</span>
+                </div>
+                <div>
+                  <strong>Route Speed:</strong>
+                  <span id="blueFaxRtSpdWest">No Data</span>
+                </div>
+                <div class="even">
+                  <strong>Route Travel Time:</strong>
+                  <span id="blueFaxRtTTWest">No Data</span>
                 </div>
               </div>
             </div>

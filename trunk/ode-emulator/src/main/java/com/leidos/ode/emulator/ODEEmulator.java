@@ -1,6 +1,9 @@
 package com.leidos.ode.emulator;
 
+import com.fastlanesw.bfw.RouteStatusExt;
 import com.leidos.ode.agent.data.ODEAgentMessage;
+import com.leidos.ode.agent.data.blufax.BluFaxLinkData;
+import com.leidos.ode.agent.data.blufax.BluFaxRouteData;
 import com.leidos.ode.agent.data.bsm.BSM;
 import com.leidos.ode.agent.data.ritis.RITISSpeedData;
 import com.leidos.ode.agent.data.vdot.VDOTSpeedData;
@@ -26,6 +29,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.xml.bind.DatatypeConverter;
 import java.util.List;
+import org.tmdd._3.messages.LinkStatus;
+import org.tmdd._3.messages.LinkStatusList;
+import org.tmdd._3.messages.RouteStatus;
+import org.tmdd._3.messages.RouteStatusList;
 
 /**
  * @author cassadyja
@@ -53,6 +60,12 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
     @Autowired
     @Qualifier("bsmCollector")
     private ODECollector bsmCollector;
+    @Autowired
+    @Qualifier("blufaxLinkCollector")
+    private ODECollector blufaxLinkCollector;
+    @Autowired
+    @Qualifier("blufaxRouteCollector")
+    private ODECollector blufaxRouteCollector;
     
     private CurrentDataSet currentData = new CurrentDataSet();
     private RITISZoneDirectionData ritisZoneDirData = new RITISZoneDirectionData();
@@ -61,16 +74,11 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
     public
     @ResponseBody
     String startEmulator(@RequestBody EmulatorCollectorList collectors) {
-        ritisWeatherCollector.stop();
-        ritisSpeedCollector.stop();
-        vdotSpeedCollector.stop();
-        vdotWeatherCollector.stop();
-        vdotTravelTimeCollector.stop();
-        bsmCollector.stop();
-
+        currentData = new CurrentDataSet();
+                
+        destroy();
+        
         for (String s : collectors.getCollectors()) {
-            
-
             try {
                 if (s.equalsIgnoreCase("RITISWeatherCollector")) {
                     ((EmulatorDataTarget) ritisWeatherCollector.getAgent().getDataTarget()).setListener(this);
@@ -96,7 +104,16 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
                     ((EmulatorDataTarget) bsmCollector.getAgent().getDataTarget()).setListener(this);
                     setCollectorDataSourceListenerForCollectorsDataSource(bsmCollector);
                     bsmCollector.startUp();
+                } else if (s.equalsIgnoreCase("BluFaxLinkCollector")) {
+                    ((EmulatorDataTarget) blufaxLinkCollector.getAgent().getDataTarget()).setListener(this);
+                    setCollectorDataSourceListenerForCollectorsDataSource(blufaxLinkCollector);
+                    blufaxLinkCollector.startUp();
+                } else if (s.equalsIgnoreCase("BluFaxRouteCollector")) {
+                    ((EmulatorDataTarget) blufaxRouteCollector.getAgent().getDataTarget()).setListener(this);
+                    setCollectorDataSourceListenerForCollectorsDataSource(blufaxRouteCollector);
+                    blufaxRouteCollector.startUp();
                 }
+                
             } catch (ODEDataTarget.DataTargetException ex) {
                 logger.error(ex.getLocalizedMessage());
             }
@@ -123,17 +140,18 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
 
     @Override
     public void destroy() {
-        System.out.println("Being destroyed!");
         ritisWeatherCollector.stop();
         ritisSpeedCollector.stop();
         vdotSpeedCollector.stop();
         vdotWeatherCollector.stop();
         vdotTravelTimeCollector.stop();
         bsmCollector.stop();
-
+        blufaxLinkCollector.stop();
+        blufaxRouteCollector.stop();
     }
 
     public void dataReceived(String messageType, ODEAgentMessage data) {
+        logger.debug("Recevied Data, Message Type: ["+messageType+"]");
         if (data != null) {
             if (ODEMessageType.BSM.equals(ODEMessageType.valueOf(messageType))) {
                 bsmDataReceived(data);
@@ -147,6 +165,12 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
                 ritisSpeedDataReceived(data);
             } else if (ODEMessageType.RITISWeather.equals(ODEMessageType.valueOf(messageType))) {
                 ritisWeatherDataReceived(data);
+            }else if (ODEMessageType.BluFaxLink.equals(ODEMessageType.valueOf(messageType))) {
+                logger.debug("Processing BluFax Link Data");
+                blufaxLinkDataReceived(data);
+            }else if (ODEMessageType.BluFaxRoute.equals(ODEMessageType.valueOf(messageType))) {
+                logger.debug("Processing BluFax Route Data");
+                blufaxRouteDataReceived(data);
             }
         }
     }
@@ -293,6 +317,110 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
         return DatatypeConverter.printHexBinary(bytes);
     }
 
+    
+    private void blufaxLinkDataReceived(ODEAgentMessage data) {
+        int wbSpeedAvg = 0;
+        int ebSpeedAvg = 0;
+        int wbTT = 0;
+        int ebTT = 0;
+        int ebCount = 0;
+        int wbCount = 0;
+        
+        
+        BluFaxLinkData linkData = (BluFaxLinkData)data.getFormattedMessage();
+        List<LinkStatus> linkStatusList = linkData.getLinkStatusMsg().getLinkStatusItem();
+        for(LinkStatus ls: linkStatusList){
+            List<LinkStatusList> linkStatusListList = ls.getLinkList().getLink();
+            for(LinkStatusList lsl:linkStatusListList){
+                if("e".equalsIgnoreCase(lsl.getLinkDirection())){
+                    ebSpeedAvg += lsl.getSpeedAverage();
+                    ebTT += lsl.getTravelTime();
+                    ebCount++;
+                }else if("w".equalsIgnoreCase(lsl.getLinkDirection())){
+                    wbSpeedAvg += lsl.getSpeedAverage();
+                    wbTT += lsl.getTravelTime();
+                    wbCount++;
+                }
+            }
+        }
+        
+        LinkStatusList ebStatus = getBluFaxStatusObject(ebSpeedAvg, ebTT, ebCount);
+        LinkStatusList wbStatus = getBluFaxStatusObject(wbSpeedAvg, wbTT, wbCount);
+        currentData.setBlufaxLinkEast(ebStatus);
+        currentData.setBlufaxLinkWest(wbStatus);
+    }
+    
+    private LinkStatusList getBluFaxStatusObject(int speedAvg, int tt, int count) {
+        LinkStatusList lsl = new LinkStatusList();
+        double speed = (double)speedAvg/count;
+        //convert kph to mph
+        speed = speed * .625;
+        
+        lsl.setSpeedAverage((short)speed);
+        lsl.setTravelTime(tt/count);
+        return lsl;
+    }
+
+
+    private void blufaxRouteDataReceived(ODEAgentMessage data) {
+        int wbSpeedAvg = 0;
+        int ebSpeedAvg = 0;
+        int wbTT = 0;
+        int ebTT = 0;
+        int ebCount = 0;
+        int wbCount = 0;
+        
+        
+        BluFaxRouteData routeData = (BluFaxRouteData)data.getFormattedMessage();
+        
+        if(routeData.getRouteStatusMsg() != null && routeData.getRouteStatusMsg().getRouteStatusItem() != null){
+            
+            List<RouteStatus> routeStatusItem = routeData.getRouteStatusMsg().getRouteStatusItem();
+            for(RouteStatus rs:routeStatusItem){
+                if(rs.getRouteList() != null){
+                    List<RouteStatusList> routeStatusList = rs.getRouteList().getRoute();
+                    for(RouteStatusList rsl:routeStatusList){
+                        Object o = rsl.getAny();
+                        if(o != null && o instanceof RouteStatusExt){
+                            RouteStatusExt ext = (RouteStatusExt)o;
+                            if("e".equalsIgnoreCase(ext.getRouteDirection())){
+                                ebSpeedAvg += rsl.getSpeedAverage();
+                                ebTT += rsl.getTravelTime();
+                                ebCount++;
+                            }else if("w".equalsIgnoreCase(ext.getRouteDirection())){
+                                wbSpeedAvg += rsl.getSpeedAverage();
+                                wbTT += rsl.getTravelTime();
+                                wbCount++;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            RouteStatusList ebRSL = createBluFaxRouteData(ebSpeedAvg, ebTT, ebCount);
+            RouteStatusList wbRSL = createBluFaxRouteData(wbSpeedAvg, wbTT, wbCount);
+            currentData.setBlufaxRouteEast(ebRSL);
+            currentData.setBlufaxRouteWest(wbRSL);
+            
+            
+        }
+        
+        
+    }
+    
+    
+    private RouteStatusList createBluFaxRouteData(int speedAvg, int tt, int count) {
+        RouteStatusList rsl = new RouteStatusList();
+        double speed = (double)speedAvg/count;
+        //convert kph to mph        
+        speed = speed * .625;
+        rsl.setSpeedAverage((short)speed);
+        rsl.setTravelTime(tt/count);
+        return rsl;
+    }
+
+    
+    
     /**
      * @return the ritisWeatherCollector
      */
@@ -376,6 +504,37 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
     public void setBsmCollector(ODECollector bsmCollector) {
         this.bsmCollector = bsmCollector;
     }
+
+    /**
+     * @return the blufaxLinkCollector
+     */
+    public ODECollector getBlufaxLinkCollector() {
+        return blufaxLinkCollector;
+    }
+
+    /**
+     * @param blufaxLinkCollector the blufaxLinkCollector to set
+     */
+    public void setBlufaxLinkCollector(ODECollector blufaxLinkCollector) {
+        this.blufaxLinkCollector = blufaxLinkCollector;
+    }
+
+    /**
+     * @return the blufaxRouteCollector
+     */
+    public ODECollector getBlufaxRouteCollector() {
+        return blufaxRouteCollector;
+    }
+
+    /**
+     * @param blufaxRouteCollector the blufaxRouteCollector to set
+     */
+    public void setBlufaxRouteCollector(ODECollector blufaxRouteCollector) {
+        this.blufaxRouteCollector = blufaxRouteCollector;
+    }
+
+
+
 
 
 }

@@ -19,6 +19,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import org.tmdd._3.messages.LinkStatusList;
+import org.tmdd._3.messages.RouteStatusList;
 
 /**
  * @author cassadyja
@@ -57,6 +59,17 @@ public class CurrentDataSet {
     private Date ritisSpeedLastUpdate;
     private RITISSpeedData ritisSpeedDataEastValue;
     private RITISSpeedData ritisSpeedDataWestValue;
+    
+    private Date blufaxLastUpdate;
+    private LinkStatusList blufaxLinkEast;
+    private LinkStatusList blufaxLinkWest;
+
+    private RouteStatusList blufaxRouteEast;
+    private RouteStatusList blufaxRouteWest;
+    
+    
+    
+    
 
     /**
      * @return the bsmLastUpdate
@@ -278,6 +291,18 @@ public class CurrentDataSet {
             speed += vdotSpeedDataWestValue.getVdotSpeedDataElements().get(0).getSpeed();
             count++;
         }
+        
+        if(blufaxLinkWest != null){
+            speed += blufaxLinkWest.getSpeedAverage();
+            count++;
+        }
+        
+        if(blufaxRouteWest != null){
+            speed += blufaxRouteWest.getSpeedAverage();
+            count++;
+        }
+        
+        
         if(count > 0){
             double speedAvg = (double)speed/count;
             double tt = 5/speedAvg;
@@ -298,6 +323,17 @@ public class CurrentDataSet {
             speed += vdotSpeedDataEastValue.getVdotSpeedDataElements().get(0).getSpeed();
             count++;
         }
+        if(blufaxLinkEast != null){
+            speed += blufaxLinkEast.getSpeedAverage();
+            count++;
+        }
+        
+        if(blufaxRouteEast != null){
+            speed += blufaxRouteEast.getSpeedAverage();
+            count++;
+        }
+        
+        
         if(count > 0){
             double speedAvg = (double)speed/count;
             double tt = 5/speedAvg;
@@ -488,6 +524,84 @@ public class CurrentDataSet {
      */
     public void setWestBoundBSMTime(String westBoundBSMTime) {
         this.westBoundBSMTime = westBoundBSMTime;
+    }
+
+    /**
+     * @return the blufaxLastUpdate
+     */
+    public Date getBlufaxLastUpdate() {
+        return blufaxLastUpdate;
+    }
+
+    /**
+     * @param blufaxLastUpdate the blufaxLastUpdate to set
+     */
+    public void setBlufaxLastUpdate(Date blufaxLastUpdate) {
+        this.blufaxLastUpdate = blufaxLastUpdate;
+    }
+
+    /**
+     * @return the blufaxLinkEast
+     */
+    public LinkStatusList getBlufaxLinkEast() {
+        return blufaxLinkEast;
+    }
+
+    /**
+     * @param blufaxLinkEast the blufaxLinkEast to set
+     */
+    public void setBlufaxLinkEast(LinkStatusList blufaxLinkEast) {
+        this.blufaxLinkEast = blufaxLinkEast;
+        recalculateEast();
+        setBlufaxLastUpdate(new Date());
+    }
+
+    /**
+     * @return the blufaxLinkWest
+     */
+    public LinkStatusList getBlufaxLinkWest() {
+        return blufaxLinkWest;
+    }
+
+    /**
+     * @param blufaxLinkWest the blufaxLinkWest to set
+     */
+    public void setBlufaxLinkWest(LinkStatusList blufaxLinkWest) {
+        this.blufaxLinkWest = blufaxLinkWest;
+        recalculateWest();
+        setBlufaxLastUpdate(new Date());
+    }
+
+    /**
+     * @return the blufaxRouteEast
+     */
+    public RouteStatusList getBlufaxRouteEast() {
+        return blufaxRouteEast;
+    }
+
+    /**
+     * @param blufaxRouteEast the blufaxRouteEast to set
+     */
+    public void setBlufaxRouteEast(RouteStatusList blufaxRouteEast) {
+        this.blufaxRouteEast = blufaxRouteEast;
+        recalculateEast();
+        setBlufaxLastUpdate(new Date());
+    }
+
+    /**
+     * @return the blufaxRouteWest
+     */
+    public RouteStatusList getBlufaxRouteWest() {
+        return blufaxRouteWest;
+    }
+
+    /**
+     * @param blufaxRouteWest the blufaxRouteWest to set
+     */
+    public void setBlufaxRouteWest(RouteStatusList blufaxRouteWest) {
+        this.blufaxRouteWest = blufaxRouteWest;
+        recalculateWest();
+        setBlufaxLastUpdate(new Date());
     }
 
     

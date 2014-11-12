@@ -363,4 +363,125 @@
         <property name="agent" ref="vdotTravelTimeSubAgent"/>
         <property name="dataSource" ref="vdotTravelTimeDataSource"/>
     </bean>
+
+
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ BluFax Beans ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <bean id="bluFaxParser" class="com.leidos.ode.agent.parser.BluFaxParser"/>
+
+    <bean id="blufaxLinkSubRegistration" class="com.leidos.ode.agent.registration.BasicODERegistration">
+        <property name="registrationBaseUrl" value="${leidos.ode.reg.baseurl}"/>
+        <property name="registrationEndpoint" value="${leidos.ode.reg.sub.endpoint}"/>
+        <property name="unregisterEndpoint" value="${leidos.ode.reg.un.endpoint}"/>
+    </bean>
+
+
+    <bean id="blufaxLinkDataTarget" class="com.leidos.ode.emulator.agent.EmulatorDataTarget">
+        <property name="messageType" value="${leidos.ode.emulator.blufaxlink.datatarget.messageType}"/>
+    </bean>
+
+
+    <bean id="blufaxLinkSubRegistrationRequest" class="com.leidos.ode.registration.request.ODERegistrationRequest">
+        <property name="messageType" value="${leidos.ode.emulator.blufaxlink.messageType}"/>
+        <property name="region" value="${leidos.ode.emulator.blufaxlink.region}"/>
+        <property name="registrationType" value="${leidos.ode.emulator.blufaxlink.sub.registrationType}"/>
+        <property name="agentId" value="${leidos.ode.emulator.blufaxlink.sub.agentId}"/>
+        <property name="subscriptionReceiveAddress" value="${leidos.ode.emulator.blufaxlink.hostAddress}"/>
+        <property name="subscriptionReceivePort" value="${leidos.ode.emulator.blufaxlink.hostPort}"/>
+        <property name="startDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.emulator.blufaxlink.sub.startDate}"/>
+            </bean>
+        </property>
+        <property name="endDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.emulator.blufaxlink.sub.endDate}"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="blufaxLinkSubAgent" parent="subscribeODEAgent">
+        <property name="registration" ref="blufaxLinkSubRegistration"/>
+        <property name="parser" ref="bluFaxParser"/>
+        <property name="sanitizer" ref="passthroughSanitizer"/>
+        <property name="dataTarget" ref="blufaxLinkDataTarget"/>
+        <property name="registrationRequest" ref="blufaxLinkSubRegistrationRequest"/>
+        <property name="odeLogger" ref="odeLogger"/>
+    </bean>
+    
+    <bean id="blufaxLinkDataSource" class="com.leidos.ode.collector.datasource.push.UDPPushDataSource">
+        <property name="hostProtocol" value="${leidos.ode.emulator.blufaxlink.hostProtocol}"/>
+        <property name="hostAddress" value="${leidos.ode.emulator.blufaxlink.hostAddress}"/>
+        <property name="hostPort" value="${leidos.ode.emulator.blufaxlink.hostPort}"/>
+    </bean>
+    
+    <bean id="blufaxLinkCollector" class="com.leidos.ode.collector.ODECollector">
+        <property name="agent" ref="blufaxLinkSubAgent"/>
+        <property name="dataSource" ref="blufaxLinkDataSource"/>
+    </bean>
+    
+    
+      
+    
+    <bean id="blufaxRouteSubRegistration" class="com.leidos.ode.agent.registration.BasicODERegistration">
+        <property name="registrationBaseUrl" value="${leidos.ode.reg.baseurl}"/>
+        <property name="registrationEndpoint" value="${leidos.ode.reg.sub.endpoint}"/>
+        <property name="unregisterEndpoint" value="${leidos.ode.reg.un.endpoint}"/>
+    </bean>
+
+
+    <bean id="blufaxRouteDataTarget" class="com.leidos.ode.emulator.agent.EmulatorDataTarget">
+        <property name="messageType" value="${leidos.ode.emulator.blufaxroute.datatarget.messageType}"/>
+    </bean>
+
+
+    <bean id="blufaxRouteSubRegistrationRequest" class="com.leidos.ode.registration.request.ODERegistrationRequest">
+        <property name="messageType" value="${leidos.ode.emulator.blufaxroute.messageType}"/>
+        <property name="region" value="${leidos.ode.emulator.blufaxroute.region}"/>
+        <property name="registrationType" value="${leidos.ode.emulator.blufaxroute.sub.registrationType}"/>
+        <property name="agentId" value="${leidos.ode.emulator.blufaxroute.sub.agentId}"/>
+        <property name="subscriptionReceiveAddress" value="${leidos.ode.emulator.blufaxroute.hostAddress}"/>
+        <property name="subscriptionReceivePort" value="${leidos.ode.emulator.blufaxroute.hostPort}"/>
+        <property name="startDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.emulator.blufaxroute.sub.startDate}"/>
+            </bean>
+        </property>
+        <property name="endDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.emulator.blufaxroute.sub.endDate}"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="blufaxRouteSubAgent" parent="subscribeODEAgent">
+        <property name="registration" ref="blufaxRouteSubRegistration"/>
+        <property name="parser" ref="bluFaxParser"/>
+        <property name="sanitizer" ref="passthroughSanitizer"/>
+        <property name="dataTarget" ref="blufaxRouteDataTarget"/>
+        <property name="registrationRequest" ref="blufaxRouteSubRegistrationRequest"/>
+        <property name="odeLogger" ref="odeLogger"/>
+    </bean>
+    
+    <bean id="blufaxRouteDataSource" class="com.leidos.ode.collector.datasource.push.UDPPushDataSource">
+        <property name="hostProtocol" value="${leidos.ode.emulator.blufaxroute.hostProtocol}"/>
+        <property name="hostAddress" value="${leidos.ode.emulator.blufaxroute.hostAddress}"/>
+        <property name="hostPort" value="${leidos.ode.emulator.blufaxroute.hostPort}"/>
+    </bean>
+    
+    <bean id="blufaxRouteCollector" class="com.leidos.ode.collector.ODECollector">
+        <property name="agent" ref="blufaxRouteSubAgent"/>
+        <property name="dataSource" ref="blufaxRouteDataSource"/>
+    </bean>
+    
+
+
 </beans>
+
+
+
+
+
+    
