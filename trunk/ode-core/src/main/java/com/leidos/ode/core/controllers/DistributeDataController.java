@@ -1,6 +1,7 @@
 package com.leidos.ode.core.controllers;
 
 import com.leidos.ode.core.distribute.DataDistributor;
+import com.leidos.ode.core.distribute.TCPDataDistributor;
 import com.leidos.ode.core.distribute.UDPDataDistributor;
 import com.leidos.ode.core.rde.data.RDEData;
 import com.leidos.ode.registration.response.ODERegistrationResponse;
@@ -15,10 +16,13 @@ import javax.annotation.PreDestroy;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.DisposableBean;
 
 @Controller
 public class DistributeDataController implements  DisposableBean{
+    private final String TAG = getClass().getSimpleName();
+    private final Logger logger = Logger.getLogger(TAG);
 
     private Map<String, DataDistributor> distributors = new HashMap<String, DataDistributor>();
     private int startingServerPort = 12000;
@@ -37,9 +41,15 @@ public class DistributeDataController implements  DisposableBean{
     @RequestMapping(value = "subscriptionNotification", method = RequestMethod.POST)
     public void receiveSubscriptionNotification(@RequestBody ODERegistrationResponse registrationResponse) {
         //Create a new DataDistributor with the info from the subscription.
-        System.out.println("New Subscription creating Distributor");
-        DataDistributor dist = new UDPDataDistributor(registrationResponse.getQueueHostURL(), registrationResponse.getQueueHostPort(), registrationResponse.getQueueConnFact(), registrationResponse.getQueueName(), registrationResponse.getTargetAddress(), registrationResponse.getTargetPort(), startingServerPort++);
-
+        logger.debug("New Subscription creating Distributor");
+        DataDistributor dist = null;
+        if("UDP".equalsIgnoreCase(registrationResponse.getSubscriptionProtocol())){
+            logger.debug("Creating UDP Distributor");
+            dist = new UDPDataDistributor(registrationResponse.getQueueHostURL(), registrationResponse.getQueueHostPort(), registrationResponse.getQueueConnFact(), registrationResponse.getQueueName(), registrationResponse.getTargetAddress(), registrationResponse.getTargetPort(), startingServerPort++);    
+        }else if("TCP".equalsIgnoreCase(registrationResponse.getSubscriptionProtocol())){
+            logger.debug("Creating TCP Distributor");
+            dist = new TCPDataDistributor(registrationResponse.getQueueHostURL(), registrationResponse.getQueueHostPort(), registrationResponse.getQueueConnFact(), registrationResponse.getQueueName(), registrationResponse.getTargetAddress(), registrationResponse.getTargetPort());    
+        }
         //Start up the distributor
         new Thread(dist).start();
         distributors.put(registrationResponse.getAgentId(), dist);

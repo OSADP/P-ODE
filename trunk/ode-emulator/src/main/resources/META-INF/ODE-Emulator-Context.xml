@@ -72,6 +72,8 @@
         <property name="agentId" value="${leidos.ode.emulator.bsm.sub.agentId}"/>
         <property name="subscriptionReceiveAddress" value="${leidos.ode.emulator.bsm.hostAddress}"/>
         <property name="subscriptionReceivePort" value="${leidos.ode.emulator.bsm.hostPort}"/>
+        <property name="subscriptionProtocol" value="${leidos.ode.emulator.sub.protocol.udp}"/>
+        
         <property name="startDate">
             <bean factory-bean="dateFormat" factory-method="parse">
                 <constructor-arg value="${leidos.ode.emulator.bsm.sub.startDate}"/>
@@ -137,6 +139,8 @@
         <property name="agentId" value="${leidos.ode.emulator.ritisspeed.sub.agentId}"/>
         <property name="subscriptionReceiveAddress" value="${leidos.ode.emulator.ritisspeed.hostAddress}"/>
         <property name="subscriptionReceivePort" value="${leidos.ode.emulator.ritisspeed.hostPort}"/>
+        <property name="subscriptionProtocol" value="${leidos.ode.emulator.sub.protocol.udp}"/>
+        
         <property name="startDate">
             <bean factory-bean="dateFormat" factory-method="parse">
                 <constructor-arg value="${leidos.ode.emulator.ritisspeed.sub.startDate}"/>
@@ -156,6 +160,8 @@
         <property name="agentId" value="${leidos.ode.emulator.ritisweather.sub.agentId}"/>
         <property name="subscriptionReceiveAddress" value="${leidos.ode.emulator.ritisweather.hostAddress}"/>
         <property name="subscriptionReceivePort" value="${leidos.ode.emulator.ritisweather.hostPort}"/>
+        <property name="subscriptionProtocol" value="${leidos.ode.emulator.sub.protocol.udp}"/>
+        
         <property name="startDate">
             <bean factory-bean="dateFormat" factory-method="parse">
                 <constructor-arg value="${leidos.ode.emulator.ritisweather.sub.startDate}"/>
@@ -253,6 +259,8 @@
         <property name="agentId" value="${leidos.ode.emulator.vdotweather.sub.agentId}"/>
         <property name="subscriptionReceiveAddress" value="${leidos.ode.emulator.vdotweather.hostAddress}"/>
         <property name="subscriptionReceivePort" value="${leidos.ode.emulator.vdotweather.hostPort}"/>
+        <property name="subscriptionProtocol" value="${leidos.ode.emulator.sub.protocol.udp}"/>
+        
         <property name="startDate">
             <bean factory-bean="dateFormat" factory-method="parse">
                 <constructor-arg value="${leidos.ode.emulator.vdotweather.sub.startDate}"/>
@@ -272,6 +280,8 @@
         <property name="agentId" value="${leidos.ode.emulator.vdotspeed.sub.agentId}"/>
         <property name="subscriptionReceiveAddress" value="${leidos.ode.emulator.vdotspeed.hostAddress}"/>
         <property name="subscriptionReceivePort" value="${leidos.ode.emulator.vdotspeed.hostPort}"/>
+        <property name="subscriptionProtocol" value="${leidos.ode.emulator.sub.protocol.tcp}"/>
+
         <property name="startDate">
             <bean factory-bean="dateFormat" factory-method="parse">
                 <constructor-arg value="${leidos.ode.emulator.vdotspeed.sub.startDate}"/>
@@ -291,6 +301,8 @@
         <property name="agentId" value="${leidos.ode.emulator.vdottraveltime.sub.agentId}"/>
         <property name="subscriptionReceiveAddress" value="${leidos.ode.emulator.vdottraveltime.hostAddress}"/>
         <property name="subscriptionReceivePort" value="${leidos.ode.emulator.vdottraveltime.hostPort}"/>
+        <property name="subscriptionProtocol" value="${leidos.ode.emulator.sub.protocol.udp}"/>
+        
         <property name="startDate">
             <bean factory-bean="dateFormat" factory-method="parse">
                 <constructor-arg value="${leidos.ode.emulator.vdottraveltime.sub.startDate}"/>
@@ -337,7 +349,7 @@
         <property name="hostPort" value="${leidos.ode.emulator.vdotweather.hostPort}"/>
     </bean>
 
-    <bean id="vdotSpeedDataSource" class="com.leidos.ode.collector.datasource.push.UDPPushDataSource">
+    <bean id="vdotSpeedDataSource" class="com.leidos.ode.collector.datasource.push.TCPPushDataSource">
         <property name="hostProtocol" value="${leidos.ode.emulator.vdotspeed.hostProtocol}"/>
         <property name="hostAddress" value="${leidos.ode.emulator.vdotspeed.hostAddress}"/>
         <property name="hostPort" value="${leidos.ode.emulator.vdotspeed.hostPort}"/>
@@ -390,6 +402,7 @@
         <property name="agentId" value="${leidos.ode.emulator.blufaxlink.sub.agentId}"/>
         <property name="subscriptionReceiveAddress" value="${leidos.ode.emulator.blufaxlink.hostAddress}"/>
         <property name="subscriptionReceivePort" value="${leidos.ode.emulator.blufaxlink.hostPort}"/>
+        <property name="subscriptionProtocol" value="${leidos.ode.emulator.sub.protocol.udp}"/>
         <property name="startDate">
             <bean factory-bean="dateFormat" factory-method="parse">
                 <constructor-arg value="${leidos.ode.emulator.blufaxlink.sub.startDate}"/>
@@ -444,6 +457,7 @@
         <property name="agentId" value="${leidos.ode.emulator.blufaxroute.sub.agentId}"/>
         <property name="subscriptionReceiveAddress" value="${leidos.ode.emulator.blufaxroute.hostAddress}"/>
         <property name="subscriptionReceivePort" value="${leidos.ode.emulator.blufaxroute.hostPort}"/>
+        <property name="subscriptionProtocol" value="${leidos.ode.emulator.sub.protocol.udp}"/>
         <property name="startDate">
             <bean factory-bean="dateFormat" factory-method="parse">
                 <constructor-arg value="${leidos.ode.emulator.blufaxroute.sub.startDate}"/>

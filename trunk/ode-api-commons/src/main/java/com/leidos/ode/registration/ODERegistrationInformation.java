@@ -14,6 +14,7 @@ public abstract class ODERegistrationInformation {
     private String region;
     private String registrationType;
     private String agentId;
+    private String subscriptionProtocol;
 
     public int getRegistrationId() {
         return registrationId;
@@ -53,5 +54,19 @@ public abstract class ODERegistrationInformation {
 
     public void setAgentId(String agentId) {
         this.agentId = agentId;
+    }
+
+    /**
+     * @return the subscriptionProtocol
+     */
+    public String getSubscriptionProtocol() {
+        return subscriptionProtocol;
+    }
+
+    /**
+     * @param subscriptionProtocol the subscriptionProtocol to set
+     */
+    public void setSubscriptionProtocol(String subscriptionProtocol) {
+        this.subscriptionProtocol = subscriptionProtocol;
     }
 }

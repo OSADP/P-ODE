@@ -50,7 +50,8 @@ public class SubscriptionRegistrationService {
         resp.setRegion(registrationRequest.getRegion());
         resp.setRegistrationId(registrationRequest.getRegistrationId());
         resp.setRegistrationType(registrationRequest.getRegistrationType());
-
+        resp.setSubscriptionProtocol(registrationRequest.getSubscriptionProtocol());
+        
         resp.setQueueConnFact(qInfo.getQueueConnectionFactory());
         resp.setQueueName(qInfo.getQueueName());
         resp.setQueueHostURL(qInfo.getTargetAddress());
