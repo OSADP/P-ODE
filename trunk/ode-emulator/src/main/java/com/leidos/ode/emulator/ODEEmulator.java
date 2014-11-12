@@ -343,11 +343,14 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
                 }
             }
         }
-        
-        LinkStatusList ebStatus = getBluFaxStatusObject(ebSpeedAvg, ebTT, ebCount);
-        LinkStatusList wbStatus = getBluFaxStatusObject(wbSpeedAvg, wbTT, wbCount);
-        currentData.setBlufaxLinkEast(ebStatus);
-        currentData.setBlufaxLinkWest(wbStatus);
+        if(ebCount > 0){
+            LinkStatusList ebStatus = getBluFaxStatusObject(ebSpeedAvg, ebTT, ebCount);
+            currentData.setBlufaxLinkEast(ebStatus);
+        }
+        if(wbCount > 0){
+            LinkStatusList wbStatus = getBluFaxStatusObject(wbSpeedAvg, wbTT, wbCount);
+            currentData.setBlufaxLinkWest(wbStatus);
+        }
     }
     
     private LinkStatusList getBluFaxStatusObject(int speedAvg, int tt, int count) {
@@ -397,11 +400,14 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
                 }
             }
             
-            RouteStatusList ebRSL = createBluFaxRouteData(ebSpeedAvg, ebTT, ebCount);
-            RouteStatusList wbRSL = createBluFaxRouteData(wbSpeedAvg, wbTT, wbCount);
-            currentData.setBlufaxRouteEast(ebRSL);
-            currentData.setBlufaxRouteWest(wbRSL);
-            
+            if(ebCount > 0){
+                RouteStatusList ebRSL = createBluFaxRouteData(ebSpeedAvg, ebTT, ebCount);
+                currentData.setBlufaxRouteEast(ebRSL);
+            }
+            if(wbCount > 0){
+                RouteStatusList wbRSL = createBluFaxRouteData(wbSpeedAvg, wbTT, wbCount);
+                currentData.setBlufaxRouteWest(wbRSL);
+            }
             
         }
         

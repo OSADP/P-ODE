@@ -33,7 +33,7 @@ public class BluFaxParser extends JAXBEnabledParser {
     }
 
     private ODEDataParserResponse parseBluFaxLinkStatusMessage(byte[] bytes) {
-        LinkStatusMsg linkStatusMsg = (LinkStatusMsg) unmarshalBytes(bytes, org.tmdd._3.messages.ObjectFactory.class);
+        LinkStatusMsg linkStatusMsg = (LinkStatusMsg) unmarshalBytes(bytes, new Class[]{org.tmdd._3.messages.ObjectFactory.class, com.fastlanesw.bfw.ObjectFactory.class});
         if (linkStatusMsg != null) {
             BluFaxLinkData bluFaxLinkData = new BluFaxLinkData();
             bluFaxLinkData.setLinkStatusMsg(linkStatusMsg);
@@ -43,7 +43,7 @@ public class BluFaxParser extends JAXBEnabledParser {
     }
 
     private ODEDataParserResponse parseBluFaxRouteStatusMessage(byte[] bytes) {
-        RouteStatusMsg routeStatusMsg = (RouteStatusMsg) unmarshalBytes(bytes, org.tmdd._3.messages.ObjectFactory.class);
+        RouteStatusMsg routeStatusMsg = (RouteStatusMsg) unmarshalBytes(bytes, new Class[]{org.tmdd._3.messages.ObjectFactory.class, com.fastlanesw.bfw.ObjectFactory.class});
         if (routeStatusMsg != null) {
             BluFaxRouteData bluFaxRouteData = new BluFaxRouteData();
             bluFaxRouteData.setRouteStatusMsg(routeStatusMsg);

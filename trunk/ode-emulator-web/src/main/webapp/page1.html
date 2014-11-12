@@ -31,24 +31,19 @@
                         $("#ebI66Time").html(srvResp.eastBoundTravelTime);
                         $("#wbI66Time").html(srvResp.westBoundTravelTime);
                         
-                        $("#ebTurnerTime").html(srvResp.eastBoundBSMTime);
-                        $("#wbTurnerTime").html(srvResp.westBoundBSMTime);
-                        
                         
                         if(srvResp.ritisSpeedDataEastValue != null){
                             $("#ritisEastOcc").html(srvResp.ritisSpeedDataEastValue.zoneDetectorDataRITIS.collectionPeriod.collectionPeriodItem[0].zoneReports.zoneReport[0].zoneData.zoneDataItem[0].occupancy);
                             $("#ritisEastSpeed").html(srvResp.ritisSpeedDataEastValue.zoneDetectorDataRITIS.collectionPeriod.collectionPeriodItem[0].zoneReports.zoneReport[0].zoneData.zoneDataItem[0].zoneVehicleSpeed);
                             $("#ritisEastVol").html(srvResp.ritisSpeedDataEastValue.zoneDetectorDataRITIS.collectionPeriod.collectionPeriodItem[0].zoneReports.zoneReport[0].zoneData.zoneDataItem[0].zoneVehicleCount);
                         }
-                        $("#ritisEastTravel").html();
-                        $("#ritisEastWeather").html();
                         
                         if(srvResp.vdotSpeedDataEastValue != null){
                             $("#vdotEastOcc").html(srvResp.vdotSpeedDataEastValue.vdotSpeedDataElements[0].occupancy);
                             $("#vdotEastSpeed").html(srvResp.vdotSpeedDataEastValue.vdotSpeedDataElements[0].speed);
                             $("#vdotEastVol").html(srvResp.vdotSpeedDataEastValue.vdotSpeedDataElements[0].volume);
                         }
-                            $("#vdotEastTravel").html();
+                            
 
                         if(srvResp.bsmDataEast != null){
                             if(srvResp.bsmDataEast['20010470000711220000000000000002'] != null){
@@ -81,15 +76,13 @@
                             $("#ritisWestSpeed").html(srvResp.ritisSpeedDataWestValue.zoneDetectorDataRITIS.collectionPeriod.collectionPeriodItem[0].zoneReports.zoneReport[0].zoneData.zoneDataItem[0].zoneVehicleSpeed);
                             $("#ritisWestVol").html(srvResp.ritisSpeedDataWestValue.zoneDetectorDataRITIS.collectionPeriod.collectionPeriodItem[0].zoneReports.zoneReport[0].zoneData.zoneDataItem[0].zoneVehicleCount);
                         }
-                        $("#ritisWestTravel").html();
-                        $("#ritisWestWeather").html();
                         
                         if(srvResp.vdotSpeedDataEastValue != null){
                             $("#vdotWestOcc").html(srvResp.vdotSpeedDataWestValue.vdotSpeedDataElements[0].occupancy);
                             $("#vdotWestSpeed").html(srvResp.vdotSpeedDataWestValue.vdotSpeedDataElements[0].speed);
                             $("#vdotWestVol").html(srvResp.vdotSpeedDataWestValue.vdotSpeedDataElements[0].volume);
                         }
-                            $("#vdotWestTravel").html();
+                           
                             
                         if(srvResp.bsmDataWest != null){
                             if(srvResp.bsmDataWest['20010470000711220000000000000002'] != null){
@@ -153,10 +146,6 @@
                         <strong>I-66 Travel Time:</strong>
                         <span id="ebI66Time">No Data</span>
                     </div>
-                    <div class="even">
-                        <strong>Turner Travel Time:</strong>
-                        <span id="ebTurnerTime">No Data</span>
-                    </div>
                 </div>
             </div>
             <div class="form-group clearfix">
@@ -177,14 +166,6 @@
                   <strong>Speed:</strong>
                   <span id="ritisEastSpeed">No Data</span>
                 </div>
-                <div class="even">
-                  <strong>Travel Time:</strong>
-                  <span id="ritisEastTravel">No Data</span>
-                </div>
-                <div>
-                  <strong>Weather:</strong>
-                  <span id="ritisEastWeather">No Data</span>
-                </div>
               </div>
             </div>
             <!-- VDOT -->
@@ -204,10 +185,6 @@
                 <div class="even">
                   <strong>Speed:</strong>
                   <span id="vdotEastSpeed">No Data</span>
-                </div>
-                <div>
-                  <strong>Travel Time:</strong>
-                  <span id="vdotEastTravel">No Data</span>
                 </div>
               </div>
             </div>
@@ -268,10 +245,6 @@
                             <strong>I-66 Travel Time:</strong>
                             <span id="wbI66Time">No Data</span>
                     </div>
-                    <div class="even">
-                            <strong>Turner Travel Time:</strong>
-                            <span id="wbTurnerTime">No Data</span>
-                    </div>
                 </div>
             </div>            
             <div class="form-group clearfix">
@@ -292,14 +265,6 @@
                   <strong>Speed:</strong>
                   <span id="ritisWestSpeed">No Data</span>
                 </div>
-                <div class="even">
-                  <strong>Travel Time:</strong>
-                  <span id="ritisWestTravel">No Data</span>
-                </div>
-                <div>
-                  <strong>Weather:</strong>
-                  <span id="ritisWestWeather">No Data</span>
-                </div>
               </div>
             </div>
             <!-- VDOT -->
@@ -319,10 +284,6 @@
                 <div class="even">
                   <strong>Speed:</strong>
                   <span id="vdotWestSpeed">No Data</span>
-                </div>
-                <div>
-                  <strong>Travel Time:</strong>
-                  <span id="vdotWestTravel">No Data</span>
                 </div>
               </div>
             </div>

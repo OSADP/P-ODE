@@ -41,7 +41,7 @@ public class RITISParser extends JAXBEnabledParser {
     }
 
     private ODEDataParserResponse parseRITISSpeedData(byte[] bytes) {
-        JAXBElement<ZoneDetectorDataRITIS> zoneDetectorDataRITIS = (JAXBElement<ZoneDetectorDataRITIS>) unmarshalBytes(bytes, org.ritis.schema.tmdd_0_0_0.ObjectFactory.class);
+        JAXBElement<ZoneDetectorDataRITIS> zoneDetectorDataRITIS = (JAXBElement<ZoneDetectorDataRITIS>) unmarshalBytes(bytes, new Class[]{org.ritis.schema.tmdd_0_0_0.ObjectFactory.class});
         if (zoneDetectorDataRITIS != null) {
             RITISSpeedData ritisSpeedData = new RITISSpeedData();
             ritisSpeedData.setZoneDetectorDataRITIS(zoneDetectorDataRITIS.getValue());
@@ -51,7 +51,7 @@ public class RITISParser extends JAXBEnabledParser {
     }
 
     private ODEDataParserResponse parseRITISWeatherNWS(byte[] bytes) {
-        JAXBElement<AlertsData> alertsData = (JAXBElement<AlertsData>) unmarshalBytes(bytes, edu.umd.cattlab.schema.ritisFilter.other.ObjectFactory.class);
+        JAXBElement<AlertsData> alertsData = (JAXBElement<AlertsData>) unmarshalBytes(bytes, new Class[]{edu.umd.cattlab.schema.ritisFilter.other.ObjectFactory.class});
         if (alertsData != null) {
             RITISWeatherDataNWS ritisWeatherDataNWS = new RITISWeatherDataNWS();
             ritisWeatherDataNWS.setAlertsData(alertsData.getValue());
@@ -61,7 +61,7 @@ public class RITISParser extends JAXBEnabledParser {
     }
 
     private ODEDataParserResponse parseRITISWeatherClarus(byte[] bytes) {
-        JAXBElement<ClarusData> clarusData = (JAXBElement<ClarusData>) unmarshalBytes(bytes, edu.umd.cattlab.schema.ritisFilter.other.ObjectFactory.class);
+        JAXBElement<ClarusData> clarusData = (JAXBElement<ClarusData>) unmarshalBytes(bytes, new Class[]{edu.umd.cattlab.schema.ritisFilter.other.ObjectFactory.class});
         if (clarusData != null) {
             RITISWeatherDataClarus ritisWeatherDataClarus = new RITISWeatherDataClarus();
             ritisWeatherDataClarus.setClarusData(clarusData.getValue());

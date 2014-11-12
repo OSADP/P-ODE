@@ -55,7 +55,7 @@ public abstract class JAXBEnabledParser extends ODEDataParser {
         return null;
     }
 
-    protected final Object unmarshalBytes(byte[] bytes, Class objectFactoryForContext) {
+    protected final Object unmarshalBytes(byte[] bytes, Class[] objectFactoryForContext) {
         if (bytes != null && objectFactoryForContext != null) {
             try {
                 ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);

@@ -215,36 +215,28 @@ public class CurrentDataSet {
     public void addBSMWestData(String ip, BSM data) {
         BSM existing = getBsmDataWest().get(ip);
         if (existing != null) {
-//            if (existing.getMessageCount() != data.getMessageCount()
-//                    && !existing.getBsmMessageId().equalsIgnoreCase(data.getBsmMessageId())) {
-                getBsmDataWest().put(ip, data);
-                recalculateBSMWest();
-//            }
+            getBsmDataWest().put(ip, data);
         } else {
             getBsmDataWest().put(ip, data);
-            recalculateBSMWest();
         }
         setBsmLastUpdate(new Date());
+        recalculateWest();
     }
 
     public void addBSMEastData(String ip, BSM data) {
         BSM existing = getBsmDataEast().get(ip);
         if (existing != null) {
-//            if (existing.getMessageCount() != data.getMessageCount()
-//                    && !existing.getBsmMessageId().equalsIgnoreCase(data.getBsmMessageId())) {
-                getBsmDataEast().put(ip, data);
-                recalculateBSMEast();
-//            }
+            getBsmDataEast().put(ip, data);
         } else {
             getBsmDataEast().put(ip, data);
-            recalculateBSMEast();
         }
         setBsmLastUpdate(new Date());
+        recalculateEast();
     }
 
     
-    private void recalculateBSMEast(){
-        Iterator<String> it = getBsmDataEast().keySet().iterator();
+    private double getBSMAverageSpeedInMilesPerHour(Map<String, BSM> bsmData){
+        Iterator<String> it = bsmData.keySet().iterator();
         double speed = 0;
         int count = 0;
         while(it.hasNext()){
@@ -255,27 +247,11 @@ public class CurrentDataSet {
         }
         if(count > 0){
             double speedAvg = (double)speed/count;
-            double tt = .6/speedAvg;
-            eastBoundBSMTime = NumberFormat.getInstance().format(tt*60);
+            //Convert meters per second into miles per hour
+            speedAvg = speedAvg * 2.237;
+            return speedAvg;
         }
-    }
-    
-    
-    private void recalculateBSMWest(){
-        Iterator<String> it = getBsmDataWest().keySet().iterator();
-        double speed = 0;
-        int count = 0;
-        while(it.hasNext()){
-            String key = it.next();
-            BSM bsm = getBsmDataWest().get(key);
-            speed += bsm.getSpeed();
-            count++;
-        }
-        if(count > 0){
-            double speedAvg = (double)speed/count;
-            double tt = .6/speedAvg;
-            westBoundBSMTime = NumberFormat.getInstance().format(tt*60);
-        }
+        return -1;
     }
     
     private void recalculateWest() {
@@ -302,6 +278,11 @@ public class CurrentDataSet {
             count++;
         }
         
+        double bsmWestSpeed = getBSMAverageSpeedInMilesPerHour(bsmDataWest);
+        if(bsmWestSpeed > -1){
+            speed += bsmWestSpeed;
+            count++;
+        }
         
         if(count > 0){
             double speedAvg = (double)speed/count;
@@ -332,6 +313,12 @@ public class CurrentDataSet {
             speed += blufaxRouteEast.getSpeedAverage();
             count++;
         }
+        
+        double bsmEastSpeed = getBSMAverageSpeedInMilesPerHour(bsmDataEast);
+        if(bsmEastSpeed > -1){
+            speed += bsmEastSpeed;
+            count++;
+        }        
         
         
         if(count > 0){
