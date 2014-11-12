@@ -75,7 +75,8 @@ public class ODERestTarget implements ODEDataTarget {
     private StringEntity createEntity(ODEAgentMessage message) throws JAXBException, UnsupportedEncodingException {
         StringWriter stringWriter = new StringWriter();
 //        JAXBContext registrationInfoContext = JAXBContext.newInstance(ODEAgentMessage.class);
-        JAXBContext registrationInfoContext = JAXBContext.newInstance("com.leidos.ode.agent.data:com.leidos.ode.agent.data.vdot:com.leidos.ode.agent.data.ritis:com.leidos.ode.agent.data.bsm");
+        JAXBContext registrationInfoContext = JAXBContext.newInstance(
+                    "com.leidos.ode.agent.data:com.leidos.ode.agent.data.vdot:com.leidos.ode.agent.data.ritis:com.leidos.ode.agent.data.bsm:com.leidos.ode.agent.data.blufax:com.fastlanesw.bfw");
 
         Marshaller marshaller = registrationInfoContext.createMarshaller();
         marshaller.marshal(message, stringWriter);
