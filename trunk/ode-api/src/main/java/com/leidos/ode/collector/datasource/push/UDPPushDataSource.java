@@ -32,7 +32,7 @@ public class UDPPushDataSource extends PushDataSource {
     @Override
     public byte[] pollDataSource() {
         try {
-            byte[] receiveData = new byte[75000];
+            byte[] receiveData = new byte[100000];
             DatagramPacket packet = new DatagramPacket(receiveData, receiveData.length);
             datagramSocket.receive(packet);
             if (packet.getLength() > 0) {
