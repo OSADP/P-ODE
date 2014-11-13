@@ -64,8 +64,10 @@ public class TCPDataDistributor extends DataDistributor{
         try {
             logger.debug("Sending TCP Message");
             socket = new Socket(targetURL, targetPort);
+            logger.debug("Have Socket: "+socket);
             DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
             DataInputStream is = new DataInputStream(socket.getInputStream());
+            logger.debug("Getting ODEAgentMessage");
             ODEAgentMessage msg = (ODEAgentMessage) ((ObjectMessage) message).getObject();
             logger.debug("Writing TCP Message Length: "+msg.getMessagePayload().length);
 

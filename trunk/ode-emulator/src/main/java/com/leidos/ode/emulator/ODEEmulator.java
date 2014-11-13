@@ -7,6 +7,7 @@ import com.leidos.ode.agent.data.blufax.BluFaxRouteData;
 import com.leidos.ode.agent.data.bsm.BSM;
 import com.leidos.ode.agent.data.ritis.RITISSpeedData;
 import com.leidos.ode.agent.data.vdot.VDOTSpeedData;
+import com.leidos.ode.agent.data.wxde.WXDEData;
 import com.leidos.ode.agent.datatarget.ODEDataTarget;
 import com.leidos.ode.collector.ODECollector;
 import com.leidos.ode.collector.datasource.CollectorDataSource;
@@ -66,6 +67,12 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
     @Autowired
     @Qualifier("blufaxRouteCollector")
     private ODECollector blufaxRouteCollector;
+    @Autowired
+    @Qualifier("weatherCollector")
+    private ODECollector weatherCollector;
+    
+    
+    
     
     private CurrentDataSet currentData = new CurrentDataSet();
     private RITISZoneDirectionData ritisZoneDirData = new RITISZoneDirectionData();
@@ -112,6 +119,10 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
                     ((EmulatorDataTarget) blufaxRouteCollector.getAgent().getDataTarget()).setListener(this);
                     setCollectorDataSourceListenerForCollectorsDataSource(blufaxRouteCollector);
                     blufaxRouteCollector.startUp();
+                } else if (s.equalsIgnoreCase("WeatherCollector")) {
+                    ((EmulatorDataTarget) getWeatherCollector().getAgent().getDataTarget()).setListener(this);
+                    setCollectorDataSourceListenerForCollectorsDataSource(getWeatherCollector());
+                    getWeatherCollector().startUp();
                 }
                 
             } catch (ODEDataTarget.DataTargetException ex) {
@@ -148,6 +159,7 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
         bsmCollector.stop();
         blufaxLinkCollector.stop();
         blufaxRouteCollector.stop();
+        getWeatherCollector().stop();
     }
 
     public void dataReceived(String messageType, ODEAgentMessage data) {
@@ -171,6 +183,8 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
             }else if (ODEMessageType.BluFaxRoute.equals(ODEMessageType.valueOf(messageType))) {
                 logger.debug("Processing BluFax Route Data");
                 blufaxRouteDataReceived(data);
+            }else if (ODEMessageType.WXDE.equals(ODEMessageType.valueOf(messageType))) {
+                weatherDataReceived(data);
             }
         }
     }
@@ -426,6 +440,18 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
     }
 
     
+
+    private void weatherDataReceived(ODEAgentMessage data) {
+        WXDEData weatherData = (WXDEData)data.getFormattedMessage();
+        if(weatherData != null && weatherData.getWxdeDataElements() != null){
+            List<WXDEData.WXDEDataElement> dataElements = weatherData.getWxdeDataElements();
+            if(dataElements.size() > 0){
+                currentData.setCurrentWeather(dataElements.get(0));
+            }
+        }
+    }
+    
+    
     
     /**
      * @return the ritisWeatherCollector
@@ -537,6 +563,20 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
      */
     public void setBlufaxRouteCollector(ODECollector blufaxRouteCollector) {
         this.blufaxRouteCollector = blufaxRouteCollector;
+    }
+
+    /**
+     * @return the weatherCollector
+     */
+    public ODECollector getWeatherCollector() {
+        return weatherCollector;
+    }
+
+    /**
+     * @param weatherCollector the weatherCollector to set
+     */
+    public void setWeatherCollector(ODECollector weatherCollector) {
+        this.weatherCollector = weatherCollector;
     }
 
 

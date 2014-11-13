@@ -76,7 +76,7 @@ public class ODERestTarget implements ODEDataTarget {
         StringWriter stringWriter = new StringWriter();
 //        JAXBContext registrationInfoContext = JAXBContext.newInstance(ODEAgentMessage.class);
         JAXBContext registrationInfoContext = JAXBContext.newInstance(
-                    "com.leidos.ode.agent.data:com.leidos.ode.agent.data.vdot:com.leidos.ode.agent.data.ritis:com.leidos.ode.agent.data.bsm:com.leidos.ode.agent.data.blufax:com.fastlanesw.bfw");
+                    "com.leidos.ode.agent.data:com.leidos.ode.agent.data.vdot:com.leidos.ode.agent.data.ritis:com.leidos.ode.agent.data.bsm:com.leidos.ode.agent.data.blufax:com.fastlanesw.bfw:com.leidos.ode.agent.data.wxde");
 
         Marshaller marshaller = registrationInfoContext.createMarshaller();
         marshaller.marshal(message, stringWriter);

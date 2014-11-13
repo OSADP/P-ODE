@@ -48,16 +48,68 @@
 
     <bean id="subscribeODEAgent" class="com.leidos.ode.agent.BasicODEAgent"/>
 
-    <bean id="passthroughSanitizer" class="com.leidos.ode.agent.sanitizer.PassthroughSanitizer"/>
+    <bean id="passthroughSanitizer" class="com.leidos.ode.agent.sanitizer.PassthroughSanitizer" scope="prototype"/>
 
-    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~BSM Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-
-    <bean id="bsmSubRegistration" class="com.leidos.ode.agent.registration.BasicODERegistration">
+    <bean id="basicSubRegistration" class="com.leidos.ode.agent.registration.BasicODERegistration" scope="prototype">
         <property name="registrationBaseUrl" value="${leidos.ode.reg.baseurl}"/>
         <property name="registrationEndpoint" value="${leidos.ode.reg.sub.endpoint}"/>
         <property name="unregisterEndpoint" value="${leidos.ode.reg.un.endpoint}"/>
     </bean>
+
+
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Weather Beans ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <bean id="wxdeParser" class="com.leidos.ode.agent.parser.impl.WXDEParser"/>
+
+    <bean id="weatherDataTarget" class="com.leidos.ode.emulator.agent.EmulatorDataTarget">
+        <property name="messageType" value="${leidos.ode.emulator.weather.datatarget.messageType}"/>
+    </bean>
+
+
+    <bean id="weatherSubRegistrationRequest" class="com.leidos.ode.registration.request.ODERegistrationRequest">
+        <property name="messageType" value="${leidos.ode.emulator.weather.messageType}"/>
+        <property name="region" value="${leidos.ode.emulator.weather.region}"/>
+        <property name="registrationType" value="${leidos.ode.emulator.weather.sub.registrationType}"/>
+        <property name="agentId" value="${leidos.ode.emulator.weather.sub.agentId}"/>
+        <property name="subscriptionReceiveAddress" value="${leidos.ode.emulator.weather.hostAddress}"/>
+        <property name="subscriptionReceivePort" value="${leidos.ode.emulator.weather.hostPort}"/>
+        <property name="subscriptionProtocol" value="${leidos.ode.emulator.sub.protocol.tcp}"/>
+        <property name="startDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.emulator.weather.sub.startDate}"/>
+            </bean>
+        </property>
+        <property name="endDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.emulator.weather.sub.endDate}"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="weatherSubAgent" class="com.leidos.ode.agent.BasicODEAgent">
+        <property name="registration" ref="basicSubRegistration"/>
+        <property name="parser" ref="wxdeParser"/>
+        <property name="sanitizer" ref="passthroughSanitizer"/>
+        <property name="dataTarget" ref="weatherDataTarget"/>
+        <property name="registrationRequest" ref="weatherSubRegistrationRequest"/>
+        <property name="odeLogger" ref="odeLogger"/>
+    </bean>
+
+            
+    <bean id="weatherDataSource" class="com.leidos.ode.collector.datasource.push.TCPPushDataSource">
+        <property name="hostProtocol" value="${leidos.ode.emulator.weather.hostProtocol}"/>
+        <property name="hostAddress" value="${leidos.ode.emulator.weather.hostAddress}"/>
+        <property name="hostPort" value="${leidos.ode.emulator.weather.hostPort}"/>
+    </bean>
+    
+    <bean id="weatherCollector" class="com.leidos.ode.collector.ODECollector">
+        <property name="agent" ref="weatherSubAgent"/>
+        <property name="dataSource" ref="weatherDataSource"/>
+    </bean>
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~BSM Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
 
     <bean id="bsmParser" class="com.leidos.ode.agent.parser.impl.BSMParser"/>
 
@@ -87,7 +139,7 @@
     </bean>
 
     <bean id="bsmSubAgent" parent="subscribeODEAgent">
-        <property name="registration" ref="bsmSubRegistration"/>
+        <property name="registration" ref="basicSubRegistration"/>
         <property name="parser" ref="bsmParser"/>
         <property name="sanitizer" ref="passthroughSanitizer"/>
         <property name="dataTarget" ref="bsmDataTarget"/>
@@ -437,14 +489,6 @@
     
     
       
-    
-    <bean id="blufaxRouteSubRegistration" class="com.leidos.ode.agent.registration.BasicODERegistration">
-        <property name="registrationBaseUrl" value="${leidos.ode.reg.baseurl}"/>
-        <property name="registrationEndpoint" value="${leidos.ode.reg.sub.endpoint}"/>
-        <property name="unregisterEndpoint" value="${leidos.ode.reg.un.endpoint}"/>
-    </bean>
-
-
     <bean id="blufaxRouteDataTarget" class="com.leidos.ode.emulator.agent.EmulatorDataTarget">
         <property name="messageType" value="${leidos.ode.emulator.blufaxroute.datatarget.messageType}"/>
     </bean>
@@ -471,7 +515,7 @@
     </bean>
 
     <bean id="blufaxRouteSubAgent" parent="subscribeODEAgent">
-        <property name="registration" ref="blufaxRouteSubRegistration"/>
+        <property name="registration" ref="basicSubRegistration"/>
         <property name="parser" ref="bluFaxParser"/>
         <property name="sanitizer" ref="passthroughSanitizer"/>
         <property name="dataTarget" ref="blufaxRouteDataTarget"/>
@@ -490,6 +534,7 @@
         <property name="dataSource" ref="blufaxRouteDataSource"/>
     </bean>
     
+
 
 
 </beans>

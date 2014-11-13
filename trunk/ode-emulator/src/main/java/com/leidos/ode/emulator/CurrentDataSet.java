@@ -12,6 +12,7 @@ import com.leidos.ode.agent.data.ritis.RITISWeatherDataNWS;
 import com.leidos.ode.agent.data.vdot.VDOTSpeedData;
 import com.leidos.ode.agent.data.vdot.VDOTTravelTimeData;
 import com.leidos.ode.agent.data.vdot.VDOTWeatherData;
+import com.leidos.ode.agent.data.wxde.WXDEData;
 import java.text.NumberFormat;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -67,6 +68,8 @@ public class CurrentDataSet {
     private RouteStatusList blufaxRouteEast;
     private RouteStatusList blufaxRouteWest;
     
+    private Date weatherLastUpdate;
+    private WXDEData.WXDEDataElement currentWeather;
     
     
     
@@ -242,8 +245,10 @@ public class CurrentDataSet {
         while(it.hasNext()){
             String key = it.next();
             BSM bsm = getBsmDataEast().get(key);
-            speed += bsm.getSpeed();
-            count++;
+            if(bsm != null){
+                speed += bsm.getSpeed();
+                count++;
+            }
         }
         if(count > 0){
             double speedAvg = (double)speed/count;
@@ -589,6 +594,35 @@ public class CurrentDataSet {
         this.blufaxRouteWest = blufaxRouteWest;
         recalculateWest();
         setBlufaxLastUpdate(new Date());
+    }
+
+    /**
+     * @return the weatherLastUpdate
+     */
+    public Date getWeatherLastUpdate() {
+        return weatherLastUpdate;
+    }
+
+    /**
+     * @param weatherLastUpdate the weatherLastUpdate to set
+     */
+    public void setWeatherLastUpdate(Date weatherLastUpdate) {
+        this.weatherLastUpdate = weatherLastUpdate;
+    }
+
+    /**
+     * @return the currentWeather
+     */
+    public WXDEData.WXDEDataElement getCurrentWeather() {
+        return currentWeather;
+    }
+
+    /**
+     * @param currentWeather the currentWeather to set
+     */
+    public void setCurrentWeather(WXDEData.WXDEDataElement currentWeather) {
+        this.currentWeather = currentWeather;
+        setWeatherLastUpdate(new Date());
     }
 
     

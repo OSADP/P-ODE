@@ -139,5 +139,6 @@ public abstract class PublishDataController {
         public static final String RITIS_WEATHER = "publishRITISWeather";
         public static final String BLUFAX_LINK = "publishBluFaxLink";
         public static final String BLUFAX_ROUTE = "publishBluFaxRoute";
+        public static final String WEATHER = "publishWeather";
     }
 }
