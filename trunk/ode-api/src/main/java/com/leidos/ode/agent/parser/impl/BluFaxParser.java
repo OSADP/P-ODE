@@ -1,10 +1,14 @@
 package com.leidos.ode.agent.parser.impl;
 
+import com.leidos.ode.agent.data.blufax.BluFaxErrorData;
 import com.leidos.ode.agent.data.blufax.BluFaxLinkData;
 import com.leidos.ode.agent.data.blufax.BluFaxRouteData;
 import com.leidos.ode.agent.parser.JAXBEnabledParser;
+import org.tmdd._3.messages.ErrorReport;
 import org.tmdd._3.messages.LinkStatusMsg;
 import org.tmdd._3.messages.RouteStatusMsg;
+
+import javax.xml.bind.JAXBElement;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,6 +21,7 @@ public class BluFaxParser extends JAXBEnabledParser {
 
     private static final String BLUFAX_LINK_TAG = "tmdd:linkStatusMsg";
     private static final String BLUFAX_ROUTE_TAG = "tmdd:routeStatusMsg";
+    private static final String BLUFAX_ERROR_TAG = "ns2:errorReportMsg";
 
     @Override
     protected ODEDataParserResponse parseDocumentByTag(String tag, byte[] bytes) {
@@ -26,6 +31,9 @@ public class BluFaxParser extends JAXBEnabledParser {
         } else if (tag.equalsIgnoreCase(BLUFAX_ROUTE_TAG)) {
             getLogger().debug("Parsing BluFax Route Status Message.");
             return parseBluFaxRouteStatusMessage(bytes);
+        } else if(tag.equalsIgnoreCase(BLUFAX_ERROR_TAG)){
+            getLogger().debug("Parsing BluFax Error Message.");
+            return parseBluFaxErrorMessage(bytes);
         } else {
             getLogger().debug("Unknown data type for tag: " + tag);
             return new ODEDataParserResponse(null, ODEDataParserReportCode.DATA_TYPE_UNKNOWN);
@@ -50,5 +58,16 @@ public class BluFaxParser extends JAXBEnabledParser {
             return new ODEDataParserResponse(bluFaxRouteData, ODEDataParserReportCode.PARSE_SUCCESS);
         }
         return new ODEDataParserResponse(null, ODEDataParserReportCode.PARSE_ERROR);
+    }
+
+    private ODEDataParserResponse parseBluFaxErrorMessage(byte[] bytes) {
+        JAXBElement<ErrorReport> errorReportMsg = (JAXBElement<ErrorReport>) unmarshalBytes(bytes, org.tmdd._3.messages.ObjectFactory.class);
+        if(errorReportMsg != null){
+            BluFaxErrorData bluFaxErrorData = new BluFaxErrorData();
+            bluFaxErrorData.setErrorReportMsg(errorReportMsg.getValue());
+            return new ODEDataParserResponse(bluFaxErrorData, ODEDataParserReportCode.DATA_SOURCE_SERVER_ERROR);
+        }
+        return new ODEDataParserResponse(null, ODEDataParserReportCode.PARSE_ERROR);
+
     }
 }
