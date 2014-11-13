@@ -41,7 +41,7 @@ public class BluFaxParser extends JAXBEnabledParser {
     }
 
     private ODEDataParserResponse parseBluFaxLinkStatusMessage(byte[] bytes) {
-        LinkStatusMsg linkStatusMsg = (LinkStatusMsg) unmarshalBytes(bytes, new Class[]{org.tmdd._3.messages.ObjectFactory.class, com.fastlanesw.bfw.ObjectFactory.class});
+        LinkStatusMsg linkStatusMsg = (LinkStatusMsg) unmarshalBytes(bytes, org.tmdd._3.messages.ObjectFactory.class);
         if (linkStatusMsg != null) {
             BluFaxLinkData bluFaxLinkData = new BluFaxLinkData();
             bluFaxLinkData.setLinkStatusMsg(linkStatusMsg);
@@ -51,7 +51,7 @@ public class BluFaxParser extends JAXBEnabledParser {
     }
 
     private ODEDataParserResponse parseBluFaxRouteStatusMessage(byte[] bytes) {
-        RouteStatusMsg routeStatusMsg = (RouteStatusMsg) unmarshalBytes(bytes, new Class[]{org.tmdd._3.messages.ObjectFactory.class, com.fastlanesw.bfw.ObjectFactory.class});
+        RouteStatusMsg routeStatusMsg = (RouteStatusMsg) unmarshalBytes(bytes, org.tmdd._3.messages.ObjectFactory.class);
         if (routeStatusMsg != null) {
             BluFaxRouteData bluFaxRouteData = new BluFaxRouteData();
             bluFaxRouteData.setRouteStatusMsg(routeStatusMsg);
@@ -65,6 +65,7 @@ public class BluFaxParser extends JAXBEnabledParser {
         if(errorReportMsg != null){
             BluFaxErrorData bluFaxErrorData = new BluFaxErrorData();
             bluFaxErrorData.setErrorReportMsg(errorReportMsg.getValue());
+            getLogger().debug("BluFax ErrorReportMsg parsed: " + bluFaxErrorData.getErrorReportMsg().getErrorText());
             return new ODEDataParserResponse(bluFaxErrorData, ODEDataParserReportCode.DATA_SOURCE_SERVER_ERROR);
         }
         return new ODEDataParserResponse(null, ODEDataParserReportCode.PARSE_ERROR);

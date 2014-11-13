@@ -28,34 +28,31 @@ public abstract class JAXBEnabledParser extends ODEDataParser {
     protected final ODEDataParserResponse parseDocumentByTag(byte[] bytes) {
         Document document = getMessageDocument(bytes);
         if (document != null) {
-            if (document != null) {
-                Element headElement = document.head();
-                Element bodyElement = document.body();
-                if (bodyElement != null) {
-                    Elements bodyChildren = bodyElement.children();
-                    if (bodyChildren != null) {
-                        Element element = bodyChildren.first();
-                        if (element != null) {
-                            String elementTag = element.tagName();
-                            if (elementTag != null) {
-                                return parseDocumentByTag(elementTag, bytes);
-                            }
-                        } else {
-                            return new ODEDataParserResponse(null, ODEDataParserReportCode.NO_DATA);
+            Element headElement = document.head();
+            Element bodyElement = document.body();
+            if (bodyElement != null) {
+                Elements bodyChildren = bodyElement.children();
+                if (bodyChildren != null) {
+                    Element element = bodyChildren.first();
+                    if (element != null) {
+                        String elementTag = element.tagName();
+                        if (elementTag != null) {
+                            return parseDocumentByTag(elementTag, bytes);
                         }
                     } else {
-                        getLogger().debug("Unable to parse body elements. Body element has no children.");
+                        return new ODEDataParserResponse(null, ODEDataParserReportCode.NO_DATA);
                     }
                 } else {
-                    getLogger().debug("Unable to parse body element. Document body was null..");
+                    getLogger().debug("Unable to parse body elements. Body element has no children.");
                 }
+            } else {
+                getLogger().debug("Unable to parse body element. Document body was null.");
             }
-            return new ODEDataParserResponse(null, ODEDataParserReportCode.UNEXPECTED_DATA_FORMAT);
         }
-        return null;
+        return new ODEDataParserResponse(null, ODEDataParserReportCode.UNEXPECTED_DATA_FORMAT);
     }
 
-    protected final Object unmarshalBytes(byte[] bytes, Class[] objectFactoryForContext) {
+    protected final Object unmarshalBytes(byte[] bytes, Class objectFactoryForContext) {
         if (bytes != null && objectFactoryForContext != null) {
             try {
                 ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
