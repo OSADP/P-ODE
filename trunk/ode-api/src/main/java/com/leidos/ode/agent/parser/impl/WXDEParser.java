@@ -203,10 +203,12 @@ public class WXDEParser extends ODEDataParser {
     }
 
     private Date parseTimestamp(String value) {
-        try {
-            return simpleDateFormat.parse(value);
-        } catch (ParseException e) {
-            getLogger().error(e.getLocalizedMessage());
+        if (value != null && !value.isEmpty()) {
+            try {
+                return simpleDateFormat.parse(value);
+            } catch (ParseException e) {
+                getLogger().error(e.getLocalizedMessage());
+            }
         }
         return null;
     }
