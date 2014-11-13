@@ -1,6 +1,5 @@
 package com.leidos.ode.agent.parser.impl;
 
-import com.fastlanesw.bfw.RouteStatusExt;
 import com.leidos.ode.agent.data.ritis.RITISSpeedData;
 import com.leidos.ode.agent.data.ritis.RITISWeatherDataClarus;
 import com.leidos.ode.agent.data.ritis.RITISWeatherDataNWS;
@@ -74,22 +73,20 @@ public class RITISParser extends JAXBEnabledParser {
     private ODEDataParserResponse parseRITISError(byte[] bytes) {
         Document document = getMessageDocument(bytes);
         if (document != null) {
-            if (document != null) {
-                Element headElement = document.head();
-                Element bodyElement = document.body();
-                if (bodyElement != null) {
-                    Elements bodyChildren = bodyElement.children();
-                    if (bodyChildren != null) {
-                        Element error = bodyChildren.first();
-                        if (error != null) {
-                            Elements errorChildren = error.children();
-                            if (errorChildren != null) {
-                                Element errorChild = errorChildren.first();
-                                if (errorChild != null) {
-                                    String errorText = errorChild.ownText();
-                                    getLogger().error("Error requesting RITIS data. Response from server: '" + errorText + "'.");
-                                    return new ODEDataParserResponse(null, ODEDataParserReportCode.DATA_SOURCE_SERVER_ERROR);
-                                }
+            Element headElement = document.head();
+            Element bodyElement = document.body();
+            if (bodyElement != null) {
+                Elements bodyChildren = bodyElement.children();
+                if (bodyChildren != null) {
+                    Element error = bodyChildren.first();
+                    if (error != null) {
+                        Elements errorChildren = error.children();
+                        if (errorChildren != null) {
+                            Element errorChild = errorChildren.first();
+                            if (errorChild != null) {
+                                String errorText = errorChild.ownText();
+                                getLogger().error("Error requesting RITIS data. Response from server: '" + errorText + "'.");
+                                return new ODEDataParserResponse(null, ODEDataParserReportCode.DATA_SOURCE_SERVER_ERROR);
                             }
                         }
                     }

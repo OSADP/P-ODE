@@ -1,14 +1,13 @@
 package com.leidos.ode.agent.parser.impl;
 
 import com.leidos.ode.agent.data.wxde.WXDEData;
-import com.leidos.ode.agent.parser.ODEDataParser;
+import com.leidos.ode.agent.parser.DateParser;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,7 +20,7 @@ import java.util.List;
  * Time: 1:53 PM
  * To change this template use File | Settings | File Templates.
  */
-public class WXDEParser extends ODEDataParser {
+public class WXDEParser extends DateParser {
 
     private final String WXDE_DATA_TAG = "wxde";
     private final String WXDE_OBSERVATIONS_TAG = "observations";
@@ -49,10 +48,10 @@ public class WXDEParser extends ODEDataParser {
     private final String WXDE_CONF_VALUE_KEY = "confvalue";
     private final String WXDE_FLAGS_KEY = "flags";
     private final String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
-    private SimpleDateFormat simpleDateFormat;
 
-    public WXDEParser() {
-        simpleDateFormat = new SimpleDateFormat(DATE_PATTERN);
+    @Override
+    protected SimpleDateFormat buildSimpleDateFormat() {
+        return new SimpleDateFormat(DATE_PATTERN);
     }
 
     @Override
@@ -154,7 +153,7 @@ public class WXDEParser extends ODEDataParser {
                     continue;
                 }
                 if (key.equals(WXDE_TIMESTAMP_KEY)) {
-                    Date timestamp = parseTimestamp(value);
+                    Date timestamp = parseDate(value);
                     if (timestamp != null) {
                         wxdeDataElement.setTimestamp(timestamp);
                     } else {
@@ -200,16 +199,5 @@ public class WXDEParser extends ODEDataParser {
             }
         }
         return wxdeDataElement;
-    }
-
-    private Date parseTimestamp(String value) {
-        if (value != null && !value.isEmpty()) {
-            try {
-                return simpleDateFormat.parse(value);
-            } catch (ParseException e) {
-                getLogger().error(e.getLocalizedMessage());
-            }
-        }
-        return null;
     }
 }

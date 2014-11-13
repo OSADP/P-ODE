@@ -3,31 +3,36 @@ package com.leidos.ode.agent.parser.impl;
 import com.leidos.ode.agent.data.vdot.VDOTSpeedData;
 import com.leidos.ode.agent.data.vdot.VDOTTravelTimeData;
 import com.leidos.ode.agent.data.vdot.VDOTWeatherData;
-import com.leidos.ode.agent.parser.ODEDataParser;
+import com.leidos.ode.agent.parser.DateParser;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-public class VDOTParser extends ODEDataParser {
+public class VDOTParser extends DateParser {
 
     private static final String VDOT_SPEED_TAG = "orci:tss_detector_status";
     private static final String VDOT_TRAVEL_TIME_TAG = "orci:traveltimesegment";
     private static final String VDOT_WEATHER_SHORT_TERM_TAG = "orci:vat_road_cond_point";
     private static final String VDOT_WEATHER_LONG_TERM_TAG = "orci:vat_road_cond_line";
     private static final String VDOT_WEATHER_LONG_TERM_DEFAULTS_TAG = "orci:vat_road_cond_area";
-    private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final String VDOT_FEATURE_MEMBERS_TAG = "gml:featureMembers";
     private static final String VDOT_EXCEPTION_REPORT_TAG = "ows:ExceptionReport";
+    private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final String TIME_ZONE_GMT = "GMT";
+
+    @Override
+    protected SimpleDateFormat buildSimpleDateFormat() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT);
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone(TIME_ZONE_GMT));
+        return simpleDateFormat;
+    }
 
     @Override
     public ODEDataParserResponse parse(byte[] bytes) {
@@ -377,16 +382,5 @@ public class VDOTParser extends ODEDataParser {
             }
         }
         return geometry;
-    }
-
-    protected Date parseDate(String dateString) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT);
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone(TIME_ZONE_GMT));
-        try {
-            return simpleDateFormat.parse(dateString);
-        } catch (ParseException e) {
-            getLogger().error(e.getLocalizedMessage());
-        }
-        return null;
     }
 }
