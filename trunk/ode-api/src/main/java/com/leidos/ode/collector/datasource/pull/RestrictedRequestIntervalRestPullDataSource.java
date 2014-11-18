@@ -21,10 +21,6 @@ public class RestrictedRequestIntervalRestPullDataSource extends RestPullDataSou
                 restPullDataSource.startDataSource();
             }
         }
-        /*Each data source in the list is responsible for its own listener, so execute
-        this source's thread with a listener.
-         */
-        executeDataSourceThread();
     }
 
     @Override

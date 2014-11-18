@@ -63,10 +63,6 @@ public abstract class DataSource implements CollectorDataSource {
         this.password = password;
     }
 
-    protected final boolean isInterrupted() {
-        return interrupted;
-    }
-
     public final CollectorDataSourceListener getCollectorDataSourceListener() {
         return collectorDataSourceListener;
     }
@@ -84,9 +80,8 @@ public abstract class DataSource implements CollectorDataSource {
     public final void stopDataSource() {
         interrupted = true;
         stopDataSourceThread();
+        cleanUpConnections();
     }
-
-    protected abstract void cleanUpConnections();
 
     /**
      * Returns a byte array containing the data retrieve from the source. Data
@@ -97,6 +92,10 @@ public abstract class DataSource implements CollectorDataSource {
      * @return the data from the source
      */
     public abstract byte[] pollDataSource();
+
+    protected abstract boolean canPoll();
+
+    protected abstract void cleanUpConnections();
 
     /**
      * Returns logger for the data source.
@@ -147,7 +146,7 @@ public abstract class DataSource implements CollectorDataSource {
 
         @Override
         public void run() {
-            while (!isInterrupted()) {
+            while (!interrupted && canPoll()) {
                 byte[] bytes = pollDataSource();
                 if (bytes != null) {
                     if (getCollectorDataSourceListener() != null) {

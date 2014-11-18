@@ -1,8 +1,12 @@
 package com.leidos.ode.collector.datasource.pull;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 
@@ -26,13 +30,41 @@ public abstract class RestPullDataSource extends PullDataSource {
     @Override
     public void startDataSource() {
         initializeHttpResources();
+        executeDataSourceThread();
+    }
+
+    @Override
+    public byte[] pollDataSource() {
+        try {
+            getLogger().debug("Polling data source for feed: '" + getFeedName() + "'.");
+            CloseableHttpResponse closeableHttpResponse = getHttpClient().execute(getHttpGet());
+            HttpEntity responseEntity = closeableHttpResponse.getEntity();
+            byte[] responseBytes = EntityUtils.toByteArray(responseEntity);
+            EntityUtils.consume(responseEntity);
+            closeableHttpResponse.close();
+            Thread.sleep(getRequestLimit());
+            return responseBytes;
+        } catch (ClientProtocolException e) {
+            getLogger().error(e.getLocalizedMessage());
+        } catch (IOException e) {
+            getLogger().error(e.getLocalizedMessage());
+        } catch (InterruptedException e) {
+            getLogger().error(e.getLocalizedMessage());
+        }
+        return null;
+    }
+
+    @Override
+    protected boolean canPoll() {
+        return httpClient != null;
     }
 
     @Override
     protected void cleanUpConnections() {
-        if (getHttpClient() != null) {
+        if (httpClient != null) {
             try {
-                getHttpClient().close();//Close http client to avoid leaks
+                httpClient.close();//Close http client to avoid leaks
+                httpClient = null;
             } catch (IOException e) {
                 getLogger().error(e.getLocalizedMessage());
             }
@@ -52,13 +84,13 @@ public abstract class RestPullDataSource extends PullDataSource {
 
     private String buildRequestString() {
         if (requestString == null) {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(getHostProtocol());
-            stringBuilder.append("://");
-            stringBuilder.append(getHostAddress());
-            stringBuilder.append("/");
-            stringBuilder.append(getBaseUrl());
-            requestString = stringBuilder.toString();
+            requestString = new StringBuilder()
+                    .append(getHostProtocol())
+                    .append("://")
+                    .append(getHostAddress())
+                    .append("/")
+                    .append(getBaseUrl())
+                    .toString();
         }
         return new StringBuilder().append(requestString).append(buildWfsFilter()).toString();
     }

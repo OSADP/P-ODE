@@ -18,7 +18,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 
 /**
- * VDOT data source, that includes a geographical bounding box filter for the emulator. Handles
+ * VDOT data source. Handles
  * requests to ITERIS for VDOT data using the Digest Authentication scheme required by the site.
  * Polls for VDOT data using Apache HTTP libraries.
  *

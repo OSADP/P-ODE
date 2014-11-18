@@ -35,12 +35,6 @@ public class WXDEDataSource extends RestPullDataSource {
     }
 
     @Override
-    public void startDataSource() {
-        super.startDataSource();
-        executeDataSourceThread();
-    }
-
-    @Override
     protected String buildWfsFilter() {
         return new StringBuilder()
                 .append("?")

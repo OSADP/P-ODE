@@ -53,6 +53,11 @@ public class UDPPushDataSource extends PushDataSource {
     }
 
     @Override
+    protected boolean canPoll() {
+        return datagramSocket != null;
+    }
+
+    @Override
     protected void cleanUpConnections() {
         if (datagramSocket != null) {
             datagramSocket.disconnect();

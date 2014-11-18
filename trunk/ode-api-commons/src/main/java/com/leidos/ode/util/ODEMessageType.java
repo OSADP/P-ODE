@@ -23,7 +23,8 @@ public enum ODEMessageType {
     BSM("BSM", false),
     BluFaxLink("BLUFAX", false),
     BluFaxRoute("BLUFAX", false),
-    WXDE("WXDE", false);
+    WXDE("WXDE", false),
+    RTMS("RTMS", false);
 
     private String dataSource;
     private boolean isRestrictedRequestInterval;

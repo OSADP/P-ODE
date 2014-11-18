@@ -64,6 +64,11 @@ public class JMSPushDataSource extends PushDataSource implements ExceptionListen
     }
 
     @Override
+    protected boolean canPoll() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
     protected void cleanUpConnections() {
         if (connection != null) {
             try {

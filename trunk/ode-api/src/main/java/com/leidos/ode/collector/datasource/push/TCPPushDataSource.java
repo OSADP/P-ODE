@@ -5,7 +5,6 @@
  */
 package com.leidos.ode.collector.datasource.push;
 
-import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -23,12 +22,13 @@ public class TCPPushDataSource extends PushDataSource{
     private final String TAG = getClass().getSimpleName();
     private final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(TAG);
     private ServerSocket socket;
-    
-    
+
     @Override
-    protected void cleanUpConnections() {
+    public void startDataSource() {
         try {
-            socket.close();
+            socket = new ServerSocket(getHostPort());
+            socket.setSoTimeout(10000);
+            executeDataSourceThread();
         } catch (IOException ex) {
             logger.error("Error creating socket ", ex);
         }
@@ -54,12 +54,12 @@ public class TCPPushDataSource extends PushDataSource{
                 bytesRead = bis.read(buffer);
                 byte[] resized = Arrays.copyOf(buffer, bytesRead);
                 retBuffer.put(resized);
-                
+
                 totalRead += bytesRead;
                 logger.debug("TCP Push Source Total Bytes Read: "+ totalRead);
                 if(totalRead == msgSize){
                     end = true;
-                }                
+                }
             }
             DataOutputStream dos = new DataOutputStream(clientSocket.getOutputStream());
             dos.writeInt(1);
@@ -72,19 +72,20 @@ public class TCPPushDataSource extends PushDataSource{
                 getLogger().error(ex.getLocalizedMessage());
             }
         }
-        
         return returnVal;
     }
 
-    public void startDataSource() {
+    @Override
+    protected boolean canPoll() {
+        return socket!=null;
+    }
+
+    @Override
+    protected void cleanUpConnections() {
         try {
-            socket = new ServerSocket(getHostPort());
-            socket.setSoTimeout(10000);
-            executeDataSourceThread();
+            socket.close();
         } catch (IOException ex) {
             logger.error("Error creating socket ", ex);
         }
-        
     }
-    
 }

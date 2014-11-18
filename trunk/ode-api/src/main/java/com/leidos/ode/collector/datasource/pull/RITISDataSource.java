@@ -19,16 +19,6 @@ public class RITISDataSource extends RestPullDataSource {
     private String apiKey;
 
     @Override
-    public void startDataSource() {
-        super.startDataSource();
-        /* The following line of code is @Deprecated. Due to the request interval
-        restriction imposed by RITIS, each RITISDataSource is no longer responsible
-        for its own polling
-        executeDataSourceThread(collectorDataSourceListener);
-        */
-    }
-
-    @Override
     public byte[] pollDataSource() {
         try {
             getLogger().debug("Polling data source for feed: '" + getFeedName() + "'.");
