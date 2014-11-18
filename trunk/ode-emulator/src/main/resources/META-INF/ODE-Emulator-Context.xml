@@ -86,11 +86,17 @@
             </bean>
         </property>
     </bean>
+    
+    <bean id="weatherPlatformSanitizer" class="com.leidos.ode.emulator.agent.WXDEPlatformSanitizer">
+        <property name="platforms" value="${leidos.ode.emulator.weather.platformlist}"/>
+        <property name="readings" value="${leidos.ode.emulator.weather.platformlist}"/>
+    </bean>
+    
 
     <bean id="weatherSubAgent" class="com.leidos.ode.agent.BasicODEAgent">
         <property name="registration" ref="basicSubRegistration"/>
         <property name="parser" ref="wxdeParser"/>
-        <property name="sanitizer" ref="passthroughSanitizer"/>
+        <property name="sanitizer" ref="weatherPlatformSanitizer"/>
         <property name="dataTarget" ref="weatherDataTarget"/>
         <property name="registrationRequest" ref="weatherSubRegistrationRequest"/>
         <property name="odeLogger" ref="odeLogger"/>
