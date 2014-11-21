@@ -32,7 +32,7 @@ public class RDEStoreControllerImpl implements RDEStoreController {
     @ResponseBody
     RDEStoreResponse store(@RequestBody RDEData rdeData) throws RDEStoreException {
         RDERequest rdeRequest = RDERequestFactory.storeRequest(rdeData);
-        //put request on the queue
+        //TODO Get the queue of type BlockingQueue<Datum<char[]>> from the RDE jar and place the rderequest on the queue.
 
          return new RDEStoreResponse();
     }
