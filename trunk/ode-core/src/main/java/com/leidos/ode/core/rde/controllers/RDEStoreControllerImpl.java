@@ -1,12 +1,16 @@
 package com.leidos.ode.core.rde.controllers;
 
-import com.leidos.ode.core.rde.data.RDEData;
-import com.leidos.ode.core.rde.data.RDEStoreResponse;
+import com.leidos.ode.core.rde.factory.RDERequestFactory;
+import com.leidos.ode.core.rde.request.RDERequest;
+import com.leidos.ode.core.rde.request.model.RDEData;
+import com.leidos.ode.core.rde.response.impl.RDEStoreResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.concurrent.BlockingQueue;
 
 /**
  * Class representing the Store Data controller. Responsible for sending published data received by the ODE to the RDE,
@@ -27,6 +31,9 @@ public class RDEStoreControllerImpl implements RDEStoreController {
     public
     @ResponseBody
     RDEStoreResponse store(@RequestBody RDEData rdeData) throws RDEStoreException {
-        return null;
+        RDERequest rdeRequest = RDERequestFactory.storeRequest(rdeData);
+        //put request on the queue
+
+         return new RDEStoreResponse();
     }
 }

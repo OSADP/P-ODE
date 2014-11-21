@@ -1,7 +1,7 @@
 package com.leidos.ode.core.rde.controllers;
 
-import com.leidos.ode.core.rde.data.RDEData;
-import com.leidos.ode.core.rde.data.RDERetrieveResponse;
+import com.leidos.ode.core.rde.request.model.RDEData;
+import com.leidos.ode.core.rde.response.impl.RDERetrieveResponse;
 
 /**
  * Created with IntelliJ IDEA.
