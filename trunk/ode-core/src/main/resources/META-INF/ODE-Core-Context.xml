@@ -51,6 +51,108 @@
         <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
     </bean>
 
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ RDE Beans ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ RDE Beans ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <bean id="rdeStoreController" class="com.leidos.ode.core.rde.controllers.RDEStoreControllerImpl" scope="singleton">
+        <constructor-arg name="context" ref="clientUploadContext"></constructor-arg>
+        <constructor-arg name="director" ref="uploadDirector"></constructor-arg>
+        <constructor-arg name="queue" ref="writerQueue"></constructor-arg>
+    </bean>
+
+    <bean id="rdeRetrieveController" class="com.leidos.ode.core.rde.controllers.RDERetrieveControllerImpl" scope="singleton">
+        <constructor-arg name="context" ref="clientDownloadContext"></constructor-arg>
+    </bean>
+
+    <bean id="clientDownloadContext" class="com.leidos.ode.core.rde.RDEClientContext" scope="singleton">
+        <constructor-arg name="queue" ref="downloadQueue"></constructor-arg>
+        <constructor-arg name="config" ref="clientConfig"></constructor-arg>
+    </bean>
+
+    <bean id="downloadQueue" class="java.util.concurrent.ArrayBlockingQueue"
+          autowire-candidate="false" scope="singleton">
+        <constructor-arg index="0" value="1000"/>
+    </bean>
+
+    <bean id="clientWriter" class="org.dot.rdelive.client.out.SampleRDEClientWriter"
+          autowire-candidate="false" scope="singleton">
+        <constructor-arg name="director" ref="uploadDirector" />
+        <constructor-arg name="context" ref="clientUploadContext"/>
+        <constructor-arg name="listener"><null/></constructor-arg>
+    </bean>
+
+    <bean id="uploadDirector" class="org.dot.rdelive.client.out.RDEClientUploadDirector"
+          autowire-candidate="false" scope="singleton">
+        <constructor-arg name="writer" ref="socketWriter"/>
+        <constructor-arg name="messages" ref="genericDirectorMessages"/>
+    </bean>
+
+    <bean id="socketWriter" class="org.dot.rdelive.client.out.SampleRDEClientSocketWriter"
+          autowire-candidate="false" scope="singleton">
+        <constructor-arg name="writerQueue" ref="writerQueue"/>
+        <constructor-arg name="context" ref="clientUploadContext"/>
+        <constructor-arg name="messages" ref="genericDirectorMessages"/>
+        <constructor-arg name="restarts" value="3"/>
+        <constructor-arg name="restartInterval">
+            <bean class="java.lang.Long">
+                <constructor-arg index="0" value="10000"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="clientConfig" class="com.leidos.ode.core.rde.RDEConfig" scope="singleton">
+        <constructor-arg name="filename" value="rdeconfig"></constructor-arg>
+    </bean>
+
+    <bean id="clientUploadContext" class="com.leidos.ode.core.rde.RDEClientContext" scope="singleton">
+        <constructor-arg name="config" ref="clientConfig"></constructor-arg>
+        <constructor-arg name="queue" ref="clientQueue"></constructor-arg>
+    </bean>
+
+    <bean id="clientQueue" class="java.util.concurrent.LinkedBlockingQueue"
+          autowire-candidate="false" scope="singleton">
+    </bean>
+
+    <bean id="writerQueue" class="java.util.concurrent.ArrayBlockingQueue"
+          autowire-candidate="false" scope="singleton">
+        <constructor-arg index="0" value="1000"/>
+    </bean>
+
+    <bean id="genericDirectorMessages" class="org.dot.rdelive.impl.GenericRDELiveMessages"
+          autowire-candidate="false" scope="singleton">
+        <constructor-arg name="messages">
+            <map>
+                <entry key="MESSAGE.ERROR.MANAGER.STARTUP_ERROR_GENERIC"
+                       value="RDE-LIVE-MANAGER-ERROR-000: DataServerManager was not able to start." />
+                <entry key="MESSAGE.ERROR.MANAGER.CONFIGURATION_NOT_LOADED"
+                       value="RDE-LIVE-MANAGER-ERROR-001: DataServerManager: was not able to load configuration." />
+                <entry key="MESSAGE.ERROR.MANAGER.SHUTDOWN_ERROR_GENERIC"
+                       value="RDE-LIVE-MANAGER-ERROR-002: DataServerManager was not able to stop." />
+                <entry key="MESSAGE.INFO.MANAGER.CONFIGURATION_LOADED"
+                       value="RDE-LIVE-MANAGER-MESSAGE-000: DataServerManager: configuration successfully loaded." />
+                <entry key="MESSAGE.INFO.MANAGER.STARTING"
+                       value="RDE-LIVE-MANAGER-MESSAGE-001: DataServerManager: starting." />
+                <entry key="MESSAGE.INFO.MANAGER.STARTED"
+                       value="RDE-LIVE-MANAGER-MESSAGE-002: DataServerManager: started." />
+                <entry key="MESSAGE.INFO.MANAGER.RUNNING"
+                       value="RDE-LIVE-MANAGER-MESSAGE-003: DataServerManager: running." />
+                <entry key="MESSAGE.INFO.MANAGER.STOPPING"
+                       value="RDE-LIVE-MANAGER-MESSAGE-004: DataServerManager: stopping." />
+                <entry key="MESSAGE.INFO.MANAGER.STOPPED"
+                       value="RDE-LIVE-MANAGER-MESSAGE-005: DataServerManager: stopped." />
+                <entry key="MESSAGE.INFO.MANAGER.CLEAN_SHUTDOWN"
+                       value="RDE-LIVE-MANAGER-MESSAGE-006: DataServerManager: cleanly shutdown." />
+                <entry key="MESSAGE.INFO.MANAGER.UNCLEAN_SHUTDOWN"
+                       value="RDE-LIVE-MANAGER-MESSAGE-007: DataServerManager: uncleanly shutdown." />
+                <entry key="MESSAGE.INFO.MANAGER.UNAVAILABLE_SHUTDOWN"
+                       value="RDE-LIVE-MANAGER-MESSAGE-008: DataServerManager: unavailable and will shutdown immediately." />
+                <entry key="MESSAGE.INFO.MANAGER.THREAD_YIELDING"
+                       value="RDE-LIVE-MANAGER-MESSAGE-009: DataServerManager: thread yielding control to other threads." />
+                <entry key="MESSAGE.INFO.MANAGER.THREAD_INTERRUPTED"
+                       value="RDE-LIVE-MANAGER-MESSAGE-010: DataServerManager: was interrupted and will continue running." />
+            </map>
+        </constructor-arg>
+    </bean>
     
     
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Data Controllers~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->

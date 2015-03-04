@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Class-Path: spring-web-3.2.8.RELEASE.jar aopalliance-1.0.jar jackson-a
+ nnotations-2.4.3.jar log4j-1.2.17.jar spring-core-4.0.3.RELEASE.jar a
+ ctivation-1.1.jar spring-expression-4.0.3.RELEASE.jar rdeapiclient-3.
+ 1.16-jar-with-dependencies.jar spring-security-web-3.2.3.RELEASE.jar 
+ mybatis-3.2.7.jar javaee-api-7.0.jar commons-logging-1.1.3.jar javax.
+ mail-1.5.0.jar rdeapiclient-3.1.16-sources.jar spring-security-core-3
+ .2.3.RELEASE.jar spring-context-4.0.3.RELEASE.jar spring-beans-4.0.3.
+ RELEASE.jar jackson-core-2.4.3.jar rdeapiclient-3.1.17-sources.jar rd
+ eapiclient-3.1.17-jar-with-dependencies.jar spring-aop-4.0.3.RELEASE.
+ jar
+Main-Class: com.leidos.ode.core.rde.controllers.RDEStoreControllerImpl
+

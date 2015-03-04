@@ -25,7 +25,7 @@ public class RDEStoreRequest extends BasicRDERequest implements RDERequest {
     private byte[] data;
     private JsonFactory jsonFactory;
 
-    protected RDEStoreRequest(RDEData rdeData) {
+    public RDEStoreRequest(RDEData rdeData) {
         super(rdeData);
         this.type = ((RDEStoreData) rdeData).getType();
         this.date = ((RDEStoreData) rdeData).getDate();
@@ -35,7 +35,6 @@ public class RDEStoreRequest extends BasicRDERequest implements RDERequest {
 
     @Override
     public Object request() {
-//        Datum<char[]> data = new GenericDatum<char[]>();
         Writer writer = new StringWriter();
         try {
             JsonGenerator generator = jsonFactory.createGenerator(writer);
@@ -47,13 +46,10 @@ public class RDEStoreRequest extends BasicRDERequest implements RDERequest {
             generator.writeEndObject();
             generator.close();
             writer.close();
-//            data.setData(writer.toString().toCharArray());
-//            data.setDataType(DataType.CHARACTER);
-//            data.setEncoding(CharsetType.UTF8);
-//            return data;
+
         } catch (IOException e) {
             getLogger().error(e.getLocalizedMessage());
         }
-        return null;
+        return writer.toString();
     }
 }

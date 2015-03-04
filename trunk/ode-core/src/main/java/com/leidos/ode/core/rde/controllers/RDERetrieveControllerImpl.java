@@ -1,8 +1,11 @@
 package com.leidos.ode.core.rde.controllers;
 
 import com.leidos.ode.core.controllers.DistributeDataController;
+import com.leidos.ode.core.rde.RDEClientContext;
+import com.leidos.ode.core.rde.RDEConfig;
 import com.leidos.ode.core.rde.request.model.RDEData;
 import com.leidos.ode.core.rde.response.impl.RDERetrieveResponse;
+import org.dot.rdelive.client.impl.RDEClientDownloadDirector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -24,6 +27,13 @@ public class RDERetrieveControllerImpl implements RDERetrieveController {
     private final String TAG = getClass().getSimpleName();
     @Autowired
     private DistributeDataController distributeDataController;
+    private RDEClientContext context;
+    private RDEClientDownloadDirector director;
+
+    public RDERetrieveControllerImpl(RDEClientContext context) {
+        this.context = context;
+        this.director = new RDEClientDownloadDirector(context, null);
+    }
 
     @Override
     public RDERetrieveResponse retrieve(RDEData rdeData) throws RDERetrieveException {
