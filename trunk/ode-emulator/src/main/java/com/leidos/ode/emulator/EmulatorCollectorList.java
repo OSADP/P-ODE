@@ -13,9 +13,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class EmulatorCollectorList {
-    private String[] collectors = new String[]{"RITISWeatherCollector",
-            "RITISSpeedCollector", "VDOTSpeedCollector", "VDOTWeatherCollector",
-            "VDOTTravelCollector", "BSMCollector","BluFaxLinkCollector","BluFaxRouteCollector","WeatherCollector"};
+    private String[] collectors = new String[]{"SpeedCollector",
+            "VolumeCollector", "OccupancyCollector", "TravelTimeCollector",
+            "WeatherCollector"};
    
 
     /**

@@ -8,6 +8,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.util.Properties;
+import javax.xml.bind.DatatypeConverter;
 import org.springframework.beans.factory.annotation.Value;
 
 
@@ -86,12 +87,15 @@ public abstract class PublishDataController {
             logger.info("Preparing message for topic");
             System.out.println("Preparing message for topic");
             System.out.println("Formatted Message "+odeAgentMessage.getFormattedMessage());
-            System.out.println("RAW Message Size: "+odeAgentMessage.getMessagePayload().length);
-            ObjectMessage msg = session.createObjectMessage();
-            msg.setObject(odeAgentMessage);
-
-            logger.info("Placing message on topic");
-            messageProducer.send(msg);
+            System.out.println("RAW Message: "+odeAgentMessage.getMessagePayload());
+            System.out.println("RAW Message Base 64: "+odeAgentMessage.getMessagePayloadBase64());
+            byte[] messageBytes = DatatypeConverter.parseBase64Binary(connectionFactoryName);
+            BytesMessage bytesMessage = session.createBytesMessage();
+            bytesMessage.writeBytes(odeAgentMessage.getMessagePayload());
+//            ObjectMessage msg = session.createObjectMessage();
+//            msg.setObject(odeAgentMessage);
+//            logger.info("Placing message on topic");
+            messageProducer.send(bytesMessage);
 
         } catch (JMSException ex) {
             logger.error("Error creating message.", ex);
@@ -140,5 +144,9 @@ public abstract class PublishDataController {
         public static final String BLUFAX_LINK = "publishBluFaxLink";
         public static final String BLUFAX_ROUTE = "publishBluFaxRoute";
         public static final String WEATHER = "publishWeather";
+        public static final String SPEED = "publishSpeed";
+        public static final String VOLUME = "publishVolume";
+        public static final String OCCUPANCY = "publishOccupancy";
+        public static final String TRAVEL_TIME = "publishTravelTime";
     }
 }

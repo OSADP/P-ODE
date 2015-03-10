@@ -45,7 +45,7 @@
     </bean>
 
     <bean id="dateFormat" class="java.text.SimpleDateFormat">
-        <constructor-arg value="MM-dd-YYYY"/>
+        <constructor-arg value="MM-dd-yyyy"/>
     </bean>
 
     <mongo:mongo id="mongo" host="${leidos.ode.mongo.host}" port="${leidos.ode.mongo.port}"/>
@@ -59,14 +59,15 @@
         <property name="mongoTemplate" ref="mongoTemplate"/>
     </bean>
 
-    <bean id="basicSubRegistration" class="com.leidos.ode.agent.registration.BasicODERegistration">
+    <bean id="basicSubRegistration" class="com.leidos.ode.agent.registration.ODESubscribeRegistration">
         <property name="registrationBaseUrl" value="${leidos.ode.reg.baseurl}"/>
         <property name="registrationEndpoint" value="${leidos.ode.reg.sub.endpoint}"/>
     </bean>
 
-    <bean id="basicPubRegistration" class="com.leidos.ode.agent.registration.BasicODERegistration">
+    <bean id="basicPubRegistration" class="com.leidos.ode.agent.registration.ODEPublishRegistration">
         <property name="registrationBaseUrl" value="${leidos.ode.reg.baseurl}"/>
         <property name="registrationEndpoint" value="${leidos.ode.reg.pub.endpoint}"/>
+        <property name="serviceRequestEndpoint" value="${leidos.ode.reg.pub.endpoint.serviceRequest}"/>
     </bean>
 
     <bean id="publishODEAgent" class="com.leidos.ode.agent.PublishODEAgent"/>
@@ -96,6 +97,8 @@
         <property name="region" value="${leidos.ode.reg.bsm.pub.region}"/>
         <property name="registrationType" value="${leidos.ode.reg.bsm.pub.registrationType}"/>
         <property name="agentId" value="${leidos.ode.reg.bsm.pub.agentId}"/>
+        <property name="dataTypes" value="${leidos.ode.reg.bsm.pub.datatypes}"/>
+        
         <property name="startDate">
             <bean factory-bean="dateFormat" factory-method="parse">
                 <constructor-arg value="${leidos.ode.reg.bsm.pub.startDate}"/>
@@ -137,6 +140,7 @@
         <property name="region" value="${leidos.ode.reg.ritisspeed.pub.region}"/>
         <property name="registrationType" value="${leidos.ode.reg.ritisspeed.pub.registrationType}"/>
         <property name="agentId" value="${leidos.ode.reg.ritisspeed.pub.agentId}"/>
+        <property name="dataTypes" value="${leidos.ode.reg.ritisspeed.pub.datatypes}"/>
         <property name="startDate">
             <bean factory-bean="dateFormat" factory-method="parse">
                 <constructor-arg value="${leidos.ode.reg.ritisspeed.pub.startDate}"/>
@@ -154,6 +158,7 @@
         <property name="region" value="${leidos.ode.reg.ritisweather.pub.region}"/>
         <property name="registrationType" value="${leidos.ode.reg.ritisweather.pub.registrationType}"/>
         <property name="agentId" value="${leidos.ode.reg.ritisweather.pub.agentId}"/>
+        <property name="dataTypes" value="${leidos.ode.reg.ritisweather.pub.datatypes}"/>
         <property name="startDate">
             <bean factory-bean="dateFormat" factory-method="parse">
                 <constructor-arg value="${leidos.ode.reg.ritisweather.pub.startDate}"/>
@@ -164,6 +169,9 @@
                 <constructor-arg value="${leidos.ode.reg.ritisweather.pub.endDate}"/>
             </bean>
         </property>
+    </bean>
+
+    <bean id="ritisSpeedMessageFormatter" class="com.leidos.ode.agent.formatter.RITISSpeedMessageFormatter">
     </bean>
 
     <bean id="basicRITISAgent" class="com.leidos.ode.agent.PublishODEAgent">
@@ -181,6 +189,7 @@
     <bean id="ritisSpeedAgent" parent="basicRITISAgent">
         <property name="registrationRequest" ref="ritisSpeedPubRegistrationRequest"/>
         <property name="dataTarget" ref="restTarget"/>
+        <property name="formatter" ref="ritisSpeedMessageFormatter"/>
     </bean>
 
     <bean id="basicRITISDataSource" class="com.leidos.ode.collector.datasource.pull.RITISDataSource">
@@ -234,6 +243,7 @@
         <property name="region" value="${leidos.ode.reg.vdotweather.pub.region}"/>
         <property name="registrationType" value="${leidos.ode.reg.vdotweather.pub.registrationType}"/>
         <property name="agentId" value="${leidos.ode.reg.vdotweather.pub.agentId}"/>
+        <property name="dataTypes" value="${leidos.ode.reg.vdotweather.pub.datatypes}"/>
         <property name="startDate">
             <bean factory-bean="dateFormat" factory-method="parse">
                 <constructor-arg value="${leidos.ode.reg.vdotweather.pub.startDate}"/>
@@ -251,6 +261,7 @@
         <property name="region" value="${leidos.ode.reg.vdotspeed.pub.region}"/>
         <property name="registrationType" value="${leidos.ode.reg.vdotspeed.pub.registrationType}"/>
         <property name="agentId" value="${leidos.ode.reg.vdotspeed.pub.agentId}"/>
+        <property name="dataTypes" value="${leidos.ode.reg.vdotspeed.pub.datatypes}"/>
         <property name="startDate">
             <bean factory-bean="dateFormat" factory-method="parse">
                 <constructor-arg value="${leidos.ode.reg.vdotspeed.pub.startDate}"/>
@@ -268,6 +279,7 @@
         <property name="region" value="${leidos.ode.reg.vdottraveltime.pub.region}"/>
         <property name="registrationType" value="${leidos.ode.reg.vdottraveltime.pub.registrationType}"/>
         <property name="agentId" value="${leidos.ode.reg.vdottraveltime.pub.agentId}"/>
+        <property name="dataTypes" value="${leidos.ode.reg.vdottraveltime.pub.datatypes}"/>
         <property name="startDate">
             <bean factory-bean="dateFormat" factory-method="parse">
                 <constructor-arg value="${leidos.ode.reg.vdottraveltime.pub.startDate}"/>
@@ -287,6 +299,15 @@
         <property name="dataTarget" ref="restTarget"/>
         <property name="odeLogger" ref="odeLogger"/>
     </bean>
+    
+    <bean id="vdotSpeedEmptySanitizer" class="com.leidos.ode.agent.sanitizer.VDOTSpeedEmptyDataSanitizer">
+    </bean>
+
+    <bean id="vdotSpeedMessageFormatter" class="com.leidos.ode.agent.formatter.VDOTSpeedMessageFormatter">
+    </bean>
+    
+    <bean id="vdotTravelMessageFormatter" class="com.leidos.ode.agent.formatter.VDOTTravelTimeMessageFormatter">
+    </bean>
 
     <bean id="vdotWeatherAgent" parent="basicVDOTAgent">
         <property name="registrationRequest" ref="vdotWeatherPubRegistrationRequest"/>
@@ -294,10 +315,13 @@
 
     <bean id="vdotSpeedAgent" parent="basicVDOTAgent">
         <property name="registrationRequest" ref="vdotSpeedPubRegistrationRequest"/>
+        <property name="sanitizer" ref="vdotSpeedEmptySanitizer"/>
+        <property name="formatter" ref="vdotSpeedMessageFormatter"/>
     </bean>
 
     <bean id="vdotTravelTimeAgent" parent="basicVDOTAgent">
         <property name="registrationRequest" ref="vdotTravelTimePubRegistrationRequest"/>
+        <property name="formatter" ref="vdotTravelMessageFormatter"/>
     </bean>
 
     <bean id="basicVDOTDataSource" class="com.leidos.ode.collector.datasource.pull.VDOTDataSource">
@@ -382,6 +406,7 @@
         <property name="region" value="${leidos.ode.reg.blufaxlink.pub.region}"/>
         <property name="registrationType" value="${leidos.ode.reg.blufaxlink.pub.registrationType}"/>
         <property name="agentId" value="${leidos.ode.reg.blufaxlink.pub.agentId}"/>
+        <property name="dataTypes" value="${leidos.ode.reg.blufaxlink.pub.datatypes}"/>
         <property name="startDate">
             <bean factory-bean="dateFormat" factory-method="parse">
                 <constructor-arg value="${leidos.ode.reg.blufaxlink.pub.startDate}"/>
@@ -399,6 +424,7 @@
         <property name="region" value="${leidos.ode.reg.blufaxroute.pub.region}"/>
         <property name="registrationType" value="${leidos.ode.reg.blufaxroute.pub.registrationType}"/>
         <property name="agentId" value="${leidos.ode.reg.blufaxroute.pub.agentId}"/>
+        <property name="dataTypes" value="${leidos.ode.reg.blufaxroute.pub.datatypes}"/>
         <property name="startDate">
             <bean factory-bean="dateFormat" factory-method="parse">
                 <constructor-arg value="${leidos.ode.reg.blufaxroute.pub.startDate}"/>
@@ -418,13 +444,26 @@
         <property name="dataTarget" ref="restTarget"/>
         <property name="odeLogger" ref="odeLogger"/>
     </bean>
+    
+    <bean id="blufaxLinkMessageFormatter" class="com.leidos.ode.agent.formatter.BlufaxLinkMessageFormatter">
+        
+        
+    </bean>
+
+    <bean id="blufaxRouteMessageFormatter" class="com.leidos.ode.agent.formatter.BlufaxRouteMessageFormatter">
+        
+        
+    </bean>
+
 
     <bean id="bluFaxLinkAgent" parent="basicBluFaxAgent">
         <property name="registrationRequest" ref="bluFaxLinkPubRegistrationRequest"/>
+        <property name="formatter" ref="blufaxLinkMessageFormatter"/>
     </bean>
 
     <bean id="bluFaxRouteAgent" parent="basicBluFaxAgent">
         <property name="registrationRequest" ref="bluFaxRoutePubRegistrationRequest"/>
+        <property name="formatter" ref="blufaxRouteMessageFormatter"/>
     </bean>
 
     <bean id="basicBluFaxDataSource" class="com.leidos.ode.collector.datasource.pull.BluFaxDataSource">
@@ -468,6 +507,7 @@
         <property name="region" value="${leidos.ode.reg.wxde.pub.region}"/>
         <property name="registrationType" value="${leidos.ode.reg.wxde.pub.registrationType}"/>
         <property name="agentId" value="${leidos.ode.reg.wxde.pub.agentId}"/>
+        <property name="dataTypes" value="${leidos.ode.reg.wxde.pub.datatypes}"/>
         <property name="startDate">
             <bean factory-bean="dateFormat" factory-method="parse">
                 <constructor-arg value="${leidos.ode.reg.wxde.pub.startDate}"/>
@@ -480,12 +520,18 @@
         </property>
     </bean>
 
+    <bean id="wxdeMessageFormatter" class="com.leidos.ode.agent.formatter.WxDEMessageFormatter">
+        
+        
+    </bean>
+
     <bean id="basicWXDEAgent" class="com.leidos.ode.agent.PublishODEAgent">
         <property name="registration" ref="basicPubRegistration"/>
         <property name="parser" ref="wxdeParser"/>
         <property name="sanitizer" ref="passthroughSanitizer"/>
         <property name="dataTarget" ref="restTarget"/>
         <property name="odeLogger" ref="odeLogger"/>
+        <property name="formatter" ref="wxdeMessageFormatter"/>
     </bean>
 
     <bean id="wxdeAgent" parent="basicWXDEAgent">
@@ -515,6 +561,7 @@
         <property name="region" value="${leidos.ode.reg.rtms.pub.region}"/>
         <property name="registrationType" value="${leidos.ode.reg.rtms.pub.registrationType}"/>
         <property name="agentId" value="${leidos.ode.reg.rtms.pub.agentId}"/>
+        <property name="dataTypes" value="${leidos.ode.archiver.rtms.datatypes}"/>
         <property name="startDate">
             <bean factory-bean="dateFormat" factory-method="parse">
                 <constructor-arg value="${leidos.ode.reg.rtms.pub.startDate}"/>
@@ -526,6 +573,11 @@
             </bean>
         </property>
     </bean>
+    
+    <bean id="rtmsMessageFormatter" class="com.leidos.ode.agent.formatter.RTMSMessageFormatter">
+        
+        
+    </bean>
 
     <bean id="basicRTMSAgent" class="com.leidos.ode.agent.PublishODEAgent">
         <property name="registration" ref="basicPubRegistration"/>
@@ -533,6 +585,7 @@
         <property name="sanitizer" ref="passthroughSanitizer"/>
         <property name="dataTarget" ref="restTarget"/>
         <property name="odeLogger" ref="odeLogger"/>
+        <property name="formatter" ref="rtmsMessageFormatter"/>
     </bean>
 
     <bean id="rtmsAgent" parent="basicRTMSAgent">

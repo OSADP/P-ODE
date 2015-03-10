@@ -37,12 +37,12 @@ public class WXDEData implements Serializable {
         private String obsTypeName;
         private String sensorId;
         private String sensorIndex;
-        private String platformId;
+        private String stationId;
         private String siteId;
         private String category;
         private String contribId;
         private String contributor;
-        private String platformCode;
+        private String stationCode;
         private Date timestamp;
         private double latitude;
         private double longitude;
@@ -158,22 +158,6 @@ public class WXDEData implements Serializable {
             this.obsTypeName = obsTypeName;
         }
 
-        public String getPlatformCode() {
-            return platformCode;
-        }
-
-        public void setPlatformCode(String platformCode) {
-            this.platformCode = platformCode;
-        }
-
-        public String getPlatformId() {
-            return platformId;
-        }
-
-        public void setPlatformId(String platformId) {
-            this.platformId = platformId;
-        }
-
         public String getSensorId() {
             return sensorId;
         }
@@ -220,6 +204,34 @@ public class WXDEData implements Serializable {
 
         public void setUnits(String units) {
             this.units = units;
+        }
+
+        /**
+         * @return the stationId
+         */
+        public String getStationId() {
+            return stationId;
+        }
+
+        /**
+         * @param stationId the stationId to set
+         */
+        public void setStationId(String stationId) {
+            this.stationId = stationId;
+        }
+
+        /**
+         * @return the stationCode
+         */
+        public String getStationCode() {
+            return stationCode;
+        }
+
+        /**
+         * @param stationCode the stationCode to set
+         */
+        public void setStationCode(String stationCode) {
+            this.stationCode = stationCode;
         }
     }
 }

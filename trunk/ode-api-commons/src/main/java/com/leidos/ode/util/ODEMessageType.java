@@ -15,23 +15,30 @@ package com.leidos.ode.util;
  * @author cassadyja, lamde
  */
 public enum ODEMessageType {
-    VDOTWeather("VDOT", false),
-    VDOTSpeed("VDOT", false),
-    VDOTTravelTime("VDOT", false),
-    RITISSpeed("RITIS", true),
-    RITISWeather("RITIS", true),
-    BSM("BSM", false),
-    BluFaxLink("BLUFAX", false),
-    BluFaxRoute("BLUFAX", false),
-    WXDE("WXDE", false),
-    RTMS("RTMS", false);
+    VDOTWeather("VDOT", false, new byte[]{0x01,0x00,0x00,0x00}),
+    VDOTSpeed("VDOT", false, new byte[]{0x01,0x00,0x00,0x00}),
+    VDOTTravelTime("VDOT", false, new byte[]{0x01,0x00,0x00,0x00}),
+    RITISSpeed("RITIS", true, new byte[]{0x02,0x00,0x00,0x00}),
+    RITISWeather("RITIS", true, new byte[]{0x02,0x00,0x00,0x00}),
+    BSM("BSM", false, new byte[]{0x04,0x00,0x00,0x00}),
+    BluFaxLink("BLUFAX", false, new byte[]{0x03,0x00,0x00,0x00}),
+    BluFaxRoute("BLUFAX", false, new byte[]{0x03,0x00,0x00,0x00}),
+    WXDE("WXDE", false, new byte[]{0x07,0x00,0x00,0x00}),
+    RTMS("RTMS", false, new byte[]{0x05,0x00,0x00,0x00}),
+    SPEED("SPEED",false,new byte[]{0x00,0x00,0x00,0x00}),
+    VOLUME("VOLUME",false,new byte[]{0x01,0x00,0x00,0x00}),
+    OCCUPANCY("OCCUPANCY",false,new byte[]{0x01,0x00,0x00,0x00}),
+    TRAVEL("TRAVEL",false,new byte[]{0x01,0x00,0x00,0x00}),
+    WEATHER("WEATHER",false,new byte[]{0x01,0x00,0x00,0x00});
 
     private String dataSource;
     private boolean isRestrictedRequestInterval;
+    private byte[] groupId;
 
-    private ODEMessageType(String dataSource, boolean isRestrictedRequestInterval) {
+    private ODEMessageType(String dataSource, boolean isRestrictedRequestInterval, byte[] groupId) {
         this.dataSource = dataSource;
         this.isRestrictedRequestInterval = isRestrictedRequestInterval;
+        this.groupId = groupId;
     }
 
     /**
@@ -52,5 +59,9 @@ public enum ODEMessageType {
      */
     public boolean restrictedRequestInterval() {
         return isRestrictedRequestInterval;
+    }
+    
+    public byte[] getGroupId(){
+        return groupId;
     }
 }

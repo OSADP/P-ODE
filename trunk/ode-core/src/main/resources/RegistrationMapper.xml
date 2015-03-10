@@ -30,6 +30,22 @@
     </resultMap>
 
 
+    <resultMap id="RegistrationRowMapper" type="RegistrationRow">
+        <id property="id" column="ID"/>
+        <result property="dialogId" column="DIALOG_ID"/>
+        <result property="sequenceId" column="SEQUENCE_ID"/>
+        <result property="groupId" column="GROUP_ID"/>
+        <result property="requestId" column="REQUEST_ID"/>
+        <result property="subAddress" column="SUB_ADDRESS"/>
+        <result property="subPort" column="SUB_PORT"/>
+        <result property="regType" column="REG_TYPE"/>
+        <result property="startDate" column="START_DATE"/>
+        <result property="endDate" column="END_DATE"/>
+    </resultMap>
+
+    
+
+
     <select id="selectAllRegistrations" resultMap="RegInfoMapper">
 		select ID, AGENT_ID, REG_TYPE, REGION, MSG_TYPE, START_DATE, END_DATE, SUB_RECEIVE_ADDR, SUB_RECEIVE_PORT
 		from ODE_REGISTRATION
@@ -49,13 +65,26 @@
 
 
     <select id="selectQueueForRegistration" parameterType="ODERegistrationRequest" resultMap="QueueInfoMapper">
-		select ID, MSG_TYPE, REGION, QUEUE_NAME, QUEUE_CONN_FACT, TARGET_ADDRESS, TARGET_PORT,WS_HOST,WS_URL
-		from MSG_QUEUE
-		where MSG_TYPE = #{messageType}
-		and REGION = #{region}
-	</select>
+        select ID, MSG_TYPE, REGION, QUEUE_NAME, QUEUE_CONN_FACT, TARGET_ADDRESS, TARGET_PORT,WS_HOST,WS_URL
+        from MSG_QUEUE
+        where MSG_TYPE = #{messageType}
+        and REGION = #{region}
+    </select>
+    
+    <select id="selectQueueForMessageType" parameterType="String" resultMap="QueueInfoMapper">
+        select ID, MSG_TYPE, REGION, QUEUE_NAME, QUEUE_CONN_FACT, TARGET_ADDRESS, TARGET_PORT,WS_HOST,WS_URL
+        from MSG_QUEUE
+        where MSG_TYPE = #{id}
+        
+    </select>    
 
-    <insert id="insertRegistration" parameterType="RDEArchiveInfo">
+    <select id="selectRegistrationForRequestId" parameterType="String" resultMap="RegistrationRowMapper">
+        select ID, DIALOG_ID, SEQUENCE_ID, GROUP_ID, REQUEST_ID, SUB_ADDRESS, SUB_PORT, REG_TYPE, START_DATE, END_DATE
+        from REGISTRATION
+        where REQUEST_ID = #{id}
+    </select>    
+
+    <insert id="insertRegistration" parameterType="ODERegistrationRequest">
         <selectKey resultType="int" keyProperty="registrationId" order="AFTER">
             SELECT LAST_INSERT_ID();
         </selectKey>
@@ -66,5 +95,20 @@
         )
     </insert>
 
+
+    <insert id="insertServiceRequest" parameterType="RegistrationRow">
+        INSERT INTO REGISTRATION 
+            (DIALOG_ID, SEQUENCE_ID, GROUP_ID, REQUEST_ID, SUB_ADDRESS, SUB_PORT, REG_TYPE, START_DATE, END_DATE) 
+        VALUES 
+        (#{dialogId}, #{sequenceId},#{groupId},#{requestId},#{subAddress},#{subPort},#{regType},#{startDate},#{endDate})
+
+    </insert>
+    
+    <update id="updateRegistration" parameterType="RegistrationRow">
+        update REGISTRATION 
+        set SUB_ID = #{subId}, MESSAGE_TYPES = #{dataTypes}
+        where 
+         REQUEST_ID = #{requestId}
+    </update>
 
 </mapper>

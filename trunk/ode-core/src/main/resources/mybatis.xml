@@ -4,9 +4,10 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <typeAliases>
-        <typeAlias alias="RDEArchiveInfo" type="com.leidos.ode.core.rde.data.RDEArchiveInfo"/>
+<!--        <typeAlias alias="RDEArchiveInfo" type="com.leidos.ode.core.rde.data.RDEArchiveInfo"/> -->
         <typeAlias alias="ODERegistrationRequest" type="com.leidos.ode.registration.request.ODERegistrationRequest"/>
         <typeAlias alias="QueueInfo" type="com.leidos.ode.core.data.QueueInfo"/>
+        <typeAlias alias="RegistrationRow" type="com.leidos.ode.core.dao.RegistrationRow"/>
 
     </typeAliases>
 
@@ -32,7 +33,7 @@
     </environments>
 
     <mappers>
-        <mapper resource="RDEArchiveMapper.xml"/>
+        <!--<mapper resource="RDEArchiveMapper.xml"/>-->
         <mapper resource="RegistrationMapper.xml"/>
 
     </mappers>

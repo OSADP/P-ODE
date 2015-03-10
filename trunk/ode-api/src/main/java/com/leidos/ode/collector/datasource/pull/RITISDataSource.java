@@ -6,6 +6,8 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * RITIS data source, that includes a geographical bounding box filter for the emulator. Handles
@@ -21,6 +23,8 @@ public class RITISDataSource extends RestPullDataSource {
     @Override
     public byte[] pollDataSource() {
         try {
+            //Adding this in because Devin's Restricted Listener isn't working right now.
+            Thread.sleep(getRequestLimit());
             getLogger().debug("Polling data source for feed: '" + getFeedName() + "'.");
             CloseableHttpResponse closeableHttpResponse = getHttpClient().execute(getHttpGet());
             HttpEntity responseEntity = closeableHttpResponse.getEntity();
@@ -31,6 +35,8 @@ public class RITISDataSource extends RestPullDataSource {
             getLogger().error(e.getLocalizedMessage());
         } catch (IOException e) {
             getLogger().error(e.getLocalizedMessage());
+        } catch (InterruptedException ex) {
+            Logger.getLogger(RITISDataSource.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }

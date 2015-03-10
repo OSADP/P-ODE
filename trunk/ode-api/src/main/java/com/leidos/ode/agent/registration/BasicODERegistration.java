@@ -1,7 +1,12 @@
 package com.leidos.ode.agent.registration;
 
+import com.leidos.ode.data.ServiceRequest;
+import com.leidos.ode.data.ServiceResponse;
+import com.leidos.ode.registration.RegistrationMessage;
 import com.leidos.ode.registration.request.ODERegistrationRequest;
 import com.leidos.ode.registration.response.ODERegistrationResponse;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
@@ -27,31 +32,96 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Random;
+import org.bn.CoderFactory;
+import org.bn.IDecoder;
+import org.bn.IEncoder;
 
-public class BasicODERegistration implements ODERegistration {
+public abstract class BasicODERegistration implements ODERegistration {
 
     private final String TAG = getClass().getSimpleName();
     private final Logger logger = Logger.getLogger(TAG);
     private String registrationBaseUrl;
     private String registrationEndpoint;
     private String unregisterEndpoint;
-
+    private String serviceRequestEndpoint;
+    
+//    @Override
+//    public RegistrationResponse register(ODERegistrationRequest registrationRequest) {
+//        CloseableHttpClient httpClient = null;
+//        CloseableHttpResponse closeableHttpResponse = null;
+//        try {
+//            StringWriter stringWriter = new StringWriter();
+//            JAXBContext registrationInfoContext = JAXBContext.newInstance(ODERegistrationRequest.class);
+//            Marshaller marshaller = registrationInfoContext.createMarshaller();
+//            marshaller.marshal(registrationRequest, stringWriter);
+//            httpClient = HttpClientBuilder.create().build();
+//            HttpPost httpPost = new HttpPost(getRegistrationUrl());
+//            StringEntity entity = new StringEntity(stringWriter.getBuffer().toString());
+//            entity.setContentType("application/xml");
+//            
+//            httpPost.setEntity(entity);
+//            closeableHttpResponse = httpClient.execute(httpPost);
+//            logger.debug(closeableHttpResponse.getStatusLine().getReasonPhrase());
+//            int statusCode = closeableHttpResponse.getStatusLine().getStatusCode();
+//            //If the request was unsuccessful return
+//            if (statusCode != HttpStatus.SC_OK) {
+//                getLogger().error("Registration unsuccessful. Status code: " + statusCode);
+//                return null;
+//            }
+//            return marshallRegistrationResponseFromHttpResponse(closeableHttpResponse);
+//        } catch (UnsupportedEncodingException e) {
+//            getLogger().error(e.getLocalizedMessage());
+//        } catch (ClientProtocolException e) {
+//            getLogger().error(e.getLocalizedMessage());
+//        } catch (IOException e) {
+//            getLogger().error(e.getLocalizedMessage());
+//        } catch (JAXBException e) {
+//            getLogger().error(e.getLocalizedMessage());
+//        } finally {
+//            try {
+//                if (httpClient != null) {
+//                    httpClient.close();
+//                }
+//                if (closeableHttpResponse != null) {
+//                    closeableHttpResponse.close();
+//                }
+//            } catch (IOException e) {
+//                getLogger().error(e.getLocalizedMessage());
+//            }
+//        }
+//        return null;
+//    }
+//    
+    
     @Override
-    public ODERegistrationResponse register(ODERegistrationRequest registrationRequest) {
+    public RegistrationResponse register(ODERegistrationRequest registrationRequest){
+        try {
+            ServiceRequest serviceRequest = buildServiceRequest(registrationRequest);
+            ServiceResponse serviceResponse = doServiceRequest(registrationRequest, serviceRequest);
+            
+            RegistrationResponse regResponse = doRegistration(registrationRequest, serviceRequest);
+            return regResponse;
+        } catch (Exception ex) {
+            getLogger().error("Error registering",ex);
+        }
+        return null;
+        
+    }
+    
+    
+    protected  abstract RegistrationResponse doRegistration(ODERegistrationRequest registrationRequest, ServiceRequest serviceRequest);
+    
+    protected abstract ServiceRequest buildServiceRequest(ODERegistrationRequest registrationRequest);
+    
+//    protected abstract void  handleRegistrationResponse(ODERegistrationRequest registrationRequest);
+    
+    protected CloseableHttpResponse postMessage(StringEntity entity, String url){
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse closeableHttpResponse = null;
         try {
-            StringWriter stringWriter = new StringWriter();
-            JAXBContext registrationInfoContext = JAXBContext.newInstance(ODERegistrationRequest.class);
-            Marshaller marshaller = registrationInfoContext.createMarshaller();
-            marshaller.marshal(registrationRequest, stringWriter);
             httpClient = HttpClientBuilder.create().build();
-            HttpPost httpPost = new HttpPost(getRegistrationUrl());
-//            httpPost.addHeader("Content-Type", "application/xml");
-//            httpPost.addHeader("dataType", "application/xml");
-//            httpPost.addHeader("Accept", "application/xml");
-//            StringEntity entity = new StringEntity(stringWriter.getBuffer().toString(),ContentType.APPLICATION_XML);
-            StringEntity entity = new StringEntity(stringWriter.getBuffer().toString());
+            HttpPost httpPost = new HttpPost(url);
             entity.setContentType("application/xml");
             
             httpPost.setEntity(entity);
@@ -63,29 +133,99 @@ public class BasicODERegistration implements ODERegistration {
                 getLogger().error("Registration unsuccessful. Status code: " + statusCode);
                 return null;
             }
-            return marshallRegistrationResponseFromHttpResponse(closeableHttpResponse);
+            return closeableHttpResponse;
         } catch (UnsupportedEncodingException e) {
             getLogger().error(e.getLocalizedMessage());
         } catch (ClientProtocolException e) {
             getLogger().error(e.getLocalizedMessage());
         } catch (IOException e) {
             getLogger().error(e.getLocalizedMessage());
-        } catch (JAXBException e) {
-            getLogger().error(e.getLocalizedMessage());
         } finally {
-            try {
-                if (httpClient != null) {
-                    httpClient.close();
-                }
-                if (closeableHttpResponse != null) {
-                    closeableHttpResponse.close();
-                }
-            } catch (IOException e) {
-                getLogger().error(e.getLocalizedMessage());
-            }
+//            try {
+//                if (httpClient != null) {
+//                    httpClient.close();
+//                }
+////                if (closeableHttpResponse != null) {
+////                    closeableHttpResponse.close();
+////                }
+//            } catch (IOException e) {
+//                getLogger().error(e.getLocalizedMessage());
+//            }
         }
+            
+        
         return null;
     }
+    
+    
+    
+    protected ServiceResponse doServiceRequest(ODERegistrationRequest registrationRequest, ServiceRequest srvRequest) throws Exception{
+        ServiceResponse srvResponse = null;
+        
+        
+        byte[] encodedServiceRequest = encodeMessage(srvRequest);
+        RegistrationMessage message = new RegistrationMessage(encodedServiceRequest);
+        
+        StringEntity entity = createEntityForMessage(message);
+        
+        CloseableHttpResponse response = postMessage(entity, getServiceRequestUrl());
+        
+        srvResponse = unmarshellServiceResponse(response);
+       
+        return srvResponse;
+    }
+
+    protected StringEntity createEntityForMessage(RegistrationMessage message) throws JAXBException, UnsupportedEncodingException {
+        StringWriter stringWriter = new StringWriter();
+        JAXBContext registrationInfoContext = JAXBContext.newInstance(RegistrationMessage.class);
+        Marshaller marshaller = registrationInfoContext.createMarshaller();
+        marshaller.marshal(message, stringWriter);
+        StringEntity entity = new StringEntity(stringWriter.getBuffer().toString());
+        entity.setContentType("application/xml");
+        return entity;
+    }
+    
+    private ServiceResponse unmarshellServiceResponse(CloseableHttpResponse closeableHttpResponse) throws IOException, ParserConfigurationException, SAXException, JAXBException, Exception {
+        ServiceResponse response = null;
+            
+            
+        HttpEntity responseEntity = closeableHttpResponse.getEntity();
+        byte[] responseBytes = EntityUtils.toByteArray(responseEntity);
+        EntityUtils.consume(responseEntity);
+        String responseString = new String(responseBytes);
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        Document document = documentBuilder.parse(new InputSource(new StringReader(responseString)));
+        JAXBContext registrationResponseContext = JAXBContext.newInstance(RegistrationMessage.class);
+        Unmarshaller unmarshaller = registrationResponseContext.createUnmarshaller();
+        RegistrationMessage registrationMessage = (RegistrationMessage) unmarshaller.unmarshal(document);
+        getLogger().debug("Successfully marshalled RegistrationMessage.");
+
+        IDecoder decoder = CoderFactory.getInstance().newDecoder("BER");
+        ByteArrayInputStream bis = new ByteArrayInputStream(registrationMessage.getEncodedRegistrationMessage());
+        response = decoder.decode(bis, ServiceResponse.class);
+
+        return response;
+    }
+    
+    
+    private byte[] encodeMessage(ServiceRequest srvRequest) throws Exception{
+        IEncoder encoder =  CoderFactory.getInstance().newEncoder("BER");
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+
+        encoder.encode(srvRequest, os);
+        return os.toByteArray();
+          
+    }
+    
+    protected byte[] generateRandomByte(int size){
+        Random rand = new Random();
+        byte[] bytes = new byte[size];
+        rand.nextBytes(bytes);
+        return bytes;
+    }
+    
+    
 
     public String unregister(ODERegistrationRequest registrationRequest) {
         CloseableHttpClient httpClient = null;
@@ -155,13 +295,20 @@ public class BasicODERegistration implements ODERegistration {
         return null;
     }
 
-    private String getRegistrationUrl() {
+    protected String getRegistrationUrl() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(getRegistrationBaseUrl());
         stringBuilder.append("/");
         stringBuilder.append(getRegistrationEndpoint());
         return stringBuilder.toString();
     }
+    private String getServiceRequestUrl() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(getRegistrationBaseUrl());
+        stringBuilder.append("/");
+        stringBuilder.append(getServiceRequestEndpoint());
+        return stringBuilder.toString();
+    }    
     
     private String getUnRegisterUrl() {
         StringBuilder stringBuilder = new StringBuilder();
@@ -204,5 +351,22 @@ public class BasicODERegistration implements ODERegistration {
     public void setUnregisterEndpoint(String unregisterEndpoint) {
         this.unregisterEndpoint = unregisterEndpoint;
     }
+
+    /**
+     * @return the serviceRequestEndpoint
+     */
+    public String getServiceRequestEndpoint() {
+        return serviceRequestEndpoint;
+    }
+
+    /**
+     * @param serviceRequestEndpoint the serviceRequestEndpoint to set
+     */
+    public void setServiceRequestEndpoint(String serviceRequestEndpoint) {
+        this.serviceRequestEndpoint = serviceRequestEndpoint;
+    }
+    
+    
+    
 
 }

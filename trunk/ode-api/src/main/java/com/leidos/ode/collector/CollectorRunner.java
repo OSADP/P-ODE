@@ -20,6 +20,7 @@ public class CollectorRunner {
 
     private final String TAG = getClass().getSimpleName();
     private final String APPLICATION_CONTEXT_FILE = "classpath*:/META-INF/ODE-API-Context.xml";
+    private final String APPLICATION_CONTEXT_ARCHIVER_FILE = "classpath*:/META-INF/ODE-Archiver-Context.xml";
     private final Class COLLECTOR_BEAN_CLASS = ODECollector.class;
     private final String COLLECTOR_BEAN_INDICATOR = "Collector";
     private Logger logger = Logger.getLogger(TAG);
@@ -30,30 +31,43 @@ public class CollectorRunner {
     public static void main(String[] args) {
         CollectorRunner runner = new CollectorRunner();
         if (args != null && args.length > 0) {
-            runner.initialize(args[0]);
+            if(args.length > 1){
+                runner.initialize(args[0], args[1]);
+            }else{
+                runner.initialize(args[0], null);
+            }
             runner.startUpCollectors();
         } else {
             runner.getLogger().error("Unable to start collectors. Properties file path argument undefined.");
         }
     }
 
-    private void initialize(String path) {
+    private void initialize(String path, String mode) {
         try {
-            setContext(new ClassPathXmlApplicationContext(APPLICATION_CONTEXT_FILE));
-
+            boolean archiveMode = false;
+            logger.debug("Launching with path: ["+path+"] and mode: ["+mode+"]");
+            if(mode == null || mode.equalsIgnoreCase("pub")){
+                setContext(new ClassPathXmlApplicationContext(APPLICATION_CONTEXT_FILE));
+            }else if(mode != null && mode.equalsIgnoreCase("archive")){
+                setContext(new ClassPathXmlApplicationContext(APPLICATION_CONTEXT_ARCHIVER_FILE));
+                archiveMode = true;
+            }
             if (loadRunnerProperties(path)) {
                 //If the runner properties is successfully loaded, build the collectors
                 collectors = new HashMap<ODECollector, List<ODECollector>>();
                 //Get all enabled collectors
                 Map<String, Map<ODEMessageType, ODECollector>> enabledCollectors = buildCollectorsForEnabledMessageTypes();
-                //Get all collectors, and their specific data sources, that have restricted request intervals
-                Map<ODECollector, String> collectorsWithRestrictedRequestIntervals = getCollectorsWithRestrictedRequestIntervalsAndDataSourcesMap(false, enabledCollectors);
-                //Remove the collectors with restricted request intervals from the runner list, since they will be stored in their own collector and ran from there
-                removeRestrictedRequestIntervalsCollectorsFromRunnerList(collectorsWithRestrictedRequestIntervals.keySet());
-                //Build the collectors that will store the restricted request interval collectors of a specific data source
-                Map<ODECollector, List<ODECollector>> restrictedRequestIntervalCollectorManagers = buildRestrictedRequestIntervalCollectorManagers(collectorsWithRestrictedRequestIntervals);
-                //Add the collector managers that contain the restricted request interval collectors to the runner list
-                addRestrictedRequestIntervalCollectorManagersToRunnerList(restrictedRequestIntervalCollectorManagers);
+                //Adding this for the new file Archivers.  When in archive mode we are not worried about restricted intervals.
+                if(!archiveMode){
+                    //Get all collectors, and their specific data sources, that have restricted request intervals
+                    Map<ODECollector, String> collectorsWithRestrictedRequestIntervals = getCollectorsWithRestrictedRequestIntervalsAndDataSourcesMap(false, enabledCollectors);
+                    //Remove the collectors with restricted request intervals from the runner list, since they will be stored in their own collector and ran from there
+                    removeRestrictedRequestIntervalsCollectorsFromRunnerList(collectorsWithRestrictedRequestIntervals.keySet());
+                    //Build the collectors that will store the restricted request interval collectors of a specific data source
+                    Map<ODECollector, List<ODECollector>> restrictedRequestIntervalCollectorManagers = buildRestrictedRequestIntervalCollectorManagers(collectorsWithRestrictedRequestIntervals);
+                    //Add the collector managers that contain the restricted request interval collectors to the runner list
+                    addRestrictedRequestIntervalCollectorManagersToRunnerList(restrictedRequestIntervalCollectorManagers);
+                }
             } else {
                 getLogger().error("No properties file found at: '" + path + ".'");
             }
@@ -73,6 +87,7 @@ public class CollectorRunner {
             getLogger().debug("MongoDB has been started.");
         } else {
             getLogger().warn("****Warning, MongoDB is not running. Exceptions will be thrown when using Mongo beans!****");
+            
         }
     }
 

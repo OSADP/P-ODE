@@ -1,6 +1,7 @@
 package com.leidos.ode.agent.parser;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
+import com.leidos.ode.data.PodeDataDelivery;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -8,6 +9,7 @@ import org.jsoup.nodes.Document;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public abstract class ODEDataParser {
 
@@ -44,12 +46,15 @@ public abstract class ODEDataParser {
     public final class ODEDataParserResponse {
 
         private Object data;
+        private List<PodeDataDelivery> podeMessages;
         private ODEDataParserReportCode reportCode;
 
         public ODEDataParserResponse(Object data, ODEDataParserReportCode reportCode) {
             this.data = data;
             this.reportCode = reportCode;
         }
+        
+       
 
         public Object getData() {
             return data;
@@ -57,6 +62,20 @@ public abstract class ODEDataParser {
 
         public ODEDataParserReportCode getReportCode() {
             return reportCode;
+        }
+
+        /**
+         * @return the podeMessages
+         */
+        public List<PodeDataDelivery> getPodeMessages() {
+            return podeMessages;
+        }
+
+        /**
+         * @param podeMessages the podeMessages to set
+         */
+        public void setPodeMessages(List<PodeDataDelivery> podeMessages) {
+            this.podeMessages = podeMessages;
         }
     }
 

@@ -66,7 +66,7 @@ public class ODECollector implements CollectorDataSourceListener {
     }
 
     private void startCollector() throws DataTargetException {
-        if("Subscribe".equalsIgnoreCase(getAgent().getRegistrationRequest().getRegistrationType())){
+        if(getAgent() != null && "Subscribe".equalsIgnoreCase(getAgent().getRegistrationRequest().getRegistrationType())){
             startCollectorDataSource();
             startCollectorAgent();
         }else{

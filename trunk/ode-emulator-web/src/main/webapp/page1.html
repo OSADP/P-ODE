@@ -31,82 +31,203 @@
                         $("#ebI66Time").html(srvResp.eastBoundTravelTime);
                         $("#wbI66Time").html(srvResp.westBoundTravelTime);
                         
-                        
-                        if(srvResp.ritisSpeedDataEastValue != null){
-                            $("#ritisEastOcc").html(srvResp.ritisSpeedDataEastValue.zoneDetectorDataRITIS.collectionPeriod.collectionPeriodItem[0].zoneReports.zoneReport[0].zoneData.zoneDataItem[0].occupancy);
-                            $("#ritisEastSpeed").html(srvResp.ritisSpeedDataEastValue.zoneDetectorDataRITIS.collectionPeriod.collectionPeriodItem[0].zoneReports.zoneReport[0].zoneData.zoneDataItem[0].zoneVehicleSpeed);
-                            $("#ritisEastVol").html(srvResp.ritisSpeedDataEastValue.zoneDetectorDataRITIS.collectionPeriod.collectionPeriodItem[0].zoneReports.zoneReport[0].zoneData.zoneDataItem[0].zoneVehicleCount);
+                        var currentArray = null;
+                        if(srvResp.speedWestValue != null){
+                            if(srvResp.speedWestValue instanceof Array){
+                                currentArray = srvResp.speedWestValue;
+                            }else{
+                                currentArray = new Array(srvResp.speedWestValue);
+                            }
+                            
+                                
+                            
+                            $.each(currentArray, function(index, m){
+                                if(m.source == 'vdot'){
+                                    $("#vdotWestSpeed").html(m.dataValue);
+                                }
+                                if(m.source == 'ritis'){
+                                    $("#ritisWestSpeed").html(m.dataValue);
+                                }
+                                
+                            });
                         }
                         
-                        if(srvResp.vdotSpeedDataEastValue != null){
-                            $("#vdotEastOcc").html(srvResp.vdotSpeedDataEastValue.vdotSpeedDataElements[0].occupancy);
-                            $("#vdotEastSpeed").html(srvResp.vdotSpeedDataEastValue.vdotSpeedDataElements[0].speed);
-                            $("#vdotEastVol").html(srvResp.vdotSpeedDataEastValue.vdotSpeedDataElements[0].volume);
+                        if(srvResp.volumeWestValue != null){
+                            if(srvResp.volumeWestValue instanceof Array){
+                                currentArray = srvResp.volumeWestValue;
+                            }else{
+                                currentArray = new Array(srvResp.volumeWestValue);
+                            }                               
+                            $.each(currentArray, function(index, m){
+                                if(m.source == 'vdot'){
+                                    $("#vdotWestVol").html(m.dataValue);
+                                }
+                                if(m.source == 'ritis'){
+                                    $("#ritisWestVol").html(m.dataValue);
+                                }                                                        
+                            });
+                            
+                        }
+                        
+                        if(srvResp.occupancyWestValue != null){
+                            if(srvResp.occupancyWestValue instanceof Array){
+                                currentArray = srvResp.occupancyWestValue;
+                            }else{
+                                currentArray = new Array(srvResp.occupancyWestValue);
+                            }                               
+                            $.each(currentArray, function(index, m){
+                                if(m.source == 'vdot'){
+                                    $("#vdotWestOcc").html(m.dataValue);
+                                }
+                                if(m.source == 'ritis'){
+                                    $("#ritisWestOcc").html(m.dataValue);
+                                }                                                        
+                            });
+                        }
+                        
+                        
+                        
+                        
+                        if(srvResp.speedEastValue != null){
+                            if(srvResp.speedEastValue instanceof Array){
+                                currentArray = srvResp.speedEastValue;
+                            }else{
+                                currentArray = new Array(srvResp.speedEastValue);
+                            }                             
+                            $.each(currentArray, function(index, m){
+                                if(m.source == 'vdot'){
+                                    $("#vdotEastSpeed").html(m.dataValue);
+                                    
+                                }
+                                if(m.source == 'ritis'){
+                                    $("#ritisEastSpeed").html(m.dataValue);
+                                }
+                            });
                         }
                             
-
-                        if(srvResp.bsmDataEast != null){
-                            if(srvResp.bsmDataEast['20010470000711220000000000000002'] != null){
-                                $("#bsmEast1").html(srvResp.bsmDataEast['20010470000711220000000000000002'].speed);        
-                            }
-                            if(srvResp.bsmDataEast['20010470000710620000000000000002'] != null){
-                                $("#bsmEast2").html(srvResp.bsmDataEast['20010470000710620000000000000002'].speed);
-                            }
-                            if(srvResp.bsmDataEast['20010470000710350000000000000002'] != null){
-                                $("#bsmEast3").html(srvResp.bsmDataEast['20010470000710350000000000000002'].speed);
-                            }
-                        }
-                        
-
-                        if(srvResp.blufaxLinkEast  != null){
-                            $("#blueFaxLnkSpdEast").html(srvResp.blufaxLinkEast.speedAverage);
-                            $("#blueFaxLnkTTEast").html(srvResp.blufaxLinkEast.travelTime);
-                        }
-                        if(srvResp.blufaxRouteEast != null){
-                            $("#blueFaxRtSpdEast").html(srvResp.blufaxRouteEast.speedAverage);
-                            $("#blueFaxRtTTEast").html(srvResp.blufaxRouteEast.travelTime);
-                        }
                         
                         
-                        
-                        
-                        
-                        if(srvResp.ritisSpeedDataEastValue != null){
-                            $("#ritisWestOcc").html(srvResp.ritisSpeedDataWestValue.zoneDetectorDataRITIS.collectionPeriod.collectionPeriodItem[0].zoneReports.zoneReport[0].zoneData.zoneDataItem[0].occupancy);
-                            $("#ritisWestSpeed").html(srvResp.ritisSpeedDataWestValue.zoneDetectorDataRITIS.collectionPeriod.collectionPeriodItem[0].zoneReports.zoneReport[0].zoneData.zoneDataItem[0].zoneVehicleSpeed);
-                            $("#ritisWestVol").html(srvResp.ritisSpeedDataWestValue.zoneDetectorDataRITIS.collectionPeriod.collectionPeriodItem[0].zoneReports.zoneReport[0].zoneData.zoneDataItem[0].zoneVehicleCount);
-                        }
-                        
-                        if(srvResp.vdotSpeedDataEastValue != null){
-                            $("#vdotWestOcc").html(srvResp.vdotSpeedDataWestValue.vdotSpeedDataElements[0].occupancy);
-                            $("#vdotWestSpeed").html(srvResp.vdotSpeedDataWestValue.vdotSpeedDataElements[0].speed);
-                            $("#vdotWestVol").html(srvResp.vdotSpeedDataWestValue.vdotSpeedDataElements[0].volume);
-                        }
-                           
+                        if(srvResp.volumeEastValue != null){
+                            if(srvResp.volumeEastValue instanceof Array){
+                                currentArray = srvResp.volumeEastValue;
+                            }else{
+                                currentArray = new Array(srvResp.volumeEastValue);
+                            }                             
                             
-                        if(srvResp.bsmDataWest != null){
-                            if(srvResp.bsmDataWest['20010470000711220000000000000002'] != null){
-                                $("#bsmWest1").html(srvResp.bsmDataWest['20010470000711220000000000000002'].speed);        
-                            }
-                            if(srvResp.bsmDataWest['20010470000710620000000000000002'] != null){
-                                $("#bsmWest2").html(srvResp.bsmDataWest['20010470000710620000000000000002'].speed);
-                            }
-                            if(srvResp.bsmDataWest['20010470000710350000000000000002'] != null){
-                                $("#bsmWest3").html(srvResp.bsmDataWest['20010470000710350000000000000002'].speed);
-                            }
-                        }                        
-                        
-                       
-                        $("#blueFaxWest").html();
-                        if(srvResp.blufaxLinkWest  != null){
-                            $("#blueFaxLnkSpdWest").html(srvResp.blufaxLinkWest.speedAverage);
-                            $("#blueFaxLnkTTWest").html(srvResp.blufaxLinkWest.travelTime);
+                            $.each(currentArray, function(index, m){
+                                if(m.source == 'vdot'){
+                                    $("#vdotEastVol").html(m.dataValue);                                    
+                                }
+                                if(m.source == 'ritis'){
+                                    $("#ritisEastVol").html(m.dataValue);
+                                }
+                            });                                                      
                         }
-                        if(srvResp.blufaxRouteWest != null){
-                            $("#blueFaxRtSpdWest").html(srvResp.blufaxRouteWest.speedAverage);
-                            $("#blueFaxRtTTWest").html(srvResp.blufaxRouteWest.travelTime);
-                        }                        
                         
+                        if(srvResp.occupancyEastValue != null){
+                            if(srvResp.occupancyEastValue instanceof Array){
+                                currentArray = srvResp.occupancyEastValue;
+                            }else{
+                                currentArray = new Array(srvResp.occupancyEastValue);
+                            }                             
+                            $.each(currentArray, function(index, m){
+                                if(m.source == 'vdot'){
+                                    $("#vdotEastOcc").html(m.dataValue);
+                                }
+                                if(m.source == 'ritis'){
+                                    $("#ritisEastOcc").html(m.dataValue);
+                                }
+                            });
+                        }
+                        
+                        
+                        
+                        
+                        
+//                        if(srvResp.ritisSpeedDataEastValue != null){
+//                            $("#ritisEastOcc").html(srvResp.ritisSpeedDataEastValue.zoneDetectorDataRITIS.collectionPeriod.collectionPeriodItem[0].zoneReports.zoneReport[0].zoneData.zoneDataItem[0].occupancy);
+//                            $("#ritisEastSpeed").html(srvResp.ritisSpeedDataEastValue.zoneDetectorDataRITIS.collectionPeriod.collectionPeriodItem[0].zoneReports.zoneReport[0].zoneData.zoneDataItem[0].zoneVehicleSpeed);
+//                            $("#ritisEastVol").html(srvResp.ritisSpeedDataEastValue.zoneDetectorDataRITIS.collectionPeriod.collectionPeriodItem[0].zoneReports.zoneReport[0].zoneData.zoneDataItem[0].zoneVehicleCount);
+//                        }
+//                        
+//                        if(srvResp.vdotSpeedDataEastValue != null){
+//                            $("#vdotEastOcc").html(srvResp.vdotSpeedDataEastValue.vdotSpeedDataElements[0].occupancy);
+//                            $("#vdotEastSpeed").html(srvResp.vdotSpeedDataEastValue.vdotSpeedDataElements[0].speed);
+//                            $("#vdotEastVol").html(srvResp.vdotSpeedDataEastValue.vdotSpeedDataElements[0].volume);
+//                        }
+//                            
+//
+//                        if(srvResp.bsmDataEast != null){
+//                            if(srvResp.bsmDataEast['20010470000711220000000000000002'] != null){
+//                                $("#bsmEast1").html(srvResp.bsmDataEast['20010470000711220000000000000002'].speed);        
+//                            }
+//                            if(srvResp.bsmDataEast['20010470000710620000000000000002'] != null){
+//                                $("#bsmEast2").html(srvResp.bsmDataEast['20010470000710620000000000000002'].speed);
+//                            }
+//                            if(srvResp.bsmDataEast['20010470000710350000000000000002'] != null){
+//                                $("#bsmEast3").html(srvResp.bsmDataEast['20010470000710350000000000000002'].speed);
+//                            }
+//                        }
+//                        
+//
+//                        if(srvResp.blufaxLinkEast  != null){
+//                            $("#blueFaxLnkSpdEast").html(srvResp.blufaxLinkEast.speedAverage);
+//                            $("#blueFaxLnkTTEast").html(srvResp.blufaxLinkEast.travelTime);
+//                        }
+//                        if(srvResp.blufaxRouteEast != null){
+//                            $("#blueFaxRtSpdEast").html(srvResp.blufaxRouteEast.speedAverage);
+//                            $("#blueFaxRtTTEast").html(srvResp.blufaxRouteEast.travelTime);
+//                        }
+//                        
+//                        
+//                        
+//                        
+//                        
+//                        if(srvResp.ritisSpeedDataWestValue != null){
+//                            $("#ritisWestOcc").html(srvResp.ritisSpeedDataWestValue.zoneDetectorDataRITIS.collectionPeriod.collectionPeriodItem[0].zoneReports.zoneReport[0].zoneData.zoneDataItem[0].occupancy);
+//                            $("#ritisWestSpeed").html(srvResp.ritisSpeedDataWestValue.zoneDetectorDataRITIS.collectionPeriod.collectionPeriodItem[0].zoneReports.zoneReport[0].zoneData.zoneDataItem[0].zoneVehicleSpeed);
+//                            $("#ritisWestVol").html(srvResp.ritisSpeedDataWestValue.zoneDetectorDataRITIS.collectionPeriod.collectionPeriodItem[0].zoneReports.zoneReport[0].zoneData.zoneDataItem[0].zoneVehicleCount);
+//                        }
+//                        
+//                        if(srvResp.vdotSpeedDataWestValue != null){
+//                            $("#vdotWestOcc").html(srvResp.vdotSpeedDataWestValue.vdotSpeedDataElements[0].occupancy);
+//                            $("#vdotWestSpeed").html(srvResp.vdotSpeedDataWestValue.vdotSpeedDataElements[0].speed);
+//                            $("#vdotWestVol").html(srvResp.vdotSpeedDataWestValue.vdotSpeedDataElements[0].volume);
+//                        }
+//                           
+//                            
+//                        if(srvResp.bsmDataWest != null){
+//                            if(srvResp.bsmDataWest['20010470000711220000000000000002'] != null){
+//                                $("#bsmWest1").html(srvResp.bsmDataWest['20010470000711220000000000000002'].speed);        
+//                            }
+//                            if(srvResp.bsmDataWest['20010470000710620000000000000002'] != null){
+//                                $("#bsmWest2").html(srvResp.bsmDataWest['20010470000710620000000000000002'].speed);
+//                            }
+//                            if(srvResp.bsmDataWest['20010470000710350000000000000002'] != null){
+//                                $("#bsmWest3").html(srvResp.bsmDataWest['20010470000710350000000000000002'].speed);
+//                            }
+//                        }                        
+//                        
+//                       
+//                        $("#blueFaxWest").html();
+//                        if(srvResp.blufaxLinkWest  != null){
+//                            $("#blueFaxLnkSpdWest").html(srvResp.blufaxLinkWest.speedAverage);
+//                            $("#blueFaxLnkTTWest").html(srvResp.blufaxLinkWest.travelTime);
+//                        }
+//                        if(srvResp.blufaxRouteWest != null){
+//                            $("#blueFaxRtSpdWest").html(srvResp.blufaxRouteWest.speedAverage);
+//                            $("#blueFaxRtTTWest").html(srvResp.blufaxRouteWest.travelTime);
+//                        }                        
+//                        
+//                        
+//                        if(srvResp.currentWeather != null){
+//                            var weatherinfo = "";
+//                            for (var m in srvResp.currentWeather){
+//                                weatherinfo = weatherinfo + "<div> <strong>"+srvResp.currentWeather[m].obsTypeName+":</strong><span >"+srvResp.currentWeather[m].englishValue+" "+srvResp.currentWeather[m].englishUnits+"</span></div>";
+//                            }
+//                            $("#weatherInfo1").html(weatherinfo);
+//                            $("#weatherInfo2").html(weatherinfo);
+//                        }
                         
 //                        var boxes = "";
 //                        $.each(srvResp.collectors, function(index, name){
@@ -232,6 +353,16 @@
                 </div>
               </div>
             </div>
+            <!-- Weather -->
+            <div class="form-group clearfix">
+              <div class="col-md-4 crimson">
+                <h5>Weather</h5>
+              </div>
+              <div id="weatherInfo1" class="col-md-8 crimson">
+
+              </div>
+            </div>
+            
          </div>
           <!-- WESTBOUND PANEL -->
           <div class="col-md-6 westbound-panel">
@@ -331,6 +462,14 @@
                 </div>
               </div>
             </div>
+            <!-- Weather -->
+            <div class="form-group clearfix">
+              <div class="col-md-4 crimson">
+                <h5>Weather</h5>
+              </div>
+              <div id="weatherInfo2" class="col-md-8 crimson">
+
+              </div>
             </div>
           </div>
         </div>
@@ -352,3 +491,4 @@
       <!-- // -->
     </body>
 </html>
+

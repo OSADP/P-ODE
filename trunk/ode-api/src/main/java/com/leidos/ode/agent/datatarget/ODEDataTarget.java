@@ -1,11 +1,12 @@
 package com.leidos.ode.agent.datatarget;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
-import com.leidos.ode.registration.response.ODERegistrationResponse;
+import com.leidos.ode.agent.registration.RegistrationResponse;
+
 
 public interface ODEDataTarget {
 
-    public void configure(ODERegistrationResponse registrationResponse) throws DataTargetException;
+    public void configure(RegistrationResponse registrationResponse) throws DataTargetException;
 
     public void sendMessage(ODEAgentMessage message) throws DataTargetException;
 

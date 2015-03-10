@@ -1,8 +1,12 @@
 package com.leidos.ode.agent.data;
 
+import com.leidos.ode.data.PodeDataDelivery;
+import com.leidos.ode.util.ODEMessageType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @XmlRootElement
 public class ODEAgentMessage implements Serializable {
@@ -10,9 +14,12 @@ public class ODEAgentMessage implements Serializable {
 
     private Date messageReceivedDate;
     private String messageId;
+    private String messagePayloadBase64;
     private byte[] messagePayload;
     private Object formattedMessage;
-
+    private Map<ODEMessageType, PodeDataDelivery> podeMessageList;
+    
+    
     public byte[] getMessagePayload() {
         return messagePayload;
     }
@@ -74,5 +81,33 @@ public class ODEAgentMessage implements Serializable {
     public ODEAgentMessage setMessageId(String messageId) {
         this.messageId = messageId;
         return this;
+    }
+
+    /**
+     * @return the podeMessageList
+     */
+    public Map<ODEMessageType, PodeDataDelivery> getPodeMessageList() {
+        return podeMessageList;
+    }
+
+    /**
+     * @param podeMessageList the podeMessageList to set
+     */
+    public void setPodeMessageList(Map<ODEMessageType, PodeDataDelivery> podeMessageList) {
+        this.podeMessageList = podeMessageList;
+    }
+
+    /**
+     * @return the messagePayloadBase64
+     */
+    public String getMessagePayloadBase64() {
+        return messagePayloadBase64;
+    }
+
+    /**
+     * @param messagePayloadBase64 the messagePayloadBase64 to set
+     */
+    public void setMessagePayloadBase64(String messagePayloadBase64) {
+        this.messagePayloadBase64 = messagePayloadBase64;
     }
 }

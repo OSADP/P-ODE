@@ -18,10 +18,11 @@ public class RDERequestFactory {
 
     public static RDERequest storeRequest(RDEData rdeData) {
         if (rdeData instanceof RDEStoreData) {
-            return new RDEStoreRequest(rdeData);
+//            return new RDEStoreRequest(rdeData);
         } else {
-            return null;
+            
         }
+        return null;
     }
 
     public static RDERequest retrieveRequest(RDEData rdeData) {

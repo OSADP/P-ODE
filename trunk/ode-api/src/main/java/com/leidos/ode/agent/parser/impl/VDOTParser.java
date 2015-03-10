@@ -4,6 +4,21 @@ import com.leidos.ode.agent.data.vdot.VDOTSpeedData;
 import com.leidos.ode.agent.data.vdot.VDOTTravelTimeData;
 import com.leidos.ode.agent.data.vdot.VDOTWeatherData;
 import com.leidos.ode.agent.parser.DateParser;
+import com.leidos.ode.data.DDateTime;
+import com.leidos.ode.data.DDay;
+import com.leidos.ode.data.DHour;
+import com.leidos.ode.data.DMinute;
+import com.leidos.ode.data.DMonth;
+import com.leidos.ode.data.DSecond;
+import com.leidos.ode.data.DYear;
+import com.leidos.ode.data.PodeDataDelivery;
+import com.leidos.ode.data.PodeDataElementList;
+import com.leidos.ode.data.PodeDataRecord;
+import com.leidos.ode.data.PodeDetectionMethod;
+import com.leidos.ode.data.PodeDetectorData;
+import com.leidos.ode.data.PodeLaneData;
+import com.leidos.ode.data.PodeLaneInfo;
+import com.leidos.ode.data.PodeSource;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -12,6 +27,8 @@ import org.jsoup.select.Elements;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -315,8 +332,12 @@ public class VDOTParser extends DateParser {
         }
         vdotSpeedData.setVdotSpeedDataElements(vdotSpeedDataElements);
 
+        
+        
         return new ODEDataParserResponse(vdotSpeedData, ODEDataParserReportCode.PARSE_SUCCESS);
     }
+    
+    
 
     private ODEDataParserResponse parseVDOTTravelTimeData(Document document) {
         VDOTTravelTimeData vdotTravelTimeData = new VDOTTravelTimeData();

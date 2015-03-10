@@ -7,12 +7,15 @@
 package com.leidos.ode.core.distribute;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
+import com.leidos.ode.util.ByteUtils;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
 import java.io.IOException;
 import java.net.*;
+import java.util.Date;
+import javax.jms.BytesMessage;
 import org.apache.log4j.Logger;
 
 /**
@@ -25,18 +28,20 @@ public class UDPDataDistributor extends DataDistributor {
     private String targetURL;
     private int targetPort;
     private DatagramSocket socket;
-    private int serverPort;
+    
 
     public UDPDataDistributor(String topicHostURL, int topicHostPort,
-                              String connFactName, String topicName, String targetURL, int targetPort, int serverPort) {
+                              String connFactName, String topicName, String targetURL, int targetPort, Date endDate) {
 
         setTopicHostURL(topicHostURL);
         setTopicHostPort(topicHostPort);
         setConnFactName(connFactName);
         setTopicName(topicName);
-
+        setSubscriptionEndDate(endDate);
+        
         this.targetURL = targetURL;
         this.targetPort = targetPort;
+
     }
 
     @Override
@@ -56,8 +61,14 @@ public class UDPDataDistributor extends DataDistributor {
     @Override
     protected void sendData(Message message) throws DistributeException {
         try {
-            ODEAgentMessage msg = (ODEAgentMessage) ((ObjectMessage) message).getObject();
-            DatagramPacket packet = new DatagramPacket(msg.getMessagePayload(), msg.getMessagePayload().length);
+            BytesMessage msg = (BytesMessage) message;
+            logger.debug("Distributor reading bytes.");
+            byte[] bytes = new byte[(int)msg.getBodyLength()];
+            logger.debug("Distributor: bytes size ["+bytes.length+"]");
+            msg.readBytes(bytes);
+            logger.debug("Distributor: bytes read ["+ByteUtils.convertBytesToHex(bytes)+"]");
+            DatagramPacket packet = new DatagramPacket(bytes, bytes.length);
+            logger.info("Distributor: Constructed Datagram Packet.");
             InetAddress address = InetAddress.getByName(targetURL);
             packet.setAddress(address);
             packet.setPort(targetPort);

@@ -3,8 +3,10 @@ package com.leidos.ode.agent;
 import com.leidos.ode.agent.data.AgentInfo;
 import com.leidos.ode.agent.data.ODEAgentMessage;
 import com.leidos.ode.agent.datatarget.ODEDataTarget;
+import com.leidos.ode.agent.formatter.ODEMessageFormatter;
 import com.leidos.ode.agent.parser.ODEDataParser;
 import com.leidos.ode.agent.registration.ODERegistration;
+import com.leidos.ode.agent.registration.RegistrationResponse;
 import com.leidos.ode.agent.sanitizer.ODESanitizer;
 import com.leidos.ode.logging.ODELogger;
 import com.leidos.ode.registration.request.ODERegistrationRequest;
@@ -21,9 +23,10 @@ public class BasicODEAgent implements ODEAgent {
     protected ODERegistration registration;
     protected ODEDataParser parser;
     protected ODESanitizer sanitizer;
+    private ODEMessageFormatter formatter;
     protected ODEDataTarget dataTarget;
     protected ODERegistrationRequest registrationRequest;
-    protected ODERegistrationResponse registrationResponse;
+    protected RegistrationResponse registrationResponse;
     private int threadCount = 0;
     private ODELogger odeLogger;
     private MessageListener messageListener;
@@ -33,8 +36,8 @@ public class BasicODEAgent implements ODEAgent {
         if (getRegistrationRequest() != null) {
             registrationResponse = getRegistration().register(getRegistrationRequest());
             if (getRegistrationResponse() != null) {
-                getRegistrationRequest().setRegistrationId(getRegistrationResponse().getRegistrationId());
-                createAgentInfo(getRegistrationResponse());
+//                getRegistrationRequest().setRegistrationId(getRegistrationResponse().getRegistrationId());
+//                createAgentInfo(getRegistrationResponse());
                 getLogger().debug("Registration succeeded.");
             } else {
                 getLogger().error("Registration failed. Registration response was null.");
@@ -126,7 +129,7 @@ public class BasicODEAgent implements ODEAgent {
         this.registrationRequest = registrationRequest;
     }
 
-    protected ODERegistrationResponse getRegistrationResponse() {
+    protected RegistrationResponse getRegistrationResponse() {
         return registrationResponse;
     }
 
@@ -148,6 +151,20 @@ public class BasicODEAgent implements ODEAgent {
 
     public void stopAgent() {
         registration.unregister(registrationRequest);
+    }
+
+    /**
+     * @return the formatter
+     */
+    public ODEMessageFormatter getFormatter() {
+        return formatter;
+    }
+
+    /**
+     * @param formatter the formatter to set
+     */
+    public void setFormatter(ODEMessageFormatter formatter) {
+        this.formatter = formatter;
     }
 
     private class MessageProcessor implements Runnable {
@@ -181,7 +198,9 @@ public class BasicODEAgent implements ODEAgent {
                 getOdeLogger().finish();
 
                 odeAgentMessage.setAgentInfo(getAgentInfo());
-
+                
+                odeAgentMessage.setPodeMessageList(formatter.formatMessage(odeAgentMessage));
+                
                 getOdeLogger().start(ODELogger.ODEStage.SEND, messageId);
                 getDataTarget().sendMessage(odeAgentMessage);
                 getOdeLogger().finish();

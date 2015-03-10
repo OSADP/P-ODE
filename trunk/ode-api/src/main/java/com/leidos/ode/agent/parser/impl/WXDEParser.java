@@ -129,7 +129,7 @@ public class WXDEParser extends DateParser {
                     continue;
                 }
                 if (key.equals(WXDE_PLATFORM_ID_KEY)) {
-                    wxdeDataElement.setPlatformId(value);
+                    wxdeDataElement.setStationId(value);
                     continue;
                 }
                 if (key.equals(WXDE_SITE_ID_KEY)) {
@@ -149,7 +149,7 @@ public class WXDEParser extends DateParser {
                     continue;
                 }
                 if (key.equals(WXDE_PLATFORM_CODE_KEY)) {
-                    wxdeDataElement.setPlatformCode(value);
+                    wxdeDataElement.setStationCode(value);
                     continue;
                 }
                 if (key.equals(WXDE_TIMESTAMP_KEY)) {

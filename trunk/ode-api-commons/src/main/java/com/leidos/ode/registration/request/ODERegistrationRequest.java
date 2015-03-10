@@ -4,31 +4,15 @@ package com.leidos.ode.registration.request;
 import com.leidos.ode.registration.ODERegistrationInformation;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.Date;
+
 
 @XmlRootElement
 public class ODERegistrationRequest extends ODERegistrationInformation {
 
-    private Date startDate;
-    private Date endDate;
+    private String dataTypes;
+    private String subscriptionType;
     private String subscriptionReceiveAddress;
     private int subscriptionReceivePort;
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
 
     public String getSubscriptionReceiveAddress() {
         return subscriptionReceiveAddress;
@@ -44,5 +28,33 @@ public class ODERegistrationRequest extends ODERegistrationInformation {
 
     public void setSubscriptionReceivePort(int subscriptionReceivePort) {
         this.subscriptionReceivePort = subscriptionReceivePort;
+    }
+
+    /**
+     * @return the subscriptionType
+     */
+    public String getSubscriptionType() {
+        return subscriptionType;
+    }
+
+    /**
+     * @param subscriptionType the subscriptionType to set
+     */
+    public void setSubscriptionType(String subscriptionType) {
+        this.subscriptionType = subscriptionType;
+    }
+
+    /**
+     * @return the dataTypes
+     */
+    public String getDataTypes() {
+        return dataTypes;
+    }
+
+    /**
+     * @param dataTypes the dataTypes to set
+     */
+    public void setDataTypes(String dataTypes) {
+        this.dataTypes = dataTypes;
     }
 }

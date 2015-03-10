@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class PublishWeatherDataController extends PublishDataController {
     
-    @Value("${leidos.ode.publisher.topic.wxde}")
+    @Value("${leidos.ode.publisher.topic.weather}")
     private String topicName;
     
     @Override

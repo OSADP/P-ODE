@@ -53,7 +53,7 @@ public final class ODELogger {
             try{
                 getMongoTemplate().save(logBean);
             }catch(Exception e){
-                logger.error("Cannot finish a log event. "+e.toString());
+                logger.error("Cannot finish a log event. "+e.toString(),e);
             }
             logBean = null;
         } else {

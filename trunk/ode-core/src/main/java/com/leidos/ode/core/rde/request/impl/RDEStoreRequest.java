@@ -30,7 +30,7 @@ public class RDEStoreRequest extends BasicRDERequest implements RDERequest {
         this.type = ((RDEStoreData) rdeData).getType();
         this.date = ((RDEStoreData) rdeData).getDate();
         this.data = ((RDEStoreData) rdeData).getData();
-        jsonFactory = new JsonFactory();
+//        jsonFactory = new JsonFactory();
     }
 
     @Override

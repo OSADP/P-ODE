@@ -10,8 +10,10 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
@@ -32,12 +34,13 @@ public class TCPDataDistributor extends DataDistributor{
     
     
     public TCPDataDistributor(String topicHostURL, int topicHostPort,
-                              String connFactName, String topicName, String targetURL, int targetPort){
+                              String connFactName, String topicName, String targetURL, int targetPort, Date endDate){
         
         setTopicHostURL(topicHostURL);
         setTopicHostPort(topicHostPort);
         setConnFactName(connFactName);
         setTopicName(topicName);
+        setSubscriptionEndDate(endDate);
         
         this.targetURL = targetURL;
         this.targetPort = targetPort;        
@@ -67,14 +70,16 @@ public class TCPDataDistributor extends DataDistributor{
             logger.debug("Have Socket: "+socket);
             DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
             DataInputStream is = new DataInputStream(socket.getInputStream());
-            logger.debug("Getting ODEAgentMessage");
-            ODEAgentMessage msg = (ODEAgentMessage) ((ObjectMessage) message).getObject();
-            logger.debug("Writing TCP Message Length: "+msg.getMessagePayload().length);
+            logger.debug("Getting BytesMessage");
+            BytesMessage msg = (BytesMessage) message;
+            byte[] bytes = new byte[(int)msg.getBodyLength()];
+            msg.readBytes(bytes);
+            logger.debug("Writing TCP Message Length: "+msg.getBodyLength());
 
-            dos.writeInt(msg.getMessagePayload().length);
+            dos.writeInt((int)msg.getBodyLength());
             dos.flush();
             logger.debug("Writing TCP Message");
-            dos.write(msg.getMessagePayload());
+            dos.write(bytes);
             logger.debug("Finished Writing TCP Message");
             dos.flush();
             logger.debug("Finished Writing TCP Message");

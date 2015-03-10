@@ -1,0 +1,258 @@
+ INFO [main] 2015-03-04 15:59:22,200 (UDPPushDataSource.java:15) - TMP Host Address: 127.0.0.1
+ INFO [main] 2015-03-04 15:59:22,214 (UDPPushDataSource.java:18) - Host Address: 127.0.0.1
+ INFO [main] 2015-03-04 15:59:22,216 (UDPPushDataSource.java:19) - Host Address: 127.0.0.1
+ INFO [main] 2015-03-04 15:59:22,219 (UDPPushDataSource.java:21) - Connecting datagram socket on port: 14007
+DEBUG [main] 2015-03-04 15:59:22,227 (DataSource.java:119) - Started data source thread.
+DEBUG [main] 2015-03-04 15:59:22,228 (ODECollector.java:60) - Started data source.
+ERROR [Thread-2] 2015-03-04 15:59:32,229 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-04 15:59:32,229 (DataSource.java:158) - Data source response bytes was null!.
+DEBUG [main] 2015-03-04 15:59:41,148 (BasicODERegistration.java:129) - OK
+DEBUG [main] 2015-03-04 15:59:41,184 (BasicODERegistration.java:202) - Successfully marshalled RegistrationMessage.
+ERROR [Thread-2] 2015-03-04 15:59:42,230 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-04 15:59:42,230 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-04 15:59:52,231 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-04 15:59:52,231 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-04 16:00:02,233 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-04 16:00:02,233 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-04 16:00:12,238 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-04 16:00:12,239 (DataSource.java:158) - Data source response bytes was null!.
+DEBUG [main] 2015-03-04 16:00:14,681 (BasicODERegistration.java:129) - OK
+ERROR [Thread-2] 2015-03-04 16:00:22,241 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-04 16:00:22,241 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-04 16:00:32,242 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-04 16:00:32,242 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-04 16:00:42,243 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-04 16:00:42,243 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-04 16:00:52,243 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-04 16:00:52,243 (DataSource.java:158) - Data source response bytes was null!.
+ INFO [main] 2015-03-04 16:01:58,538 (UDPPushDataSource.java:15) - TMP Host Address: 127.0.0.1
+ INFO [main] 2015-03-04 16:01:58,541 (UDPPushDataSource.java:18) - Host Address: 127.0.0.1
+ INFO [main] 2015-03-04 16:01:58,544 (UDPPushDataSource.java:19) - Host Address: 127.0.0.1
+ INFO [main] 2015-03-04 16:01:58,544 (UDPPushDataSource.java:21) - Connecting datagram socket on port: 14007
+DEBUG [main] 2015-03-04 16:01:58,547 (DataSource.java:119) - Started data source thread.
+DEBUG [main] 2015-03-04 16:01:58,548 (ODECollector.java:60) - Started data source.
+ERROR [Thread-2] 2015-03-04 16:02:08,550 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-04 16:02:08,550 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-04 16:02:18,551 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-04 16:02:18,551 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-04 16:02:28,552 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-04 16:02:28,553 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-04 16:02:38,553 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-04 16:02:38,553 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-04 16:02:48,554 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-04 16:02:48,554 (DataSource.java:158) - Data source response bytes was null!.
+ INFO [main] 2015-03-05 11:35:58,472 (UDPPushDataSource.java:15) - TMP Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 11:35:58,493 (UDPPushDataSource.java:18) - Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 11:35:58,498 (UDPPushDataSource.java:19) - Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 11:35:58,499 (UDPPushDataSource.java:21) - Connecting datagram socket on port: 14007
+DEBUG [main] 2015-03-05 11:35:58,549 (DataSource.java:119) - Started data source thread.
+DEBUG [main] 2015-03-05 11:35:58,551 (ODECollector.java:60) - Started data source.
+DEBUG [main] 2015-03-05 11:36:05,596 (BasicODERegistration.java:129) - OK
+DEBUG [main] 2015-03-05 11:36:05,684 (BasicODERegistration.java:202) - Successfully marshalled RegistrationMessage.
+ERROR [Thread-2] 2015-03-05 11:36:08,553 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:36:08,555 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:36:18,557 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:36:18,558 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:36:28,558 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:36:28,558 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:36:38,560 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:36:38,560 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:36:48,565 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:36:48,566 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:36:58,566 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:36:58,566 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:37:08,569 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:37:08,569 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:37:18,570 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:37:18,570 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:37:28,571 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:37:28,571 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:37:38,572 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:37:38,572 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:37:48,574 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:37:48,574 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:37:58,576 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:37:58,577 (DataSource.java:158) - Data source response bytes was null!.
+ INFO [main] 2015-03-05 11:39:56,225 (UDPPushDataSource.java:15) - TMP Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 11:39:56,231 (UDPPushDataSource.java:18) - Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 11:39:56,235 (UDPPushDataSource.java:19) - Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 11:39:56,236 (UDPPushDataSource.java:21) - Connecting datagram socket on port: 14007
+DEBUG [main] 2015-03-05 11:39:56,241 (DataSource.java:119) - Started data source thread.
+DEBUG [main] 2015-03-05 11:39:56,242 (ODECollector.java:60) - Started data source.
+DEBUG [main] 2015-03-05 11:39:57,753 (BasicODERegistration.java:129) - OK
+DEBUG [main] 2015-03-05 11:39:57,765 (BasicODERegistration.java:202) - Successfully marshalled RegistrationMessage.
+ERROR [Thread-2] 2015-03-05 11:40:06,246 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:40:06,247 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:40:16,248 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:40:16,249 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:40:26,249 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:40:26,249 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:40:36,251 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:40:36,252 (DataSource.java:158) - Data source response bytes was null!.
+ INFO [main] 2015-03-05 11:43:14,713 (UDPPushDataSource.java:15) - TMP Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 11:43:14,717 (UDPPushDataSource.java:18) - Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 11:43:14,722 (UDPPushDataSource.java:19) - Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 11:43:14,722 (UDPPushDataSource.java:21) - Connecting datagram socket on port: 14007
+DEBUG [main] 2015-03-05 11:43:14,726 (DataSource.java:119) - Started data source thread.
+DEBUG [main] 2015-03-05 11:43:14,727 (ODECollector.java:60) - Started data source.
+DEBUG [main] 2015-03-05 11:43:16,163 (BasicODERegistration.java:129) - OK
+DEBUG [main] 2015-03-05 11:43:16,175 (BasicODERegistration.java:202) - Successfully marshalled RegistrationMessage.
+ERROR [Thread-2] 2015-03-05 11:43:24,727 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:43:24,727 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:43:34,729 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:43:34,730 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:43:44,730 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:43:44,731 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:43:54,732 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:43:54,732 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:44:04,735 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:44:04,736 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:44:14,736 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:44:14,736 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:44:24,737 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:44:24,738 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:44:34,738 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:44:34,738 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:44:44,739 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:44:44,739 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:44:54,740 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:44:54,741 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:45:04,742 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:45:04,743 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:45:14,744 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:45:14,745 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:45:24,745 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:45:24,746 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:45:34,747 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:45:34,748 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:45:44,748 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:45:44,749 (DataSource.java:158) - Data source response bytes was null!.
+ INFO [main] 2015-03-05 11:48:10,311 (UDPPushDataSource.java:15) - TMP Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 11:48:10,315 (UDPPushDataSource.java:18) - Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 11:48:10,321 (UDPPushDataSource.java:19) - Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 11:48:10,323 (UDPPushDataSource.java:21) - Connecting datagram socket on port: 14007
+DEBUG [main] 2015-03-05 11:48:10,327 (DataSource.java:119) - Started data source thread.
+DEBUG [main] 2015-03-05 11:48:10,328 (ODECollector.java:60) - Started data source.
+DEBUG [main] 2015-03-05 11:48:13,735 (BasicODERegistration.java:129) - OK
+DEBUG [main] 2015-03-05 11:48:13,753 (BasicODERegistration.java:202) - Successfully marshalled RegistrationMessage.
+ERROR [Thread-2] 2015-03-05 11:48:20,329 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:48:20,330 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:48:30,331 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:48:30,332 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:48:40,332 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:48:40,333 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:48:50,334 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:48:50,334 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:49:00,336 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:49:00,336 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:49:10,337 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:49:10,337 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:49:20,339 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:49:20,339 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:49:30,340 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:49:30,341 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 11:49:40,342 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 11:49:40,342 (DataSource.java:158) - Data source response bytes was null!.
+ INFO [main] 2015-03-05 11:59:53,184 (UDPPushDataSource.java:15) - TMP Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 11:59:53,188 (UDPPushDataSource.java:18) - Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 11:59:53,214 (UDPPushDataSource.java:19) - Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 11:59:53,215 (UDPPushDataSource.java:21) - Connecting datagram socket on port: 14007
+DEBUG [main] 2015-03-05 11:59:53,222 (DataSource.java:119) - Started data source thread.
+DEBUG [main] 2015-03-05 11:59:53,223 (ODECollector.java:60) - Started data source.
+DEBUG [main] 2015-03-05 11:59:56,926 (BasicODERegistration.java:129) - OK
+DEBUG [main] 2015-03-05 11:59:56,938 (BasicODERegistration.java:202) - Successfully marshalled RegistrationMessage.
+ERROR [Thread-2] 2015-03-05 12:00:03,277 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 12:00:03,277 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 12:00:13,278 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 12:00:13,278 (DataSource.java:158) - Data source response bytes was null!.
+ INFO [main] 2015-03-05 12:03:35,155 (UDPPushDataSource.java:15) - TMP Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 12:03:35,159 (UDPPushDataSource.java:18) - Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 12:03:35,163 (UDPPushDataSource.java:19) - Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 12:03:35,164 (UDPPushDataSource.java:21) - Connecting datagram socket on port: 14007
+DEBUG [main] 2015-03-05 12:03:35,169 (DataSource.java:119) - Started data source thread.
+DEBUG [main] 2015-03-05 12:03:35,169 (ODECollector.java:60) - Started data source.
+DEBUG [main] 2015-03-05 12:03:35,969 (BasicODERegistration.java:129) - OK
+DEBUG [main] 2015-03-05 12:03:35,986 (BasicODERegistration.java:202) - Successfully marshalled RegistrationMessage.
+ERROR [Thread-2] 2015-03-05 12:03:45,169 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 12:03:45,170 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 12:03:55,171 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 12:03:55,172 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 12:04:05,172 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 12:04:05,173 (DataSource.java:158) - Data source response bytes was null!.
+ INFO [main] 2015-03-05 12:05:48,701 (UDPPushDataSource.java:15) - TMP Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 12:05:48,705 (UDPPushDataSource.java:18) - Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 12:05:48,709 (UDPPushDataSource.java:19) - Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 12:05:48,710 (UDPPushDataSource.java:21) - Connecting datagram socket on port: 14007
+DEBUG [main] 2015-03-05 12:05:48,715 (DataSource.java:119) - Started data source thread.
+DEBUG [main] 2015-03-05 12:05:48,715 (ODECollector.java:60) - Started data source.
+DEBUG [main] 2015-03-05 12:05:49,284 (BasicODERegistration.java:129) - OK
+DEBUG [main] 2015-03-05 12:05:49,296 (BasicODERegistration.java:202) - Successfully marshalled RegistrationMessage.
+ERROR [Thread-2] 2015-03-05 12:05:58,717 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 12:05:58,717 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 12:06:08,717 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 12:06:08,717 (DataSource.java:158) - Data source response bytes was null!.
+ INFO [main] 2015-03-05 12:45:32,849 (UDPPushDataSource.java:15) - TMP Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 12:45:32,854 (UDPPushDataSource.java:18) - Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 12:45:32,879 (UDPPushDataSource.java:19) - Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 12:45:32,880 (UDPPushDataSource.java:21) - Connecting datagram socket on port: 14007
+DEBUG [main] 2015-03-05 12:45:32,887 (DataSource.java:119) - Started data source thread.
+DEBUG [main] 2015-03-05 12:45:32,887 (ODECollector.java:60) - Started data source.
+DEBUG [main] 2015-03-05 12:45:33,650 (BasicODERegistration.java:129) - OK
+DEBUG [main] 2015-03-05 12:45:33,663 (BasicODERegistration.java:202) - Successfully marshalled RegistrationMessage.
+ERROR [Thread-2] 2015-03-05 12:45:42,888 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 12:45:42,888 (DataSource.java:158) - Data source response bytes was null!.
+ INFO [main] 2015-03-05 12:46:09,896 (UDPPushDataSource.java:15) - TMP Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 12:46:09,900 (UDPPushDataSource.java:18) - Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 12:46:09,936 (UDPPushDataSource.java:19) - Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 12:46:09,936 (UDPPushDataSource.java:21) - Connecting datagram socket on port: 14007
+DEBUG [main] 2015-03-05 12:46:09,947 (DataSource.java:119) - Started data source thread.
+DEBUG [main] 2015-03-05 12:46:09,947 (ODECollector.java:60) - Started data source.
+DEBUG [main] 2015-03-05 12:46:10,755 (BasicODERegistration.java:129) - OK
+DEBUG [main] 2015-03-05 12:46:10,769 (BasicODERegistration.java:202) - Successfully marshalled RegistrationMessage.
+ERROR [Thread-2] 2015-03-05 12:46:19,990 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 12:46:19,990 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 12:46:29,991 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 12:46:29,991 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 12:46:39,991 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 12:46:39,991 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 12:46:49,992 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 12:46:49,992 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 12:46:59,994 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 12:46:59,994 (DataSource.java:158) - Data source response bytes was null!.
+ INFO [main] 2015-03-05 12:47:39,093 (UDPPushDataSource.java:15) - TMP Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 12:47:39,097 (UDPPushDataSource.java:18) - Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 12:47:39,101 (UDPPushDataSource.java:19) - Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 12:47:39,102 (UDPPushDataSource.java:21) - Connecting datagram socket on port: 14007
+DEBUG [main] 2015-03-05 12:47:39,107 (DataSource.java:119) - Started data source thread.
+DEBUG [main] 2015-03-05 12:47:39,107 (ODECollector.java:60) - Started data source.
+DEBUG [main] 2015-03-05 12:47:39,751 (BasicODERegistration.java:129) - OK
+DEBUG [main] 2015-03-05 12:47:39,763 (BasicODERegistration.java:202) - Successfully marshalled RegistrationMessage.
+ERROR [Thread-2] 2015-03-05 12:47:49,166 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 12:47:49,166 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 12:47:59,167 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 12:47:59,167 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 12:48:09,167 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 12:48:09,167 (DataSource.java:158) - Data source response bytes was null!.
+ERROR [Thread-2] 2015-03-05 12:48:19,168 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 12:48:19,168 (DataSource.java:158) - Data source response bytes was null!.
+ INFO [main] 2015-03-05 12:55:26,272 (UDPPushDataSource.java:15) - TMP Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 12:55:26,276 (UDPPushDataSource.java:18) - Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 12:55:26,280 (UDPPushDataSource.java:19) - Host Address: 127.0.0.1
+ INFO [main] 2015-03-05 12:55:26,281 (UDPPushDataSource.java:21) - Connecting datagram socket on port: 14007
+DEBUG [main] 2015-03-05 12:55:26,284 (DataSource.java:119) - Started data source thread.
+DEBUG [main] 2015-03-05 12:55:26,285 (ODECollector.java:60) - Started data source.
+DEBUG [main] 2015-03-05 12:55:26,994 (BasicODERegistration.java:129) - OK
+DEBUG [main] 2015-03-05 12:55:27,009 (BasicODERegistration.java:202) - Successfully marshalled RegistrationMessage.
+ERROR [Thread-2] 2015-03-05 12:55:36,286 (UDPPushDataSource.java:49) - Receive timed out
+DEBUG [Thread-2] 2015-03-05 12:55:36,286 (DataSource.java:158) - Data source response bytes was null!.
+ INFO [main] 2015-03-10 10:29:28,744 (UDPPushDataSource.java:15) - TMP Host Address: 127.0.0.1
+ INFO [main] 2015-03-10 10:29:28,776 (UDPPushDataSource.java:18) - Host Address: 127.0.0.1
+ INFO [main] 2015-03-10 10:29:28,777 (UDPPushDataSource.java:19) - Host Address: 127.0.0.1
+ INFO [main] 2015-03-10 10:29:28,778 (UDPPushDataSource.java:21) - Connecting datagram socket on port: 14007
+ERROR [main] 2015-03-10 10:29:28,782 (UDPPushDataSource.java:28) - Address already in use: Cannot bind
+DEBUG [main] 2015-03-10 10:29:28,783 (ODECollector.java:60) - Started data source.
+DEBUG [main] 2015-03-10 10:29:29,288 (BasicODERegistration.java:129) - OK
+DEBUG [main] 2015-03-10 10:29:29,300 (BasicODERegistration.java:202) - Successfully marshalled RegistrationMessage.
+DEBUG [main] 2015-03-10 10:29:37,097 (BasicODERegistration.java:129) - OK
+DEBUG [main] 2015-03-10 10:29:37,111 (BasicODEAgent.java:41) - Registration succeeded.
+DEBUG [main] 2015-03-10 10:29:37,111 (ODECollector.java:49) - Started agent.

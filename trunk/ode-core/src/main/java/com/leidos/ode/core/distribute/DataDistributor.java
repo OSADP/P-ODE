@@ -5,6 +5,7 @@
  */
 package com.leidos.ode.core.distribute;
 
+import java.util.Date;
 import org.apache.log4j.Logger;
 
 import javax.jms.*;
@@ -30,7 +31,9 @@ public abstract class DataDistributor implements Runnable {
     private Connection connection;
     private Topic topic;
     private MessageConsumer consumer;
-
+    private Date subscriptionEndDate;
+    
+    
     protected abstract void cleanup();
     
     public void run() {
@@ -50,7 +53,9 @@ public abstract class DataDistributor implements Runnable {
                         sendData(message);
                     }
                 }
-
+                
+                checkSubScriptionEnd();
+                
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
@@ -59,11 +64,11 @@ public abstract class DataDistributor implements Runnable {
             }
 
         } catch (NamingException ex) {
-            java.util.logging.Logger.getLogger(DataDistributor.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("Naming Exception",ex);
         } catch (JMSException ex) {
-            java.util.logging.Logger.getLogger(DataDistributor.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("Jms Exception",ex);
         } catch (DistributeException ex) {
-            java.util.logging.Logger.getLogger(DataDistributor.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("Distribute Exception",ex);
         } finally {
             try {
                 consumer.close();
@@ -77,6 +82,16 @@ public abstract class DataDistributor implements Runnable {
         }
     }
 
+    private void checkSubScriptionEnd() {
+        logger.debug("Checking for subscription end sub end date["+subscriptionEndDate+"] Now ["+new Date()+"]");
+        logger.debug("Result of Date compare ["+subscriptionEndDate.compareTo(new Date())+"]");
+        if(subscriptionEndDate.compareTo(new Date()) < 0){
+            logger.debug("Past end date for subscription.");
+            setInterrupted(true);
+        }
+    }
+
+    
     private void connectTopic() throws NamingException, JMSException {
         Properties env = new Properties();
         env.put(Context.SECURITY_PRINCIPAL, "admin");
@@ -196,6 +211,21 @@ public abstract class DataDistributor implements Runnable {
     public void setStopped(boolean stopped) {
         this.stopped = stopped;
     }
+
+    /**
+     * @return the subscriptionEndDate
+     */
+    public Date getSubscriptionEndDate() {
+        return subscriptionEndDate;
+    }
+
+    /**
+     * @param subscriptionEndDate the subscriptionEndDate to set
+     */
+    public void setSubscriptionEndDate(Date subscriptionEndDate) {
+        this.subscriptionEndDate = subscriptionEndDate;
+    }
+
 
     public class DistributeException extends Exception {
 

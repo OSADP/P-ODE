@@ -1,5 +1,7 @@
 package com.leidos.ode.registration;
 
+import java.util.Date;
+
 /**
  * Created with IntelliJ IDEA.
  * User: LAMDE
@@ -15,7 +17,28 @@ public abstract class ODERegistrationInformation {
     private String registrationType;
     private String agentId;
     private String subscriptionProtocol;
+    private Date startDate;
+    private Date endDate;
+    
+    
+    
+    public Date getEndDate() {
+        return endDate;
+    }
 
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    
     public int getRegistrationId() {
         return registrationId;
     }

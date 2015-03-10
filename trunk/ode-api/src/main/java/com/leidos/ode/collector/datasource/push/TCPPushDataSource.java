@@ -83,9 +83,13 @@ public class TCPPushDataSource extends PushDataSource{
     @Override
     protected void cleanUpConnections() {
         try {
-            socket.close();
+            if(socket != null){
+                socket.close();
+            }
         } catch (IOException ex) {
-            logger.error("Error creating socket ", ex);
+            logger.error("Error closing socket ", ex);
+        }catch(Exception ex){
+            logger.warn("Error closing socket ", ex);
         }
     }
 }
