@@ -24,6 +24,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * Class representing the Store Data controller. Responsible for sending published data received by the ODE to the RDE,
@@ -38,11 +40,23 @@ import java.util.concurrent.BlockingQueue;
 public class RDEStoreControllerImpl implements RDEStoreController {
 
     private final String TAG = getClass().getSimpleName();
+    @Autowired
+    @Qualifier("clientUploadContext")
     private RDEClientContext context;
+    @Autowired
+    @Qualifier("uploadDirector")
     private RDEClientUploadDirector director;
+    @Autowired
+    @Qualifier("writerQueueDatum")
     private BlockingQueue<Datum<char[]>> queue;
     private Thread directorThread;
 
+    private boolean started = false;
+    
+    public RDEStoreControllerImpl(){
+        
+    }
+    
     public RDEStoreControllerImpl(RDEClientContext context, RDEClientUploadDirector director,
                                   BlockingQueue<Datum<char[]>> queue) {
         this.context = context;
@@ -52,6 +66,7 @@ public class RDEStoreControllerImpl implements RDEStoreController {
         // Initialize the RDE data writing mechanism
         if (!this.director.isAvailable()) {
             this.director.initialize();
+            
         }
 
         if (!director.isActive()) {
@@ -65,6 +80,20 @@ public class RDEStoreControllerImpl implements RDEStoreController {
     public
     @ResponseBody
     RDEStoreResponse store(@RequestBody RDEData rdeData) throws RDEStoreException {
+        if(!started){
+            // Initialize the RDE data writing mechanism
+            if (!this.director.isAvailable()) {
+                this.director.initialize();
+
+            }
+
+            if (!director.isActive()) {
+                directorThread = new Thread(this.director, "RDEWriterThread");
+                directorThread.start();
+            }      
+            started = true;
+        }
+        
         RDERequest rawData = RDERequestFactory.storeRequest(rdeData);
         RDEStoreRequest rdeRequest = null;
 
