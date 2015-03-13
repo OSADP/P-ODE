@@ -21,6 +21,12 @@
             <artifactId>ode-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.leidos.ode</groupId>
+            <artifactId>ode-api-commons</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        
     </dependencies>
 
     <build>
