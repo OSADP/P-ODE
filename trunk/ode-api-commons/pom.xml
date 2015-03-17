@@ -12,12 +12,6 @@
     <artifactId>ode-api-commons</artifactId>
     <packaging>jar</packaging>
     <dependencies>
-    
-        <dependency>
-            <groupId>turkcelltech</groupId>
-            <artifactId>jac</artifactId>
-            <version>1</version>
-        </dependency>
         <dependency>
             <groupId>binarynotes</groupId>
             <artifactId>binarynotes</artifactId>
