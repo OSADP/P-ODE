@@ -5,6 +5,7 @@ import org.dot.rdelive.api.RunnableDataWriter;
 import org.dot.rdelive.client.out.RDEClientUploadDirector;
 import org.dot.rdelive.client.out.SampleRDEClientSocketWriter;
 
+import java.util.Properties;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -26,12 +27,18 @@ public class RDEDataWriter {
     private BlockingQueue<Datum<char[]>> writerQueue;
     private Thread directorThread;
 
-
     public RDEDataWriter(RDEConfig config) {
         writerQueue = new ArrayBlockingQueue<Datum<char[]>>(100);
         context = new RDEClientContext(writerQueue, config);
         writer = new SampleRDEClientSocketWriter(writerQueue, context, null, 3, 1000);
         director = new RDEClientUploadDirector(writer, null);
+
+        // Initialize the SSL certs needed for the RDE API
+        Properties props = System.getProperties();
+        props.setProperty("javax.net.ssl.trustStoreType", config.getTrustStoreType());
+        props.setProperty("javax.net.ssl.trustStore", config.getTrustStore());
+        props.setProperty("javax.net.ssl.trustStorePassword", config.getPassword());
+        System.setProperties(props);
 
         // Start up the RDE connection
         director.initialize();

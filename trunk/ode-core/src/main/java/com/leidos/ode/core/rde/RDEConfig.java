@@ -23,6 +23,9 @@ public class RDEConfig implements RDEClientConfig<Datum<char[]>, char[]> {
     private long retryInterval;
     private RDEClientMode clientMode;
     private int socketTimeout;
+    private String trustStoreType;
+    private String trustStore;
+    private String trustStorePassword;
 
     public RDEConfig(String filename) {
         // Open the file
@@ -41,6 +44,9 @@ public class RDEConfig implements RDEClientConfig<Datum<char[]>, char[]> {
         retryInterval = Long.parseLong(bundle.getString("rde.retryinterval"));
         clientMode = RDEClientMode.valueOf(bundle.getString("rde.clientmode"));
         socketTimeout = Integer.parseInt(bundle.getString("rde.sockettimeout"));
+        trustStore = bundle.getString("rde.truststore");
+        trustStoreType = bundle.getString("rde.truststoretype");
+        trustStorePassword = bundle.getString("rde.truststorepassword");
     }
 
     @Override
@@ -151,5 +157,17 @@ public class RDEConfig implements RDEClientConfig<Datum<char[]>, char[]> {
     @Override
     public int getSocketTimeout() {
         return socketTimeout;
+    }
+
+    public String getTrustStoreType() {
+        return trustStoreType;
+    }
+
+    public String getTrustStore() {
+        return trustStore;
+    }
+
+    public String getTrustStorePassword() {
+        return trustStorePassword;
     }
 }
