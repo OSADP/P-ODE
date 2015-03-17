@@ -6,6 +6,7 @@
 package com.leidos.ode.agent.datatarget;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
+import com.leidos.ode.agent.registration.RegistrationResponse;
 import com.leidos.ode.registration.response.ODERegistrationResponse;
 
 /**
@@ -14,6 +15,11 @@ import com.leidos.ode.registration.response.ODERegistrationResponse;
 public class PrintingDataTarget implements ODEDataTarget {
 
     public void configure(ODERegistrationResponse odeRegistrationResponse) throws DataTargetException {
+
+    }
+
+    @Override
+    public void configure(RegistrationResponse registrationResponse) throws DataTargetException {
 
     }
 
