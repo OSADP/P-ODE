@@ -27,10 +27,7 @@ public class RDERetrieveControllerImpl implements RDERetrieveController {
 
     private final String TAG = getClass().getSimpleName();
     @Autowired
-
     private DistributeDataController distributeDataController;
-    @Autowired
-    @Qualifier("clientDownloadContext")
     private RDEClientContext context;
     private RDEClientDownloadDirector director;
 

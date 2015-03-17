@@ -3,13 +3,14 @@ package com.leidos.ode.core.rde;
 import org.dot.rdelive.api.Datum;
 import org.dot.rdelive.client.api.RDEClientConfig;
 import org.dot.rdelive.client.api.RDEClientMode;
+import org.dot.rdelive.impl.GenericDatum;
 
 import java.util.ResourceBundle;
 
 /**
  * Mock config because the test case is having some issues reading the properties bundle.
  */
-public class RDETestConfig implements RDEClientConfig<Datum<char[]>, char[]> {
+public class RDETestConfig implements RDEClientConfig<GenericDatum<char[]>, char[]> {
     private String url = "69.198.157.205";
     private int port = 12090;
     private boolean useSSL = true;

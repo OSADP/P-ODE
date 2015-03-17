@@ -2,6 +2,8 @@ package com.leidos.ode.core.rde;
 
 import org.dot.rdelive.api.Datum;
 import org.dot.rdelive.client.api.RDEClientConfig;
+import org.dot.rdelive.impl.GenericDatum;
+
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -18,7 +20,7 @@ public class RDEClientContext implements org.dot.rdelive.client.api.RDEClientCon
     }
 
     @Override
-    public BlockingQueue getQueue() {
+    public BlockingQueue<Datum<char[]>> getQueue() {
         return clientQueue;
     }
 
@@ -33,7 +35,7 @@ public class RDEClientContext implements org.dot.rdelive.client.api.RDEClientCon
     }
 
     @Override
-    public RDEClientConfig getConfig() {
+    public RDEClientConfig<Datum<char[]>, char[]> getConfig() {
         return config;
     }
 }

@@ -9,5 +9,5 @@ Class-Path: spring-web-3.2.8.RELEASE.jar aopalliance-1.0.jar jackson-a
  RELEASE.jar jackson-core-2.4.3.jar rdeapiclient-3.1.17-sources.jar rd
  eapiclient-3.1.17-jar-with-dependencies.jar spring-aop-4.0.3.RELEASE.
  jar
-Main-Class: com.leidos.ode.core.rde.controllers.RDEStoreControllerImpl
+Main-Class: com.leidos.ode.core.rde.controllers.RDEStoreDistributor
 
