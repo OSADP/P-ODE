@@ -26,6 +26,7 @@ public class RDEConfig implements RDEClientConfig<Datum<char[]>, char[]> {
     private String trustStoreType;
     private String trustStore;
     private String trustStorePassword;
+    private boolean loadCertFromJar;
 
     public RDEConfig(String filename) {
         // Open the file
@@ -170,4 +171,5 @@ public class RDEConfig implements RDEClientConfig<Datum<char[]>, char[]> {
     public String getTrustStorePassword() {
         return trustStorePassword;
     }
+
 }

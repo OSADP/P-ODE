@@ -2,6 +2,9 @@ package com.leidos.ode.core.rde;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
+/*import com.leidos.ode.agent.data.ODEAgentMessage;
+import com.leidos.ode.agent.parser.ODEDataParser;
+import com.leidos.ode.agent.parser.impl.ODEJ2735DataParser; */
 import com.leidos.ode.core.distribute.DataDistributor;
 import com.leidos.ode.core.rde.RDEClientContext;
 import com.leidos.ode.core.rde.RDEDataWriter;
@@ -159,9 +162,13 @@ public class RDEDistributor extends DataDistributor {
             generator.writeStringField("date", getRdeTimestamp(message.getJMSTimestamp()));
 
             // Get the bytes of our message and write that to the JSON as a char[]
+            //ODEJ2735DataParser parser = new ODEJ2735DataParser();
             BytesMessage msg = (BytesMessage) message;
             byte[] encoded = new byte[(int) msg.getBodyLength()];
             msg.readBytes(encoded);
+
+            //ODEAgentMessage parsed = parser.parseMessage(encoded);
+
             generator.writeFieldName("value");
             generator.writeBinary(encoded);
 
@@ -173,7 +180,9 @@ public class RDEDistributor extends DataDistributor {
             throw new DistributeException("Unable to create create RDE Datum JSON structure.");
         } catch (JMSException e) {
             throw new DistributeException("Unable to parse data from JMS Message for RDE.");
-        }
+        } /*catch (ODEDataParser.ODEParseException e) {
+            e.printStackTrace();
+        }*/
 
         // Copy the above generated values into the Datum
         datum.setData(stringWriter.toString().toCharArray());
