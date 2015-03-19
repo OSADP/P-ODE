@@ -5,37 +5,22 @@ import com.fasterxml.jackson.core.JsonGenerator;
 /*import com.leidos.ode.agent.data.ODEAgentMessage;
 import com.leidos.ode.agent.parser.ODEDataParser;
 import com.leidos.ode.agent.parser.impl.ODEJ2735DataParser; */
+import com.leidos.ode.agent.ODEAgent;
+import com.leidos.ode.agent.data.ODEAgentMessage;
+import com.leidos.ode.agent.parser.ODEDataParser;
+import com.leidos.ode.agent.parser.impl.ODEJ2735DataParser;
 import com.leidos.ode.core.distribute.DataDistributor;
-import com.leidos.ode.core.rde.RDEClientContext;
-import com.leidos.ode.core.rde.RDEDataWriter;
-import com.leidos.ode.core.rde.RDETestConfig;
-import com.leidos.ode.core.rde.factory.RDERequestFactory;
-import com.leidos.ode.core.rde.request.RDERequest;
-import com.leidos.ode.core.rde.request.impl.RDEStoreRequest;
-import com.leidos.ode.core.rde.request.model.RDEData;
-import com.leidos.ode.core.rde.request.model.RDEStoreData;
-import com.leidos.ode.core.rde.response.impl.RDEStoreResponse;
-import org.dot.rdelive.api.Datum;
+import com.leidos.ode.data.PodeDataDelivery;
+import com.leidos.ode.data.Position3D;
+import com.leidos.ode.util.ODEMessageType;
 import org.dot.rdelive.api.config.CharsetType;
 import org.dot.rdelive.api.config.DataType;
-import org.dot.rdelive.client.out.RDEClientUploadDirector;
-import org.dot.rdelive.client.out.SampleRDEClientSocketWriter;
 import org.dot.rdelive.impl.GenericDatum;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import java.util.Map;
 
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
@@ -62,130 +47,23 @@ public class RDEDistributor extends DataDistributor {
         
     }
 
-
-    /*@Override
-    @RequestMapping(value = "rdeStore", method = RequestMethod.POST)
-    public
-    @ResponseBody
-    RDEStoreResponse store(@RequestBody RDEData rdeData) throws RDEStoreException {
-
-        
-        RDERequest rawData = RDERequestFactory.storeRequest(rdeData);
-        RDEStoreRequest rdeRequest = null;
-
-        if (rawData != null) {
-            // If it's not null it is an instance of RDEStoreRequest
-            rdeRequest = (RDEStoreRequest) rawData;
-        }
-
-        // Generate the datum object
-        GenericDatum<char[]> datum = new GenericDatum<char[]>();
-        if (rdeRequest != null) {
-            String json = ((String) (rdeRequest.request()));
-            System.out.println(json);
-            datum.setData(json.toCharArray());
-            datum.setDataType(DataType.CHARACTER);
-            datum.setEncoding(CharsetType.UTF8);
-
-            try {
-                queue.put(datum);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-         return new RDEStoreResponse();
-    }*/
-
-    // For testing purposes
-    /*public static void main(String[] args) {
-        // Initialize the store controller
-        ArrayBlockingQueue<GenericDatum<char[]>> writerQueue = new ArrayBlockingQueue<GenericDatum<char[]>>(100);
-        RDETestConfig config = new RDETestConfig();
-        RDEClientContext context = new RDEClientContext(writerQueue, config);
-        SampleRDEClientSocketWriter writer = new SampleRDEClientSocketWriter(writerQueue, context, null, 3, 1000);
-        RDEClientUploadDirector director = new RDEClientUploadDirector(writer, null);
-        RDEStoreController store = new RDEStoreControllerImpl(context, director, writerQueue);
-
-        System.out.println("Proceeding with config: " + config);
-
-        // Initialize the RDE data to store
-        byte[] test = "HitQAQJRGgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPQ==".getBytes();
-        String header = "BSM";
-        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd hh:mm:ss a");
-
-        while (true) {
-            // Send the data to the RDE
-            String date = formatter.format(new Date());
-            System.out.println("Sending: " + header + " " + test +  " " + date);
-            try {
-                RDEData data = new RDEStoreData(header, test, date);
-                store.store(data);
-            } catch (RDEStoreController.RDEStoreException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }*/
-
     @Override
     protected void cleanup() {
-
+        // Empty method because theres nothing to cleanup here.
     }
 
     @Override
     protected void connectTarget() throws DistributeException {
-
+        // Empty method because we don't connect here.
     }
 
     @Override
-    protected void sendData(Message message) throws DistributeException {
+    protected void sendData(Message rawMessage) throws DistributeException {
         // Generate the datum object
         GenericDatum<char[]> datum = new GenericDatum<char[]>();
 
-        // Open the generators and writers
-        JsonFactory jsonFactory = new JsonFactory();
-        Writer stringWriter = new StringWriter();
-
-        try {
-            // Start writing the JSON string
-            JsonGenerator generator = jsonFactory.createGenerator(stringWriter);
-            generator.writeStartObject();
-
-            // Write the topic/type and timestamp fields
-            generator.writeObjectFieldStart(getRdeType(topic.getTopicName()));
-            generator.writeStringField("date", getRdeTimestamp(message.getJMSTimestamp()));
-
-            // Get the bytes of our message and write that to the JSON as a char[]
-            //ODEJ2735DataParser parser = new ODEJ2735DataParser();
-            BytesMessage msg = (BytesMessage) message;
-            byte[] encoded = new byte[(int) msg.getBodyLength()];
-            msg.readBytes(encoded);
-
-            //ODEAgentMessage parsed = parser.parseMessage(encoded);
-
-            generator.writeFieldName("value");
-            generator.writeBinary(encoded);
-
-            // Close it all out
-            generator.writeEndObject();
-            generator.close();
-            stringWriter.close();
-        } catch (IOException e) {
-            throw new DistributeException("Unable to create create RDE Datum JSON structure.");
-        } catch (JMSException e) {
-            throw new DistributeException("Unable to parse data from JMS Message for RDE.");
-        } /*catch (ODEDataParser.ODEParseException e) {
-            e.printStackTrace();
-        }*/
-
         // Copy the above generated values into the Datum
-        datum.setData(stringWriter.toString().toCharArray());
+        datum.setData(generateJson(rawMessage).toCharArray());
         datum.setDataType(DataType.CHARACTER);
         datum.setEncoding(CharsetType.UTF8);
 
@@ -197,21 +75,98 @@ public class RDEDistributor extends DataDistributor {
         }
     }
 
-    /**
-     * Converts a topic.toString value into the appropriate String type to send to the RDE
-     * @param topic a String representing the topic this RDEStoreController is subscribed to
-     * @return A String representing the RDE type associated with that topic
-     */
-    private String getRdeType(String topic) {
-        return topic;
+    private String generateJson(Message rawMessage) throws DistributeException {
+        String json = "";
+
+        // Open the generators and writers
+        JsonFactory jsonFactory = new JsonFactory();
+        Writer stringWriter = new StringWriter();
+
+        try {
+            // Get the bytes of our rawMessage and write that to the JSON as a char[]
+            ODEJ2735DataParser parser = new ODEJ2735DataParser();
+            BytesMessage msg = (BytesMessage) rawMessage;
+            byte[] encoded = new byte[(int) msg.getBodyLength()];
+            msg.readBytes(encoded);
+
+            ODEAgentMessage parsed = parser.parseMessage(encoded);
+
+            // Parse RDE metadata
+            Position3D pos = getPosition(parsed);
+            String timestamp = getTimestamp(parsed);
+            String messageType = getMessageType(parsed);
+
+            // Start writing the JSON string
+            JsonGenerator generator = jsonFactory.createGenerator(stringWriter);
+
+            generator.writeStartObject();
+            generator.writeObjectFieldStart(messageType);
+            generator.writeStringField("latitude", pos.getLat().toString());
+            generator.writeStringField("longitude", pos.getLon().toString());
+            generator.writeStringField("elevation", pos.getElevation().toString());
+            generator.writeStringField("date", timestamp);
+            generator.writeFieldName("value");
+            generator.writeBinary(encoded);
+            generator.writeEndObject();
+
+            // Close it all out
+            generator.close();
+            stringWriter.close();
+            json = stringWriter.toString();
+        } catch (IOException e) {
+            throw new DistributeException("Unable to create create RDE Datum JSON structure.");
+        } catch (JMSException e) {
+            throw new DistributeException("Unable to parse data from JMS Message for RDE.");
+        } catch (ODEDataParser.ODEParseException e) {
+            throw new DistributeException("ODEDataParser error occurred while trying to parse RDE data.");
+        }
+
+        return json;
     }
 
     /**
-     * Converts timestamp formats for usage by the RDE
-     * @param timestamp A long timestamp as used by JMS
-     * @return A string encoding of that timestamp for use by the RDE
+     * Take in an {@link com.leidos.ode.agent.data.ODEAgentMessage} object and return the {@link com.leidos.ode.data.Position3D}
+     * associated with its detector.
+     * @param message An ODEAgentMessage parsed with {@link com.leidos.ode.agent.parser.impl.ODEJ2735DataParser}
+     * @return the Position3D object of the {@link com.leidos.ode.data.PodeDetectorData} for the message
+     * @throws DistributeException if the parse originally failed and thus the message is null.
      */
-    private String getRdeTimestamp(long timestamp) {
-        return "" + timestamp;
+    private Position3D getPosition(ODEAgentMessage message) throws DistributeException{
+        if (message.getFormattedMessage() == null) {
+            throw new DistributeException();
+        }
+
+        PodeDataDelivery data = (PodeDataDelivery) message.getFormattedMessage();
+        return data.getPodeData().getPodeData().getDetector().getPosition();
+    }
+
+    /**
+     * Take in an {@link com.leidos.ode.agent.data.ODEAgentMessage} object and return the J2735 timestamp string associated
+     * with it.
+     * @param message An ODEAgentMessage parsed with {@link com.leidos.ode.agent.parser.impl.ODEJ2735DataParser}
+     * @return The J2735 timestamp for the {@link com.leidos.ode.data.PodeDataDelivery} as a String
+     * @throws DistributeException if the parse originally failed and thus the message is null.
+     */
+    private String getTimestamp(ODEAgentMessage message) throws DistributeException {
+        if (message.getFormattedMessage() == null) {
+            throw new DistributeException();
+        }
+        PodeDataDelivery data = (PodeDataDelivery) message.getFormattedMessage();
+        return data.getPodeData().getLastupdatetime().toString();
+    }
+
+    /**
+     * Take in an {@link com.leidos.ode.agent.data.ODEAgentMessage} object and return the string representation of the
+     * message type (BSM, VSDM, SPaT, MAP, etc).
+     * @param message An ODEAgentMessage parsed with {@link com.leidos.ode.agent.parser.impl.ODEJ2735DataParser}
+     * @return A string representation of the message type
+     * @throws DistributeException if the parse originally failed and thus the message is null.
+     */
+    private String getMessageType(ODEAgentMessage message) throws DistributeException {
+        if (message.getFormattedMessage() == null) {
+            throw new DistributeException();
+        }
+        PodeDataDelivery data = (PodeDataDelivery) message.getFormattedMessage();
+        return data.getPodeData().getSource().toString();
     }
 }
