@@ -41,7 +41,6 @@ public class RDEDistributor extends DataDistributor {
 
     private final String TAG = getClass().getSimpleName();
     private RDEDataWriter writer;
-    private Topic topic;
     
     public RDEDistributor(){
         
