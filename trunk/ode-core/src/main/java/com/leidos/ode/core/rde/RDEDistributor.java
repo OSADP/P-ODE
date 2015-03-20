@@ -28,7 +28,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Topic;
 
-/**
+/**,
  * Class representing the Store Data controller. Responsible for sending published data received by the ODE to the RDE,
  * and recording that transfer to the Pub/Sub registration. Contains an RDE Interface sub-component, which is responsible
  * for formatting the data feed to the RDE as well as the metadata document that will accompany the data feed. Once data
@@ -44,14 +44,10 @@ public class RDEDistributor extends DataDistributor {
     private RDEDataWriter writer;
     String targetURL;
     int targetPort;
-
-    public RDEDistributor() {
-
-    }
     
-    public RDEDistributor(String topicHostURL, int topicHostPort,
+    public RDEDistributor(RDEDataWriter writer, String topicHostURL, int topicHostPort,
                           String connFactName, String topicName, String targetURL, int targetPort, Date endDate){
-
+        this.writer = writer;
         setTopicHostURL(topicHostURL);
         setTopicHostPort(topicHostPort);
         setConnFactName(connFactName);

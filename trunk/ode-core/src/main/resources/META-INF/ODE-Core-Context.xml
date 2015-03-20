@@ -74,8 +74,6 @@
         <constructor-arg name="config" ref="clientConfig"/>
     </bean>
 
-    <bean id="rdeDistributor" class="com.leidos.ode.core.rde.RDEDistributor"/>
-
     <bean id="clientConfig" class="com.leidos.ode.core.rde.RDEConfig">
         <constructor-arg name="filename" value="rdeconfig"/>
     </bean>
