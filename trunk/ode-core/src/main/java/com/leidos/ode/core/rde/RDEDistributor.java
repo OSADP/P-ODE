@@ -20,6 +20,7 @@ import org.dot.rdelive.impl.GenericDatum;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.Date;
 import java.util.Map;
 
 import javax.jms.BytesMessage;
@@ -41,8 +42,20 @@ public class RDEDistributor extends DataDistributor {
 
     private final String TAG = getClass().getSimpleName();
     private RDEDataWriter writer;
+    String targetURL;
+    int targetPort;
     
-    public RDEDistributor(){
+    public RDEDistributor(String topicHostURL, int topicHostPort,
+                          String connFactName, String topicName, String targetURL, int targetPort, Date endDate){
+
+        setTopicHostURL(topicHostURL);
+        setTopicHostPort(topicHostPort);
+        setConnFactName(connFactName);
+        setTopicName(topicName);
+        setSubscriptionEndDate(endDate);
+
+        this.targetURL = targetURL;
+        this.targetPort = targetPort;
         
     }
 
