@@ -16,6 +16,7 @@ public class LogBean {
     private Date startTime, endTime;
     private ODELogger.ODEStage odeStage;
     private String messageId;
+    private String component;
 
     public LogBean(Date startTime, Date endTime, ODELogger.ODEStage odeStage, String messageId) {
         this.startTime = startTime;
@@ -69,6 +70,22 @@ public class LogBean {
                 .append(getOdeStage())
                 .append(", messageId=")
                 .append(getMessageId())
+                .append(", component=")
+                .append(getComponent())
                 .toString();
+    }
+
+    /**
+     * @return the component
+     */
+    public String getComponent() {
+        return component;
+    }
+
+    /**
+     * @param component the component to set
+     */
+    public void setComponent(String component) {
+        this.component = component;
     }
 }

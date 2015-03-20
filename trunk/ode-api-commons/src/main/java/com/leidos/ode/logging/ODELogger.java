@@ -17,6 +17,7 @@ public final class ODELogger {
     private Logger logger = Logger.getLogger(TAG);
     private LogBean logBean;
     private MongoTemplate mongoTemplate;
+    private boolean mongoRemote = false;
     
     /**
      * Marks the starting point of a given ODEStage in the log message.
@@ -47,17 +48,21 @@ public final class ODELogger {
      */
     public void finish() throws ODELoggerException {
         Date endTime = new Date();
-        if (logBean != null && MongoUtils.isMongoDBRunning()) {
-            logBean.setEndTime(endTime);
-            // save the log bean
-            try{
-                getMongoTemplate().save(logBean);
-            }catch(Exception e){
-                logger.error("Cannot finish a log event. "+e.toString(),e);
+        if(logBean != null){
+            if (isMongoRemote() || MongoUtils.isMongoDBRunning()) {
+                logBean.setEndTime(endTime);
+                // save the log bean
+                try{
+                    getMongoTemplate().save(logBean);
+                }catch(Exception e){
+                    logger.error("Cannot finish a log event. "+e.toString(),e);
+                }
+                logBean = null;
+            }else{
+                logger.warn("Local Mongo not running.");
             }
-            logBean = null;
         } else {
-            logger.error("Cannot finish a log event that has not been started.");
+            logger.warn("Cannot finish a log event that has not been started.");
             
         }
     }
@@ -71,6 +76,20 @@ public final class ODELogger {
     }
 
     /**
+     * @return the mongoRemote
+     */
+    public boolean isMongoRemote() {
+        return mongoRemote;
+    }
+
+    /**
+     * @param mongoRemote the mongoRemote to set
+     */
+    public void setMongoRemote(boolean mongoRemote) {
+        this.mongoRemote = mongoRemote;
+    }
+
+    /**
      * Represents current stage of message processing in the ODE.
      * PARSE: Message is being parsed.
      * SANITIZE: Message is being sanitized.
@@ -78,7 +97,7 @@ public final class ODELogger {
      * SEND: Message is being sent to the core.
      */
     public enum ODEStage {
-        PARSE, SANITIZE, ENCRYPT, SEND;
+        PARSE, SANITIZE, ENCRYPT, SEND, RECEIVED, DISTRIBUTED;
     }
 
     public static class ODELoggerException extends Exception {
