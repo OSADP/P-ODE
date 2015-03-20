@@ -44,6 +44,10 @@ public class RDEDistributor extends DataDistributor {
     private RDEDataWriter writer;
     String targetURL;
     int targetPort;
+
+    public RDEDistributor() {
+
+    }
     
     public RDEDistributor(String topicHostURL, int topicHostPort,
                           String connFactName, String topicName, String targetURL, int targetPort, Date endDate){
