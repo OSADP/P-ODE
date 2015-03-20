@@ -45,6 +45,8 @@ public abstract class BasicODERegistration implements ODERegistration {
     private String registrationEndpoint;
     private String unregisterEndpoint;
     private String serviceRequestEndpoint;
+    private ServiceRequest serviceRequest;
+    private ServiceResponse serviceResponse;
     
 //    @Override
 //    public RegistrationResponse register(ODERegistrationRequest registrationRequest) {
@@ -97,8 +99,10 @@ public abstract class BasicODERegistration implements ODERegistration {
     @Override
     public RegistrationResponse register(ODERegistrationRequest registrationRequest){
         try {
-            ServiceRequest serviceRequest = buildServiceRequest(registrationRequest);
-            ServiceResponse serviceResponse = doServiceRequest(registrationRequest, serviceRequest);
+            ServiceRequest sr = buildServiceRequest(registrationRequest);
+            this.serviceRequest = sr;
+            ServiceResponse response = doServiceRequest(registrationRequest, serviceRequest);
+            this.serviceResponse = response;
             
             RegistrationResponse regResponse = doRegistration(registrationRequest, serviceRequest);
             return regResponse;
@@ -364,6 +368,34 @@ public abstract class BasicODERegistration implements ODERegistration {
      */
     public void setServiceRequestEndpoint(String serviceRequestEndpoint) {
         this.serviceRequestEndpoint = serviceRequestEndpoint;
+    }
+
+    /**
+     * @return the serviceRequest
+     */
+    public ServiceRequest getServiceRequest() {
+        return serviceRequest;
+    }
+
+    /**
+     * @param serviceRequest the serviceRequest to set
+     */
+    public void setServiceRequest(ServiceRequest serviceRequest) {
+        this.serviceRequest = serviceRequest;
+    }
+
+    /**
+     * @return the serviceResponse
+     */
+    public ServiceResponse getServiceResponse() {
+        return serviceResponse;
+    }
+
+    /**
+     * @param serviceResponse the serviceResponse to set
+     */
+    public void setServiceResponse(ServiceResponse serviceResponse) {
+        this.serviceResponse = serviceResponse;
     }
     
     

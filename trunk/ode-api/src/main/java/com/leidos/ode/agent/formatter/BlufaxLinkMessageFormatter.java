@@ -6,12 +6,42 @@
 package com.leidos.ode.agent.formatter;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
+import com.leidos.ode.agent.data.blufax.BluFaxLinkData;
+import com.leidos.ode.data.DDateTime;
+import com.leidos.ode.data.DDay;
+import com.leidos.ode.data.DHour;
+import com.leidos.ode.data.DMinute;
+import com.leidos.ode.data.DMonth;
+import com.leidos.ode.data.DSecond;
+import com.leidos.ode.data.DYear;
 import com.leidos.ode.data.PodeDataDelivery;
+import com.leidos.ode.data.PodeDataDistribution;
+import com.leidos.ode.data.PodeDataElementList;
+import com.leidos.ode.data.PodeDataRecord;
+import com.leidos.ode.data.PodeDetectionMethod;
+import com.leidos.ode.data.PodeDetectorData;
+import com.leidos.ode.data.PodeDialogID;
+import com.leidos.ode.data.PodeLaneData;
+import com.leidos.ode.data.PodeLaneDirection;
+import com.leidos.ode.data.PodeLaneInfo;
+import com.leidos.ode.data.PodeSource;
+import com.leidos.ode.data.PodeTravelTime;
+import com.leidos.ode.data.SemiSequenceID;
+import com.leidos.ode.data.ServiceRequest;
+import com.leidos.ode.data.Sha256Hash;
+import com.leidos.ode.data.Speed;
 import com.leidos.ode.util.ODEMessageType;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.xml.bind.DatatypeConverter;
+import org.tmdd._3.messages.DateTimeZone;
+import org.tmdd._3.messages.LinkStatus;
+import org.tmdd._3.messages.LinkStatusList;
+import org.tmdd._3.messages.LinkStatusMsg;
 
 /**
  *
@@ -20,10 +50,186 @@ import java.util.Map;
 public class BlufaxLinkMessageFormatter extends ODEMessageFormatter{
     
     @Override
-    public Map<ODEMessageType,PodeDataDelivery> formatMessage(ODEAgentMessage agentMessage) {
-        Map<ODEMessageType,PodeDataDelivery> messages = new HashMap<ODEMessageType,PodeDataDelivery>();
+    public Map<ODEMessageType,List<PodeDataDistribution>> formatMessage(ODEAgentMessage agentMessage, ServiceRequest serviceRequst) {
+        Map<ODEMessageType,List<PodeDataDistribution>> messages = new HashMap<ODEMessageType,List<PodeDataDistribution>>();
+        BluFaxLinkData linkData = (BluFaxLinkData)agentMessage.getFormattedMessage();
+        
+        PodeSource source = new PodeSource();
+        source.setValue(PodeSource.EnumType.blufax);
+        Sha256Hash hash = new Sha256Hash(DatatypeConverter.parseHexBinary(agentMessage.getMessageId()));
+
+        List<PodeDataDistribution> travelMessages = new ArrayList<PodeDataDistribution>();
+        List<PodeDataDistribution> speedMessages = new ArrayList<PodeDataDistribution>();
+        List<PodeDataDistribution> volumeMessages = new ArrayList<PodeDataDistribution>();
+        List<PodeDataDistribution> occupancyMessages = new ArrayList<PodeDataDistribution>();
+        
+        if(linkData.getLinkStatusMsg() != null){
+            LinkStatusMsg lsm = linkData.getLinkStatusMsg();
+            if(lsm.getLinkStatusItem() != null){
+                List<LinkStatus> lsList = lsm.getLinkStatusItem();
+                for(LinkStatus linkStatus:lsList){
+                    LinkStatus.LinkList linkList = linkStatus.getLinkList();
+                    List<LinkStatusList> linkStatusListList = linkList.getLink();
+                    for(LinkStatusList lsl:linkStatusListList){
+                        travelMessages.add(createMessage(lsl, source, hash, TRAVEL_TIME_MESSAGE,serviceRequst));
+                        speedMessages.add(createMessage(lsl, source, hash, SPEED_MESSAGE,serviceRequst));
+                        volumeMessages.add(createMessage(lsl, source, hash, VOLUME_MESSAGE,serviceRequst));
+                        occupancyMessages.add(createMessage(lsl, source, hash, OCCUPANCY_MESSAGE,serviceRequst));
+                    }
+                }
+            }
+        }
+        
+        messages.put(ODEMessageType.TRAVEL, travelMessages);
+        messages.put(ODEMessageType.SPEED, speedMessages);
+        messages.put(ODEMessageType.VOLUME, volumeMessages);
+        messages.put(ODEMessageType.OCCUPANCY, occupancyMessages);
+
+        
         
         return messages;
     }    
+
+    private PodeDataDistribution createMessage(LinkStatusList lsl, PodeSource source, Sha256Hash hash, int messageType, ServiceRequest serviceRequst) {
+        PodeDataRecord.PodeDataChoiceType data = new PodeDataRecord.PodeDataChoiceType();
+        PodeDetectorData detector = new PodeDetectorData();
+        
+        PodeDetectionMethod method = new PodeDetectionMethod();
+        method.setValue(PodeDetectionMethod.EnumType.unknown);
+        detector.setDetectMethod(method);
+        
+        detector.setDetectorID(lsl.getLinkId());
+        
+        PodeLaneData laneData = new PodeLaneData();
+        
+        PodeDataElementList laneDataList = createLaneDataList(lsl, messageType);
+        
+        laneData.setData(laneDataList);
+        
+        PodeLaneInfo laneInfo = new PodeLaneInfo();
+        
+        PodeLaneDirection direction = new PodeLaneDirection();
+        
+        if ("e".equalsIgnoreCase(lsl.getLinkDirection())) {
+            direction.setValue(PodeLaneDirection.EnumType.east);
+        } else if ("w".equalsIgnoreCase(lsl.getLinkDirection())) {
+            direction.setValue(PodeLaneDirection.EnumType.west);
+        }
+        
+        laneInfo.setLaneDirection(direction);
+        
+        //Hard coded for prototype
+        laneInfo.setZoneNum(1);
+        
+        laneData.setLane(laneInfo);
+        
+        detector.setLaneData(laneData);
+        data.selectDetector(detector);
+        PodeDataRecord record = new PodeDataRecord();
+        record.setPodeData(data);
+        DateTimeZone dtz = lsl.getLastUpdateTime();
+        
+        DDateTime dateTime = getDDateTimeForDateTimeZone(dtz);
+        record.setLastupdatetime(dateTime);
+        
+        record.setMeasduration(lsl.getEventDescriptionTime());
+        
+        record.setRoutename("I-66");
+        record.setSource(source);
+        
+        PodeDataDistribution message = new PodeDataDistribution();
+        message.setPodeData(record);
+        
+        
+        
+        PodeDialogID dialog = new PodeDialogID();
+        dialog.setValue(PodeDialogID.EnumType.podeDataDistribution);
+        message.setDialogID(dialog);
+        
+        message.setGroupID(serviceRequst.getGroupID());
+        message.setRequestID(serviceRequst.getRequestID());
+        SemiSequenceID seqId = new SemiSequenceID();
+        seqId.setValue(SemiSequenceID.EnumType.data);
+        message.setSeqID(seqId);        
+        
+        message.setMessageID(hash);
+        return message;
+    }
+
+    private PodeDataElementList createLaneDataList(LinkStatusList lsl, int messageType) {
+        if(messageType == TRAVEL_TIME_MESSAGE){
+            return createTravelTimeMessage(lsl);
+        }else if(messageType == SPEED_MESSAGE){
+            return createSpeedMessage(lsl);
+        }else if(messageType == VOLUME_MESSAGE){
+            return createVolumeMessage(lsl);
+        }else if(messageType == OCCUPANCY_MESSAGE){
+            return createOccupancyMessage(lsl);
+        }
+        
+        return null;
+    }
+
+    private PodeDataElementList createTravelTimeMessage(LinkStatusList lsl) {
+        PodeDataElementList laneDataList = createSpeedMessage(lsl);
+        PodeTravelTime travelTime = new PodeTravelTime();
+        travelTime.setTravelTime(new DMinute(lsl.getTravelTime()));
+        laneDataList.setTravelTimeInfo(travelTime);
+        return laneDataList;
+    }
+    
+    private PodeDataElementList createSpeedMessage(LinkStatusList lsl) {
+        PodeDataElementList laneDataList = new PodeDataElementList();
+        //speed in mph
+        int normalSpeed = lsl.getSpeedAverage();
+        //convert to meter per second
+        double meterSecond = normalSpeed*.44704;
+        //convert to .02 meter per second as per SAE J2735
+        double saeSpeed = meterSecond / .02;
+        
+        Speed speed = new Speed((int)Math.round(saeSpeed));
+        laneDataList.setSpeed(speed);
+        
+        return laneDataList;
+    }    
+
+    
+    private PodeDataElementList createVolumeMessage(LinkStatusList lsl) {
+        PodeDataElementList laneDataList = createSpeedMessage(lsl);
+        if(lsl.getVolume() > 25){
+            laneDataList.setVolume(25);
+        }else{
+            laneDataList.setVolume(lsl.getVolume().intValue());
+        }        
+        return laneDataList;
+    }    
+    
+    private PodeDataElementList createOccupancyMessage(LinkStatusList lsl) {
+        PodeDataElementList laneDataList = createSpeedMessage(lsl);
+        laneDataList.setOccupancy(lsl.getOccupancy().intValue());
+        return laneDataList;
+    }    
+    
+    
+    
+    
+    private DDateTime getDDateTimeForDateTimeZone(DateTimeZone dtz){
+        Calendar cal = Calendar.getInstance();
+        
+        DDateTime dateTime = new DDateTime();
+        DHour hour = new DHour(cal.get(Calendar.HOUR_OF_DAY));
+        dateTime.setHour(hour);
+        DMinute min = new DMinute(cal.get(Calendar.MINUTE));
+        dateTime.setMinute(min);
+        DSecond sec = new DSecond(cal.get(Calendar.SECOND));
+        dateTime.setSecond(sec);
+        DMonth month = new DMonth(cal.get(Calendar.MONTH)+1);
+        dateTime.setMonth(month);
+        DDay day = new DDay(cal.get(Calendar.DAY_OF_MONTH));
+        dateTime.setDay(day);
+        DYear year = new DYear(cal.get(Calendar.YEAR));
+        dateTime.setYear(year); 
+        return dateTime;
+    }
     
 }

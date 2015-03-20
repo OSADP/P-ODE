@@ -54,6 +54,11 @@
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-mongodb</artifactId>
+            <version>1.6.0.RELEASE</version>
+        </dependency>        
+        <dependency>
             <groupId>org.dot.rdelive</groupId>
             <artifactId>rdeapiclient-jar-with-dependencies</artifactId>
             <scope>system</scope>

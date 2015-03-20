@@ -4,6 +4,7 @@ import com.leidos.ode.agent.data.ODEAgentMessage;
 import com.leidos.ode.agent.registration.RegistrationResponse;
 import com.leidos.ode.data.PodeDataDelivery;
 import com.leidos.ode.data.PodeDataDestination;
+import com.leidos.ode.data.PodeDataDistribution;
 import com.leidos.ode.registration.response.ODERegistrationResponse;
 import com.leidos.ode.util.ODEMessageType;
 import java.io.ByteArrayOutputStream;
@@ -24,6 +25,7 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import javax.xml.bind.DatatypeConverter;
 import org.bn.CoderFactory;
@@ -114,24 +116,25 @@ public class ODERestTarget implements ODEDataTarget {
         try {
             //Going to continue using the ODEAgentMessage, but only going to send 
             //the raw bytes of the new message.
-            Map<ODEMessageType, PodeDataDelivery> messages = message.getPodeMessageList();
+            Map<ODEMessageType, List<PodeDataDistribution>> messages = message.getPodeMessageList();
             Iterator<ODEMessageType> it = messages.keySet().iterator();
             while(it.hasNext()){
                 ODEMessageType messageType = it.next();
-                PodeDataDelivery data = messages.get(messageType);
                 httpPost = httpPosts.get(messageType);
-                ODEAgentMessage agentMessage = new ODEAgentMessage();
-                agentMessage.setMessageId(message.getMessageId());
-                agentMessage.setMessagePayload(encodePodeMessage(data));
-                agentMessage.setMessagePayloadBase64(DatatypeConverter.printBase64Binary(agentMessage.getMessagePayload()));
-                StringEntity entity = createEntity(agentMessage);
-                httpPost.setEntity(entity);
-                logger.debug("Sending message to target.");
-                httpResponse = httpClient.execute(httpPost);
-                HttpEntity responseEntity = httpResponse.getEntity();
-                String responseString = EntityUtils.toString(responseEntity);
-                logger.debug("Target response: " + responseString);
-
+                List<PodeDataDistribution> list = messages.get(messageType);
+                for(PodeDataDistribution data:list){
+                    ODEAgentMessage agentMessage = new ODEAgentMessage();
+                    agentMessage.setMessageId(message.getMessageId());
+                    agentMessage.setMessagePayload(encodePodeMessage(data));
+                    agentMessage.setMessagePayloadBase64(DatatypeConverter.printBase64Binary(agentMessage.getMessagePayload()));
+                    StringEntity entity = createEntity(agentMessage);
+                    httpPost.setEntity(entity);
+                    logger.debug("Sending message to target.");
+                    httpResponse = httpClient.execute(httpPost);
+                    HttpEntity responseEntity = httpResponse.getEntity();
+                    String responseString = EntityUtils.toString(responseEntity);
+                    logger.debug("Target response: " + responseString);
+                }
             }
 
 
@@ -151,7 +154,7 @@ public class ODERestTarget implements ODEDataTarget {
         }
     }
     
-    private byte[] encodePodeMessage(PodeDataDelivery data) throws Exception{
+    private byte[] encodePodeMessage(PodeDataDistribution data) throws Exception{
         IEncoder encoder = CoderFactory.getInstance().newEncoder("BER");
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         encoder.encode(data, bos);

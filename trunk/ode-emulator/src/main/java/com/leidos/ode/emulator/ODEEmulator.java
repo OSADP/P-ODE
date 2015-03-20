@@ -1,13 +1,6 @@
 package com.leidos.ode.emulator;
 
-import com.fastlanesw.bfw.RouteStatusExt;
 import com.leidos.ode.agent.data.ODEAgentMessage;
-import com.leidos.ode.agent.data.blufax.BluFaxLinkData;
-import com.leidos.ode.agent.data.blufax.BluFaxRouteData;
-import com.leidos.ode.agent.data.bsm.BSM;
-import com.leidos.ode.agent.data.ritis.RITISSpeedData;
-import com.leidos.ode.agent.data.vdot.VDOTSpeedData;
-import com.leidos.ode.agent.data.wxde.WXDEData;
 import com.leidos.ode.agent.datatarget.ODEDataTarget;
 import com.leidos.ode.collector.ODECollector;
 import com.leidos.ode.collector.datasource.CollectorDataSource;
@@ -15,16 +8,12 @@ import com.leidos.ode.collector.datasource.DataSource;
 import com.leidos.ode.data.PodeDataDelivery;
 import com.leidos.ode.data.PodeLaneDirection;
 import com.leidos.ode.data.PodeSource;
+import com.leidos.ode.data.PodeWeatherData;
+import com.leidos.ode.data.PodeWeatherinfo;
 import com.leidos.ode.emulator.agent.EmulatorDataTarget;
+
 import com.leidos.ode.util.ODEMessageType;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import org.apache.log4j.Logger;
-import org.ritis.schema.tmdd_0_0_0.ZoneDataCollectionPeriodRITIS;
-import org.ritis.schema.tmdd_0_0_0.ZoneDataRITIS;
-import org.ritis.schema.tmdd_0_0_0.ZoneDetectorDataRITIS;
-import org.ritis.schema.tmdd_0_0_0.ZoneReportRITIS;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -35,13 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.xml.bind.DatatypeConverter;
-import java.util.List;
-import java.util.Map;
-import org.bn.annotations.ASN1EnumItem;
-import org.tmdd._3.messages.LinkStatus;
-import org.tmdd._3.messages.LinkStatusList;
-import org.tmdd._3.messages.RouteStatus;
-import org.tmdd._3.messages.RouteStatusList;
+
 
 /**
  * @author cassadyja
@@ -135,6 +118,7 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
 
     }
 
+    
     public void dataReceived(String messageType, ODEAgentMessage data) {
         logger.debug("Recevied Data, Message Type: ["+messageType+"]");
         if (data != null) {
@@ -199,12 +183,54 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
 
     private void travelTimeDataReceived(ODEAgentMessage data) {
         PodeDataDelivery dataDelivery = (PodeDataDelivery) data.getFormattedMessage();
+        String source = getSourceName(dataDelivery.getPodeData().getSource().getValue());
+        DataDisplayElement element = new DataDisplayElement();
+        element.setSource(source);
+        element.setDataType("Travel Time");
+        element.setDataValue(dataDelivery.getPodeData().getPodeData().getDetector().getLaneData().getData().getTravelTimeInfo().getTravelTime().getValue()+"");
+        if(dataDelivery.getPodeData().getPodeData().getDetector().getLaneData().getLane().getLaneDirection().getValue().equals(PodeLaneDirection.EnumType.east)){
+            currentData.addTravelTimeEastValue(element);
+        }else{
+            currentData.addTravelTimeWestValue(element);
+        }
         
+                
     }
 
     private void weatherDataReceived(ODEAgentMessage data) {
         PodeDataDelivery dataDelivery = (PodeDataDelivery) data.getFormattedMessage();
-        
+        String source = getSourceName(dataDelivery.getPodeData().getSource().getValue());
+        DataDisplayElement element = new DataDisplayElement();
+        element.setSource(source);
+        String weatherReadingType = getWeatherReadingType(dataDelivery.getPodeData().getPodeData().getWeather());
+        String weatherReadingValue = getWeatherValue(dataDelivery.getPodeData().getPodeData().getWeather());
+        element.setDataType(weatherReadingType);
+        element.setDataValue(weatherReadingValue);
+        currentData.addCurrentWeather(element);
+    }
+    
+    private String getWeatherValue(PodeWeatherinfo weatherInfo){
+        PodeWeatherData weatherData = weatherInfo.getWeatherSenorData();
+        if(weatherData.getSurfaceTemperature() != null){
+            return weatherData.getSurfaceTemperature().getValue()+"";
+        }else if(weatherData.getPrecipRate() != null){
+            return weatherData.getPrecipRate().getValue()+"";
+        }else if(weatherData.getVisibility() != null){
+            return weatherData.getVisibility().getValue()+"";
+        }
+        return "";
+    }
+    
+    private String getWeatherReadingType(PodeWeatherinfo weatherInfo){
+        PodeWeatherData weatherData = weatherInfo.getWeatherSenorData();
+        if(weatherData.getSurfaceTemperature() != null){
+            return "Temperature";
+        }else if(weatherData.getPrecipRate() != null){
+            return "PrecipRate";
+        }else if(weatherData.getVisibility() != null){
+            return "Visibility";
+        }
+        return "";
     }
 
     

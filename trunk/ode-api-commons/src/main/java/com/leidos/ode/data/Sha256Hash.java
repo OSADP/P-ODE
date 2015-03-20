@@ -21,7 +21,7 @@ import org.bn.types.*;
     
             @ASN1OctetString( name = "Sha256Hash" )
             
-            @ASN1SizeConstraint ( max = 64L )
+            @ASN1SizeConstraint ( max = 128L )
         
             private byte[] value = null;
             

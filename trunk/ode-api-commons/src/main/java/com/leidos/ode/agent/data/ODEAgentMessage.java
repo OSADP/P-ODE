@@ -1,6 +1,7 @@
 package com.leidos.ode.agent.data;
 
-import com.leidos.ode.data.PodeDataDelivery;
+
+import com.leidos.ode.data.PodeDataDistribution;
 import com.leidos.ode.util.ODEMessageType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
@@ -17,7 +18,7 @@ public class ODEAgentMessage implements Serializable {
     private String messagePayloadBase64;
     private byte[] messagePayload;
     private Object formattedMessage;
-    private Map<ODEMessageType, PodeDataDelivery> podeMessageList;
+    private Map<ODEMessageType, List<PodeDataDistribution>> podeMessageList;
     
     
     public byte[] getMessagePayload() {
@@ -83,19 +84,6 @@ public class ODEAgentMessage implements Serializable {
         return this;
     }
 
-    /**
-     * @return the podeMessageList
-     */
-    public Map<ODEMessageType, PodeDataDelivery> getPodeMessageList() {
-        return podeMessageList;
-    }
-
-    /**
-     * @param podeMessageList the podeMessageList to set
-     */
-    public void setPodeMessageList(Map<ODEMessageType, PodeDataDelivery> podeMessageList) {
-        this.podeMessageList = podeMessageList;
-    }
 
     /**
      * @return the messagePayloadBase64
@@ -109,5 +97,19 @@ public class ODEAgentMessage implements Serializable {
      */
     public void setMessagePayloadBase64(String messagePayloadBase64) {
         this.messagePayloadBase64 = messagePayloadBase64;
+    }
+
+    /**
+     * @return the podeMessageList
+     */
+    public Map<ODEMessageType, List<PodeDataDistribution>> getPodeMessageList() {
+        return podeMessageList;
+    }
+
+    /**
+     * @param podeMessageList the podeMessageList to set
+     */
+    public void setPodeMessageList(Map<ODEMessageType, List<PodeDataDistribution>> podeMessageList) {
+        this.podeMessageList = podeMessageList;
     }
 }

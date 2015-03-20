@@ -1,6 +1,11 @@
 package com.leidos.ode.core.controllers;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
+import com.leidos.ode.data.PodeDataDelivery;
+import com.leidos.ode.data.PodeDataDistribution;
+import com.leidos.ode.logging.ODELogger;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import org.apache.log4j.Logger;
 
 import javax.jms.*;
@@ -8,7 +13,12 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.util.Properties;
-import javax.xml.bind.DatatypeConverter;
+import java.util.logging.Level;
+import org.bn.CoderFactory;
+import org.bn.IDecoder;
+import org.bn.IEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 
 
@@ -28,15 +38,45 @@ public abstract class PublishDataController {
     @Value("${leidos.ode.publisher.connectionfactoryname}")
     private String connectionFactoryName;
     
+    @Autowired
+    @Qualifier("odeLogger")
+    private ODELogger odeLogger;
 
     protected abstract String publishData(ODEAgentMessage odeAgentMessage);
 
     protected final String publish(ODEAgentMessage odeAgentMessage) {
         initTopicConnection();
+        
+        startLogEntry(ODELogger.ODEStage.RECEIVED, odeAgentMessage.getMessageId());
+        finishLogEntry();
+        startLogEntry(ODELogger.ODEStage.DISTRIBUTED, odeAgentMessage.getMessageId());
+        
         sendMessage(odeAgentMessage);
+        
+        finishLogEntry();
         return "OK";
     }
+    
+    private void startLogEntry(ODELogger.ODEStage stage, String message){
+        try {
+            odeLogger.start(stage, message);
+        } catch (ODELogger.ODELoggerException ex) {
+            logger.warn("Error starting log event",ex);
+        }
+        
+    }
 
+    
+    private void finishLogEntry(){
+        try {
+            odeLogger.finish();
+        } catch (ODELogger.ODELoggerException ex) {
+            logger.warn("Error finishing log entry",ex);
+        }
+    }
+    
+    
+    
     protected void initTopicConnection() {
         if (messageProducer == null) {
             try {
@@ -89,12 +129,8 @@ public abstract class PublishDataController {
             System.out.println("Formatted Message "+odeAgentMessage.getFormattedMessage());
             System.out.println("RAW Message: "+odeAgentMessage.getMessagePayload());
             System.out.println("RAW Message Base 64: "+odeAgentMessage.getMessagePayloadBase64());
-            byte[] messageBytes = DatatypeConverter.parseBase64Binary(connectionFactoryName);
             BytesMessage bytesMessage = session.createBytesMessage();
-            bytesMessage.writeBytes(odeAgentMessage.getMessagePayload());
-//            ObjectMessage msg = session.createObjectMessage();
-//            msg.setObject(odeAgentMessage);
-//            logger.info("Placing message on topic");
+            bytesMessage.writeBytes(encodePodeMessage(convertDataDistribution(odeAgentMessage.getMessagePayload())));
             messageProducer.send(bytesMessage);
 
         } catch (JMSException ex) {
@@ -104,6 +140,25 @@ public abstract class PublishDataController {
         }
     }
 
+    private byte[] encodePodeMessage(PodeDataDelivery data) throws Exception{
+        IEncoder encoder = CoderFactory.getInstance().newEncoder("BER");
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        encoder.encode(data, bos);
+        return bos.toByteArray();
+    }
+    
+    
+    private PodeDataDelivery convertDataDistribution(byte[] bytes) throws Exception{
+        PodeDataDelivery dataDelivery = new PodeDataDelivery();
+        IDecoder decoder = CoderFactory.getInstance().newDecoder("BER");
+        ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+        PodeDataDistribution message = decoder.decode(bis, PodeDataDistribution.class);
+        dataDelivery.setPodeData(message.getPodeData());
+        dataDelivery.setMessageID(message.getMessageID());
+        
+        return dataDelivery;
+    }
+    
     public String getHostAddress() {
         return hostAddress;
     }
@@ -129,6 +184,20 @@ public abstract class PublishDataController {
     }
 
     public abstract String getTopicName() ;
+
+    /**
+     * @return the odeLogger
+     */
+    public ODELogger getOdeLogger() {
+        return odeLogger;
+    }
+
+    /**
+     * @param odeLogger the odeLogger to set
+     */
+    public void setOdeLogger(ODELogger odeLogger) {
+        this.odeLogger = odeLogger;
+    }
 
 
     /**

@@ -21,8 +21,8 @@ import org.springframework.stereotype.Controller;
  *
  * @author lamde
  */
-@Controller
-@Component
+//@Controller
+//@Component
 public class RDERetrieveControllerImpl implements RDERetrieveController {
 
     private final String TAG = getClass().getSimpleName();

@@ -34,6 +34,7 @@ public abstract class DataDistributor implements Runnable {
     private Date subscriptionEndDate;
     
     
+    
     protected abstract void cleanup();
     
     public void run() {
@@ -44,7 +45,7 @@ public abstract class DataDistributor implements Runnable {
             connectTarget();
             while (!isInterrupted()) {
                 Message message = consumer.receive(10000);
-
+                
                 if (message != null) {
                     if (message instanceof TextMessage) {
                         logger.debug("Distribute found TextMessage, ignoring. " + message);

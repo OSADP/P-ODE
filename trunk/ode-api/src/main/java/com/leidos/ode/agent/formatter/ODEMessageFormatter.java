@@ -7,6 +7,8 @@ package com.leidos.ode.agent.formatter;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
 import com.leidos.ode.data.PodeDataDelivery;
+import com.leidos.ode.data.PodeDataDistribution;
+import com.leidos.ode.data.ServiceRequest;
 import com.leidos.ode.util.ODEMessageType;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +21,8 @@ public abstract class ODEMessageFormatter {
     protected static final int SPEED_MESSAGE = 1;
     protected static final int VOLUME_MESSAGE = 2;
     protected static final int OCCUPANCY_MESSAGE = 3;
+    protected static final int TRAVEL_TIME_MESSAGE = 4;
     
-    public abstract Map<ODEMessageType,PodeDataDelivery> formatMessage(ODEAgentMessage agentMessage);
+    public abstract Map<ODEMessageType,List<PodeDataDistribution>> formatMessage(ODEAgentMessage agentMessage, ServiceRequest serviceRequst);
     
 }

@@ -26,5 +26,7 @@ public class ByteUtils {
     public static String convertBytesToHex(byte[] bytes){
         String hexString = DatatypeConverter.printHexBinary(bytes);
         return  hexString;
-    }    
+    }
+    
+    
 }

@@ -7,6 +7,8 @@ package com.leidos.ode.agent.formatter;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
 import com.leidos.ode.data.PodeDataDelivery;
+import com.leidos.ode.data.PodeDataDistribution;
+import com.leidos.ode.data.ServiceRequest;
 import com.leidos.ode.util.ODEMessageType;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,8 +23,8 @@ public class VDOTTravelTimeMessageFormatter extends ODEMessageFormatter{
     
     
     @Override
-    public Map<ODEMessageType,PodeDataDelivery> formatMessage(ODEAgentMessage agentMessage) {
-        Map<ODEMessageType,PodeDataDelivery> messages = new HashMap<ODEMessageType,PodeDataDelivery>();
+    public Map<ODEMessageType,List<PodeDataDistribution>> formatMessage(ODEAgentMessage agentMessage, ServiceRequest serviceRequst) {
+        Map<ODEMessageType,List<PodeDataDistribution>> messages = new HashMap<ODEMessageType,List<PodeDataDistribution>>();
         
         return messages;
     }    

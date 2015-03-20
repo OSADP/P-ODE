@@ -11,6 +11,7 @@ import com.leidos.ode.data.PodeDataTypes;
 import com.leidos.ode.data.PodeProtocol;
 import com.leidos.ode.data.PodeSubscriptionRequest;
 import com.leidos.ode.data.ServiceRequest;
+import com.leidos.ode.logging.ODELogger;
 import com.leidos.ode.registration.response.ODERegistrationResponse;
 import com.leidos.ode.util.ByteUtils;
 import com.leidos.ode.util.ODEMessageType;
@@ -32,6 +33,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 @Controller
 public class DistributeDataController implements  DisposableBean{
@@ -48,6 +50,8 @@ public class DistributeDataController implements  DisposableBean{
     
     @Autowired
     private RegistrationDAO regDao;
+    
+    
     
     
     public DistributeDataController() {

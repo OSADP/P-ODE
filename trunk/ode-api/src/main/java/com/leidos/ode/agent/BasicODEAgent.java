@@ -199,7 +199,7 @@ public class BasicODEAgent implements ODEAgent {
 
                 odeAgentMessage.setAgentInfo(getAgentInfo());
                 
-                odeAgentMessage.setPodeMessageList(formatter.formatMessage(odeAgentMessage));
+                odeAgentMessage.setPodeMessageList(formatter.formatMessage(odeAgentMessage, getRegistration().getServiceRequest()));
                 
                 getOdeLogger().start(ODELogger.ODEStage.SEND, messageId);
                 getDataTarget().sendMessage(odeAgentMessage);

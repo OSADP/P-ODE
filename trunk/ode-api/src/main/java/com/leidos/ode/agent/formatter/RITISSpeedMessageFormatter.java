@@ -15,14 +15,19 @@ import com.leidos.ode.data.DMonth;
 import com.leidos.ode.data.DSecond;
 import com.leidos.ode.data.DYear;
 import com.leidos.ode.data.PodeDataDelivery;
+import com.leidos.ode.data.PodeDataDistribution;
 import com.leidos.ode.data.PodeDataElementList;
 import com.leidos.ode.data.PodeDataRecord;
 import com.leidos.ode.data.PodeDetectionMethod;
 import com.leidos.ode.data.PodeDetectorData;
+import com.leidos.ode.data.PodeDialogID;
 import com.leidos.ode.data.PodeLaneData;
 import com.leidos.ode.data.PodeLaneDirection;
 import com.leidos.ode.data.PodeLaneInfo;
 import com.leidos.ode.data.PodeSource;
+import com.leidos.ode.data.SemiSequenceID;
+import com.leidos.ode.data.ServiceRequest;
+import com.leidos.ode.data.Sha256Hash;
 import com.leidos.ode.data.Speed;
 import com.leidos.ode.util.ODEMessageType;
 import java.util.ArrayList;
@@ -31,6 +36,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.xml.bind.DatatypeConverter;
 import javax.xml.datatype.XMLGregorianCalendar;
 import org.ritis.schema.tmdd_0_0_0.DateTimeZone;
 import org.ritis.schema.tmdd_0_0_0.ZoneDataCollectionPeriodRITIS;
@@ -46,8 +52,8 @@ public class RITISSpeedMessageFormatter extends ODEMessageFormatter{
 
     private RITISZoneDirectionData ritisZoneDirData = new RITISZoneDirectionData();
     
-    public Map<ODEMessageType,PodeDataDelivery> formatMessage(ODEAgentMessage agentMessage) {
-        Map<ODEMessageType,PodeDataDelivery> messages = new HashMap<ODEMessageType,PodeDataDelivery>();
+    public Map<ODEMessageType,List<PodeDataDistribution>> formatMessage(ODEAgentMessage agentMessage, ServiceRequest serviceRequst) {
+        Map<ODEMessageType,List<PodeDataDistribution>> messages = new HashMap<ODEMessageType,List<PodeDataDistribution>>();
         RITISSpeedData ritisSpeedData = (RITISSpeedData)agentMessage.getFormattedMessage();
         if(ritisSpeedData.getZoneDetectorDataRITIS() == null 
            || ritisSpeedData.getZoneDetectorDataRITIS().getCollectionPeriod() == null
@@ -68,11 +74,15 @@ public class RITISSpeedMessageFormatter extends ODEMessageFormatter{
                     
                     if(zoneReport.getZoneData() != null && zoneReport.getZoneData().getZoneDataItem() != null){
                         for(ZoneDataRITIS zoneData:zoneReport.getZoneData().getZoneDataItem()){
-                            messages.put(ODEMessageType.SPEED,createMessage(item, zoneReport, zoneData, source, SPEED_MESSAGE));
-                            messages.put(ODEMessageType.SPEED,createMessage(item, zoneReport, zoneData, source, VOLUME_MESSAGE));
-                            messages.put(ODEMessageType.SPEED,createMessage(item, zoneReport, zoneData, source, OCCUPANCY_MESSAGE));
-                            
-                            
+                            List<PodeDataDistribution> list = new ArrayList<PodeDataDistribution>();
+                            list.add(createMessage(agentMessage, item, zoneReport, zoneData, source, SPEED_MESSAGE, serviceRequst));
+                            messages.put(ODEMessageType.SPEED,list);
+                            list = new ArrayList<PodeDataDistribution>();
+                            list.add(createMessage(agentMessage, item, zoneReport, zoneData, source, VOLUME_MESSAGE, serviceRequst));
+                            messages.put(ODEMessageType.VOLUME,list);
+                            list = new ArrayList<PodeDataDistribution>();
+                            list.add(createMessage(agentMessage, item, zoneReport, zoneData, source, OCCUPANCY_MESSAGE, serviceRequst));
+                            messages.put(ODEMessageType.OCCUPANCY,list);
                         }
                     }
                 }
@@ -84,9 +94,22 @@ public class RITISSpeedMessageFormatter extends ODEMessageFormatter{
     
     
     
-    private PodeDataDelivery createMessage(ZoneDataCollectionPeriodRITIS item, ZoneReportRITIS zoneReport, ZoneDataRITIS zoneData, PodeSource source, int messageType){
-        PodeDataDelivery message = new PodeDataDelivery();
-
+    private PodeDataDistribution createMessage(ODEAgentMessage agentMessage, ZoneDataCollectionPeriodRITIS item, ZoneReportRITIS zoneReport, ZoneDataRITIS zoneData, PodeSource source, int messageType, ServiceRequest serviceRequst){
+        PodeDataDistribution message = new PodeDataDistribution();
+        Sha256Hash hash = new Sha256Hash(DatatypeConverter.parseHexBinary(agentMessage.getMessageId()));
+        message.setMessageID(hash);
+        
+        
+        PodeDialogID dialog = new PodeDialogID();
+        dialog.setValue(PodeDialogID.EnumType.podeDataDistribution);
+        message.setDialogID(dialog);
+        
+        message.setGroupID(serviceRequst.getGroupID());
+        message.setRequestID(serviceRequst.getRequestID());
+        SemiSequenceID seqId = new SemiSequenceID();
+        seqId.setValue(SemiSequenceID.EnumType.data);
+        message.setSeqID(seqId);        
+        
         PodeDataRecord.PodeDataChoiceType data = new PodeDataRecord.PodeDataChoiceType();
         PodeDetectorData detector = new PodeDetectorData();
 

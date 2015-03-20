@@ -485,8 +485,14 @@ public class CurrentDataSet {
         if(currentWeather == null){
             currentWeather = new ArrayList<DataDisplayElement>();
         }
-        //TODO might need to change this.
-        addElementToList(currentWeather, element);  
+        for(int i=0;i<currentWeather.size();i++){
+            if(currentWeather.get(i).getDataType().equals(element.getDataType())){
+                currentWeather.remove(i);
+                break;
+            }
+        }
+        currentWeather.add(element);
+        
     }    
     
 

@@ -15,15 +15,20 @@ import com.leidos.ode.data.DMonth;
 import com.leidos.ode.data.DSecond;
 import com.leidos.ode.data.DYear;
 import com.leidos.ode.data.PodeDataDelivery;
+import com.leidos.ode.data.PodeDataDistribution;
 import com.leidos.ode.data.PodeDataElementList;
 import com.leidos.ode.data.PodeDataRecord;
 import com.leidos.ode.data.PodeDetectionMethod;
 import com.leidos.ode.data.PodeDetectorData;
+import com.leidos.ode.data.PodeDialogID;
 import com.leidos.ode.data.PodeLaneData;
 import com.leidos.ode.data.PodeLaneDirection;
 import com.leidos.ode.data.PodeLaneInfo;
 import com.leidos.ode.data.PodeLaneType;
 import com.leidos.ode.data.PodeSource;
+import com.leidos.ode.data.SemiSequenceID;
+import com.leidos.ode.data.ServiceRequest;
+import com.leidos.ode.data.Sha256Hash;
 import com.leidos.ode.data.Speed;
 import com.leidos.ode.util.ODEMessageType;
 import java.util.ArrayList;
@@ -32,6 +37,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.xml.bind.DatatypeConverter;
 
 /**
  *
@@ -42,8 +48,8 @@ public class VDOTSpeedMessageFormatter extends ODEMessageFormatter{
 
     
     
-    public Map<ODEMessageType,PodeDataDelivery> formatMessage(ODEAgentMessage agentMessage) {
-        Map<ODEMessageType,PodeDataDelivery> messages = new HashMap<ODEMessageType,PodeDataDelivery>();
+    public Map<ODEMessageType,List<PodeDataDistribution>> formatMessage(ODEAgentMessage agentMessage, ServiceRequest serviceRequst) {
+        Map<ODEMessageType,List<PodeDataDistribution>> messages = new HashMap<ODEMessageType,List<PodeDataDistribution>>();
         VDOTSpeedData vdotSpeedData = (VDOTSpeedData)agentMessage.getFormattedMessage();
 
         PodeSource source = new PodeSource();
@@ -52,13 +58,18 @@ public class VDOTSpeedMessageFormatter extends ODEMessageFormatter{
         
         if(vdotSpeedData.getVdotSpeedDataElements() != null){
             for(VDOTSpeedData.VDOTSpeedDataElement element: vdotSpeedData.getVdotSpeedDataElements()){
-                PodeDataDelivery speedMessage = createMessage(element, source, SPEED_MESSAGE);
-                PodeDataDelivery volumeMessage = createMessage(element, source, VOLUME_MESSAGE);
-                PodeDataDelivery occupancyMessage = createMessage(element, source, OCCUPANCY_MESSAGE);
-                
-                messages.put(ODEMessageType.SPEED,speedMessage);
-                messages.put(ODEMessageType.VOLUME,volumeMessage);
-                messages.put(ODEMessageType.OCCUPANCY,occupancyMessage);
+                PodeDataDistribution speedMessage = createMessage(agentMessage, element, source, SPEED_MESSAGE,serviceRequst);
+                PodeDataDistribution volumeMessage = createMessage(agentMessage, element, source, VOLUME_MESSAGE,serviceRequst);
+                PodeDataDistribution occupancyMessage = createMessage(agentMessage, element, source, OCCUPANCY_MESSAGE,serviceRequst);
+                List<PodeDataDistribution> list = new ArrayList<PodeDataDistribution>();
+                list.add(speedMessage);
+                messages.put(ODEMessageType.SPEED,list);
+                list = new ArrayList<PodeDataDistribution>();
+                list.add(volumeMessage);
+                messages.put(ODEMessageType.VOLUME,list);
+                list = new ArrayList<PodeDataDistribution>();
+                list.add(occupancyMessage);
+                messages.put(ODEMessageType.OCCUPANCY,list);
                 
             }
         }
@@ -68,9 +79,23 @@ public class VDOTSpeedMessageFormatter extends ODEMessageFormatter{
     
     
     
-    private PodeDataDelivery createMessage(VDOTSpeedData.VDOTSpeedDataElement element, PodeSource source, int messageType){
-        PodeDataDelivery message = new PodeDataDelivery();
-
+    private PodeDataDistribution createMessage(ODEAgentMessage agentMessage, VDOTSpeedData.VDOTSpeedDataElement element, PodeSource source, int messageType, ServiceRequest serviceRequst){
+        PodeDataDistribution message = new PodeDataDistribution();
+        
+        PodeDialogID dialog = new PodeDialogID();
+        dialog.setValue(PodeDialogID.EnumType.podeDataDistribution);
+        message.setDialogID(dialog);
+        
+        message.setGroupID(serviceRequst.getGroupID());
+        message.setRequestID(serviceRequst.getRequestID());
+        SemiSequenceID seqId = new SemiSequenceID();
+        seqId.setValue(SemiSequenceID.EnumType.data);
+        message.setSeqID(seqId);
+        
+        
+        Sha256Hash hash = new Sha256Hash(DatatypeConverter.parseHexBinary(agentMessage.getMessageId()));
+        message.setMessageID(hash);
+        
         PodeDataRecord.PodeDataChoiceType data = new PodeDataRecord.PodeDataChoiceType();
         PodeDetectorData detector = new PodeDetectorData();
 

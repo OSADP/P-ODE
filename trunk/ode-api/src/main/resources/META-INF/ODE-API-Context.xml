@@ -57,6 +57,7 @@
 
     <bean id="odeLogger" class="com.leidos.ode.logging.ODELogger" scope="prototype">
         <property name="mongoTemplate" ref="mongoTemplate"/>
+        <property name="mongoRemote" value="true"/>
     </bean>
 
     <bean id="basicSubRegistration" class="com.leidos.ode.agent.registration.ODESubscribeRegistration">
@@ -111,12 +112,17 @@
         </property>
     </bean>
 
+    <bean id="bsmMessageFormatter" class="com.leidos.ode.agent.formatter.BSMMessageFormatter">
+    </bean>
+
     <bean id="bsmPubAgent" class="com.leidos.ode.agent.PublishODEAgent">
         <property name="registration" ref="basicPubRegistration"/>
         <property name="parser" ref="bsmParser"/>
         <property name="sanitizer" ref="passthroughSanitizer"/>
         <property name="dataTarget" ref="restTarget"/>
         <property name="registrationRequest" ref="bsmPubRegistrationRequest"/>
+        <property name="formatter" ref="bsmMessageFormatter"/>
+
         <property name="odeLogger" ref="odeLogger"/>
     </bean>
 
@@ -436,6 +442,7 @@
             </bean>
         </property>
     </bean>
+    
 
     <bean id="basicBluFaxAgent" class="com.leidos.ode.agent.PublishODEAgent">
         <property name="registration" ref="basicPubRegistration"/>
