@@ -31,12 +31,12 @@ public class WXDEParser extends DateParser {
     private final String WXDE_OBS_TYPE_NAME_KEY = "obstypename";
     private final String WXDE_SENSOR_ID_KEY = "sensorid";
     private final String WXDE_SENSOR_INDEX_KEY = "sensorindex";
-    private final String WXDE_PLATFORM_ID_KEY = "platformid";
+    private final String WXDE_PLATFORM_ID_KEY = "stationid";
     private final String WXDE_SITE_ID_KEY = "siteid";
     private final String WXDE_CATEGORY_KEY = "category";
     private final String WXDE_CONTRIB_ID_KEY = "contribid";
     private final String WXDE_CONTRIBUTOR_KEY = "contributor";
-    private final String WXDE_PLATFORM_CODE_KEY = "platformcode";
+    private final String WXDE_PLATFORM_CODE_KEY = "stationcode";
     private final String WXDE_TIMESTAMP_KEY = "timestamp";
     private final String WXDE_LATITUDE_KEY = "latitude";
     private final String WXDE_LONGITUDE_KEY = "longitude";

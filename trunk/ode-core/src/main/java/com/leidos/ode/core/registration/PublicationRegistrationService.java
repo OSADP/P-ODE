@@ -25,8 +25,7 @@ import com.leidos.ode.util.SHAHasher;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 import org.bn.CoderFactory;
 import org.bn.IDecoder;
 import org.bn.IEncoder;
@@ -39,7 +38,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class PublicationRegistrationService {
-
+    private String TAG = getClass().getSimpleName();
+    private Logger logger = Logger.getLogger(TAG);
+    
     @Autowired
     private RegistrationDAO regDao;
 
@@ -94,6 +95,8 @@ public class PublicationRegistrationService {
 //            response.setServiceRegion(null);
             
             String hash = SHAHasher.sha256Hash(registrationRequest.getEncodedRegistrationMessage());
+            logger.debug("Service Response Hash: "+hash);
+            logger.debug("Service Response Hash Length: "+hash.getBytes().length);
             Sha256Hash shaHash = new Sha256Hash(hash.getBytes());
             response.setHash(shaHash);
             
@@ -101,7 +104,7 @@ public class PublicationRegistrationService {
             registrationResponse.setEncodedRegistrationMessage(encodeMessage(response));
                     
         } catch (Exception ex) {
-            Logger.getLogger(PublicationRegistrationService.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("Error processing Service Request", ex);
         }
         
         return registrationResponse;
@@ -168,7 +171,7 @@ public class PublicationRegistrationService {
             registrationResponse.setEncodedRegistrationMessage(encodeMessage(confirmation));
             
         } catch (Exception ex) {
-            Logger.getLogger(PublicationRegistrationService.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("Error processing registration: ",ex);
         }
 
         return registrationResponse;

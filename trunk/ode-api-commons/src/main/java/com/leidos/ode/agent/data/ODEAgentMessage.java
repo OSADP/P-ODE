@@ -8,8 +8,12 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlTransient;
 
 @XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ODEAgentMessage implements Serializable {
     private AgentInfo agentInfo;
 
@@ -18,6 +22,7 @@ public class ODEAgentMessage implements Serializable {
     private String messagePayloadBase64;
     private byte[] messagePayload;
     private Object formattedMessage;
+    @XmlTransient
     private Map<ODEMessageType, List<PodeDataDistribution>> podeMessageList;
     
     

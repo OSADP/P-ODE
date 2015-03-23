@@ -6,11 +6,20 @@
 package com.leidos.ode.agent.formatter;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
+import com.leidos.ode.agent.data.vdot.VDOTSpeedData;
 import com.leidos.ode.agent.data.wxde.WXDEData;
 import com.leidos.ode.data.AmbientAirTemperature;
+import com.leidos.ode.data.DDateTime;
+import com.leidos.ode.data.DDay;
+import com.leidos.ode.data.DHour;
+import com.leidos.ode.data.DMinute;
+import com.leidos.ode.data.DMonth;
+import com.leidos.ode.data.DSecond;
+import com.leidos.ode.data.DYear;
 import com.leidos.ode.data.Distance;
 import com.leidos.ode.data.Latitude;
 import com.leidos.ode.data.Longitude;
+import com.leidos.ode.data.PodeCategory;
 import com.leidos.ode.data.PodeDataDelivery;
 import com.leidos.ode.data.PodeDataDistribution;
 import com.leidos.ode.data.PodeDataRecord;
@@ -25,6 +34,8 @@ import com.leidos.ode.data.ServiceRequest;
 import com.leidos.ode.data.Sha256Hash;
 import com.leidos.ode.util.ODEMessageType;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,16 +56,16 @@ public class WxDEMessageFormatter extends ODEMessageFormatter{
     public Map<ODEMessageType,List<PodeDataDistribution>> formatMessage(ODEAgentMessage agentMessage, ServiceRequest serviceRequst) {
         Map<ODEMessageType,List<PodeDataDistribution>> messages = new HashMap<ODEMessageType,List<PodeDataDistribution>>();
         WXDEData wxdeData = (WXDEData)agentMessage.getFormattedMessage();
-        
-        PodeSource source = new PodeSource();
-        source.setValue(PodeSource.EnumType.wxde);
-        List<PodeDataDistribution> messageList = new ArrayList<PodeDataDistribution>();
-        for(WXDEData.WXDEDataElement element:wxdeData.getWxdeDataElements()){
-            PodeDataDistribution dataDelivery = createMessage(agentMessage, element, source, serviceRequst);
-            messageList.add(dataDelivery);
+        if(wxdeData != null){
+            PodeSource source = new PodeSource();
+            source.setValue(PodeSource.EnumType.wxde);
+            List<PodeDataDistribution> messageList = new ArrayList<PodeDataDistribution>();
+            for(WXDEData.WXDEDataElement element:wxdeData.getWxdeDataElements()){
+                PodeDataDistribution dataDelivery = createMessage(agentMessage, element, source, serviceRequst);
+                messageList.add(dataDelivery);
+            }
+            messages.put(ODEMessageType.WEATHER, messageList);
         }
-        messages.put(ODEMessageType.WEATHER, messageList);
-
         
         
         return messages;
@@ -76,12 +87,18 @@ public class WxDEMessageFormatter extends ODEMessageFormatter{
         Sha256Hash hash = new Sha256Hash(DatatypeConverter.parseHexBinary(agentMessage.getMessageId()));
         dataDelivery.setMessageID(hash);        
         PodeDataRecord record = new PodeDataRecord();
+        
+        record.setLastupdatetime(getDateTimeForElement());
+        
+        
         record.setSource(source);
         PodeDataRecord.PodeDataChoiceType dataChoice = new PodeDataRecord.PodeDataChoiceType();
         
         
         PodeWeatherinfo weatherInfo = new PodeWeatherinfo();
-        weatherInfo.setCategory(null);
+        PodeCategory category = new PodeCategory();
+        category.setValue(PodeCategory.EnumType.t);
+        weatherInfo.setCategory(category);
         weatherInfo.setContribID(element.getContribId().getBytes());
         weatherInfo.setContributor(element.getContributor());
         weatherInfo.setObsTypeID(element.getObsTypeId().getBytes());
@@ -91,6 +108,7 @@ public class WxDEMessageFormatter extends ODEMessageFormatter{
         weatherInfo.setSensorIndex(Integer.parseInt(element.getSensorIndex()));
         weatherInfo.setSiteID(element.getSiteId().getBytes());
         weatherInfo.setSourceID(element.getSourceId().getBytes());
+        
         Position3D position = new Position3D();
         
         position.setLat(new Latitude(getLatitudeValue(element.getLatitude())));
@@ -141,5 +159,25 @@ public class WxDEMessageFormatter extends ODEMessageFormatter{
         int base = 10000000;
         return (int)Math.round(base*lon);
     }
+    
+    private DDateTime getDateTimeForElement(){
+        Calendar cal = Calendar.getInstance();
+        
+        DDateTime dateTime = new DDateTime();
+        DHour hour = new DHour(cal.get(Calendar.HOUR_OF_DAY));
+        dateTime.setHour(hour);
+        DMinute min = new DMinute(cal.get(Calendar.MINUTE));
+        dateTime.setMinute(min);
+        DSecond sec = new DSecond(cal.get(Calendar.SECOND));
+        dateTime.setSecond(sec);
+        DMonth month = new DMonth(cal.get(Calendar.MONTH)+1);
+        dateTime.setMonth(month);
+        DDay day = new DDay(cal.get(Calendar.DAY_OF_MONTH));
+        dateTime.setDay(day);
+        DYear year = new DYear(cal.get(Calendar.YEAR));
+        dateTime.setYear(year);
+        return dateTime;
+    }    
+    
 }
 

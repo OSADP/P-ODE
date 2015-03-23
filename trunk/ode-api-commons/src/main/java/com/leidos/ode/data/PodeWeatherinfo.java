@@ -20,7 +20,7 @@ import org.bn.types.*;
     public class PodeWeatherinfo implements IASN1PreparedElement {
             @ASN1OctetString( name = "" )
     
-            @ASN1SizeConstraint ( max = 4L )
+//            @ASN1SizeConstraint ( max = 4L )
         
         @ASN1Element ( name = "sourceID", isOptional =  false , hasTag =  true, tag = 0 , hasDefaultValue =  false  )
     
@@ -28,7 +28,7 @@ import org.bn.types.*;
                 
   @ASN1OctetString( name = "" )
     
-            @ASN1SizeConstraint ( max = 4L )
+//            @ASN1SizeConstraint ( max = 4L )
         
         @ASN1Element ( name = "obsTypeID", isOptional =  false , hasTag =  true, tag = 1 , hasDefaultValue =  false  )
     
@@ -36,7 +36,7 @@ import org.bn.types.*;
                 
   @ASN1OctetString( name = "" )
     
-            @ASN1SizeConstraint ( max = 4L )
+//            @ASN1SizeConstraint ( max = 4L )
         
         @ASN1Element ( name = "sensorID", isOptional =  false , hasTag =  true, tag = 2 , hasDefaultValue =  false  )
     
@@ -57,7 +57,7 @@ import org.bn.types.*;
                 
   @ASN1OctetString( name = "" )
     
-            @ASN1SizeConstraint ( max = 4L )
+//            @ASN1SizeConstraint ( max = 4L )
         
         @ASN1Element ( name = "platformID", isOptional =  false , hasTag =  true, tag = 4 , hasDefaultValue =  false  )
     
@@ -65,7 +65,7 @@ import org.bn.types.*;
                 
   @ASN1OctetString( name = "" )
     
-            @ASN1SizeConstraint ( max = 4L )
+//            @ASN1SizeConstraint ( max = 4L )
         
         @ASN1Element ( name = "siteID", isOptional =  false , hasTag =  true, tag = 5 , hasDefaultValue =  false  )
     
@@ -78,7 +78,7 @@ import org.bn.types.*;
                 
   @ASN1OctetString( name = "" )
     
-            @ASN1SizeConstraint ( max = 4L )
+//            @ASN1SizeConstraint ( max = 4L )
         
         @ASN1Element ( name = "contribID", isOptional =  false , hasTag =  true, tag = 7 , hasDefaultValue =  false  )
     
