@@ -42,21 +42,19 @@ public class RDEDistributor extends DataDistributor {
 
     private final String TAG = getClass().getSimpleName();
     private RDEDataWriter writer;
-    String targetURL;
-    int targetPort;
-    
+
     public RDEDistributor(RDEDataWriter writer, String topicHostURL, int topicHostPort,
-                          String connFactName, String topicName, String targetURL, int targetPort, Date endDate){
+                          String connFactName, String topicName){
         this.writer = writer;
         setTopicHostURL(topicHostURL);
         setTopicHostPort(topicHostPort);
-        setConnFactName(connFactName);
         setTopicName(topicName);
-        setSubscriptionEndDate(endDate);
+        setConnFactName(connFactName);
 
-        this.targetURL = targetURL;
-        this.targetPort = targetPort;
-        
+        // Set us to essentially never expire.
+        Date end = new Date();
+        end.setTime(Long.MAX_VALUE);
+        setSubscriptionEndDate(end);
     }
 
     @Override

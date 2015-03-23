@@ -80,6 +80,46 @@
         <constructor-arg name="filename" value="rdeconfig"/>
     </bean>
 
+    <bean id="rdeWeatherDistributor" class="com.leidos.ode.core.rde.RDEDistributor">
+        <constructor-arg name="writer" ref="rdeDataWriter"/>
+        <constructor-arg name="topicName" value="WeatherTopic"/>
+        <constructor-arg name="topicHostPort" value="7676"/>
+        <constructor-arg name="topicHostURL" value="localhost"/>
+        <constructor-arg name="connFactName" value="ODETopicConnFact"/>
+    </bean>
+
+    <bean id="rdeSpeedDistributor" class="com.leidos.ode.core.rde.RDEDistributor">
+        <constructor-arg name="writer" ref="rdeDataWriter"/>
+        <constructor-arg name="topicName" value="SpeedTopic"/>
+        <constructor-arg name="topicHostPort" value="7676"/>
+        <constructor-arg name="topicHostURL" value="localhost"/>
+        <constructor-arg name="connFactName" value="ODETopicConnFact"/>
+    </bean>
+
+    <bean id="rdeOccupancyDistributor" class="com.leidos.ode.core.rde.RDEDistributor">
+        <constructor-arg name="writer" ref="rdeDataWriter"/>
+        <constructor-arg name="topicName" value="OccupancyTopic"/>
+        <constructor-arg name="topicHostPort" value="7676"/>
+        <constructor-arg name="topicHostURL" value="localhost"/>
+        <constructor-arg name="connFactName" value="ODETopicConnFact"/>
+    </bean>
+
+    <bean id="rdeTravelTimeDistributor" class="com.leidos.ode.core.rde.RDEDistributor">
+        <constructor-arg name="writer" ref="rdeDataWriter"/>
+        <constructor-arg name="topicName" value="TravelTimeTopic"/>
+        <constructor-arg name="topicHostPort" value="7676"/>
+        <constructor-arg name="topicHostURL" value="localhost"/>
+        <constructor-arg name="connFactName" value="ODETopicConnFact"/>
+    </bean>
+
+    <bean id="rdeVolumeDistributor" class="com.leidos.ode.core.rde.RDEDistributor">
+        <constructor-arg name="writer" ref="rdeDataWriter"/>
+        <constructor-arg name="topicName" value="VolumeTopic"/>
+        <constructor-arg name="topicHostPort" value="7676"/>
+        <constructor-arg name="topicHostURL" value="localhost"/>
+        <constructor-arg name="connFactName" value="ODETopicConnFact"/>
+    </bean>
+
 
     
     
