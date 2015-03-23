@@ -39,10 +39,10 @@ public class RDEDistributeController {
 
     @PostConstruct
     public void initialize() {
-        weather.run();
-        speed.run();
-        volume.run();
-        occupancy.run();
-        traveltime.run();
+        new Thread(weather).start();
+        new Thread(speed).start();
+        new Thread(volume).start();
+        new Thread(occupancy).start();
+        new Thread(traveltime).start();
     }
 }
