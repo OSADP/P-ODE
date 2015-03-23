@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import java.util.Iterator;
 
 /**
  * Controller object just to instantiate the RDEDistributors necessary to send data to the RDE about all topics
@@ -44,5 +46,15 @@ public class RDEDistributeController {
         new Thread(volume).start();
         new Thread(occupancy).start();
         new Thread(traveltime).start();
+    }
+
+    @PreDestroy
+    public void cleanup() {
+        System.out.println("Closing RDE Distributors.");
+        weather.setInterrupted(true);
+        speed.setInterrupted(true);
+        volume.setInterrupted(true);
+        occupancy.setInterrupted(true);
+        traveltime.setInterrupted(true);
     }
 }
