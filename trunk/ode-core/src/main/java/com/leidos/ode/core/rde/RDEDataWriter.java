@@ -45,7 +45,7 @@ public class RDEDataWriter {
         // Check if the configured cert location exists, use it if we can, otherwise look inward.
         if (!setSslSystemProps(config)) {
             logger.warn("No external SSL certificate found at " + config.getTrustStore() + " attempting to load internal"
-                        + "certificate...");
+                        + " certificate...");
 
             // Try to load the RDE SSL cert from inside the JAR
             try {
@@ -70,7 +70,7 @@ public class RDEDataWriter {
                 SSLContext sslContext = SSLContext.getInstance("SSL");
                 sslContext.init(keyManagers, trustManagers, null);
                 SSLContext.setDefault(sslContext);
-                logger.debug("Sucessfully initialized default SSL context with RDE trust store.");
+                logger.info("Sucessfully initialized default SSL context with RDE trust store.");
             } catch (CertificateException e) {
                 logger.error("Unable to load SSL certificate for RDE.", e);
             } catch (UnrecoverableKeyException e) {
