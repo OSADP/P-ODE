@@ -72,18 +72,30 @@ public class BlufaxLinkMessageFormatter extends ODEMessageFormatter{
                     List<LinkStatusList> linkStatusListList = linkList.getLink();
                     for(LinkStatusList lsl:linkStatusListList){
                         travelMessages.add(createMessage(lsl, source, hash, TRAVEL_TIME_MESSAGE,serviceRequst));
-                        speedMessages.add(createMessage(lsl, source, hash, SPEED_MESSAGE,serviceRequst));
-                        volumeMessages.add(createMessage(lsl, source, hash, VOLUME_MESSAGE,serviceRequst));
-                        occupancyMessages.add(createMessage(lsl, source, hash, OCCUPANCY_MESSAGE,serviceRequst));
+                        if(lsl.getSpeedAverage() != null){
+                            speedMessages.add(createMessage(lsl, source, hash, SPEED_MESSAGE,serviceRequst));
+                        }
+                        if(lsl.getVolume() != null){
+                            volumeMessages.add(createMessage(lsl, source, hash, VOLUME_MESSAGE,serviceRequst));
+                        }
+                        if(lsl.getOccupancy() != null){
+                            occupancyMessages.add(createMessage(lsl, source, hash, OCCUPANCY_MESSAGE,serviceRequst));
+                        }
                     }
                 }
             }
         }
         
         messages.put(ODEMessageType.TRAVEL, travelMessages);
-        messages.put(ODEMessageType.SPEED, speedMessages);
-        messages.put(ODEMessageType.VOLUME, volumeMessages);
-        messages.put(ODEMessageType.OCCUPANCY, occupancyMessages);
+        if(speedMessages.size() > 0){
+            messages.put(ODEMessageType.SPEED, speedMessages);
+        }
+        if(volumeMessages.size() > 0){
+            messages.put(ODEMessageType.VOLUME, volumeMessages);
+        }
+        if(occupancyMessages.size() > 0){
+            messages.put(ODEMessageType.OCCUPANCY, occupancyMessages);        
+        }
 
         
         
@@ -173,23 +185,28 @@ public class BlufaxLinkMessageFormatter extends ODEMessageFormatter{
     private PodeDataElementList createTravelTimeMessage(LinkStatusList lsl) {
         PodeDataElementList laneDataList = createSpeedMessage(lsl);
         PodeTravelTime travelTime = new PodeTravelTime();
-        travelTime.setTravelTime(new DMinute(lsl.getTravelTime()));
+        int value = lsl.getTravelTime()/60;
+        travelTime.setTravelTime(new DMinute(value));
         laneDataList.setTravelTimeInfo(travelTime);
         return laneDataList;
     }
     
     private PodeDataElementList createSpeedMessage(LinkStatusList lsl) {
         PodeDataElementList laneDataList = new PodeDataElementList();
-        //speed in mph
-        int normalSpeed = lsl.getSpeedAverage();
-        //convert to meter per second
-        double meterSecond = normalSpeed*.44704;
-        //convert to .02 meter per second as per SAE J2735
-        double saeSpeed = meterSecond / .02;
-        
-        Speed speed = new Speed((int)Math.round(saeSpeed));
-        laneDataList.setSpeed(speed);
-        
+        if(lsl.getSpeedAverage() != null){
+            //speed in mph
+            int normalSpeed = lsl.getSpeedAverage();
+            //convert to meter per second
+            double meterSecond = normalSpeed*.44704;
+            //convert to .02 meter per second as per SAE J2735
+            double saeSpeed = meterSecond / .02;
+
+            Speed speed = new Speed((int)Math.round(saeSpeed));
+            laneDataList.setSpeed(speed);
+        }else{
+            Speed speed = new Speed(0);
+            laneDataList.setSpeed(speed);
+        }
         return laneDataList;
     }    
 

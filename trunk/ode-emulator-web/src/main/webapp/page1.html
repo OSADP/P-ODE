@@ -40,14 +40,15 @@
                                 currentArray = new Array(srvResp.speedWestValue);
                             }
                             
-                                
-                            
                             $.each(currentArray, function(index, m){
                                 if(m.source == 'vdot'){
                                     $("#vdotWestSpeed").html(m.dataValue);
                                 }
                                 if(m.source == 'ritis'){
                                     $("#ritisWestSpeed").html(m.dataValue);
+                                }
+                                if(m.source == 'blufax'){
+                                    $("#blueFaxLnkSpdWest").html(m.dataValue);
                                 }
                                 
                             });
@@ -85,6 +86,19 @@
                                 }                                                        
                             });
                         }
+                        if(srvResp.travelTimeWest != null){
+                            if(srvResp.travelTimeWest instanceof Array){
+                                currentArray = srvResp.travelTimeWest;
+                            }else{
+                                currentArray = new Array(srvResp.travelTimeWest);
+                            }                             
+                            $.each(currentArray, function(index, m){
+                                if(m.source == 'blufax'){
+                                    $("#blueFaxLnkTTWest").html(m.dataValue);
+                                }
+                                
+                            });
+                        }                        
                         
                         
                         
@@ -103,6 +117,9 @@
                                 if(m.source == 'ritis'){
                                     $("#ritisEastSpeed").html(m.dataValue);
                                 }
+                                if(m.source == 'blufax'){
+                                    $("#blueFaxLnkSpdEast").html(m.dataValue);
+                                }                                
                             });
                         }
                             
@@ -140,6 +157,20 @@
                                 }
                             });
                         }
+                        
+                        if(srvResp.travelTimeEast != null){
+                            if(srvResp.travelTimeEast instanceof Array){
+                                currentArray = srvResp.travelTimeEast;
+                            }else{
+                                currentArray = new Array(srvResp.travelTimeEast);
+                            }                             
+                            $.each(currentArray, function(index, m){
+                                if(m.source == 'blufax'){
+                                    $("#blueFaxLnkTTEast").html(m.dataValue);
+                                }
+                                
+                            });
+                        }                        
                         
                         
                         if(srvResp.currentWeather != null){

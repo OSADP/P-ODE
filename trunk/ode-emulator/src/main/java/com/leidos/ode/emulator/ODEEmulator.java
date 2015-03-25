@@ -219,7 +219,7 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
         }else if(weatherData.getPrecipRate() != null){
             return weatherData.getPrecipRate().getValue()+"";
         }else if(weatherData.getVisibility() != null){
-            return weatherData.getVisibility().getValue()+"";
+            return new String(weatherData.getVisibility().getValue());
         }
         return null;
     }

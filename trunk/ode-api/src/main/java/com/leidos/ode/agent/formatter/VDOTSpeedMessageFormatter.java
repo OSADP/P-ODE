@@ -123,7 +123,7 @@ public class VDOTSpeedMessageFormatter extends ODEMessageFormatter{
         PodeLaneDirection direction = new PodeLaneDirection();
         if(element.getLaneDirection().equalsIgnoreCase("E")){
             direction.setValue(PodeLaneDirection.EnumType.east);
-        }else{
+        }else if(element.getLaneDirection().equalsIgnoreCase("W")){
             direction.setValue(PodeLaneDirection.EnumType.west);
         }
         laneInfo.setLaneDirection(direction);
