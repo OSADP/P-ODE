@@ -201,7 +201,7 @@ public class RDEDistributor extends DataDistributor {
     /**
      * Converts a DDateTime object into a string representation of the data contained within.
      * @param time
-     * @return a string conversion in MM
+     * @return a string conversion in M/D/Y H:M:S format
      */
     private String convertDDateTime(DDateTime time) {
         StringBuilder out = new StringBuilder();
