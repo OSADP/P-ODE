@@ -26,6 +26,7 @@
                     url:  'resources/getCurrentData',
                     type: 'GET',
                     dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
                     success: function(srvResp){
 //                        $("#").html();
                         $("#ebI66Time").html(srvResp.eastBoundTravelTime);
@@ -141,7 +142,14 @@
                         }
                         
                         
-                        
+                        if(srvResp.currentWeather != null){
+                            var weatherinfo = "";
+                            for (var m in srvResp.currentWeather){
+                                weatherinfo = weatherinfo + "<div> <strong>"+srvResp.currentWeather[m].dataType+":</strong><span >"+srvResp.currentWeather[m].dataValue+"</span></div>";
+                            }
+                            $("#weatherInfo1").html(weatherinfo);
+                            $("#weatherInfo2").html(weatherinfo);
+                        }                        
                         
                         
 //                        if(srvResp.ritisSpeedDataEastValue != null){

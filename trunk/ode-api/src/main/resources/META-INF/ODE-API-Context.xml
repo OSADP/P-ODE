@@ -532,10 +532,15 @@
         
     </bean>
 
+    <bean id="wxdeSanitizer" class="com.leidos.ode.agent.sanitizer.WXDEPlatformSanitizer">
+        <property name="platforms" value="${leidos.ode.weather.platformlist}"/>
+        <property name="readings" value="${leidos.ode.weather.readinglist}"/>
+    </bean>
+
     <bean id="basicWXDEAgent" class="com.leidos.ode.agent.PublishODEAgent">
         <property name="registration" ref="basicPubRegistration"/>
         <property name="parser" ref="wxdeParser"/>
-        <property name="sanitizer" ref="passthroughSanitizer"/>
+        <property name="sanitizer" ref="wxdeSanitizer"/>
         <property name="dataTarget" ref="restTarget"/>
         <property name="odeLogger" ref="odeLogger"/>
         <property name="formatter" ref="wxdeMessageFormatter"/>

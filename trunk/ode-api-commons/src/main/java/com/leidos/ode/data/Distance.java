@@ -21,7 +21,7 @@ import org.bn.types.*;
     
             @ASN1OctetString( name = "Distance" )
             
-            @ASN1SizeConstraint ( max = 2L )
+//            @ASN1SizeConstraint ( max = 2L )
         
             private byte[] value = null;
             

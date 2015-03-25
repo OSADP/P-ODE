@@ -17,11 +17,11 @@ and open the template in the editor.
                     url:  'resources/getCollectorList',
                     type: 'GET',
                     dataType: 'json',
+                    contentType: "application/json",
                     success: function(srvResp){
                         var boxes = "";
                         $.each(srvResp.collectors, function(index, name){
                             boxes += "<input type='checkbox' id='collectors' value='"+name+"' name='"+name+"'/>"+name+"<br/>";
-                            
                         });
                         boxes += "<input type='button' id='submit' value='Start' name='Start' onClick='submitForm()'/>"+name+"<br/>";
                         $("#checkboxDiv").html(boxes);

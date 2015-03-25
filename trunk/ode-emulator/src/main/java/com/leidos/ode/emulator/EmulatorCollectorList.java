@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author cassadyja
  */
 @XmlRootElement
+
 public class EmulatorCollectorList {
     private String[] collectors = new String[]{"SpeedCollector",
             "VolumeCollector", "OccupancyCollector", "TravelTimeCollector",

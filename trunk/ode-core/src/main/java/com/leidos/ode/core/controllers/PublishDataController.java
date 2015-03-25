@@ -38,9 +38,7 @@ public abstract class PublishDataController {
     @Value("${leidos.ode.publisher.connectionfactoryname}")
     private String connectionFactoryName;
     
-    @Autowired
-    @Qualifier("odeLogger")
-    private ODELogger odeLogger;
+
 
     protected abstract String publishData(ODEAgentMessage odeAgentMessage);
 
@@ -59,7 +57,7 @@ public abstract class PublishDataController {
     
     private void startLogEntry(ODELogger.ODEStage stage, String message){
         try {
-            odeLogger.start(stage, message);
+            getOdeLogger().start(stage, message);
         } catch (ODELogger.ODELoggerException ex) {
             logger.warn("Error starting log event",ex);
         }
@@ -69,7 +67,7 @@ public abstract class PublishDataController {
     
     private void finishLogEntry(){
         try {
-            odeLogger.finish();
+            getOdeLogger().finish();
         } catch (ODELogger.ODELoggerException ex) {
             logger.warn("Error finishing log entry",ex);
         }
@@ -188,16 +186,9 @@ public abstract class PublishDataController {
     /**
      * @return the odeLogger
      */
-    public ODELogger getOdeLogger() {
-        return odeLogger;
-    }
+    public abstract ODELogger getOdeLogger();
 
-    /**
-     * @param odeLogger the odeLogger to set
-     */
-    public void setOdeLogger(ODELogger odeLogger) {
-        this.odeLogger = odeLogger;
-    }
+
 
 
     /**

@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.xml.bind.DatatypeConverter;
+import org.springframework.http.MediaType;
 
 
 /**
@@ -54,7 +55,7 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
     private CurrentDataSet currentData = new CurrentDataSet();
 
 
-    @RequestMapping(value = "startEmulator", method = RequestMethod.POST)
+    @RequestMapping(value = "startEmulator", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public
     @ResponseBody
     String startEmulator(@RequestBody EmulatorCollectorList collectors) {
@@ -103,7 +104,7 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
         }
     }
 
-    @RequestMapping(value = "getCurrentData", method = RequestMethod.GET)
+    @RequestMapping(value = "getCurrentData", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody CurrentDataSet getCurrentData() {
         return currentData;
     }
@@ -204,9 +205,11 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
         element.setSource(source);
         String weatherReadingType = getWeatherReadingType(dataDelivery.getPodeData().getPodeData().getWeather());
         String weatherReadingValue = getWeatherValue(dataDelivery.getPodeData().getPodeData().getWeather());
-        element.setDataType(weatherReadingType);
-        element.setDataValue(weatherReadingValue);
-        currentData.addCurrentWeather(element);
+        if(weatherReadingType != null && weatherReadingValue != null){
+            element.setDataType(weatherReadingType);
+            element.setDataValue(weatherReadingValue);
+            currentData.addCurrentWeather(element);
+        }
     }
     
     private String getWeatherValue(PodeWeatherinfo weatherInfo){
@@ -218,7 +221,7 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
         }else if(weatherData.getVisibility() != null){
             return weatherData.getVisibility().getValue()+"";
         }
-        return "";
+        return null;
     }
     
     private String getWeatherReadingType(PodeWeatherinfo weatherInfo){
@@ -230,7 +233,7 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
         }else if(weatherData.getVisibility() != null){
             return "Visibility";
         }
-        return "";
+        return null;
     }
 
     

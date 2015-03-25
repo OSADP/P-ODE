@@ -112,17 +112,16 @@ public class ODERestTarget implements ODEDataTarget {
     
     @Override
     public void sendMessage(ODEAgentMessage message) throws DataTargetException {
-        
-        try {
-            //Going to continue using the ODEAgentMessage, but only going to send 
-            //the raw bytes of the new message.
-            Map<ODEMessageType, List<PodeDataDistribution>> messages = message.getPodeMessageList();
-            Iterator<ODEMessageType> it = messages.keySet().iterator();
-            while(it.hasNext()){
-                ODEMessageType messageType = it.next();
-                httpPost = httpPosts.get(messageType);
-                List<PodeDataDistribution> list = messages.get(messageType);
-                for(PodeDataDistribution data:list){
+        //Going to continue using the ODEAgentMessage, but only going to send 
+        //the raw bytes of the new message.
+        Map<ODEMessageType, List<PodeDataDistribution>> messages = message.getPodeMessageList();
+        Iterator<ODEMessageType> it = messages.keySet().iterator();
+        while(it.hasNext()){
+            ODEMessageType messageType = it.next();
+            httpPost = httpPosts.get(messageType);
+            List<PodeDataDistribution> list = messages.get(messageType);
+            for(PodeDataDistribution data:list){
+                try{
                     ODEAgentMessage agentMessage = new ODEAgentMessage();
                     agentMessage.setMessageId(message.getMessageId());
                     agentMessage.setMessagePayload(encodePodeMessage(data));
@@ -134,23 +133,14 @@ public class ODERestTarget implements ODEDataTarget {
                     HttpEntity responseEntity = httpResponse.getEntity();
                     String responseString = EntityUtils.toString(responseEntity);
                     logger.debug("Target response: " + responseString);
+                } catch (IOException e) {
+                    logger.error(e.getLocalizedMessage());
+                } catch (JAXBException e) {
+                    logger.error(e.toString());
+                }catch(Exception e){
+                    logger.error(e.toString(),e);
                 }
             }
-
-
-//            StringEntity entity = createEntity(message);
-//            httpPost.setEntity(entity);
-//            logger.debug("Sending message to target.");
-//            httpResponse = httpClient.execute(httpPost);
-//            HttpEntity responseEntity = httpResponse.getEntity();
-//            String responseString = EntityUtils.toString(responseEntity);
-//            logger.debug("Target response: " + responseString);
-        } catch (IOException e) {
-            logger.error(e.getLocalizedMessage());
-        } catch (JAXBException e) {
-            logger.error(e.toString());
-        }catch(Exception e){
-            logger.error(e.toString());
         }
     }
     

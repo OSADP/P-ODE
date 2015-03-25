@@ -2,7 +2,10 @@ package com.leidos.ode.core.controllers.topics;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
 import com.leidos.ode.core.controllers.PublishDataController;
+import com.leidos.ode.logging.ODELogger;
 import javax.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +26,10 @@ public class PublishVDOTSpdVolOccDataController extends PublishDataController {
     @Value("${leidos.ode.publisher.topic.vdotspdvolocc}")
     private String topicName;
     
+    @Autowired
+    @Qualifier("odeLogger")
+    private ODELogger odeLogger;    
+    
     @Override
     public String getTopicName() {
         return topicName;
@@ -35,4 +42,18 @@ public class PublishVDOTSpdVolOccDataController extends PublishDataController {
         return publish(odeAgentMessage);
     }
 
+    /**
+     * @return the odeLogger
+     */
+    public ODELogger getOdeLogger() {
+        return odeLogger;
+    }
+
+    /**
+     * @param odeLogger the odeLogger to set
+     */
+    public void setOdeLogger(ODELogger odeLogger) {
+        this.odeLogger = odeLogger;
+    }    
+    
 }

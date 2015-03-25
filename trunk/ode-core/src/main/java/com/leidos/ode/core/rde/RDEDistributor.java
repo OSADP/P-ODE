@@ -27,6 +27,7 @@ import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Topic;
+import org.apache.log4j.Logger;
 
 /**,
  * Class representing the Store Data controller. Responsible for sending published data received by the ODE to the RDE,
@@ -41,6 +42,7 @@ import javax.jms.Topic;
 public class RDEDistributor extends DataDistributor {
 
     private final String TAG = getClass().getSimpleName();
+    private Logger logger = Logger.getLogger(TAG);    
     private RDEDataWriter writer;
 
     public RDEDistributor(RDEDataWriter writer, String topicHostURL, int topicHostPort,
@@ -59,7 +61,7 @@ public class RDEDistributor extends DataDistributor {
 
     @Override
     protected void cleanup() {
-        // Empty method because theres nothing to cleanup here.
+        setInterrupted(true);
     }
 
     @Override
@@ -70,6 +72,7 @@ public class RDEDistributor extends DataDistributor {
     @Override
     protected void sendData(Message rawMessage) throws DistributeException {
         // Generate the datum object
+        logger.debug("Received message at RDE Distributor.");
         GenericDatum<char[]> datum = new GenericDatum<char[]>();
 
         // Copy the above generated values into the Datum
@@ -79,7 +82,9 @@ public class RDEDistributor extends DataDistributor {
 
         // Send it off to the RDE
         try {
+            logger.debug("Writing message...");
             writer.send(datum);
+            logger.debug("Message Written to RDE.");
         } catch (InterruptedException e) {
             throw new DistributeException("Interrupted while waiting on writer queue.");
         }
@@ -111,9 +116,11 @@ public class RDEDistributor extends DataDistributor {
 
             generator.writeStartObject();
             generator.writeObjectFieldStart(messageType);
-            generator.writeStringField("latitude", pos.getLat().toString());
-            generator.writeStringField("longitude", pos.getLon().toString());
-            generator.writeStringField("elevation", pos.getElevation().toString());
+            if(pos != null && pos.getLat() != null && pos.getLon() != null && pos.getElevation() != null){
+                generator.writeStringField("latitude", pos.getLat().toString());
+                generator.writeStringField("longitude", pos.getLon().toString());
+                generator.writeStringField("elevation", pos.getElevation().toString());
+            }
             generator.writeStringField("date", timestamp);
             generator.writeFieldName("value");
             generator.writeBinary(encoded);

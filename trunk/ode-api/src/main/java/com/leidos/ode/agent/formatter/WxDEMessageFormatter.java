@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.xml.bind.DatatypeConverter;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -50,6 +51,8 @@ public class WxDEMessageFormatter extends ODEMessageFormatter{
     private static final String TEMP_READING = "essSurfaceTemperature";
     private static final String PRECIP_READING = "essPrecipRate";
     private static final String VIS_READING = "essVisibility";
+    private final String TAG = getClass().getSimpleName();
+    private Logger logger = Logger.getLogger(TAG);
     
     
     @Override
@@ -62,7 +65,9 @@ public class WxDEMessageFormatter extends ODEMessageFormatter{
             List<PodeDataDistribution> messageList = new ArrayList<PodeDataDistribution>();
             for(WXDEData.WXDEDataElement element:wxdeData.getWxdeDataElements()){
                 PodeDataDistribution dataDelivery = createMessage(agentMessage, element, source, serviceRequst);
-                messageList.add(dataDelivery);
+                if(dataDelivery != null){
+                    messageList.add(dataDelivery);
+                }
             }
             messages.put(ODEMessageType.WEATHER, messageList);
         }
@@ -72,62 +77,67 @@ public class WxDEMessageFormatter extends ODEMessageFormatter{
     }    
 
     private PodeDataDistribution createMessage(ODEAgentMessage agentMessage, WXDEData.WXDEDataElement element, PodeSource source, ServiceRequest serviceRequst) {
-        PodeDataDistribution dataDelivery = new PodeDataDistribution();
-        PodeDialogID dialog = new PodeDialogID();
-        dialog.setValue(PodeDialogID.EnumType.podeDataDistribution);
-        dataDelivery.setDialogID(dialog);
-        
-        dataDelivery.setGroupID(serviceRequst.getGroupID());
-        dataDelivery.setRequestID(serviceRequst.getRequestID());
-        SemiSequenceID seqId = new SemiSequenceID();
-        seqId.setValue(SemiSequenceID.EnumType.data);
-        dataDelivery.setSeqID(seqId);
-                
-        
-        Sha256Hash hash = new Sha256Hash(DatatypeConverter.parseHexBinary(agentMessage.getMessageId()));
-        dataDelivery.setMessageID(hash);        
-        PodeDataRecord record = new PodeDataRecord();
-        
-        record.setLastupdatetime(getDateTimeForElement());
-        
-        
-        record.setSource(source);
-        PodeDataRecord.PodeDataChoiceType dataChoice = new PodeDataRecord.PodeDataChoiceType();
-        
-        
-        PodeWeatherinfo weatherInfo = new PodeWeatherinfo();
-        PodeCategory category = new PodeCategory();
-        category.setValue(PodeCategory.EnumType.t);
-        weatherInfo.setCategory(category);
-        weatherInfo.setContribID(element.getContribId().getBytes());
-        weatherInfo.setContributor(element.getContributor());
-        weatherInfo.setObsTypeID(element.getObsTypeId().getBytes());
-        weatherInfo.setPlatformCode(element.getStationCode());
-        weatherInfo.setPlatformID(element.getStationId().getBytes());
-        weatherInfo.setSensorID(element.getSensorId().getBytes());
-        weatherInfo.setSensorIndex(Integer.parseInt(element.getSensorIndex()));
-        weatherInfo.setSiteID(element.getSiteId().getBytes());
-        weatherInfo.setSourceID(element.getSourceId().getBytes());
-        
-        Position3D position = new Position3D();
-        
-        position.setLat(new Latitude(getLatitudeValue(element.getLatitude())));
-        position.setLon(new Longitude(getLongitudeValue(element.getLongitude())));
-        weatherInfo.setPosition(position);
-        
-        
-        
-        PodeWeatherData weatherData = createWeatherData(element);
-                
-        weatherInfo.setWeatherSenorData(weatherData);
-        
-        
-        dataChoice.selectWeather(weatherInfo);
-        record.setPodeData(dataChoice);
-        
-        dataDelivery.setPodeData(record);
-        
-        return dataDelivery;
+        PodeWeatherData weatherData = createWeatherData(element);        
+        if(weatherData != null){
+            PodeDataDistribution dataDelivery = new PodeDataDistribution();
+            PodeDialogID dialog = new PodeDialogID();
+            dialog.setValue(PodeDialogID.EnumType.podeDataDistribution);
+            dataDelivery.setDialogID(dialog);
+
+            dataDelivery.setGroupID(serviceRequst.getGroupID());
+            dataDelivery.setRequestID(serviceRequst.getRequestID());
+            SemiSequenceID seqId = new SemiSequenceID();
+            seqId.setValue(SemiSequenceID.EnumType.data);
+            dataDelivery.setSeqID(seqId);
+
+
+            Sha256Hash hash = new Sha256Hash(DatatypeConverter.parseHexBinary(agentMessage.getMessageId()));
+            dataDelivery.setMessageID(hash);        
+            PodeDataRecord record = new PodeDataRecord();
+
+            record.setLastupdatetime(getDateTimeForElement());
+
+
+            record.setSource(source);
+            PodeDataRecord.PodeDataChoiceType dataChoice = new PodeDataRecord.PodeDataChoiceType();
+
+
+            PodeWeatherinfo weatherInfo = new PodeWeatherinfo();
+            PodeCategory category = new PodeCategory();
+            category.setValue(PodeCategory.EnumType.t);
+            weatherInfo.setCategory(category);
+            weatherInfo.setContribID(element.getContribId().getBytes());
+            weatherInfo.setContributor(element.getContributor());
+            weatherInfo.setObsTypeID(element.getObsTypeId().getBytes());
+            weatherInfo.setPlatformCode(element.getStationCode());
+            weatherInfo.setPlatformID(element.getStationId().getBytes());
+            weatherInfo.setSensorID(element.getSensorId().getBytes());
+            weatherInfo.setSensorIndex(Integer.parseInt(element.getSensorIndex()));
+            weatherInfo.setSiteID(element.getSiteId().getBytes());
+            weatherInfo.setSourceID(element.getSourceId().getBytes());
+
+            Position3D position = new Position3D();
+
+            position.setLat(new Latitude(getLatitudeValue(element.getLatitude())));
+            position.setLon(new Longitude(getLongitudeValue(element.getLongitude())));
+            weatherInfo.setPosition(position);
+
+
+
+
+
+            weatherInfo.setWeatherSenorData(weatherData);
+
+
+            dataChoice.selectWeather(weatherInfo);
+            record.setPodeData(dataChoice);
+
+            dataDelivery.setPodeData(record);
+
+            return dataDelivery;
+        }else{
+            return null;
+        }
     }    
     
     
@@ -135,15 +145,20 @@ public class WxDEMessageFormatter extends ODEMessageFormatter{
         PodeWeatherData weatherData = new PodeWeatherData();
         String type = element.getObsTypeName();
         if(TEMP_READING.equalsIgnoreCase(type)){
+            logger.debug("Formatting temp message");
             double value = element.getObservation();
             value += 40;
             weatherData.setSurfaceTemperature(new AmbientAirTemperature((int)value));
         }else if(VIS_READING.equalsIgnoreCase(type)){
-            int value = (int)element.getObservation();
-            String valueString = Integer.toString(value);
-            weatherData.setVisibility(new Distance(valueString.getBytes()));
+            logger.debug("Formatting Visibility message");
+            Integer i = new Integer((int)element.getObservation());
+            weatherData.setVisibility(new Distance(i.toString().getBytes()));
         }else if(PRECIP_READING.equalsIgnoreCase(type)){
+            logger.debug("Formatting Precip message");
             weatherData.setPrecipRate(new PrecipRate((int)element.getObservation()));
+        }else{
+            logger.debug("Ignoring "+type);
+            return null;
         }
         
         return weatherData;
