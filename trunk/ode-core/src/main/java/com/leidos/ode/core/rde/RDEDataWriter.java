@@ -5,6 +5,7 @@ import org.dot.rdelive.api.Datum;
 import org.dot.rdelive.api.RunnableDataWriter;
 import org.dot.rdelive.client.out.RDEClientUploadDirector;
 import org.dot.rdelive.client.out.SampleRDEClientSocketWriter;
+import org.dot.rdelive.client.out.WriterTask;
 
 import javax.net.ssl.*;
 import java.io.File;
@@ -13,6 +14,7 @@ import java.io.InputStream;
 import java.security.*;
 import java.security.cert.CertificateException;
 import java.util.Properties;
+import java.util.Timer;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -43,7 +45,7 @@ public class RDEDataWriter {
         director = new RDEClientUploadDirector(writer, null);
 
         // Check if the configured cert location exists, use it if we can, otherwise look inward.
-        if (!setSslSystemProps(config)) {
+        if (config.getLoadCert() && !setSslSystemProps(config)) {
             logger.warn("No external SSL certificate found at " + config.getTrustStore() + " attempting to load internal"
                         + " certificate...");
 
@@ -53,14 +55,14 @@ public class RDEDataWriter {
                 InputStream keyStream = getClass().getResourceAsStream("rdeapi.p12");
 
                 // Initialize the key stores
-                KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+                KeyStore keyStore = KeyStore.getInstance("PKCS12");
                 keyStore.load(keyStream, password);
                 KeyManagerFactory keyFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
                 keyFactory.init(keyStore, password);
                 KeyManager[] keyManagers = keyFactory.getKeyManagers();
 
                 // Initialize the trust stores
-                KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+                KeyStore trustStore = KeyStore.getInstance("PKCS12");
                 trustStore.load(keyStream, password);
                 TrustManagerFactory trustFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
                 trustFactory.init(trustStore);
@@ -70,6 +72,7 @@ public class RDEDataWriter {
                 SSLContext sslContext = SSLContext.getInstance("SSL");
                 sslContext.init(keyManagers, trustManagers, null);
                 SSLContext.setDefault(sslContext);
+                SSLContext.getDefault();
                 logger.info("Sucessfully initialized default SSL context with RDE trust store.");
             } catch (CertificateException e) {
                 logger.error("Unable to load SSL certificate for RDE.", e);
@@ -136,7 +139,26 @@ public class RDEDataWriter {
         props.setProperty("javax.net.ssl.trustStorePassword", config.getPassword());
         System.setProperties(props);
 
+        // TODO: Remove this log statement, it leaks the password.
+        logger.info(String.format("Set trust store to %s, type %s, password %s",
+                    config.getTrustStore(),
+                    config.getTrustStoreType(),
+                    config.getTrustStorePassword()));
+
+
         return true;
+    }
+
+    public static void main(String[] args) {
+        System.out.println("Running in standalone test mode...");
+        RDEConfig config = new RDEConfig("rdeconfig");
+        RDEDataWriter writer = new RDEDataWriter(config);
+
+        System.out.println("Instantiated writer.");
+
+        WriterTask task = new WriterTask(writer.getWriterQueue());
+        new Timer().schedule(task, 5000, 50000);
+        System.out.println("Instantiated timer task.");
     }
 
 }

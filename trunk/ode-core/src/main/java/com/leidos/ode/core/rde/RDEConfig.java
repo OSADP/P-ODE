@@ -26,7 +26,7 @@ public class RDEConfig implements RDEClientConfig<Datum<char[]>, char[]> {
     private String trustStoreType;
     private String trustStore;
     private String trustStorePassword;
-    private boolean loadCertFromJar;
+    private boolean loadCert;
 
     public RDEConfig(String filename) {
         // Open the file
@@ -48,114 +48,97 @@ public class RDEConfig implements RDEClientConfig<Datum<char[]>, char[]> {
         trustStore = bundle.getString("rde.truststore");
         trustStoreType = bundle.getString("rde.truststoretype");
         trustStorePassword = bundle.getString("rde.truststorepassword");
+        loadCert = Boolean.parseBoolean(bundle.getString("rde.loadcert"));
     }
-
-    @Override
+    
     public void setURL(String URL) {
         this.url = URL;
     }
 
-    @Override
+    
     public String getURL() {
         return url;
     }
-
-    @Override
+    
     public void setPort(int port) {
         this.port = port;
     }
-
-    @Override
+    
     public int getPort() {
         return port;
     }
-
-    @Override
+    
     public void setUseSSL(boolean useSSL) {
         this.useSSL = useSSL;
     }
-
-    @Override
+    
     public boolean isUseSSL() {
         return useSSL;
     }
-
-    @Override
+    
     public void setUsername(String username) {
         this.username = username;
     }
 
-    @Override
+    
     public String getUsername() {
         return username;
     }
 
-    @Override
+    
     public void setPassword(String password) {
         this.password = password;
     }
 
-    @Override
+    
     public String getPassword() {
         return password;
     }
 
-    @Override
     public void setAppName(String appName) {
         this.appName = appName;
     }
 
-    @Override
     public String getAppName() {
         return appName;
     }
 
-    @Override
     public void setTimeout(int timeOut) {
         this.timeout = timeOut;
     }
 
-    @Override
     public int getTimeout() {
         return timeout;
     }
 
-    @Override
     public void setRetries(int retries) {
         this.retries = retries;
     }
 
-    @Override
     public int getRetries() {
         return retries;
     }
 
-    @Override
     public void setRetryInterval(long millis) {
         this.retryInterval = millis;
     }
 
-    @Override
     public long getRetryInterval() {
         return retryInterval;
     }
 
-    @Override
     public void setRDEClientMode(RDEClientMode mode) {
         this.clientMode = mode;
     }
 
-    @Override
     public RDEClientMode getRDEClientMode() {
         return clientMode;
     }
 
-    @Override
     public void setSocketTimeout(int timeout) {
         socketTimeout = timeout;
     }
 
-    @Override
     public int getSocketTimeout() {
         return socketTimeout;
     }
@@ -170,6 +153,10 @@ public class RDEConfig implements RDEClientConfig<Datum<char[]>, char[]> {
 
     public String getTrustStorePassword() {
         return trustStorePassword;
+    }
+
+    public Boolean getLoadCert() {
+        return loadCert;
     }
 
 }
