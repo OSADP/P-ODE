@@ -10,7 +10,9 @@ import com.leidos.ode.agent.data.ODEAgentMessage;
 import com.leidos.ode.agent.parser.ODEDataParser;
 import com.leidos.ode.agent.parser.impl.ODEJ2735DataParser;
 import com.leidos.ode.core.distribute.DataDistributor;
+import com.leidos.ode.data.DDateTime;
 import com.leidos.ode.data.PodeDataDelivery;
+import com.leidos.ode.data.PodeSource;
 import com.leidos.ode.data.Position3D;
 import com.leidos.ode.util.ODEMessageType;
 import org.dot.rdelive.api.config.CharsetType;
@@ -169,7 +171,54 @@ public class RDEDistributor extends DataDistributor {
             throw new DistributeException();
         }
         PodeDataDelivery data = (PodeDataDelivery) message.getFormattedMessage();
-        return data.getPodeData().getLastupdatetime().toString();
+        return convertDDateTime(data.getPodeData().getLastupdatetime());
+    }
+
+    /**
+     * Converts a PodeSource enum into a string representation
+     * @param enumType The PodeSource.EnumType
+     * @return The string representation
+     */
+    private String getSourceName(PodeSource.EnumType enumType){
+        if(enumType.equals(PodeSource.EnumType.blufax)){
+            return "blufax";
+        }else if(enumType.equals(PodeSource.EnumType.dms)){
+            return "dms";
+        }else if(enumType.equals(PodeSource.EnumType.ritis)){
+            return "ritis";
+        }else if(enumType.equals(PodeSource.EnumType.rtms)){
+            return "rtms";
+        }else if(enumType.equals(PodeSource.EnumType.spat)){
+            return "spat";
+        }else if(enumType.equals(PodeSource.EnumType.vdot)){
+            return "vdot";
+        }else if(enumType.equals(PodeSource.EnumType.wxde)){
+            return "wxde";
+        }
+        return "unknown";
+    }
+
+    /**
+     * Converts a DDateTime object into a string representation of the data contained within.
+     * @param time
+     * @return a string conversion in MM
+     */
+    private String convertDDateTime(DDateTime time) {
+        StringBuilder out = new StringBuilder();
+        out.append(time.getMonth().getValue());
+        out.append("/");
+        out.append(time.getDay().getValue());
+        out.append("/");
+        out.append(time.getYear().getValue());
+        out.append(" ");
+
+        out.append(time.getHour().getValue());
+        out.append(":");
+        out.append(time.getMinute().getValue());
+        out.append(":");
+        out.append(time.getSecond().getValue());
+
+        return out.toString();
     }
 
     /**
@@ -184,6 +233,6 @@ public class RDEDistributor extends DataDistributor {
             throw new DistributeException();
         }
         PodeDataDelivery data = (PodeDataDelivery) message.getFormattedMessage();
-        return data.getPodeData().getSource().toString();
+        return getSourceName(data.getPodeData().getSource().getValue());
     }
 }
