@@ -20,6 +20,7 @@ import org.dot.rdelive.api.config.DataType;
 import org.dot.rdelive.impl.GenericDatum;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Date;
@@ -124,8 +125,7 @@ public class RDEDistributor extends DataDistributor {
                 generator.writeStringField("elevation", pos.getElevation().toString());
             }
             generator.writeStringField("date", timestamp);
-            generator.writeFieldName("value");
-            generator.writeBinary(encoded);
+            generator.writeStringField("value",getHexForByteArray(encoded));
             generator.writeEndObject();
 
             // Close it all out
@@ -141,6 +141,17 @@ public class RDEDistributor extends DataDistributor {
         }
 
         return json;
+    }
+    
+    
+    private String getHexForByteArray(byte[] bytes){
+        
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        for(int i=0; i<bytes.length; i++) {
+                pw.printf("%02X ", bytes[i]);
+        }	        
+        return sw.toString();
     }
 
     /**
