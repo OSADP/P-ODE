@@ -25,7 +25,7 @@ public final class ODELogger {
      * @param odeStage
      * @param messageId
      */
-    public void start(ODEStage odeStage, String messageId) throws ODELoggerException {
+    public void start(ODEStage odeStage, String messageId, String system) throws ODELoggerException {
         Date startTime = new Date();
 //        if (logBean == null) {
             logBean = new LogBean(startTime, odeStage, messageId);

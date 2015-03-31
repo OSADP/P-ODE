@@ -1,9 +1,12 @@
 package com.leidos.ode.core.controllers;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
+import com.leidos.ode.agent.parser.ODEDataParser;
+import com.leidos.ode.agent.parser.impl.ODEJ2735DataParser;
 import com.leidos.ode.data.PodeDataDelivery;
 import com.leidos.ode.data.PodeDataDistribution;
 import com.leidos.ode.logging.ODELogger;
+import com.leidos.ode.util.ASNObjectUtils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import org.apache.log4j.Logger;
@@ -37,17 +40,16 @@ public abstract class PublishDataController {
     private int hostPort;
     @Value("${leidos.ode.publisher.connectionfactoryname}")
     private String connectionFactoryName;
-    
-
 
     protected abstract String publishData(ODEAgentMessage odeAgentMessage);
 
     protected final String publish(ODEAgentMessage odeAgentMessage) {
         initTopicConnection();
+        String system = getSystemFromMessage(odeAgentMessage);
         
-        startLogEntry(ODELogger.ODEStage.RECEIVED, odeAgentMessage.getMessageId());
+        startLogEntry(ODELogger.ODEStage.RECEIVED, odeAgentMessage.getMessageId(),system);
         finishLogEntry();
-        startLogEntry(ODELogger.ODEStage.DISTRIBUTED, odeAgentMessage.getMessageId());
+        startLogEntry(ODELogger.ODEStage.DISTRIBUTED, odeAgentMessage.getMessageId(),system);
         
         sendMessage(odeAgentMessage);
         
@@ -55,9 +57,9 @@ public abstract class PublishDataController {
         return "OK";
     }
     
-    private void startLogEntry(ODELogger.ODEStage stage, String message){
+    private void startLogEntry(ODELogger.ODEStage stage, String message, String system){
         try {
-            getOdeLogger().start(stage, message);
+            getOdeLogger().start(stage, message, system);
         } catch (ODELogger.ODELoggerException ex) {
             logger.warn("Error starting log event",ex);
         }
@@ -71,6 +73,17 @@ public abstract class PublishDataController {
         } catch (ODELogger.ODELoggerException ex) {
             logger.warn("Error finishing log entry",ex);
         }
+    }
+    
+    private String getSystemFromMessage(ODEAgentMessage message){
+        try {
+            PodeDataDelivery pdd = convertDataDistribution(message.getMessagePayload());
+            return ASNObjectUtils.getSourceName(pdd.getPodeData().getSource().getValue());
+        } catch (Exception ex) {
+            java.util.logging.Logger.getLogger(PublishDataController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return null;
     }
     
     

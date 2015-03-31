@@ -186,14 +186,14 @@ public class BasicODEAgent implements ODEAgent {
                 String messageId = SHAHasher.sha256Hash(messageBytes);
 
                 //Start log event for parsing message
-                getOdeLogger().start(ODELogger.ODEStage.PARSE, messageId);
+                getOdeLogger().start(ODELogger.ODEStage.PARSE, messageId, getRegistrationRequest().getMessageType());
                 ODEAgentMessage odeAgentMessage = getParser().parseMessage(messageBytes);
                 //Finish log event for parsing message
                 getOdeLogger().finish();
 
                 odeAgentMessage.setMessageId(messageId);
 
-                getOdeLogger().start(ODELogger.ODEStage.SANITIZE, messageId);
+                getOdeLogger().start(ODELogger.ODEStage.SANITIZE, messageId, getRegistrationRequest().getMessageType());
                 odeAgentMessage = getSanitizer().sanitizeMessage(odeAgentMessage);
                 getOdeLogger().finish();
 
@@ -201,7 +201,7 @@ public class BasicODEAgent implements ODEAgent {
                 
                 odeAgentMessage.setPodeMessageList(formatter.formatMessage(odeAgentMessage, getRegistration().getServiceRequest()));
                 
-                getOdeLogger().start(ODELogger.ODEStage.SEND, messageId);
+                getOdeLogger().start(ODELogger.ODEStage.SEND, messageId, getRegistrationRequest().getMessageType());
                 getDataTarget().sendMessage(odeAgentMessage);
                 getOdeLogger().finish();
 

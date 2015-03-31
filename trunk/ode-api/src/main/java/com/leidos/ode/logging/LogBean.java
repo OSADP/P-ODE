@@ -17,7 +17,8 @@ public class LogBean {
     private ODELogger.ODEStage odeStage;
     private String messageId;
     private String component;
-
+    private String system;
+    
     public LogBean(Date startTime, Date endTime, ODELogger.ODEStage odeStage, String messageId) {
         this.startTime = startTime;
         this.endTime = endTime;
@@ -25,6 +26,19 @@ public class LogBean {
         this.messageId = messageId;
     }
 
+    public LogBean(Date startTime, Date endTime, ODELogger.ODEStage odeStage, String messageId, String system) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.odeStage = odeStage;
+        this.messageId = messageId;
+        this.system = system;
+    }
+    
+    
+    public LogBean(Date startTime, ODELogger.ODEStage odeStage, String messageId, String system) {
+        this(startTime, null, odeStage, messageId, system);
+    }    
+    
     public LogBean(Date startTime, ODELogger.ODEStage odeStage, String messageId) {
         this(startTime, null, odeStage, messageId);
     }
@@ -87,5 +101,19 @@ public class LogBean {
      */
     public void setComponent(String component) {
         this.component = component;
+    }
+
+    /**
+     * @return the system
+     */
+    public String getSystem() {
+        return system;
+    }
+
+    /**
+     * @param system the system to set
+     */
+    public void setSystem(String system) {
+        this.system = system;
     }
 }

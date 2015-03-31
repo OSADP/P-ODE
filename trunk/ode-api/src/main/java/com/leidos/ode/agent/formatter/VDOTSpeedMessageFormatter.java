@@ -26,6 +26,7 @@ import com.leidos.ode.data.PodeLaneDirection;
 import com.leidos.ode.data.PodeLaneInfo;
 import com.leidos.ode.data.PodeLaneType;
 import com.leidos.ode.data.PodeSource;
+import com.leidos.ode.data.Position3D;
 import com.leidos.ode.data.SemiSequenceID;
 import com.leidos.ode.data.ServiceRequest;
 import com.leidos.ode.data.Sha256Hash;
@@ -58,6 +59,7 @@ public class VDOTSpeedMessageFormatter extends ODEMessageFormatter{
         
         if(vdotSpeedData.getVdotSpeedDataElements() != null){
             for(VDOTSpeedData.VDOTSpeedDataElement element: vdotSpeedData.getVdotSpeedDataElements()){
+                
                 PodeDataDistribution speedMessage = createMessage(agentMessage, element, source, SPEED_MESSAGE,serviceRequst);
                 PodeDataDistribution volumeMessage = createMessage(agentMessage, element, source, VOLUME_MESSAGE,serviceRequst);
                 PodeDataDistribution occupancyMessage = createMessage(agentMessage, element, source, OCCUPANCY_MESSAGE,serviceRequst);
@@ -103,7 +105,9 @@ public class VDOTSpeedMessageFormatter extends ODEMessageFormatter{
         method.setValue(PodeDetectionMethod.EnumType.unknown);
         detector.setDetectMethod(method);
         detector.setDetectorID(element.getDetectorId());
-
+        Position3D pos = new Position3D();
+        
+        detector.setPosition(pos);
         PodeLaneData laneData = new PodeLaneData();
 
         
@@ -125,6 +129,8 @@ public class VDOTSpeedMessageFormatter extends ODEMessageFormatter{
             direction.setValue(PodeLaneDirection.EnumType.east);
         }else if(element.getLaneDirection().equalsIgnoreCase("W")){
             direction.setValue(PodeLaneDirection.EnumType.west);
+        }else {
+            direction.setValue(PodeLaneDirection.EnumType.north);
         }
         laneInfo.setLaneDirection(direction);
         laneInfo.setLaneNumber(element.getLaneNum());
@@ -175,8 +181,14 @@ public class VDOTSpeedMessageFormatter extends ODEMessageFormatter{
     
     private PodeDataElementList createOccupancyDataElementList(VDOTSpeedData.VDOTSpeedDataElement element, PodeSource source){
         PodeDataElementList laneDataList = createSpeedDataElementList(element, source);
-        
-        laneDataList.setOccupancy(element.getOccupancy());
+        int value = element.getOccupancy();
+        if(element.getOccupancy() > 100){
+            value = 100;
+        }else if (element.getOccupancy() < 1){
+            value = 1;
+        }
+            
+        laneDataList.setOccupancy(value);
         
         return laneDataList;
     }
