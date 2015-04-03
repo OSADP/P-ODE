@@ -119,10 +119,12 @@ public class RDEDistributor extends DataDistributor {
 
             generator.writeStartObject();
             generator.writeObjectFieldStart(messageType);
-            if(pos != null && pos.getLat() != null && pos.getLon() != null && pos.getElevation() != null){
+            if(pos != null && pos.getLat() != null && pos.getLon() != null){
                 generator.writeStringField("latitude", pos.getLat().toString());
                 generator.writeStringField("longitude", pos.getLon().toString());
-                generator.writeStringField("elevation", pos.getElevation().toString());
+                if(pos.getElevation() != null){
+                    generator.writeStringField("elevation", pos.getElevation().toString());
+                }
             }
             generator.writeStringField("date", timestamp);
             generator.writeStringField("value",getHexForByteArray(encoded));
@@ -167,7 +169,13 @@ public class RDEDistributor extends DataDistributor {
         }
 
         PodeDataDelivery data = (PodeDataDelivery) message.getFormattedMessage();
-        return data.getPodeData().getPodeData().getDetector().getPosition();
+        if(data.getPodeData().getPodeData().isDetectorSelected()){
+            return data.getPodeData().getPodeData().getDetector().getPosition();
+        }else if(data.getPodeData().getPodeData().isWeatherSelected()){
+            return data.getPodeData().getPodeData().getWeather().getPosition();
+        }else {
+            return null;
+        }
     }
 
     /**

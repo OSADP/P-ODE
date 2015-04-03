@@ -1,8 +1,6 @@
 package com.leidos.ode.core.controllers;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
-import com.leidos.ode.agent.parser.ODEDataParser;
-import com.leidos.ode.agent.parser.impl.ODEJ2735DataParser;
 import com.leidos.ode.data.PodeDataDelivery;
 import com.leidos.ode.data.PodeDataDistribution;
 import com.leidos.ode.logging.ODELogger;
@@ -20,8 +18,6 @@ import java.util.logging.Level;
 import org.bn.CoderFactory;
 import org.bn.IDecoder;
 import org.bn.IEncoder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 
 

@@ -453,13 +453,13 @@
     </bean>
     
     <bean id="blufaxLinkMessageFormatter" class="com.leidos.ode.agent.formatter.BlufaxLinkMessageFormatter">
-        
-        
+        <property name="latitude" value="${leidos.ode.reg.blufaxlink.pub.latitude}"/>
+        <property name="longitude" value="${leidos.ode.reg.blufaxlink.pub.longitude}"/>
     </bean>
 
     <bean id="blufaxRouteMessageFormatter" class="com.leidos.ode.agent.formatter.BlufaxRouteMessageFormatter">
-        
-        
+        <property name="latitude" value="${leidos.ode.reg.blufaxroute.pub.latitude}"/>
+        <property name="longitude" value="${leidos.ode.reg.blufaxroute.pub.longitude}"/>
     </bean>
 
 
@@ -587,8 +587,8 @@
     </bean>
     
     <bean id="rtmsMessageFormatter" class="com.leidos.ode.agent.formatter.RTMSMessageFormatter">
-        
-        
+        <property name="latitude" value="${leidos.ode.reg.blufaxroute.pub.latitude}"/>
+        <property name="longitude" value="${leidos.ode.reg.blufaxroute.pub.longitude}"/>
     </bean>
 
     <bean id="basicRTMSAgent" class="com.leidos.ode.agent.PublishODEAgent">

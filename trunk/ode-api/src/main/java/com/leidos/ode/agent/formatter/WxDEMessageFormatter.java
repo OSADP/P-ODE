@@ -164,17 +164,6 @@ public class WxDEMessageFormatter extends ODEMessageFormatter{
         return weatherData;
     }
     
-    private int getLatitudeValue(double lat){
-        int base = 10000000;
-        
-        return (int)Math.round(base*lat);
-    }
-    
-    private int getLongitudeValue(double lon){
-        int base = 10000000;
-        return (int)Math.round(base*lon);
-    }
-    
     private DDateTime getDateTimeForElement(){
         Calendar cal = Calendar.getInstance();
         

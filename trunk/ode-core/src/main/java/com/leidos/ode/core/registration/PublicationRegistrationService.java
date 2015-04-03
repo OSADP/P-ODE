@@ -141,9 +141,6 @@ public class PublicationRegistrationService {
             PodeDataPulicationRegistration pubRegistration = decoder.decode(bis, PodeDataPulicationRegistration.class);
             
             
-            
-            
-            
             PodeDataConfirmation confirmation = new PodeDataConfirmation();
             PodeDialogID dId = new PodeDialogID();
             dId.setValue(PodeDialogID.EnumType.podeDataPulicationRegistration);

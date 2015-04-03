@@ -25,4 +25,15 @@ public abstract class ODEMessageFormatter {
     
     public abstract Map<ODEMessageType,List<PodeDataDistribution>> formatMessage(ODEAgentMessage agentMessage, ServiceRequest serviceRequst);
     
+    protected int getLatitudeValue(double lat){
+        int base = 10000000;
+        
+        return (int)Math.round(base*lat);
+    }
+    
+    protected int getLongitudeValue(double lon){
+        int base = 10000000;
+        return (int)Math.round(base*lon);
+    }    
+    
 }

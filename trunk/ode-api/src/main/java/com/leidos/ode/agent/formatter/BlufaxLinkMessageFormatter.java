@@ -14,6 +14,8 @@ import com.leidos.ode.data.DMinute;
 import com.leidos.ode.data.DMonth;
 import com.leidos.ode.data.DSecond;
 import com.leidos.ode.data.DYear;
+import com.leidos.ode.data.Latitude;
+import com.leidos.ode.data.Longitude;
 import com.leidos.ode.data.PodeDataDelivery;
 import com.leidos.ode.data.PodeDataDistribution;
 import com.leidos.ode.data.PodeDataElementList;
@@ -26,6 +28,7 @@ import com.leidos.ode.data.PodeLaneDirection;
 import com.leidos.ode.data.PodeLaneInfo;
 import com.leidos.ode.data.PodeSource;
 import com.leidos.ode.data.PodeTravelTime;
+import com.leidos.ode.data.Position3D;
 import com.leidos.ode.data.SemiSequenceID;
 import com.leidos.ode.data.ServiceRequest;
 import com.leidos.ode.data.Sha256Hash;
@@ -48,6 +51,9 @@ import org.tmdd._3.messages.LinkStatusMsg;
  * @author cassadyja
  */
 public class BlufaxLinkMessageFormatter extends ODEMessageFormatter{
+    private double latitude;
+    private double longitude;
+    
     
     @Override
     public Map<ODEMessageType,List<PodeDataDistribution>> formatMessage(ODEAgentMessage agentMessage, ServiceRequest serviceRequst) {
@@ -111,6 +117,12 @@ public class BlufaxLinkMessageFormatter extends ODEMessageFormatter{
         detector.setDetectMethod(method);
         
         detector.setDetectorID(lsl.getLinkId());
+        
+        Position3D pos = new Position3D();
+        pos.setLat(new Latitude(getLatitudeValue(latitude)));
+        pos.setLon(new Longitude(getLongitudeValue(longitude)));
+        detector.setPosition(pos);
+        
         
         PodeLaneData laneData = new PodeLaneData();
         
@@ -247,6 +259,33 @@ public class BlufaxLinkMessageFormatter extends ODEMessageFormatter{
         DYear year = new DYear(cal.get(Calendar.YEAR));
         dateTime.setYear(year); 
         return dateTime;
+    }
+    /**
+     * @return the latitude
+     */
+    public double getLatitude() {
+        return latitude;
+    }
+
+    /**
+     * @param latitude the latitude to set
+     */
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    /**
+     * @return the longitude
+     */
+    public double getLongitude() {
+        return longitude;
+    }
+
+    /**
+     * @param longitude the longitude to set
+     */
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
     
 }

@@ -14,6 +14,8 @@ import com.leidos.ode.data.DMinute;
 import com.leidos.ode.data.DMonth;
 import com.leidos.ode.data.DSecond;
 import com.leidos.ode.data.DYear;
+import com.leidos.ode.data.Latitude;
+import com.leidos.ode.data.Longitude;
 import com.leidos.ode.data.PodeDataDelivery;
 import com.leidos.ode.data.PodeDataDistribution;
 import com.leidos.ode.data.PodeDataElementList;
@@ -104,9 +106,12 @@ public class VDOTSpeedMessageFormatter extends ODEMessageFormatter{
         PodeDetectionMethod method = new PodeDetectionMethod();
         method.setValue(PodeDetectionMethod.EnumType.unknown);
         detector.setDetectMethod(method);
-        detector.setDetectorID(element.getDetectorId());
-        Position3D pos = new Position3D();
         
+        detector.setDetectorID(element.getDetectorId());
+        
+        Position3D pos = new Position3D();
+        pos.setLat(new Latitude(getLatitudeValue(element.getGeometry()[0])));
+        pos.setLon(new Longitude(getLongitudeValue(element.getGeometry()[1])));
         detector.setPosition(pos);
         PodeLaneData laneData = new PodeLaneData();
 
