@@ -120,15 +120,15 @@ public class RTMSMessageFormatter extends ODEMessageFormatter{
         PodeLaneInfo laneInfo = new PodeLaneInfo();
         
         //TODO: find the direction of travel
-//        PodeLaneDirection direction = new PodeLaneDirection();
+        PodeLaneDirection direction = new PodeLaneDirection();
 //        if(element.getLaneDirection().equalsIgnoreCase("E")){
-//            direction.setValue(PodeLaneDirection.EnumType.east);
+            direction.setValue(PodeLaneDirection.EnumType.east);
 //        }else if(element.getLaneDirection().equalsIgnoreCase("W")){
 //            direction.setValue(PodeLaneDirection.EnumType.west);
 //        }else {
 //            direction.setValue(PodeLaneDirection.EnumType.north);
 //        }
-//        laneInfo.setLaneDirection(direction);
+        laneInfo.setLaneDirection(direction);
         
         
         //Lane Number not in RTMS data

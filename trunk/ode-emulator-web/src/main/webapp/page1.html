@@ -39,7 +39,7 @@
                             }else{
                                 currentArray = new Array(srvResp.speedWestValue);
                             }
-                            
+                            var lastBSM = 1;
                             $.each(currentArray, function(index, m){
                                 if(m.source == 'vdot'){
                                     $("#vdotWestSpeed").html(m.dataValue);
@@ -49,6 +49,11 @@
                                 }
                                 if(m.source == 'blufax'){
                                     $("#blueFaxLnkSpdWest").html(m.dataValue);
+                                }
+                                if(m.source.lastIndexOf('dms')==0){
+                                    $("#bsmWest"+lastBSM).html(m.dataValue);
+                                    lastBSM++;
+                                    
                                 }
                                 
                             });
@@ -108,7 +113,8 @@
                                 currentArray = srvResp.speedEastValue;
                             }else{
                                 currentArray = new Array(srvResp.speedEastValue);
-                            }                             
+                            }                  
+                            var lastBSM = 1;
                             $.each(currentArray, function(index, m){
                                 if(m.source == 'vdot'){
                                     $("#vdotEastSpeed").html(m.dataValue);
@@ -119,7 +125,14 @@
                                 }
                                 if(m.source == 'blufax'){
                                     $("#blueFaxLnkSpdEast").html(m.dataValue);
-                                }                                
+                                }                
+                                
+                                if(m.source.lastIndexOf('dms')==0){
+                                    $("#bsmEast"+lastBSM).html(m.dataValue);
+                                    lastBSM++;
+                                    
+                                }
+                                
                             });
                         }
                             

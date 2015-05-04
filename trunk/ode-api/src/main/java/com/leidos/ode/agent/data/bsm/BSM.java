@@ -44,7 +44,9 @@ public class BSM implements Serializable {
     private Timestamp dateReceived;
     private SafetyExtData extData;
     private VehStatusData vehStatusData;
-
+    private String rsuID;
+    
+    
     public String getDateReceivedString() {
         return sdf.format(new Date(dateReceived.getTime()));
     }
@@ -284,5 +286,19 @@ public class BSM implements Serializable {
         pw.println(vehStatusData);
 
         return sw.getBuffer().toString();
+    }
+
+    /**
+     * @return the rsuID
+     */
+    public String getRsuID() {
+        return rsuID;
+    }
+
+    /**
+     * @param rsuID the rsuID to set
+     */
+    public void setRsuID(String rsuID) {
+        this.rsuID = rsuID;
     }
 }

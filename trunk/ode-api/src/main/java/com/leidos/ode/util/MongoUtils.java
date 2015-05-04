@@ -63,11 +63,12 @@ public class MongoUtils {
 //                .append(" ")
 //                .append(logFile)
 //                .toString();
-        String command = new StringBuilder()
-                .append("pgrep mongod")
-                .toString();
-        ProcessResponse processResponse = executeCommand(command);
-        return processResponse != null && processResponse.getResponse() != null && !processResponse.getResponse().isEmpty();
+//        String command = new StringBuilder()
+//                .append("pgrep mongod")
+//                .toString();
+//        ProcessResponse processResponse = executeCommand(command);
+//        return processResponse != null && processResponse.getResponse() != null && !processResponse.getResponse().isEmpty();
+        return true;
     }
 
     private static ProcessResponse executeCommand(String... command) {

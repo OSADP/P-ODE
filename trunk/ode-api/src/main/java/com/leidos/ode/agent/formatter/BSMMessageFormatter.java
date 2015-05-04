@@ -129,7 +129,11 @@ public class BSMMessageFormatter extends ODEMessageFormatter {
         DDateTime dateTime = getDateTimeForTimeStamp(bsm.getDateReceived());
         record.setLastupdatetime(dateTime);
 
-        record.setRoutename("I-66");
+        if(bsm.getRsuID() != null && !"".equals(bsm.getRsuID())){
+            record.setRoutename(bsm.getRsuID());
+        }else{
+            record.setRoutename("unknownRSU");
+        }
         record.setSource(source);
         
         

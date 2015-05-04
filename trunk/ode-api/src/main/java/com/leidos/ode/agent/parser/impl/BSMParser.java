@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 
 public class BSMParser extends ODEDataParser {
 
+    private static final String IP_ADDRESS_END = "7766";
     private static final String BSM_START_CHARS = "80010281";
     private static final int MESSAGE_COUNT_START = 6;
     private static final int MESSAGE_COUNT_END = 8;
@@ -67,6 +68,14 @@ public class BSMParser extends ODEDataParser {
         int bsmStart = hex.indexOf("80010281");
         if (bsmStart > -1) {
             bsm = new BSM();
+            
+            int addressEnd = hex.indexOf(IP_ADDRESS_END);
+            if(addressEnd > -1){
+                String ipAddress = hex.substring(0,addressEnd);
+                bsm.setRsuID(ipAddress.substring(ipAddress.length() -4, ipAddress.length()));
+            }            
+            
+            
             bsmStart = bsmStart + 4;
             bsm.setDateReceived(new Timestamp(System.currentTimeMillis()));
 
