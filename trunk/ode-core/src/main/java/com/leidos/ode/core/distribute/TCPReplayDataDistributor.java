@@ -23,10 +23,7 @@ public class TCPReplayDataDistributor extends ReplayDataDistributor {
 
     @Override
     public void sendMessage(PodeQueryResult message) {
-
-        // Commented out entire method body to make identical to UDPReplayDistributor
-
-        /*log.debug("ReplayDataDistributor " + subscriptionId + " sending message with timestamp " + message.getDateTime() + ".");
+        log.debug("ReplayDataDistributor " + subscriptionId + " sending message with timestamp " + message.getDateTime() + ".");
 
         try {
             // Connect the socket
@@ -49,7 +46,11 @@ public class TCPReplayDataDistributor extends ReplayDataDistributor {
             sock.close();
         } catch (IOException e) {
             log.error("Unable to transmit replay packet correctly.");
-        } */
+        }
+    }
 
+    @Override
+    public void cleanupConnection() {
+        // Nothing needed
     }
 }

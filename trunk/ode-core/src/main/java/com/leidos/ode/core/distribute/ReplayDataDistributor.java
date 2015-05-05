@@ -172,20 +172,22 @@ public abstract class ReplayDataDistributor extends TextWebSocketHandler impleme
             } catch (InterruptedException e) {
                 log.error("Unable to delay replay data correctly.");
             }
+
+            // Delegate to our abstract method to send the message via whatever means
             sendMessage(cur);
+
+            // Record our current message so we can appropriately delay the next message
             prev = cur;
         }
         log.info("ReplayDataDistributor " + subscriptionId + " finished sending data to client.");
 
-        // Clean up before closing
-        try {
-            sock.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // Delegate to our abstract function to cleanup whatever connection might exist
+        cleanupConnection();
     }
 
     public abstract void sendMessage(PodeQueryResult message);
+
+    public abstract void cleanupConnection();
 
     @Override
     protected void handleTextMessage(WebSocketSession session,
