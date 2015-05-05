@@ -12,6 +12,10 @@ import org.springframework.stereotype.Controller;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Created by rushk1 on 4/30/2015.
@@ -29,11 +33,21 @@ public class ReplayDataController {
          * doesn't seem to matter which I include as long as I don't include both in the clause. Super weird.
          */
         if (podeSubscriptionRequest.getProtocol().getValue().equals(PodeProtocol.EnumType.upd)) {
-            dist = new UDPReplayDataDistributor(podeSubscriptionRequest, serviceRequest);
-        } /* else if (podeSubscriptionRequest.getProtocol().getValue().equals(PodeProtocol.EnumType.tcp)) {
-            dist = new TCPReplayDataDistributor(podeSubscriptionRequest, serviceRequest);
-        } */
-
+            createUDP(serviceRequest, podeSubscriptionRequest);
+        }  else if (podeSubscriptionRequest.getProtocol().getValue().equals(PodeProtocol.EnumType.tcp)) {
+            createTCP(serviceRequest, podeSubscriptionRequest);
+        } 
+        
+    }
+    
+    public void createUDP(ServiceRequest serviceRequest, PodeSubscriptionRequest podeSubscriptionRequest){
+        ReplayDataDistributor dist = new UDPReplayDataDistributor(podeSubscriptionRequest, serviceRequest);
+        new Thread(dist).start();
+        distributors.put(ByteUtils.convertBytesToHex(podeSubscriptionRequest.getRequestID()), dist);
+    }
+    
+    public void createTCP(ServiceRequest serviceRequest, PodeSubscriptionRequest podeSubscriptionRequest){
+        ReplayDataDistributor dist = new TCPReplayDataDistributor(podeSubscriptionRequest, serviceRequest);
         new Thread(dist).start();
         distributors.put(ByteUtils.convertBytesToHex(podeSubscriptionRequest.getRequestID()), dist);
     }
