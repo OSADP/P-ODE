@@ -29,7 +29,8 @@ public enum ODEMessageType {
     VOLUME("VOLUME",false,new byte[]{0x01,0x00,0x00,0x00}),
     OCCUPANCY("OCCUPANCY",false,new byte[]{0x01,0x00,0x00,0x00}),
     TRAVEL("TRAVEL",false,new byte[]{0x01,0x00,0x00,0x00}),
-    WEATHER("WEATHER",false,new byte[]{0x01,0x00,0x00,0x00});
+    WEATHER("WEATHER",false,new byte[]{0x01,0x00,0x00,0x00}),
+    SPATMAP("SPATMAP", false, new byte[]{0x06,0x00,0x00,0x00});
 
     private String dataSource;
     private boolean isRestrictedRequestInterval;

@@ -616,4 +616,49 @@
         <property name="agent" ref="rtmsAgent"/>
         <property name="dataSource" ref="rtmsDataSource"/>
     </bean>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~SPaT/MAP Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <bean id="spatMapParser" class="com.leidos.ode.agent.parser.impl.ODEJ2735DataParser"/>
+
+    <bean id="spatMapPubRegistrationRequest" class="com.leidos.ode.registration.request.ODERegistrationRequest">
+        <property name="messageType" value="${leidos.ode.reg.spatmap.pub.messageType}"/>
+        <property name="region" value="${leidos.ode.reg.spatmap.pub.region}"/>
+        <property name="registrationType" value="${leidos.ode.reg.spatmap.pub.registrationType}"/>
+        <property name="agentId" value="${leidos.ode.reg.spatmap.pub.agentId}"/>
+        <property name="dataTypes" value="${leidos.ode.reg.spatmap.pub.datatypes}"/>
+        <property name="startDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.reg.spatmap.pub.startDate}"/>
+            </bean>
+        </property>
+        <property name="endDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.reg.spatmap.pub.endDate}"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="spatMapMessageFormatter" class="com.leidos.ode.agent.formatter.SPaTMAPMessageFormatter"/>
+
+    <bean id="spatMapDataSource" class="com.leidos.ode.collector.datasource.push.SPaTMAPDataSource">
+          <constructor-arg name="spatPort" value="${leidos.ode.spatmap.spatport}"/>
+          <constructor-arg name="mapPort" value="${leidos.ode.spatmap.mapport}"/>
+    </bean>
+
+    <bean id="spatMapAgent" class="com.leidos.ode.agent.PublishODEAgent">
+        <property name="registration" ref="basicPubRegistration"/>
+        <property name="parser" ref="spatMapParser"/>
+        <property name="sanitizer" ref="passthroughSanitizer"/>
+        <property name="dataTarget" ref="restTarget"/>
+        <property name="odeLogger" ref="odeLogger"/>
+        <property name="registrationRequest" ref="spatMapPubRegistrationRequest"/>
+        <property name="formatter" ref="spatMapMessageFormatter"/>
+    </bean>
+
+    <bean id="spatMapCollector" class="com.leidos.ode.collector.ODECollector">
+        <property name="agent" ref="spatMapAgent"/>
+        <property name="dataSource" ref="spatMapDataSource"/>
+    </bean>
 </beans>
