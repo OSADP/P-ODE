@@ -1,6 +1,7 @@
 package com.leidos.ode.core.registration;
 
 import com.leidos.ode.core.controllers.DistributeDataController;
+import com.leidos.ode.core.controllers.ReplayDataController;
 import com.leidos.ode.core.dao.RegistrationDAO;
 import com.leidos.ode.core.data.QueueInfo;
 import com.leidos.ode.data.DDateTime;
@@ -46,6 +47,10 @@ public class SubscriptionRegistrationService {
     
     @Autowired
     private DistributeDataController distributeDataController;
+
+    @Autowired
+    private ReplayDataController replayDataController;
+
     @Autowired
     private RegistrationDAO registrationDAO;
 
@@ -133,11 +138,7 @@ public class SubscriptionRegistrationService {
         try {
             IDecoder decoder = CoderFactory.getInstance().newDecoder("BER");
             PodeSubscriptionRequest subRegistration = decoder.decode(bis, PodeSubscriptionRequest.class);
-            
-            
-            
-            
-            
+
             DataSubscriptionResponse response = new DataSubscriptionResponse();
             
             PodeDialogID dId = new PodeDialogID();
@@ -157,7 +158,14 @@ public class SubscriptionRegistrationService {
             
             getRegistrationDAO().updateRegistration(subRegistration, response);
             ServiceRequest serviceRequest = getRegistrationDAO().getServiceRequestForRequestId(subRegistration.getRequestID());
-            distributeDataController.subscriptionReceived(serviceRequest, subRegistration);
+
+            if (subRegistration.getType().getReplayData() != null) {
+                // Handle requests for replay data
+                replayDataController.registerReplayRequest(serviceRequest, subRegistration);
+            } else {
+                // Handle normal real-time data requests
+                distributeDataController.subscriptionReceived(serviceRequest, subRegistration);
+            }
                     
             
             registrationResponse = new RegistrationMessage(encodeMessage(response));

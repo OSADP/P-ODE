@@ -70,15 +70,15 @@
             <groupId>org.dot.rdelive</groupId>
             <artifactId>rdeapiclient-jar-with-dependencies</artifactId>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/rdeapiclient-3.1.17-jar-with-dependencies.jar</systemPath>
-            <version>3.1.17</version>
+            <systemPath>${project.basedir}/lib/rdeapiclient-3.1.23-SNAPSHOT-jar-with-dependencies.jar</systemPath>
+            <version>3.1.23</version>
         </dependency>
         <dependency>
             <groupId>org.dot.rdelive</groupId>
             <artifactId>rdeapiclient-sources</artifactId>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/rdeapiclient-3.1.17-sources.jar</systemPath>
-            <version>3.1.17</version>
+            <systemPath>${project.basedir}/lib/rdeapiclient-3.1.23-SNAPSHOT-sources.jar</systemPath>
+            <version>3.1.23</version>
         </dependency>
     </dependencies>
 </project>

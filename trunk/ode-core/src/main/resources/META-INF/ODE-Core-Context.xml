@@ -120,6 +120,8 @@
         <constructor-arg name="connFactName" value="ODETopicConnFact"/>
     </bean>
 
+    <bean id="replayDataController" class="com.leidos.ode.core.controllers.ReplayDataController"></bean>
+
 
     
     

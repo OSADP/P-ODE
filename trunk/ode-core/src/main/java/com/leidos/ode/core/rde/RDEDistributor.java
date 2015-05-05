@@ -23,7 +23,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Map;
 
 import javax.jms.BytesMessage;
@@ -127,6 +129,7 @@ public class RDEDistributor extends DataDistributor {
                 }
             }
             generator.writeStringField("date", timestamp);
+            generator.writeStringField("type", getMessageType(parsed));
             generator.writeStringField("value",getHexForByteArray(encoded));
             generator.writeEndObject();
 
@@ -223,21 +226,11 @@ public class RDEDistributor extends DataDistributor {
      * @return a string conversion in M/D/Y H:M:S format
      */
     private String convertDDateTime(DDateTime time) {
-        StringBuilder out = new StringBuilder();
-        out.append(time.getMonth().getValue());
-        out.append("/");
-        out.append(time.getDay().getValue());
-        out.append("/");
-        out.append(time.getYear().getValue());
-        out.append(" ");
+        Calendar convCal = new GregorianCalendar();
+        convCal.set(time.getYear().getValue(), time.getMonth().getValue(), time.getDay().getValue(),
+                    time.getHour().getValue(), time.getMinute().getValue(), time.getSecond().getValue());
 
-        out.append(time.getHour().getValue());
-        out.append(":");
-        out.append(time.getMinute().getValue());
-        out.append(":");
-        out.append(time.getSecond().getValue());
-
-        return out.toString();
+        return Long.toString(convCal.getTime().getTime());
     }
 
     /**
@@ -248,10 +241,18 @@ public class RDEDistributor extends DataDistributor {
      * @throws DistributeException if the parse originally failed and thus the message is null.
      */
     private String getMessageType(ODEAgentMessage message) throws DistributeException {
-        if (message.getFormattedMessage() == null) {
-            throw new DistributeException();
-        }
-        PodeDataDelivery data = (PodeDataDelivery) message.getFormattedMessage();
-        return getSourceName(data.getPodeData().getSource().getValue());
+        /**
+         * NOTE:
+         *
+         * This is tightly coupled to the title of the subscription topic as defined in the context file. This assumes
+         * that the Topic name being subscribed to represents a valid PodeDataType entry. This is necessary so that the
+         * RDE query can operate correctly when requesting data of a certain type. If the topic names must be changed
+         * the messages will be archived on the RDE under the new topic name and will not be able to be found in the
+         * query results. To correct that the switch statment in ReplayDataDistributor#formatDataType must be changed to
+         * match the new topic name for each type.
+         *
+         * - KR
+         */
+        return getTopicName().split("Topic")[0].toLowerCase();
     }
 }
