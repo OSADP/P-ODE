@@ -7,10 +7,12 @@ import com.leidos.ode.data.PodeProtocol;
 import com.leidos.ode.data.PodeSubscriptionRequest;
 import com.leidos.ode.data.ServiceRequest;
 import com.leidos.ode.util.ByteUtils;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.stereotype.Controller;
 
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,11 +20,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * Created by rushk1 on 4/30/2015.
+ * Replay Data Distributor Manager
+ *
+ * Controls the instantiation and state of ReplayDataDistributor instances.
  */
 
 @Controller
-public class ReplayDataController {
+public class ReplayDataController implements DisposableBean {
     private Map<String, ReplayDataDistributor> distributors = new HashMap<String, ReplayDataDistributor>();
 
     public void registerReplayRequest(ServiceRequest serviceRequest, PodeSubscriptionRequest podeSubscriptionRequest) {
@@ -50,5 +54,14 @@ public class ReplayDataController {
         ReplayDataDistributor dist = new TCPReplayDataDistributor(podeSubscriptionRequest, serviceRequest);
         new Thread(dist).start();
         distributors.put(ByteUtils.convertBytesToHex(podeSubscriptionRequest.getRequestID()), dist);
+    }
+
+    public void destroy() throws Exception {
+        System.out.println("Closing Replay Data Distributors.");
+        Iterator<String> it = distributors.keySet().iterator();
+        while (it.hasNext()) {
+            String key = it.next();
+            distributors.get(key).setInterrupted(true);
+        }
     }
 }
