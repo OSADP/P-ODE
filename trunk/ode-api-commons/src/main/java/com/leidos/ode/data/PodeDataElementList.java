@@ -24,26 +24,26 @@ import org.bn.types.*;
 	private Speed speed = null;
                 
   @ASN1Integer( name = "" )
-    @ASN1ValueRangeConstraint ( 
-		
-		min = 1L, 
-		
-		max = 100L 
-		
-	   )
+//    @ASN1ValueRangeConstraint ( 
+//		
+//		min = 1L, 
+//		
+//		max = 100L 
+//		
+//	   )
 	   
         @ASN1Element ( name = "occupancy", isOptional =  true , hasTag =  true, tag = 1 , hasDefaultValue =  false  )
     
 	private Integer occupancy = null;
                 
   @ASN1Integer( name = "" )
-    @ASN1ValueRangeConstraint ( 
-		
-		min = 1L, 
-		
-		max = 25L 
-		
-	   )
+//    @ASN1ValueRangeConstraint ( 
+//		
+//		min = 1L, 
+//		
+//		max = 25L 
+//		
+//	   )
 	   
         @ASN1Element ( name = "volume", isOptional =  true , hasTag =  true, tag = 2 , hasDefaultValue =  false  )
     

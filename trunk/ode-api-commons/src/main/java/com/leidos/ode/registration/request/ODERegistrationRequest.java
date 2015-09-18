@@ -13,7 +13,9 @@ public class ODERegistrationRequest extends ODERegistrationInformation {
     private String subscriptionType;
     private String subscriptionReceiveAddress;
     private int subscriptionReceivePort;
-
+    private String replayStartDate;
+    private String replayEndDate;
+    
     public String getSubscriptionReceiveAddress() {
         return subscriptionReceiveAddress;
     }
@@ -56,5 +58,33 @@ public class ODERegistrationRequest extends ODERegistrationInformation {
      */
     public void setDataTypes(String dataTypes) {
         this.dataTypes = dataTypes;
+    }
+
+    /**
+     * @return the replayStartDate
+     */
+    public String getReplayStartDate() {
+        return replayStartDate;
+    }
+
+    /**
+     * @param replayStartDate the replayStartDate to set
+     */
+    public void setReplayStartDate(String replayStartDate) {
+        this.replayStartDate = replayStartDate;
+    }
+
+    /**
+     * @return the replayEndDate
+     */
+    public String getReplayEndDate() {
+        return replayEndDate;
+    }
+
+    /**
+     * @param replayEndDate the replayEndDate to set
+     */
+    public void setReplayEndDate(String replayEndDate) {
+        this.replayEndDate = replayEndDate;
     }
 }
