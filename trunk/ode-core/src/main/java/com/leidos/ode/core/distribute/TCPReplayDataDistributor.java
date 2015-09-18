@@ -23,7 +23,7 @@ public class TCPReplayDataDistributor extends ReplayDataDistributor {
 
     @Override
     public void sendMessage(PodeQueryResult message) {
-        log.debug("ReplayDataDistributor " + subscriptionId + " sending message with timestamp " + message.getDateTime() + ".");
+        log.debug("ReplayDataDistributor " + subscriptionId + " sending message with timestamp " + message.getDate() + ".");
 
         try {
             // Connect the socket
@@ -34,7 +34,7 @@ public class TCPReplayDataDistributor extends ReplayDataDistributor {
             DataOutputStream os = new DataOutputStream(sock.getOutputStream());
 
             // Write the data
-            byte[] bytes = DatatypeConverter.parseHexBinary(message.getData());
+            byte[] bytes = DatatypeConverter.parseHexBinary(message.getValue());
             log.debug("Writing TCP replay packet length.");
             os.write(bytes.length);
             os.flush();

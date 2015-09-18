@@ -30,9 +30,9 @@ public class UDPReplayDataDistributor extends ReplayDataDistributor {
 
     @Override
     public void sendMessage(PodeQueryResult message) {
-        log.debug("ReplayDataDistributor " + subscriptionId + " sending message with timestamp " + message.getDateTime() + ".");
+        log.debug("ReplayDataDistributor " + subscriptionId + " sending message with timestamp " + message.getDate() + ".");
         // Decode the message data
-        byte[] decodedHex = DatatypeConverter.parseHexBinary(message.getData());
+        byte[] decodedHex = DatatypeConverter.parseHexBinary(message.getValue());
         DatagramPacket p = new DatagramPacket(decodedHex, decodedHex.length);
 
         // Parse the target information out of the requests

@@ -10,14 +10,9 @@ import com.leidos.ode.util.ByteUtils;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.stereotype.Controller;
 
-import java.net.Socket;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Replay Data Distributor Manager
@@ -45,9 +40,14 @@ public class ReplayDataController implements DisposableBean {
     }
     
     public void createUDP(ServiceRequest serviceRequest, PodeSubscriptionRequest podeSubscriptionRequest){
+//        ReplayDataDistributor dist = getUDPReplayDistrib(serviceRequest, podeSubscriptionRequest);
         ReplayDataDistributor dist = new UDPReplayDataDistributor(podeSubscriptionRequest, serviceRequest);
         new Thread(dist).start();
         distributors.put(ByteUtils.convertBytesToHex(podeSubscriptionRequest.getRequestID()), dist);
+    }
+    
+    private ReplayDataDistributor getUDPReplayDistrib(ServiceRequest serviceRequest, PodeSubscriptionRequest podeSubscriptionRequest){
+        return new UDPReplayDataDistributor(podeSubscriptionRequest, serviceRequest);
     }
     
     public void createTCP(ServiceRequest serviceRequest, PodeSubscriptionRequest podeSubscriptionRequest){

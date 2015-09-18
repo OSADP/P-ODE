@@ -3,10 +3,8 @@ package com.leidos.ode.core.distribute;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
-import com.leidos.ode.core.controllers.ReplayDataController;
 import com.leidos.ode.data.*;
 import com.leidos.ode.util.ByteUtils;
 import org.dot.rdeapi.client.websocket.sockjs.PodeQueryResult;
@@ -26,15 +24,21 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import org.springframework.web.socket.sockjs.client.SockJsClient;
-import javax.xml.bind.DatatypeConverter;
 
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.Socket;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.springframework.util.Base64Utils;
+import org.springframework.web.socket.WebSocketHttpHeaders;
+
 
 /**
  * Replay Data Distributor for RDE query/replay data.
@@ -102,8 +106,11 @@ public abstract class ReplayDataDistributor extends TextWebSocketHandler impleme
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(RDESockJsClient.class);
         // Construct and send the query to the RDE over STOMP
         SockJsClient sockJsClient = context.getBean(SockJsClient.class);
-        ListenableFuture<WebSocketSession> future =  sockJsClient.doHandshake(this, RDE_API_BASE_URL);
+        WebSocketHttpHeaders headers = new WebSocketHttpHeaders();
+        headers.add(WebSocketHttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString("pode:podepassword".getBytes()));
+//        ListenableFuture<WebSocketSession> future =  sockJsClient.doHandshake(this, RDE_API_BASE_URL);
         try {
+            ListenableFuture<WebSocketSession> future = sockJsClient.doHandshake(this, headers, new URI(RDE_API_BASE_URL));
             // Handshake with the Websocket server
             WebSocketSession webSocketSession = future.get();
             webSocketSession.sendMessage(new TextMessage(createSubscribeMessage()));
@@ -130,6 +137,8 @@ public abstract class ReplayDataDistributor extends TextWebSocketHandler impleme
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(ReplayDataDistributor.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         log.info("ReplayDataDistributor " + subscriptionId + " finished query. " + resultList.size() + " entries returned");
@@ -151,7 +160,7 @@ public abstract class ReplayDataDistributor extends TextWebSocketHandler impleme
         // Ensure the results are sorted in time order
         Collections.sort(resultList, new Comparator<PodeQueryResult>() {
             public int compare(PodeQueryResult o1, PodeQueryResult o2) {
-                return Long.valueOf(o1.getDateTime()).compareTo(Long.valueOf(o2.getDateTime()));
+                return Long.valueOf(o1.getDate()).compareTo(Long.valueOf(o2.getDate()));
             }
         });
 
@@ -168,7 +177,7 @@ public abstract class ReplayDataDistributor extends TextWebSocketHandler impleme
 
             // Delay the message to match how it was originally recorded
             try {
-                Thread.sleep(Long.valueOf(cur.getDateTime()) - Long.valueOf(prev.getDateTime()));
+                Thread.sleep(Long.valueOf(cur.getDate()) - Long.valueOf(prev.getDate()));
             } catch (InterruptedException e) {
                 log.error("Unable to delay replay data correctly.");
             }
@@ -312,7 +321,7 @@ public abstract class ReplayDataDistributor extends TextWebSocketHandler impleme
                 .create(StompCommand.SUBSCRIBE);
         headers.setSubscriptionId(subscriptionId);
         headers.setDestination(RDE_QUERY_RESULT_DESTINATION + subscriptionId);
-
+        log.debug("RDE Subscription Headers: "+headers.toString());
         Message<byte[]> message1 = MessageBuilder
                 .withPayload(ByteBuffer.allocate(0).array())
                 .setHeaders(headers).build();
