@@ -134,9 +134,14 @@ public class VDOTSpeedMessageFormatter extends ODEMessageFormatter{
             direction.setValue(PodeLaneDirection.EnumType.east);
         }else if(element.getLaneDirection().equalsIgnoreCase("W")){
             direction.setValue(PodeLaneDirection.EnumType.west);
-        }else {
+        }else if(element.getLaneDirection().equalsIgnoreCase("S")){
+            direction.setValue(PodeLaneDirection.EnumType.south);
+        }else if(element.getLaneDirection().equalsIgnoreCase("N")){
             direction.setValue(PodeLaneDirection.EnumType.north);
+        }else{
+            direction.setValue(PodeLaneDirection.EnumType.east);
         }
+        
         laneInfo.setLaneDirection(direction);
         laneInfo.setLaneNumber(element.getLaneNum());
         //hardcoded for Prototype.

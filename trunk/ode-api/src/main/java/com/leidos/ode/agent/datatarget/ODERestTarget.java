@@ -122,6 +122,8 @@ public class ODERestTarget implements ODEDataTarget {
             List<PodeDataDistribution> list = messages.get(messageType);
             for(PodeDataDistribution data:list){
                 try{
+                    
+                    logger.debug("Sending message type: "+messageType.name()+" with direction: "+data.getPodeData().getPodeData().getDetector().getLaneData().getLane().getLaneDirection().getValue().name()+" From: "+data.getPodeData().getSource().getValue().name());
                     ODEAgentMessage agentMessage = new ODEAgentMessage();
                     agentMessage.setMessageId(message.getMessageId());
                     agentMessage.setMessagePayload(encodePodeMessage(data));

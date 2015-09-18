@@ -250,5 +250,69 @@
                 </plugins>
             </build>
         </profile>
+        
+        <profile>
+            <id>ode-api-distro</id>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>${project.basedir}/src/main/resources</directory>
+                        <excludes>
+                            <exclude>collector_runner.properties</exclude>
+                            <exclude>META-INF/ODE-API-Context.properties</exclude>
+                            <exclude>META-INF/ODE-API-Context-Dev.properties</exclude>
+                            <exclude>META-INF/ODE-Archiver-Context.properties</exclude>                            
+                            <exclude>META-INF/ODE-Archiver-Context-Dev.properties</exclude>                            
+                            <exclude>blufax.properties</exclude>
+                            <exclude>mongo.properties</exclude>
+                            <exclude>ritis.properties</exclude>
+                            <exclude>ritisjms.properties</exclude>
+                            <exclude>rtms.properties</exclude>
+                            <exclude>vdot.properties</exclude>
+                            <exclude>wxde.properties</exclude>
+                            <exclude>spatmap.properties</exclude>
+                        </excludes>
+                    </resource>
+                </resources>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.7</version>
+                        <executions>
+                            <execution>
+                                <id>development-properties</id>
+                                <phase>validate</phase>
+                                <configuration>
+                                    <target name="Swap Spring context production properties with development properties">
+                                        <copy file="${project.basedir}/src/main/resources/META-INF/ODE-API-Context-Dev.properties"
+                                              tofile="${project.build.outputDirectory}/META-INF/ODE-API-Context.properties"/>
+                                        <copy file="${project.basedir}/src/main/resources/META-INF/ODE-Archiver-Context-Dev.properties"
+                                              tofile="${project.build.outputDirectory}/META-INF/ODE-Archiver-Context.properties"/>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>runner-properties</id>
+                                <phase>validate</phase>
+                                <configuration>
+                                    <target name="Copy runner properties alongside jar">
+                                        <copy file="${project.basedir}/src/main/resources/collector_runner.properties"
+                                              tofile="${project.build.directory}/collector_runner.properties"/>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        
     </profiles>
 </project>

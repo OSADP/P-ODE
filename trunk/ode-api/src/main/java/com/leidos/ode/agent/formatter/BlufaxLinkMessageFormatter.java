@@ -227,6 +227,8 @@ public class BlufaxLinkMessageFormatter extends ODEMessageFormatter{
         PodeDataElementList laneDataList = createSpeedMessage(lsl);
         if(lsl.getVolume() > 25){
             laneDataList.setVolume(25);
+        }else if(lsl.getVolume() < 1){
+            laneDataList.setVolume(1);
         }else{
             laneDataList.setVolume(lsl.getVolume().intValue());
         }        

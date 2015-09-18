@@ -160,7 +160,10 @@ public class RITISSpeedMessageFormatter extends ODEMessageFormatter{
         record.setLastupdatetime(dateTime);
 
 
-        record.setMeasduration(item.getMeasurementDuration().intValue());
+        if(item.getMeasurementDuration() != null){
+            record.setMeasduration(item.getMeasurementDuration().intValue());
+        }
+        
         record.setRoutename("I-66");
         record.setSource(source);
 
@@ -194,7 +197,14 @@ public class RITISSpeedMessageFormatter extends ODEMessageFormatter{
     
      private PodeDataElementList createVolumeDataElementList(ZoneDataRITIS zoneData){
         PodeDataElementList laneDataList = createSpeedDataElementList(zoneData);
-        laneDataList.setVolume(zoneData.getZoneVehicleCount().intValue());
+        
+        int value = zoneData.getZoneVehicleCount().intValue();
+        if(value > 25){
+            value = 25;
+        }else if (value < 1){
+            value = 1;
+        }
+        laneDataList.setVolume(value);
         return laneDataList;        
     }
 

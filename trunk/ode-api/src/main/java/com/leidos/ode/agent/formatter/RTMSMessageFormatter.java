@@ -72,11 +72,24 @@ public class RTMSMessageFormatter extends ODEMessageFormatter{
         for(RTMSData.RTMSDataElement element:dataElementList){
             
             PodeDataDistribution message = createRecord(serviceRequst, agentMessage, element, source, SPEED_MESSAGE);
-            
-            
-            speedList.add(message);
+            if(message != null){
+                speedList.add(message);
+            }
+            message = createRecord(serviceRequst, agentMessage, element, source, VOLUME_MESSAGE);
+            if(message != null){
+                volueList.add(message);
+            }
+            message = createRecord(serviceRequst, agentMessage, element, source, OCCUPANCY_MESSAGE);
+            if(message != null){
+                occupancyList.add(message);
+            }
+
+        
         }
         
+        messages.put(ODEMessageType.SPEED, speedList);
+        messages.put(ODEMessageType.VOLUME, volueList);
+        messages.put(ODEMessageType.OCCUPANCY, occupancyList);
         return messages;
     }
 
@@ -114,20 +127,22 @@ public class RTMSMessageFormatter extends ODEMessageFormatter{
             laneDataList = createVolumeDataElementList(element, source);
         }else{
             laneDataList = createOccupancyDataElementList(element, source);
-        }        
+        }      
+        if(laneDataList == null){
+            return null;
+        }
         laneData.setData(laneDataList);
         
         PodeLaneInfo laneInfo = new PodeLaneInfo();
         
         //TODO: find the direction of travel
+        
         PodeLaneDirection direction = new PodeLaneDirection();
-//        if(element.getLaneDirection().equalsIgnoreCase("E")){
+        if(element.getRtmsNetworkId()== 5){
             direction.setValue(PodeLaneDirection.EnumType.east);
-//        }else if(element.getLaneDirection().equalsIgnoreCase("W")){
-//            direction.setValue(PodeLaneDirection.EnumType.west);
-//        }else {
-//            direction.setValue(PodeLaneDirection.EnumType.north);
-//        }
+        }else {
+            direction.setValue(PodeLaneDirection.EnumType.west);
+        }
         laneInfo.setLaneDirection(direction);
         
         
@@ -176,15 +191,19 @@ public class RTMSMessageFormatter extends ODEMessageFormatter{
     
     private PodeDataElementList createOccupancyDataElementList(RTMSData.RTMSDataElement element, PodeSource source){
         PodeDataElementList laneDataList = createSpeedDataElementList(element, source);
-        if(element.getOccupancy() != null){
-            int value = Integer.parseInt(element.getOccupancy());
-            if(value > 100){
-                value = 100;
+        if(element.getOccupancy() != null && !"".equals(element.getOccupancy())){
+            double d = Double.parseDouble(element.getOccupancy());
+            
+            int value = (int)d;
+            if(value > 25){
+                value = 25;
             }else if (value < 1){
                 value = 1;
             }
 
             laneDataList.setOccupancy(value);
+        }else{
+            return null;
         }
         return laneDataList;
     }
@@ -207,7 +226,9 @@ public class RTMSMessageFormatter extends ODEMessageFormatter{
     private DDateTime getDateTimeForElement(RTMSData.RTMSDataElement element){
         Date date = element.getDateTimeStamp();
         Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
+        if(date != null){
+            cal.setTime(date);
+        }
         
         DDateTime dateTime = new DDateTime();
         DHour hour = new DHour(cal.get(Calendar.HOUR_OF_DAY));

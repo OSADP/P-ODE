@@ -35,6 +35,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -64,6 +65,8 @@ import org.xml.sax.SAXException;
  */
 public class ODESubscribeRegistration extends BasicODERegistration{
 
+    private SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy Hh:mm:ss");
+    
     @Override
     protected RegistrationResponse doRegistration(ODERegistrationRequest registrationRequest, ServiceRequest serviceRequest) {
          RegistrationResponse response = null;
@@ -108,6 +111,10 @@ public class ODESubscribeRegistration extends BasicODERegistration{
             type.selectRealTimeData(rtData);
         }else{
             PodeReplayData rpData = new PodeReplayData();
+            DFullTime start = getFullTimeForDateString(registrationRequest.getReplayStartDate());
+            rpData.setStartTime(start);
+            DFullTime end = getFullTimeForDateString(registrationRequest.getReplayEndDate());
+            rpData.setEndTIme(end);
             type.selectReplayData(rpData);
         }
         subRequest.setType(type);
@@ -156,6 +163,14 @@ public class ODESubscribeRegistration extends BasicODERegistration{
         subRequest.setProtocol(protocol);
         
         return subRequest;
+    }
+    
+    private DFullTime getFullTimeForDateString(String dateString){
+        DFullTime fullTime = new DFullTime();
+        
+        
+        
+        return fullTime;
     }
     
     private byte[] encodeSubscriptionRequest(PodeSubscriptionRequest subRequest) throws Exception{
