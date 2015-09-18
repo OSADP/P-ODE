@@ -120,5 +120,45 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>ode-emulator-replay</id>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>${project.basedir}/src/main/resources</directory>
+                        <excludes>
+                            <exclude>META-INF/EmulatorContext-Dev.properties</exclude>
+                            <exclude>META-INF/ODE-Emulator-Context-Replay.xml</exclude>
+
+                        </excludes>
+                    </resource>
+                </resources>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.7</version>
+                        <executions>
+                            <execution>
+                                <id>development-properties</id>
+                                <phase>validate</phase>
+                                <configuration>
+                                    <target name="Swap Spring context with replay context">
+                                        <copy file="${project.basedir}/src/main/resources/META-INF/ODE-Emulator-Context-Replay.xml"
+                                              tofile="${project.build.outputDirectory}/META-INF/ODE-Emulator-Context.xml"/>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+                
+            </build>
+        </profile>
+        
+        
     </profiles>
 </project>

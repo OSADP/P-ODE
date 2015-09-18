@@ -149,6 +149,7 @@ public class ODEEmulator implements EmulatorDataListener, DisposableBean {
         element.setSource(source);
         element.setDataType("Speed");
         element.setDataValue(dataDelivery.getPodeData().getPodeData().getDetector().getLaneData().getData().getSpeed().getValue()+"");
+        logger.debug("EMULATOR: Speed Direction value: "+dataDelivery.getPodeData().getPodeData().getDetector().getLaneData().getLane().getLaneDirection().getValue().name()+" From: "+source);
         if(dataDelivery.getPodeData().getPodeData().getDetector().getLaneData().getLane().getLaneDirection().getValue().equals(PodeLaneDirection.EnumType.east)){
             currentData.addSpeedEastValue(element);
         }else{
