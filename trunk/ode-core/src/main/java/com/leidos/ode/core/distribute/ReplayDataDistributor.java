@@ -36,7 +36,9 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.dot.rdeapi.client.websocket.sockjs.ClientWebSocketHandler;
 import org.springframework.util.Base64Utils;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 import org.springframework.web.socket.WebSocketHttpHeaders;
 
 
@@ -51,7 +53,7 @@ import org.springframework.web.socket.WebSocketHttpHeaders;
  * TODO: Verify SockJsClient async model
  * TODO: Base64 encode RDE messages in RDEDistributor.java
  */
-public abstract class ReplayDataDistributor extends TextWebSocketHandler implements Runnable  {
+public abstract class ReplayDataDistributor extends TextWebSocketHandler implements Runnable {
     // Constants
     private static final int PACKET_TX_DELAY = 100;
     private static final String RDE_QUERY_RESULT_DESTINATION = "/query/result/";
@@ -71,7 +73,7 @@ public abstract class ReplayDataDistributor extends TextWebSocketHandler impleme
 
     private List<PodeQueryResult> resultList;
     private boolean allMessagesReceived = false;
-
+    private ClientWebSocketHandler clientWebSocketHandler = null;
     // For interrupting the thread
     private boolean isInterrupted;
 
@@ -104,27 +106,38 @@ public abstract class ReplayDataDistributor extends TextWebSocketHandler impleme
     public void run() {
         log.info("ReplayDataDistributor " + subscriptionId + " running.");
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(RDESockJsClient.class);
+        clientWebSocketHandler = context.getBean(ClientWebSocketHandler.class);
         // Construct and send the query to the RDE over STOMP
         SockJsClient sockJsClient = context.getBean(SockJsClient.class);
         WebSocketHttpHeaders headers = new WebSocketHttpHeaders();
         headers.add(WebSocketHttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString("pode:podepassword".getBytes()));
-//        ListenableFuture<WebSocketSession> future =  sockJsClient.doHandshake(this, RDE_API_BASE_URL);
         try {
-            ListenableFuture<WebSocketSession> future = sockJsClient.doHandshake(this, headers, new URI(RDE_API_BASE_URL));
+            log.debug("Sending RDE Handshake");
+//            ListenableFuture<WebSocketSession> future = sockJsClient.doHandshake(this, headers, new URI(RDE_API_BASE_URL));
+            ListenableFuture<WebSocketSession> future = sockJsClient.doHandshake(clientWebSocketHandler, headers, new URI(RDE_API_BASE_URL));
             // Handshake with the Websocket server
+            
+            log.debug("Getting webSocketSession");
             WebSocketSession webSocketSession = future.get();
+            log.debug("Sending RDE Subscription Message");
             webSocketSession.sendMessage(new TextMessage(createSubscribeMessage()));
 
             Thread.sleep(5000); // Unsure if this is necessary
 
+            log.debug("Sending RDE Query");
             // Send the query
             webSocketSession.sendMessage(new TextMessage(createQueryMessage()));
             log.info("ReplayDataDistributor " + subscriptionId + " query sent to RDE.");
 
+            
             // Wait until we've received all the messages
-            while (!allMessagesReceived) {
+            while(!clientWebSocketHandler.isRecievedMessage()){
                 Thread.sleep(100);
             }
+            
+//            while (!allMessagesReceived) {
+//                Thread.sleep(100);
+//            }
 
             // Close the websocket connection
             webSocketSession.sendMessage(new TextMessage(createUnSubscribeMessage()));
@@ -150,12 +163,13 @@ public abstract class ReplayDataDistributor extends TextWebSocketHandler impleme
         String targetIp = ByteUtils.buildIpAddressFromBytes(target.getAddress().getIpv4Address().getValue());
         int targetPort = target.getPort().getValue();
 
-        try {
-            sock = new Socket(targetIp, targetPort);
-            log.info("ReplayDataDistributor " + subscriptionId + " connected to client (" + targetIp + ":" + targetPort + ").");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            log.info("Attempting to connect to subscriber: "+targetIp+":"+targetPort);
+////            sock = new Socket(targetIp, targetPort);
+//            log.info("ReplayDataDistributor " + subscriptionId + " connected to client (" + targetIp + ":" + targetPort + ").");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         // Ensure the results are sorted in time order
         Collections.sort(resultList, new Comparator<PodeQueryResult>() {
@@ -382,4 +396,5 @@ public abstract class ReplayDataDistributor extends TextWebSocketHandler impleme
     private PodeQueryResult pop() {
         return resultList.remove(0);
     }
+
 }
