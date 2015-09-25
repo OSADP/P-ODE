@@ -110,7 +110,7 @@ public abstract class ReplayDataDistributor extends TextWebSocketHandler impleme
         // Construct and send the query to the RDE over STOMP
         SockJsClient sockJsClient = context.getBean(SockJsClient.class);
         WebSocketHttpHeaders headers = new WebSocketHttpHeaders();
-        headers.add(WebSocketHttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString("pode:podepassword".getBytes()));
+        headers.add(WebSocketHttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString("podeuser:P0dep@ssword".getBytes()));
         try {
             log.debug("Sending RDE Handshake");
 //            ListenableFuture<WebSocketSession> future = sockJsClient.doHandshake(this, headers, new URI(RDE_API_BASE_URL));
