@@ -1,0 +1,6 @@
+# P-ODE Release Notes
+
+## v1.0.0
+ - Initial release of P-ODE
+ - Documentation is available in README.txt and user guide.
+
