@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://filter.ritis.org/input"
+    xmlns="http://filter.ritis.org/input"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    xmlns:ai="http://jaxb.dev.java.net/plugin/if_insertion"
+    xmlns:rf="http://cattlab.umd.edu/schema/ritisFilter"
+    jaxb:version="2.0" version="1.0.0">
+    
+    <xs:annotation>
+        <xs:appinfo>
+            <jaxb:schemaBindings>
+                <jaxb:package name="edu.umd.cattlab.schema.ritisFilter.input"/>
+            </jaxb:schemaBindings>
+        </xs:appinfo>
+    </xs:annotation>
+    <xs:import namespace="http://cattlab.umd.edu/schema/ritisFilter"
+        schemaLocation="ritisFilterEventOutput.xsd"/>
+    
+    <xs:element name="locationInput" type="rf:location">
+    </xs:element>
+    
+    <xs:element name="vehicleInput" type="rf:vehicle">
+        
+    </xs:element>
+    
+    <xs:element name="responderInput" type="rf:responder">
+        
+    </xs:element>
+    
+    <xs:element name="laneInput" type="laneInput">
+        
+    </xs:element>
+    <xs:complexType name="laneInput">
+        <xs:sequence>
+            <xs:element name="direction" type="rf:lettersAndDigits"/>
+            <xs:element name="type" type="rf:lettersAndDigits"/>
+            <xs:element name="status" type="rf:lettersAndDigits"/>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>

@@ -1,0 +1,586 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified"
+    targetNamespace="http://www.ritis.org/schema/lrms-2-0-0" version="1"
+    xmlns="http://www.ritis.org/schema/lrms-2-0-0"
+    xmlns:local="http://www.ritis.org/schema/local-0-0-0"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    jaxb:version="2.0">
+
+    <xs:import namespace="http://www.ritis.org/schema/local-0-0-0" schemaLocation="local.xsd"/>
+
+    <xs:annotation>
+        <xs:appinfo>
+            <jaxb:schemaBindings>
+                <jaxb:package name="edu.umd.cattlab.schema.atis.lrms"/>
+            </jaxb:schemaBindings>
+        </xs:appinfo>
+    </xs:annotation>
+
+    <!--
+        RITIS\CATT LRMS Message Set Schema
+        
+        More Information Available at:
+        www.ritis.org
+        www.cattlab.umd.edu
+        
+        Questions\Comments to:
+        Jason Ellison
+        jjellso@umd.edu
+    -->
+
+    <xs:annotation>
+        <xs:documentation> LRMS types and definitions used by ATIS. </xs:documentation>
+    </xs:annotation>
+
+    <xs:complexType name="LocationReference">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="locationName" type="Text-name255"/>
+            <xs:element minOccurs="0" name="pointLocation" type="PointLocation"/>
+            <xs:element minOccurs="0" name="linkLocation" type="LinkLocation"/>
+            <xs:element minOccurs="0" name="areaLocation" type="AreaLocation"/>
+            <xs:element minOccurs="0" name="groupLocation" type="GroupLocation"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="GroupLocation">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="groupName" type="Text-name255"/>
+            <xs:choice maxOccurs="unbounded" minOccurs="1">
+                <xs:element name="pointLocation" type="PointLocation"/>
+                <xs:element name="linkLocation" type="LinkLocation"/>
+                <xs:element name="areaLocation" type="AreaLocation"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="AreaLocation">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="locationName" type="Text-name255"/>
+            <xs:element minOccurs="0" name="adminAreas" type="AdminAreaGroup"/>
+            <xs:element minOccurs="0" name="polygon" type="Polygon"/>
+            <xs:element minOccurs="0" name="roads">
+                <xs:complexType>
+                    <xs:sequence maxOccurs="unbounded" minOccurs="1">
+                        <xs:element name="road" type="StreetInfo"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Polygon">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="polygonName" type="Text-name255"/>
+            <xs:element maxOccurs="unbounded" minOccurs="3" name="vertex" type="PointLocation"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="LinkLocation">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="linkName" type="Text-name255"/>
+            <xs:element minOccurs="0" name="linkEndpoints" type="LinkGeneral"/>
+            <xs:element minOccurs="0" name="addressLink" type="AddressLink"/>
+            <xs:element minOccurs="0" name="crossStreetsLink" type="CrossStreetsLink"/>
+            <xs:element minOccurs="0" name="geoLocationLink" type="GeoLocationLink"/>
+            <xs:element minOccurs="0" name="adminAreas" type="AdminAreaGroup"/>
+            <xs:element minOccurs="0" name="linkType" type="LinkType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="GeoLocationLink">
+        <xs:sequence>
+            <xs:element name="startPoint" type="GeoLocation"/>
+            <xs:element name="endPoint" type="GeoLocation"/>
+            <xs:element minOccurs="0" name="direction" type="Direction"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="CrossStreetsLink">
+        <xs:sequence>
+            <xs:element name="onStreetInfo" type="StreetInfo"/>
+            <xs:element name="fromStreetInfo" type="StreetInfo"/>
+            <xs:element name="toStreetInfo" type="StreetInfo"/>
+            <xs:element minOccurs="0" name="startGeoLocation" type="GeoLocation"/>
+            <xs:element minOccurs="0" name="endGeoLocation" type="GeoLocation"/>
+            <xs:element minOccurs="0" name="startIntersectionType" type="IntersectionType"/>
+            <xs:element minOccurs="0" name="endIntersectionType" type="IntersectionType"/>
+            <xs:element minOccurs="0" name="offset1" type="Distance"/>
+            <xs:element minOccurs="0" name="offset2" type="Distance"/>
+            <xs:element minOccurs="0" name="direction" type="Direction"/>
+            <xs:element minOccurs="0" name="side" type="Side"/>
+            <xs:element minOccurs="0" name="height" type="Height"/>
+            <xs:element minOccurs="0" name="adminArea1" type="AdminAreaGroup"/>
+            <xs:element minOccurs="0" name="adminArea2" type="AdminAreaGroup"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="AddressLink">
+        <xs:sequence>
+            <xs:element name="fromStructureNumber" type="Text-name255"/>
+            <xs:element name="toStructureNumber" type="Text-name255"/>
+            <xs:element minOccurs="0" name="streetInfo" type="StreetInfo"/>
+            <xs:element minOccurs="0" name="direction" type="Direction"/>
+            <xs:element minOccurs="0" name="fromSide" type="Side"/>
+            <xs:element minOccurs="0" name="toSide" type="Side"/>
+            <xs:element minOccurs="0" name="fromHeight" type="Height"/>
+            <xs:element minOccurs="0" name="toHeight" type="Height"/>
+            <xs:element minOccurs="0" name="fromAdminAreas" type="AdminAreaGroup"/>
+            <xs:element minOccurs="0" name="toAdminAreas" type="AdminAreaGroup"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="LinkGeneral">
+        <xs:sequence>
+            <xs:element name="startLocation" type="PointLocation"/>
+            <xs:element name="endLocation" type="PointLocation"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="LinkType">
+        <xs:annotation>
+            <xs:appinfo> freeway (1) arterial (2) collector (3) local (4) service road (7)
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:unsignedInt">
+                    <xs:minInclusive value="1"/>
+                    <xs:maxInclusive value="7"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="freeway"/>
+                    <xs:enumeration value="arterial"/>
+                    <xs:enumeration value="collector"/>
+                    <xs:enumeration value="local"/>
+                    <xs:enumeration value="service road"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+
+    <xs:simpleType name="Int-index32">
+        <xs:restriction base="xs:unsignedInt"/>
+    </xs:simpleType>
+
+    <xs:simpleType name="Text-name255">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="255"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="PointLocation">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="pointName" type="Text-name255"/>
+            <xs:element minOccurs="0" name="addressPoint" type="AddressPoint"/>
+            <xs:element minOccurs="0" name="crossStreetsPoint" type="CrossStreetsPoint"/>
+            <xs:element minOccurs="0" name="geoLocationPoint" type="GeoLocation"/>
+            <xs:element minOccurs="0" name="adminArea" type="AdminAreaGroup"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="CrossStreetsPoint">
+        <xs:sequence>
+            <xs:element name="onStreetInfo" type="StreetInfo"/>
+            <xs:element name="atStreetInfo" type="StreetInfo"/>
+            <xs:element minOccurs="0" name="geoLocation" type="GeoLocation"/>
+            <xs:element minOccurs="0" name="intersectionType" type="IntersectionType"/>
+            <xs:element minOccurs="0" name="offset" type="Distance"/>
+            <xs:element minOccurs="0" name="direction" type="Direction"/>
+            <xs:element minOccurs="0" name="side" type="Side"/>
+            <xs:element minOccurs="0" name="height" type="Height"/>
+            <xs:element minOccurs="0" name="adminAreas" type="AdminAreaGroup"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="IntersectionType">
+        <xs:annotation>
+            <xs:appinfo> simple (0) -- Road crossing that has no internal road elements. --
+                Represented in any map database by just one GDF junction. complex (1) -- Road
+                crossing that has one or more internal -- road elements that can be considered part
+                of the road crossing. -- Represented in higher resolution map databases by several
+                -- GDF road elements and junctions. gradeSeparated (2) -- Non-topological
+                intersection of roads , for example an overpass. roundabout (3) -- Closed , one-way
+                loop for the regulation of traffic flow at grade. square (4) -- An area of regulated
+                traffic flow around an obstruction such as a fountain. interchange (5) -- A complex
+                feature composed of all the road elements and junctions forming a crossing.
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:unsignedInt">
+                    <xs:minInclusive value="0"/>
+                    <xs:maxInclusive value="5"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="simple"/>
+                    <xs:enumeration value="complex"/>
+                    <xs:enumeration value="gradeSeparated"/>
+                    <xs:enumeration value="roundabout"/>
+                    <xs:enumeration value="square"/>
+                    <xs:enumeration value="interchange"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+
+    <xs:simpleType name="Direction">
+        <xs:annotation>
+            <xs:appinfo> north (0) south (1) east (2) west (3) northeast (4) northwest (5) southeast
+                (6) southwest (7) inner loop (8) outer loop (9)</xs:appinfo>
+        </xs:annotation>
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:unsignedInt">
+                    <xs:minInclusive value="0"/>
+                    <xs:maxInclusive value="10"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="north"/>
+                    <xs:enumeration value="south"/>
+                    <xs:enumeration value="east"/>
+                    <xs:enumeration value="west"/>
+                    <xs:enumeration value="northeast"/>
+                    <xs:enumeration value="northwest"/>
+                    <xs:enumeration value="southeast"/>
+                    <xs:enumeration value="southwest"/>
+                    <xs:enumeration value="inner loop"/>
+                    <xs:enumeration value="outer loop"/>
+                    <xs:enumeration value="unknown"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+
+    <xs:complexType name="GeoLocation">
+        <xs:sequence>
+            <xs:element name="latitude" type="Latitude"/>
+            <xs:element name="longitude" type="Longitude"/>
+            <xs:element minOccurs="0" name="horizontalDatum" type="HorizontalDatum"/>
+            <xs:element minOccurs="0" name="height" type="Height"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Height">
+        <xs:choice>
+            <xs:sequence>
+                <xs:element name="altitude" type="Distance"/>
+                <xs:element minOccurs="0" name="verticalDatum" type="VerticalDatum"/>
+            </xs:sequence>
+            <xs:element name="verticalLevel" type="VerticalLevel"/>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:simpleType name="VerticalLevel">
+        <xs:restriction base="xs:byte">
+            <xs:minInclusive value="-128"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="Distance">
+        <xs:choice>
+            <xs:element name="m">
+                <xs:simpleType>
+                    <xs:restriction base="xs:int">
+                        <xs:minInclusive value="-10000000"/>
+                        <xs:maxInclusive value="+10000000"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="mDec">
+                <xs:simpleType>
+                    <xs:restriction base="xs:decimal">
+                        <xs:minInclusive value="-10000000"/>
+                        <xs:maxInclusive value="+10000000"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="mm">
+                <xs:simpleType>
+                    <xs:restriction base="xs:int">
+                        <xs:minInclusive value="-1000000"/>
+                        <xs:maxInclusive value="+1000000"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="mmDec">
+                <xs:simpleType>
+                    <xs:restriction base="xs:decimal">
+                        <xs:minInclusive value="-1000000"/>
+                        <xs:maxInclusive value="+1000000"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="dm">
+                <xs:simpleType>
+                    <xs:restriction base="xs:int">
+                        <xs:minInclusive value="-1000000"/>
+                        <xs:maxInclusive value="+1000000"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="dmDec">
+                <xs:simpleType>
+                    <xs:restriction base="xs:decimal">
+                        <xs:minInclusive value="-1000000"/>
+                        <xs:maxInclusive value="+1000000"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="yd">
+                <xs:simpleType>
+                    <xs:restriction base="xs:int">
+                        <xs:minInclusive value="-17600000"/>
+                        <xs:maxInclusive value="+17600000"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="ydDec">
+                <xs:simpleType>
+                    <xs:restriction base="xs:decimal">
+                        <xs:minInclusive value="-17600000"/>
+                        <xs:maxInclusive value="+17600000"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="ft">
+                <xs:simpleType>
+                    <xs:restriction base="xs:int">
+                        <xs:minInclusive value="-52800000"/>
+                        <xs:maxInclusive value="+52800000"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="ftDec">
+                <xs:simpleType>
+                    <xs:restriction base="xs:decimal">
+                        <xs:minInclusive value="-52800000"/>
+                        <xs:maxInclusive value="+52800000"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="in">
+                <xs:simpleType>
+                    <xs:restriction base="xs:int">
+                        <xs:minInclusive value="-1000000"/>
+                        <xs:maxInclusive value="+1000000"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="inDec">
+                <xs:simpleType>
+                    <xs:restriction base="xs:decimal">
+                        <xs:minInclusive value="-1000000"/>
+                        <xs:maxInclusive value="+1000000"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="mi">
+                <xs:simpleType>
+                    <xs:restriction base="xs:short">
+                        <xs:minInclusive value="-10000"/>
+                        <xs:maxInclusive value="+10000"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="miDec">
+                <xs:simpleType>
+                    <xs:restriction base="xs:decimal">
+                        <xs:minInclusive value="-10000"/>
+                        <xs:maxInclusive value="+10000"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="km">
+                <xs:simpleType>
+                    <xs:restriction base="xs:short">
+                        <xs:minInclusive value="-10000"/>
+                        <xs:maxInclusive value="+10000"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="kmDec">
+                <xs:simpleType>
+                    <xs:restriction base="xs:decimal">
+                        <xs:minInclusive value="-10000"/>
+                        <xs:maxInclusive value="+10000"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="block">
+                <xs:simpleType>
+                    <xs:restriction base="xs:short">
+                        <xs:minInclusive value="-1000"/>
+                        <xs:maxInclusive value="+1000"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="blkDec">
+                <xs:simpleType>
+                    <xs:restriction base="xs:decimal">
+                        <xs:minInclusive value="-1000"/>
+                        <xs:maxInclusive value="+1000"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:simpleType name="HorizontalDatum">
+        <xs:annotation>
+            <xs:appinfo> wgs-84 (0) wgs-84egm-96 (1) nad83 (2) nad27 (3) -- LOCAL_CONTENT
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:unsignedInt">
+                    <xs:minInclusive value="0"/>
+                    <xs:maxInclusive value="3"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="wgs-84"/>
+                    <xs:enumeration value="wgs-84egm-96"/>
+                    <xs:enumeration value="nad83"/>
+                    <xs:enumeration value="nad27"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+
+    <xs:simpleType name="VerticalDatum">
+        <xs:annotation>
+            <xs:appinfo> wgs-84 (0) navd (1) </xs:appinfo>
+        </xs:annotation>
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:unsignedInt">
+                    <xs:minInclusive value="0"/>
+                    <xs:maxInclusive value="1"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="wgs-84"/>
+                    <xs:enumeration value="navd"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+
+    <xs:simpleType name="Int-longitude32">
+        <xs:restriction base="xs:int">
+            <xs:minInclusive value="-180000000"/>
+            <xs:maxInclusive value="+180000000"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="Latitude">
+        <xs:restriction base="Int-latitude32"/>
+    </xs:simpleType>
+
+    <xs:simpleType name="Int-latitude32">
+        <xs:restriction base="xs:int">
+            <xs:minInclusive value="-90000000"/>
+            <xs:maxInclusive value="+90000000"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="Longitude">
+        <xs:restriction base="Int-longitude32"/>
+    </xs:simpleType>
+
+    <xs:complexType name="AddressPoint">
+        <xs:sequence>
+            <xs:element name="structureNumber" type="Text-name255"/>
+            <xs:element minOccurs="0" name="streetInfo" type="StreetInfo"/>
+            <xs:element minOccurs="0" name="side" type="Side"/>
+            <xs:element minOccurs="0" name="height" type="Height"/>
+            <xs:element minOccurs="0" name="adminAreas" type="AdminAreaGroup"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="StreetInfo">
+            <xs:sequence>
+                <xs:element maxOccurs="4" minOccurs="0" name="prefix" type="Text-name-presuf4"/>
+                <xs:element name="name" type="Text-name255"/>
+                <xs:element maxOccurs="4" minOccurs="0" name="suffix" type="Text-name-presuf4"/>
+            </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="Text-name-presuf4">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="4"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="Side">
+        <xs:annotation>
+            <xs:appinfo> unknown (0) right (1) left (2) both (3) north (4) south (5) east (6) west
+                (7) northeast (8) northwest (9) southeast (10) southwest (11) northAndSouth (12)
+                eastAndWest (13) all (14) </xs:appinfo>
+        </xs:annotation>
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:unsignedInt">
+                    <xs:minInclusive value="0"/>
+                    <xs:maxInclusive value="14"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="unknown"/>
+                    <xs:enumeration value="right"/>
+                    <xs:enumeration value="left"/>
+                    <xs:enumeration value="both"/>
+                    <xs:enumeration value="north"/>
+                    <xs:enumeration value="south"/>
+                    <xs:enumeration value="east"/>
+                    <xs:enumeration value="west"/>
+                    <xs:enumeration value="northeast"/>
+                    <xs:enumeration value="northwest"/>
+                    <xs:enumeration value="southeast"/>
+                    <xs:enumeration value="southwest"/>
+                    <xs:enumeration value="northAndSouth"/>
+                    <xs:enumeration value="eastAndWest"/>
+                    <xs:enumeration value="all"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+
+    <xs:complexType name="AdminAreaGroup">
+        <xs:choice maxOccurs="unbounded" minOccurs="1">
+            <xs:element name="city" type="Text-name255"/>
+            <xs:element name="county" type="Text-name255"/>
+            <xs:element name="state" type="Text-name255"/>
+            <xs:element name="postalCode" type="PostalCode"/>
+            <xs:element name="stateFIPS" type="Int-index8"/>
+            <xs:element name="cityFIPS" type="Int-index32"/>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:simpleType name="PostalCode">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="5"/>
+            <xs:maxLength value="10"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="Int-index16">
+        <xs:restriction base="xs:unsignedShort"/>
+    </xs:simpleType>
+
+    <xs:simpleType name="Int-index8">
+        <xs:restriction base="xs:unsignedByte"/>
+    </xs:simpleType>
+
+</xs:schema>

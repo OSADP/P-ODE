@@ -1,0 +1,2414 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified"
+   targetNamespace="http://www.ritis.org/schema/itis-3-0-1" version="1"
+   xmlns="http://www.ritis.org/schema/itis-3-0-1"
+   xmlns:local="http://www.ritis.org/schema/local-0-0-0" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+   xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0">
+
+   <xs:import namespace="http://www.ritis.org/schema/local-0-0-0" schemaLocation="local.xsd"/>
+
+   <xs:annotation>
+      <xs:appinfo>
+         <jaxb:schemaBindings>
+            <jaxb:package name="edu.umd.cattlab.schema.atis.itis"/>
+         </jaxb:schemaBindings>
+      </xs:appinfo>
+   </xs:annotation>
+
+   <!--
+      RITIS\CATT ITIS Phrase List Schema
+      
+      More Information Available at:
+      www.ritis.org
+      www.cattlab.umd.edu
+      
+      Questions\Comments to:
+      Jason Ellison
+      jjellso@umd.edu
+   -->
+
+   <xs:annotation>
+      <xs:documentation> ITIS Phrase List for use with ATIS schema. </xs:documentation>
+   </xs:annotation>
+
+   <xs:complexType name="ITISEventType">
+      <xs:annotation>
+         <xs:documentation> the set of ITIS.ITISgroups a single code representing the top level
+            grouping of ITIS sub-groups surrounded by the element tag of its sub group
+         </xs:documentation>
+      </xs:annotation>
+      <xs:choice>
+         <xs:annotation>
+            <xs:appinfo>
+               <jaxb:property name="EventType"/>
+            </xs:appinfo>
+         </xs:annotation>
+         <xs:element name="trafficConditions" type="TrafficConditions"/>
+         <xs:element name="accidentsAndIncidents" type="AccidentsAndIncidents"/>
+         <xs:element name="closures" type="Closures"/>
+         <xs:element name="roadwork" type="Roadwork"/>
+         <xs:element name="obstruction" type="Obstruction"/>
+         <xs:element name="delayStatusCancellation" type="DelayStatusCancellation"/>
+         <xs:element name="unusualDriving" type="UnusualDriving"/>
+         <xs:element name="mobileSituation" type="MobileSituation"/>
+         <xs:element name="deviceStatus" type="DeviceStatus"/>
+         <xs:element name="restrictionClass" type="RestrictionClass"/>
+         <xs:element name="incidentResponseStatus" type="IncidentResponseStatus"/>
+         <xs:element name="disasters" type="Disasters"/>
+         <xs:element name="disturbances" type="Disturbances"/>
+         <xs:element name="sportingEvents" type="SportingEvents"/>
+         <xs:element name="specialEvents" type="SpecialEvents"/>
+         <xs:element name="parkingInformation" type="ParkingInformation"/>
+         <xs:element name="systemInformation" type="SystemInformation"/>
+         <xs:element name="weatherConditions" type="WeatherConditions"/>
+         <xs:element name="precipitation" type="Precipitation"/>
+         <xs:element name="winds" type="Winds"/>
+         <xs:element name="visibilityAndAirQuality" type="VisibilityAndAirQuality"/>
+         <xs:element name="temperature" type="Temperature"/>
+         <xs:element name="pavementConditions" type="PavementConditions"/>
+         <xs:element name="winterDrivingRestrictions" type="WinterDrivingRestrictions"/>
+         <xs:element name="winterDrivingIndex" type="WinterDrivingIndex"/>
+         <xs:element name="suggestionAdvice" type="SuggestionAdvice"/>
+         <xs:element name="warningAdvice" type="WarningAdvice"/>
+         <xs:element name="adviceInstructionsRecommendations"
+            type="AdviceInstructionsRecommendations"/>
+         <xs:element name="adviceInstructionsMandatory" type="AdviceInstructionsMandatory"/>
+         <xs:element name="laneRoadway" type="LaneRoadway"/>
+         <xs:element name="alternateRoute" type="AlternateRoute"/>
+         <xs:element name="transitMode" type="TransitMode"/>
+         <xs:element name="vehicleGroupAffected" type="VehicleGroupAffected"/>
+         <xs:element name="travelerGroupAffected" type="TravelerGroupAffected"/>
+         <xs:element name="responderGroupAffected" type="ResponderGroupAffected"/>
+         <xs:element name="incidentResponseEquipment" type="IncidentResponseEquipment"/>
+         <xs:element name="transitOperations" type="TransitOperations"/>
+      </xs:choice>
+   </xs:complexType>
+
+   <xs:simpleType name="AccidentsAndIncidents">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="512"/>
+               <xs:maxInclusive value="767"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_513" value="accident"/>
+               <xs:enumeration id="_514" value="serious accident"/>
+               <xs:enumeration id="_515" value="injury accident"/>
+               <xs:enumeration id="_516" value="minor accident"/>
+               <xs:enumeration id="_517" value="multi vehicle accident"/>
+               <xs:enumeration id="_518" value="numerous accidents"/>
+               <xs:enumeration id="_519" value="accident involving a bicycle"/>
+               <xs:enumeration id="_520" value="accident involving a bus"/>
+               <xs:enumeration id="_521" value="accident involving a motorcycle"/>
+               <xs:enumeration id="_522" value="accident involving a pedestrian"/>
+               <xs:enumeration id="_523" value="accident involving a train"/>
+               <xs:enumeration id="_524" value="accident involving a truck"/>
+               <xs:enumeration id="_562" value="accident involving a semi trailer"/>
+               <xs:enumeration id="_525" value="accident involving hazardous materials"/>
+               <xs:enumeration id="_526" value="earlier accident"/>
+               <xs:enumeration id="_527" value="medical emergency"/>
+               <xs:enumeration id="_528" value="secondary accident"/>
+               <xs:enumeration id="_530" value="accident investigation work"/>
+               <xs:enumeration id="_531" value="incident"/>
+               <xs:enumeration id="_532" value="stalled vehicle"/>
+               <xs:enumeration id="_533" value="abandoned vehicle"/>
+               <xs:enumeration id="_534" value="disabled vehicle"/>
+               <xs:enumeration id="_535" value="disabled truck"/>
+               <xs:enumeration id="_536" value="disabled semi trailer"/>
+               <xs:enumeration id="_537" value="disabled bus"/>
+               <xs:enumeration id="_538" value="disabled train"/>
+               <xs:enumeration id="_539" value="vehicle spun out"/>
+               <xs:enumeration id="_540" value="vehicle on fire"/>
+               <xs:enumeration id="_541" value="vehicle in water"/>
+               <xs:enumeration id="_542" value="vehicles slowing to look at accident"/>
+               <xs:enumeration id="_543" value="jackknifed semi trailer"/>
+               <xs:enumeration id="_544" value="jackknifed trailer home"/>
+               <xs:enumeration id="_545" value="jackknifed trailer"/>
+               <xs:enumeration id="_546" value="spillage occurring from moving vehicle"/>
+               <xs:enumeration id="_547" value="acid spill"/>
+               <xs:enumeration id="_548" value="chemical spill"/>
+               <xs:enumeration id="_549" value="fuel spill"/>
+               <xs:enumeration id="_550" value="hazardous materials spill"/>
+               <xs:enumeration id="_551" value="oil spill"/>
+               <xs:enumeration id="_552" value="spilled load"/>
+               <xs:enumeration id="_553" value="toxic spill"/>
+               <xs:enumeration id="_554" value="overturned vehicle"/>
+               <xs:enumeration id="_555" value="overturned truck"/>
+               <xs:enumeration id="_556" value="overturned semi trailer"/>
+               <xs:enumeration id="_557" value="overturned bus"/>
+               <xs:enumeration id="_558" value="derailed train"/>
+               <xs:enumeration id="_559" value="stuck vehicle"/>
+               <xs:enumeration id="_560" value="truck stuck under bridge"/>
+               <xs:enumeration id="_561" value="bus stuck under bridge"/>
+               <xs:enumeration id="_638" value="accident cleared"/>
+               <xs:enumeration id="_639" value="incident cleared"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="AlternateRoute">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="8448"/>
+               <xs:maxInclusive value="8703"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_8449" value="detour where possible"/>
+               <xs:enumeration id="_8450" value="no detour available"/>
+               <xs:enumeration id="_8451" value="follow signs"/>
+               <xs:enumeration id="_8452" value="follow detour signs"/>
+               <xs:enumeration id="_8453" value="follow special detour markers"/>
+               <xs:enumeration id="_8454" value="do not follow detour signs"/>
+               <xs:enumeration id="_8455" value="detour in operation"/>
+               <xs:enumeration id="_8456" value="follow local detour"/>
+               <xs:enumeration id="_8457" value="compulsory detour in operation"/>
+               <xs:enumeration id="_8458" value="no suitable detour available"/>
+               <xs:enumeration id="_8459" value="detour is no longer recommended"/>
+               <xs:enumeration id="_8460" value="local drivers are recommended to avoid the area"/>
+               <xs:enumeration id="_8461" value="trucks are recommended to avoid the area"/>
+               <xs:enumeration id="_8462" value="consider alternate route"/>
+               <xs:enumeration id="_8463" value="consider alternate parking"/>
+               <xs:enumeration id="_8464" value="consider alternate destination"/>
+               <xs:enumeration id="_8465" value="consider alternate area"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="AssetStatus">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="10240"/>
+               <xs:maxInclusive value="10495"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_10240" value="unknown status"/>
+               <xs:enumeration id="_10241" value="ready for use"/>
+               <xs:enumeration id="_10242" value="working normally"/>
+               <xs:enumeration id="_10243" value="working autonomously"/>
+               <xs:enumeration id="_10244" value="working incorrectly"/>
+               <xs:enumeration id="_10245" value="not working"/>
+               <xs:enumeration id="_10246" value="normal maintenance"/>
+               <xs:enumeration id="_10247" value="in route to use"/>
+               <xs:enumeration id="_10248" value="returning from use"/>
+               <xs:enumeration id="_10249" value="out of service"/>
+               <xs:enumeration id="_10250" value="off duty"/>
+               <xs:enumeration id="_10251" value="on patrol"/>
+               <xs:enumeration id="_10252" value="on call"/>
+               <xs:enumeration id="_10253" value="on break"/>
+               <xs:enumeration id="_10254" value="mandatory time off"/>
+               <xs:enumeration id="_10255" value="low on fuel"/>
+               <xs:enumeration id="_10256" value="low on water"/>
+               <xs:enumeration id="_10257" value="low charge"/>
+               <xs:enumeration id="_10258" value="missing"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="Closures">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="768"/>
+               <xs:maxInclusive value="1023"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_769" value="closed to traffic"/>
+               <xs:enumeration id="_770" value="closed"/>
+               <xs:enumeration id="_771" value="closed ahead"/>
+               <xs:enumeration id="_772" value="closed intermittently"/>
+               <xs:enumeration id="_773" value="closed for repairs"/>
+               <xs:enumeration id="_774" value="closed for the season"/>
+               <xs:enumeration id="_775" value="blocked"/>
+               <xs:enumeration id="_776" value="blocked ahead"/>
+               <xs:enumeration id="_777" value="reduced to one lane"/>
+               <xs:enumeration id="_778" value="reduced to two lanes"/>
+               <xs:enumeration id="_779" value="reduced to three lanes"/>
+               <xs:enumeration id="_780" value="collapse"/>
+               <xs:enumeration id="_781" value="out"/>
+               <xs:enumeration id="_891" value="open to traffic"/>
+               <xs:enumeration id="_892" value="open"/>
+               <xs:enumeration id="_893" value="reopened to traffic"/>
+               <xs:enumeration id="_894" value="clearing"/>
+               <xs:enumeration id="_895" value="cleared from road"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="DelayStatusCancellation">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="1536"/>
+               <xs:maxInclusive value="1791"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_1537" value="delays"/>
+               <xs:enumeration id="_1538" value="short delays"/>
+               <xs:enumeration id="_1539" value="long delays"/>
+               <xs:enumeration id="_1540" value="very long delays"/>
+               <xs:enumeration id="_1541" value="delays of uncertain duration"/>
+               <xs:enumeration id="_1542" value="delayed until further notice"/>
+               <xs:enumeration id="_1543" value="busy"/>
+               <xs:enumeration id="_1544" value="very busy"/>
+               <xs:enumeration id="_1545" value="crowded"/>
+               <xs:enumeration id="_1546" value="overcrowded"/>
+               <xs:enumeration id="_1547" value="cancellations"/>
+               <xs:enumeration id="_1548" value="route cancelled and no replacement"/>
+               <xs:enumeration id="_1549" value="service cancelled"/>
+               <xs:enumeration id="_1550" value="service suspended"/>
+               <xs:enumeration id="_1551" value="service withdrawn"/>
+               <xs:enumeration id="_1552" value="service fully booked"/>
+               <xs:enumeration id="_1553" value="all services fully booked"/>
+               <xs:enumeration id="_1554" value="next departure"/>
+               <xs:enumeration id="_1555" value="next arrival"/>
+               <xs:enumeration id="_1556" value="very frequent service"/>
+               <xs:enumeration id="_1557" value="frequent service"/>
+               <xs:enumeration id="_1558" value="fairly frequent service"/>
+               <xs:enumeration id="_1559" value="regular service"/>
+               <xs:enumeration id="_1560" value="irregular service"/>
+               <xs:enumeration id="_1561" value="not operating"/>
+               <xs:enumeration id="_1562" value="system busy"/>
+               <xs:enumeration id="_1563" value="system very busy"/>
+               <xs:enumeration id="_1564" value="system crowded"/>
+               <xs:enumeration id="_1565" value="system overcrowded"/>
+               <xs:enumeration id="_1567" value="headway"/>
+               <xs:enumeration id="_1568" value="extra services in operation"/>
+               <xs:enumeration id="_1660" value="delays clearing"/>
+               <xs:enumeration id="_1661" value="delays cleared"/>
+               <xs:enumeration id="_1662" value="normal services resumed"/>
+               <xs:enumeration id="_1663" value="operating"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="DeviceStatus">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="2304"/>
+               <xs:maxInclusive value="2559"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_2305" value="lane control signs not working"/>
+               <xs:enumeration id="_2306" value="lane control signs working incorrectly"/>
+               <xs:enumeration id="_2307" value="lane control signs operating"/>
+               <xs:enumeration id="_2308" value="variable message signs not working"/>
+               <xs:enumeration id="_2309" value="variable message signs working incorrectly"/>
+               <xs:enumeration id="_2310" value="variable message signs operating"/>
+               <xs:enumeration id="_2311" value="emergency telephones not working"/>
+               <xs:enumeration id="_2312" value="emergency telephone number not working"/>
+               <xs:enumeration id="_2313" value="traffic lights not working"/>
+               <xs:enumeration id="_2314" value="traffic lights working incorrectly"/>
+               <xs:enumeration id="_2315" value="ramp control signals not working"/>
+               <xs:enumeration id="_2316" value="ramp control signals working incorrectly"/>
+               <xs:enumeration id="_2317" value="temporary traffic lights not working"/>
+               <xs:enumeration id="_2318" value="temporary traffic lights working incorrectly"/>
+               <xs:enumeration id="_2319" value="traffic signal control computer not working"/>
+               <xs:enumeration id="_2320" value="traffic signal timings changed"/>
+               <xs:enumeration id="_2321" value="overheight warning system triggered"/>
+               <xs:enumeration id="_2322" value="equipment failure"/>
+               <xs:enumeration id="_2323" value="railroad crossing equipment failure"/>
+               <xs:enumeration id="_2324" value="tunnel ventilation not working"/>
+               <xs:enumeration id="_2325" value="power failure"/>
+               <xs:enumeration id="_2326" value="widespread power outages"/>
+               <xs:enumeration id="_2327" value="technical problems"/>
+               <xs:enumeration id="_2328" value="sign down"/>
+               <xs:enumeration id="_2329" value="lines in road faded"/>
+               <xs:enumeration id="_2330" value="damaged light standard"/>
+               <xs:enumeration id="_2331" value="traffic signal stuck on flash"/>
+               <xs:enumeration id="_2332" value="guide rail"/>
+               <xs:enumeration id="_2333" value="fencing"/>
+               <xs:enumeration id="_2334" value="light standard hanging by wires"/>
+               <xs:enumeration id="_2335" value="call box"/>
+               <xs:enumeration id="_2336" value="signal cabinet"/>
+               <xs:enumeration id="_2337" value="detector"/>
+               <xs:enumeration id="_2338" value="improper use of State vehicle or equipment"/>
+               <xs:enumeration id="_2339" value="bulb out"/>
+               <xs:enumeration id="_2340" value="not yet operational"/>
+               <xs:enumeration id="_2341" value="not yet installed"/>
+               <xs:enumeration id="_2428" value="electronic signs repaired"/>
+               <xs:enumeration id="_2429" value="emergency call facilities restored"/>
+               <xs:enumeration id="_2430" value="traffic signals repaired"/>
+               <xs:enumeration id="_2431" value="railroad crossing equipment now working normally"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="Disasters">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="3072"/>
+               <xs:maxInclusive value="3327"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_3073" value="flash flood"/>
+               <xs:enumeration id="_3074" value="major flood"/>
+               <xs:enumeration id="_3075" value="reservoir failure"/>
+               <xs:enumeration id="_3076" value="levee failure"/>
+               <xs:enumeration id="_3077" value="tsunami"/>
+               <xs:enumeration id="_3078" value="tidal wave"/>
+               <xs:enumeration id="_3079" value="volcanic eruption"/>
+               <xs:enumeration id="_3080" value="ash fall"/>
+               <xs:enumeration id="_3081" value="lava flow"/>
+               <xs:enumeration id="_3082" value="serious fire"/>
+               <xs:enumeration id="_3083" value="forest fire"/>
+               <xs:enumeration id="_3084" value="wildfire"/>
+               <xs:enumeration id="_3085" value="building fire"/>
+               <xs:enumeration id="_3086" value="brush fire"/>
+               <xs:enumeration id="_3087" value="grass fire"/>
+               <xs:enumeration id="_3088" value="fire danger extreme"/>
+               <xs:enumeration id="_3089" value="fire danger very high"/>
+               <xs:enumeration id="_3090" value="fire danger high"/>
+               <xs:enumeration id="_3091" value="fire danger medium"/>
+               <xs:enumeration id="_3092" value="fire danger low"/>
+               <xs:enumeration id="_3093" value="earthquake damage"/>
+               <xs:enumeration id="_3094" value="air crash"/>
+               <xs:enumeration id="_3095" value="rail crash"/>
+               <xs:enumeration id="_3096" value="toxic release"/>
+               <xs:enumeration id="_3097" value="toxic leak"/>
+               <xs:enumeration id="_3098" value="radioactive release"/>
+               <xs:enumeration id="_3099" value="radiation hazard"/>
+               <xs:enumeration id="_3100" value="reactor leakage"/>
+               <xs:enumeration id="_3101" value="explosion"/>
+               <xs:enumeration id="_3102" value="major hazardous materials fire"/>
+               <xs:enumeration id="_3103" value="major hazardous materials release"/>
+               <xs:enumeration id="_3199" value="disaster cleared"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="Disturbances">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="3328"/>
+               <xs:maxInclusive value="3583"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_3329" value="assault"/>
+               <xs:enumeration id="_3330" value="crime"/>
+               <xs:enumeration id="_3331" value="robbery"/>
+               <xs:enumeration id="_3332" value="fare dispute"/>
+               <xs:enumeration id="_3333" value="shooting"/>
+               <xs:enumeration id="_3334" value="gunfire on roadway"/>
+               <xs:enumeration id="_3335" value="suicide"/>
+               <xs:enumeration id="_3336" value="fight"/>
+               <xs:enumeration id="_3337" value="gang fight"/>
+               <xs:enumeration id="_3338" value="person harassment"/>
+               <xs:enumeration id="_3339" value="person injured"/>
+               <xs:enumeration id="_3363" value="sick customer"/>
+               <xs:enumeration id="_3340" value="unruly passenger"/>
+               <xs:enumeration id="_3341" value="person intoxicated"/>
+               <xs:enumeration id="_3342" value="crowd control problem"/>
+               <xs:enumeration id="_3343" value="demonstration"/>
+               <xs:enumeration id="_3344" value="march"/>
+               <xs:enumeration id="_3345" value="public disturbance"/>
+               <xs:enumeration id="_3346" value="riot"/>
+               <xs:enumeration id="_3347" value="civil unrest"/>
+               <xs:enumeration id="_3348" value="civil emergency"/>
+               <xs:enumeration id="_3349" value="strike"/>
+               <xs:enumeration id="_3350" value="public transit strike"/>
+               <xs:enumeration id="_3351" value="stampede"/>
+               <xs:enumeration id="_3352" value="teargas used"/>
+               <xs:enumeration id="_3353" value="security alert"/>
+               <xs:enumeration id="_3354" value="security incident"/>
+               <xs:enumeration id="_3355" value="checkpoint"/>
+               <xs:enumeration id="_3356" value="bomb alert"/>
+               <xs:enumeration id="_3357" value="terrorist incident"/>
+               <xs:enumeration id="_3358" value="high velocity shell fire"/>
+               <xs:enumeration id="_3359" value="explosives in use"/>
+               <xs:enumeration id="_3360" value="air raid"/>
+               <xs:enumeration id="_3361" value="weapons of mass destruction threat"/>
+               <xs:enumeration id="_3362" value="military operations"/>
+               <xs:enumeration id="_3454" value="security problem cleared"/>
+               <xs:enumeration id="_3455" value="traffic disturbance cleared"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="GenericLocations">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="7936"/>
+               <xs:maxInclusive value="8191"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_7937" value="on bridges"/>
+               <xs:enumeration id="_7938" value="in tunnels"/>
+               <xs:enumeration id="_7939" value="entering or leaving tunnels"/>
+               <xs:enumeration id="_7940" value="on ramps"/>
+               <xs:enumeration id="_7941" value="in road construction area"/>
+               <xs:enumeration id="_7942" value="around a curve"/>
+               <xs:enumeration id="_7943" value="on minor roads"/>
+               <xs:enumeration id="_7944" value="in the opposing lanes"/>
+               <xs:enumeration id="_7945" value="adjacent to roadway"/>
+               <xs:enumeration id="_7946" value="on bend"/>
+               <xs:enumeration id="_7947" value="entire intersection"/>
+               <xs:enumeration id="_7948" value="in the median"/>
+               <xs:enumeration id="_7949" value="moved to side of road"/>
+               <xs:enumeration id="_7950" value="moved to shoulder"/>
+               <xs:enumeration id="_7951" value="on the roadway"/>
+               <xs:enumeration id="_7952" value="in shaded areas"/>
+               <xs:enumeration id="_7953" value="in low lying areas"/>
+               <xs:enumeration id="_7954" value="in the downtown area"/>
+               <xs:enumeration id="_7955" value="in the inner city area"/>
+               <xs:enumeration id="_7956" value="in parts"/>
+               <xs:enumeration id="_7957" value="in some places"/>
+               <xs:enumeration id="_7958" value="in the ditch"/>
+               <xs:enumeration id="_7959" value="in the valley"/>
+               <xs:enumeration id="_7960" value="on hill top"/>
+               <xs:enumeration id="_7961" value="near the foothills"/>
+               <xs:enumeration id="_7962" value="at high altitudes"/>
+               <xs:enumeration id="_7963" value="near the lake"/>
+               <xs:enumeration id="_7964" value="near the shore"/>
+               <xs:enumeration id="_8008" value="nearby basin"/>
+               <xs:enumeration id="_7965" value="over the crest of a hill"/>
+               <xs:enumeration id="_7966" value="other than on the roadway"/>
+               <xs:enumeration id="_7967" value="near the beach"/>
+               <xs:enumeration id="_7968" value="near beach access point"/>
+               <xs:enumeration id="_8006" value="mountain pass"/>
+               <xs:enumeration id="_7969" value="lower level"/>
+               <xs:enumeration id="_7970" value="upper level"/>
+               <xs:enumeration id="_7971" value="airport"/>
+               <xs:enumeration id="_7972" value="concourse"/>
+               <xs:enumeration id="_7973" value="gate"/>
+               <xs:enumeration id="_7974" value="baggage claim"/>
+               <xs:enumeration id="_7975" value="customs point"/>
+               <xs:enumeration id="_8007" value="reservation center"/>
+               <xs:enumeration id="_7976" value="station"/>
+               <xs:enumeration id="_7977" value="platform"/>
+               <xs:enumeration id="_7978" value="dock"/>
+               <xs:enumeration id="_7979" value="depot"/>
+               <xs:enumeration id="_7980" value="ev charging point"/>
+               <xs:enumeration id="_7981" value="information welcome point"/>
+               <xs:enumeration id="_7982" value="at rest area"/>
+               <xs:enumeration id="_7983" value="at service area"/>
+               <xs:enumeration id="_7984" value="at weigh station"/>
+               <xs:enumeration id="_7985" value="picnic areas"/>
+               <xs:enumeration id="_7986" value="rest area"/>
+               <xs:enumeration id="_7987" value="service stations"/>
+               <xs:enumeration id="_7988" value="toilets"/>
+               <xs:enumeration id="_7989" value="on the right"/>
+               <xs:enumeration id="_7990" value="on the left"/>
+               <xs:enumeration id="_7991" value="in the center"/>
+               <xs:enumeration id="_7992" value="in the opposite direction"/>
+               <xs:enumeration id="_7993" value="cross traffic"/>
+               <xs:enumeration id="_7994" value="northbound traffic"/>
+               <xs:enumeration id="_7995" value="eastbound traffic"/>
+               <xs:enumeration id="_7996" value="southbound traffic"/>
+               <xs:enumeration id="_7997" value="westbound traffic"/>
+               <xs:enumeration id="_7998" value="north"/>
+               <xs:enumeration id="_7999" value="south"/>
+               <xs:enumeration id="_8000" value="east"/>
+               <xs:enumeration id="_8001" value="west"/>
+               <xs:enumeration id="_8002" value="northeast"/>
+               <xs:enumeration id="_8003" value="northwest"/>
+               <xs:enumeration id="_8004" value="southeast"/>
+               <xs:enumeration id="_8005" value="southwest"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="local:LocalGenericLocations"/>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="IncidentResponseEquipment">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="9984"/>
+               <xs:maxInclusive value="10239"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_9985" value="ground fire suppression"/>
+               <xs:enumeration id="_9986" value="heavy ground equipment"/>
+               <xs:enumeration id="_9988" value="aircraft"/>
+               <xs:enumeration id="_9989" value="marine equipment"/>
+               <xs:enumeration id="_9990" value="support equipment"/>
+               <xs:enumeration id="_9991" value="medical rescue unit"/>
+               <xs:enumeration id="_9993" value="other"/>
+               <xs:enumeration id="_9994" value="ground fire suppression other"/>
+               <xs:enumeration id="_9995" value="engine"/>
+               <xs:enumeration id="_9996" value="truck or aerial"/>
+               <xs:enumeration id="_9997" value="quint"/>
+               <xs:enumeration id="_9998" value="tanker pumper combination"/>
+               <xs:enumeration id="_10000" value="brush truck"/>
+               <xs:enumeration id="_10001" value="aircraft rescue firefighting"/>
+               <xs:enumeration id="_10004" value="heavy ground equipment other"/>
+               <xs:enumeration id="_10005" value="dozer or plow"/>
+               <xs:enumeration id="_10006" value="tractor"/>
+               <xs:enumeration id="_10008" value="tanker or tender"/>
+               <xs:enumeration id="_10024" value="aircraft other"/>
+               <xs:enumeration id="_10025" value="aircraft fixed wing tanker"/>
+               <xs:enumeration id="_10026" value="helitanker"/>
+               <xs:enumeration id="_10027" value="helicopter"/>
+               <xs:enumeration id="_10034" value="marine equipment other"/>
+               <xs:enumeration id="_10035" value="fire boat with pump"/>
+               <xs:enumeration id="_10036" value="boat no pump"/>
+               <xs:enumeration id="_10044" value="support apparatus other"/>
+               <xs:enumeration id="_10045" value="breathing apparatus support"/>
+               <xs:enumeration id="_10046" value="light and air unit"/>
+               <xs:enumeration id="_10054" value="medical rescue unit other"/>
+               <xs:enumeration id="_10055" value="rescue unit"/>
+               <xs:enumeration id="_10056" value="urban search rescue unit"/>
+               <xs:enumeration id="_10057" value="high angle rescue"/>
+               <xs:enumeration id="_10058" value="crash fire rescue"/>
+               <xs:enumeration id="_10059" value="bLS unit"/>
+               <xs:enumeration id="_10060" value="aLS unit"/>
+               <xs:enumeration id="_10075" value="mobile command post"/>
+               <xs:enumeration id="_10076" value="chief officer car"/>
+               <xs:enumeration id="_10077" value="HAZMAT unit"/>
+               <xs:enumeration id="_10078" value="type i hand crew"/>
+               <xs:enumeration id="_10079" value="type ii hand crew"/>
+               <xs:enumeration id="_10083" value="privately owned vehicle"/>
+               <xs:enumeration id="_10084" value="other apparatus resource"/>
+               <xs:enumeration id="_10085" value="ambulance"/>
+               <xs:enumeration id="_10086" value="bomb squad van"/>
+               <xs:enumeration id="_10087" value="combine harvester"/>
+               <xs:enumeration id="_10088" value="construction vehicle"/>
+               <xs:enumeration id="_10089" value="farm tractor"/>
+               <xs:enumeration id="_10090" value="grass cutting machines"/>
+               <xs:enumeration id="_10091" value="HAZMAT containment tow"/>
+               <xs:enumeration id="_10092" value="heavy tow"/>
+               <xs:enumeration id="_10094" value="light tow"/>
+               <xs:enumeration id="_10114" value="flatbed tow"/>
+               <xs:enumeration id="_10093" value="hedge cutting machines"/>
+               <xs:enumeration id="_10095" value="mobile crane"/>
+               <xs:enumeration id="_10096" value="refuse collection vehicle"/>
+               <xs:enumeration id="_10097" value="resurfacing vehicle"/>
+               <xs:enumeration id="_10098" value="road sweeper"/>
+               <xs:enumeration id="_10099" value="roadside litter collection crews"/>
+               <xs:enumeration id="_10100" value="salvage vehicle"/>
+               <xs:enumeration id="_10101" value="sand truck"/>
+               <xs:enumeration id="_10102" value="snowplow"/>
+               <xs:enumeration id="_10103" value="steam roller"/>
+               <xs:enumeration id="_10104" value="swat team van"/>
+               <xs:enumeration id="_10105" value="track laying vehicle"/>
+               <xs:enumeration id="_10106" value="unknown vehicle"/>
+               <xs:enumeration id="_10107" value="white lining vehicle"/>
+               <xs:enumeration id="_10108" value="dump truck"/>
+               <xs:enumeration id="_10109" value="supervisor vehicle"/>
+               <xs:enumeration id="_10110" value="snow blower"/>
+               <xs:enumeration id="_10111" value="rotary snow blower"/>
+               <xs:enumeration id="_10112" value="road grader"/>
+               <xs:enumeration id="_10113" value="steam truck"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="IncidentResponseStatus">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="2816"/>
+               <xs:maxInclusive value="3071"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_2817" value="unconfirmed report"/>
+               <xs:enumeration id="_2818" value="initial response en route"/>
+               <xs:enumeration id="_2819" value="follow up response en route"/>
+               <xs:enumeration id="_2820" value="initial response on scene"/>
+               <xs:enumeration id="_2821" value="follow up response on scene"/>
+               <xs:enumeration id="_2822" value="confirmed report"/>
+               <xs:enumeration id="_2823" value="scene is unsecured at this time"/>
+               <xs:enumeration id="_2824" value="response scene secured"/>
+               <xs:enumeration id="_2825" value="rescue and recovery work in progress"/>
+               <xs:enumeration id="_2826" value="extraction in progress"/>
+               <xs:enumeration id="_2827" value="clearance work in progress"/>
+               <xs:enumeration id="_2828" value="body removal operations"/>
+               <xs:enumeration id="_2829" value="fire containment contained"/>
+               <xs:enumeration id="_2830" value="fire containment not contained"/>
+               <xs:enumeration id="_2831" value="event cleared"/>
+               <xs:enumeration id="_2832" value="traffic clearing"/>
+               <xs:enumeration id="_2833" value="incident closed"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="SystemInformation">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="4352"/>
+               <xs:maxInclusive value="4607"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_4353" value="information available on radio"/>
+               <xs:enumeration id="_4354" value="information available on TV"/>
+               <xs:enumeration id="_4355" value="call to get information"/>
+               <xs:enumeration id="_4356" value="information available via Internet"/>
+               <xs:enumeration id="_4357" value="test message"/>
+               <xs:enumeration id="_4358" value="no information available"/>
+               <xs:enumeration id="_4359" value="null description"/>
+               <xs:enumeration id="_4360" value="information service is being suspended"/>
+               <xs:enumeration id="_4478" value="information service resumed"/>
+               <xs:enumeration id="_4479" value="message canceled"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <!-- Descriptive Name: DE_Instructions-Mandatory -->
+   <xs:simpleType name="AdviceInstructionsMandatory">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="7424"/>
+               <xs:maxInclusive value="7679"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_7425" value="keep to the right"/>
+               <xs:enumeration id="_7426" value="keep to the left"/>
+               <xs:enumeration id="_7427" value="use right lane"/>
+               <xs:enumeration id="_7428" value="use left lane"/>
+               <xs:enumeration id="_7429" value="heavy vehicles use right lane"/>
+               <xs:enumeration id="_7430" value="heavy vehicles use left lane"/>
+               <xs:enumeration id="_7431" value="observe signals"/>
+               <xs:enumeration id="_7432" value="observe signs"/>
+               <xs:enumeration id="_7433" value="no passing"/>
+               <xs:enumeration id="_7434" value="no smoking"/>
+               <xs:enumeration id="_7435" value="no open flames"/>
+               <xs:enumeration id="_7436" value="use shoulder as lane"/>
+               <xs:enumeration id="_7437" value="do not drive on the shoulder"/>
+               <xs:enumeration id="_7438" value="allow emergency vehicles to pass"/>
+               <xs:enumeration id="_7439" value="clear a lane for emergency vehicles"/>
+               <xs:enumeration id="_7440" value="pull over to the edge of the roadway"/>
+               <xs:enumeration id="_7441" value="wait for escort vehicle"/>
+               <xs:enumeration id="_7442" value="in emergency wait for police patrol"/>
+               <xs:enumeration id="_7443" value="reduce your speed"/>
+               <xs:enumeration id="_7444" value="observe speed limits"/>
+               <xs:enumeration id="_7445" value="check point"/>
+               <xs:enumeration id="_7446" value="entry requirements"/>
+               <xs:enumeration id="_7447" value="insurance requirements"/>
+               <xs:enumeration id="_7448" value="firearms requirements"/>
+               <xs:enumeration id="_7449" value="pet requirements"/>
+               <xs:enumeration id="_7547" value="shoulder travel no longer allowed"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="AdviceInstructionsRecommendations">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="7168"/>
+               <xs:maxInclusive value="7423"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_7169" value="drive carefully"/>
+               <xs:enumeration id="_7170" value="drive with extreme caution"/>
+               <xs:enumeration id="_7171" value="approach with care"/>
+               <xs:enumeration id="_7172" value="keep your distance"/>
+               <xs:enumeration id="_7173" value="increase normal following distance"/>
+               <xs:enumeration id="_7174" value="test your brakes"/>
+               <xs:enumeration id="_7175" value="cross intersection with care"/>
+               <xs:enumeration id="_7176" value="pass with care"/>
+               <xs:enumeration id="_7177" value="use low beam headlights"/>
+               <xs:enumeration id="_7178" value="use fog lights"/>
+               <xs:enumeration id="_7179" value="use hazard warning lights"/>
+               <xs:enumeration id="_7180" value="do not leave your vehicle"/>
+               <xs:enumeration id="_7181" value="leave your vehicle and proceed to next safe place"/>
+               <xs:enumeration id="_7182" value="turn off engine"/>
+               <xs:enumeration id="_7183"
+                  value="close all windows turn off heater air conditioner and vents"/>
+               <xs:enumeration id="_7184"
+                  value="turn off air conditioner to prevent engine overheating"/>
+               <xs:enumeration id="_7185" value="turn off mobile phones and two way radios"/>
+               <xs:enumeration id="_7186" value="prepare to stop"/>
+               <xs:enumeration id="_7187" value="stop at next rest area"/>
+               <xs:enumeration id="_7188" value="stop at next safe place"/>
+               <xs:enumeration id="_7189" value="only travel if absolutely necessary"/>
+               <xs:enumeration id="_7190" value="drive to another service area"/>
+               <xs:enumeration id="_7191" value="use through traffic lanes"/>
+               <xs:enumeration id="_7192" value="use local traffic lanes"/>
+               <xs:enumeration id="_7193" value="use left hand parallel roadway"/>
+               <xs:enumeration id="_7194" value="use right hand parallel roadway"/>
+               <xs:enumeration id="_7195" value="use heavy vehicle lane"/>
+               <xs:enumeration id="_7196" value="observe recommended speed"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="ITIScodes">
+      <xs:annotation>
+         <xs:appinfo> -- Consults SAE J2366.2 for a complete listing stopped traffic (257) stop and
+            go traffic (258) endCode (65000) -- over 1 , 200 phrases follow in the complete listing
+            -- Consults SAE J2366.2 for a complete listing </xs:appinfo>
+      </xs:annotation>
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="257"/>
+               <xs:maxInclusive value="65000"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration value="stopped traffic"/>
+               <xs:enumeration value="stop and go traffic"/>
+               <xs:enumeration value="endCode"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="ITIStext">
+      <xs:restriction base="xs:string">
+         <xs:minLength value="1"/>
+      </xs:restriction>
+   </xs:simpleType>
+
+   <xs:simpleType name="ITISgroups">
+      <xs:annotation>
+         <xs:appinfo> trafficConditions (1) accidentsAndIncidents (2) closures (3) roadwork (4)
+            obstruction (5) delayStatusCancellation (6) unusualDriving (7) mobileSituation (8)
+            deviceStatus (9) restrictionClass (10) incidentResponseStatus (11) disasters (12)
+            disturbances (13) sportingEvents (14) specialEvents (15) parkingInformation (16)
+            systemInformation (17) weatherConditions (18) precipitation (19) winds (20)
+            visibilityAndAirQuality (21) temperature (22) pavementConditions (23)
+            winterDrivingRestrictions (24) winterDrivingIndex (25) suggestionAdvice (26)
+            warningAdvice (27) adviceInstructionsRecommendations (28) adviceInstructionsMandatory
+            (29) qualifiers (30) genericLocations (31) laneRoadway (32) alternateRoute (33) units
+            (34) transitMode (35) vehicleGroupAffected (36) travelerGroupAffected (37)
+            responderGroupAffected (38) incidentResponseEquipment (39) assetStatus (40)
+            roadsideAssets (41) transitOperations (42) objects (43) </xs:appinfo>
+      </xs:annotation>
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="1"/>
+               <xs:maxInclusive value="43"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration value="trafficConditions"/>
+               <xs:enumeration value="accidentsAndIncidents"/>
+               <xs:enumeration value="closures"/>
+               <xs:enumeration value="roadwork"/>
+               <xs:enumeration value="obstruction"/>
+               <xs:enumeration value="delayStatusCancellation"/>
+               <xs:enumeration value="unusualDriving"/>
+               <xs:enumeration value="mobileSituation"/>
+               <xs:enumeration value="deviceStatus"/>
+               <xs:enumeration value="restrictionClass"/>
+               <xs:enumeration value="incidentResponseStatus"/>
+               <xs:enumeration value="disasters"/>
+               <xs:enumeration value="disturbances"/>
+               <xs:enumeration value="sportingEvents"/>
+               <xs:enumeration value="specialEvents"/>
+               <xs:enumeration value="parkingInformation"/>
+               <xs:enumeration value="systemInformation"/>
+               <xs:enumeration value="weatherConditions"/>
+               <xs:enumeration value="precipitation"/>
+               <xs:enumeration value="winds"/>
+               <xs:enumeration value="visibilityAndAirQuality"/>
+               <xs:enumeration value="temperature"/>
+               <xs:enumeration value="pavementConditions"/>
+               <xs:enumeration value="winterDrivingRestrictions"/>
+               <xs:enumeration value="winterDrivingIndex"/>
+               <xs:enumeration value="suggestionAdvice"/>
+               <xs:enumeration value="warningAdvice"/>
+               <xs:enumeration value="adviceInstructionsRecommendations"/>
+               <xs:enumeration value="adviceInstructionsMandatory"/>
+               <xs:enumeration value="qualifiers"/>
+               <xs:enumeration value="genericLocations"/>
+               <xs:enumeration value="laneRoadway"/>
+               <xs:enumeration value="alternateRoute"/>
+               <xs:enumeration value="units"/>
+               <xs:enumeration value="transitMode"/>
+               <xs:enumeration value="vehicleGroupAffected"/>
+               <xs:enumeration value="travelerGroupAffected"/>
+               <xs:enumeration value="responderGroupAffected"/>
+               <xs:enumeration value="incidentResponseEquipment"/>
+               <xs:enumeration value="assetStatus"/>
+               <xs:enumeration value="roadsideAssets"/>
+               <xs:enumeration value="transitOperations"/>
+               <xs:enumeration value="objects"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="LaneRoadway">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="8192"/>
+               <xs:maxInclusive value="8447"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_8193" value="all roadways"/>
+               <xs:enumeration id="_8194" value="through lanes"/>
+               <xs:enumeration id="_8195" value="left lane"/>
+               <xs:enumeration id="_8196" value="right lane"/>
+               <xs:enumeration id="_8197" value="center lane"/>
+               <xs:enumeration id="_8198" value="middle lanes"/>
+               <xs:enumeration id="_8199" value="middle two lanes"/>
+               <xs:enumeration id="_8200" value="right turning lanes"/>
+               <xs:enumeration id="_8201" value="left turning lanes"/>
+               <xs:enumeration id="_8236" value="upper deck lanes"/>
+               <xs:enumeration id="_8237" value="lower deck lanes"/>
+               <xs:enumeration id="_8238" value="reversible lanes"/>
+               <xs:enumeration id="_8239" value="right exit lanes"/>
+               <xs:enumeration id="_8240" value="left exit lanes"/>
+               <xs:enumeration id="_8241" value="right merging lanes"/>
+               <xs:enumeration id="_8242" value="left merging lanes"/>
+               <xs:enumeration id="_8202" value="right exit ramp"/>
+               <xs:enumeration id="_8243" value="right second exit ramp"/>
+               <xs:enumeration id="_8203" value="right entrance ramp"/>
+               <xs:enumeration id="_8245" value="right second entrance ramp"/>
+               <xs:enumeration id="_8204" value="left exit ramp"/>
+               <xs:enumeration id="_8244" value="left second exit ramp"/>
+               <xs:enumeration id="_8205" value="left entrance ramp"/>
+               <xs:enumeration id="_8246" value="left second entrance ramp"/>
+               <xs:enumeration id="_8234" value="escape ramp"/>
+               <xs:enumeration id="_8206" value="hard shoulder"/>
+               <xs:enumeration id="_8207" value="soft shoulder"/>
+               <xs:enumeration id="_8208" value="right shoulder"/>
+               <xs:enumeration id="_8209" value="left shoulder"/>
+               <xs:enumeration id="_8235" value="highways"/>
+               <xs:enumeration id="_8210" value="right hand parallel lanes"/>
+               <xs:enumeration id="_8211" value="left hand parallel lanes"/>
+               <xs:enumeration id="_8212" value="connecting lanes"/>
+               <xs:enumeration id="_8213" value="express lanes"/>
+               <xs:enumeration id="_8214" value="local lanes"/>
+               <xs:enumeration id="_8215" value="toll lanes"/>
+               <xs:enumeration id="_8216" value="electronic toll lanes"/>
+               <xs:enumeration id="_8217" value="toll plaza"/>
+               <xs:enumeration id="_8218" value="inspection lane"/>
+               <xs:enumeration id="_8219" value="HOV lanes"/>
+               <xs:enumeration id="_8220" value="bus lanes"/>
+               <xs:enumeration id="_8221" value="carpool lanes"/>
+               <xs:enumeration id="_8222" value="truck lanes"/>
+               <xs:enumeration id="_8223" value="emergency lanes"/>
+               <xs:enumeration id="_8224" value="passing lanes"/>
+               <xs:enumeration id="_8225" value="climbing lanes"/>
+               <xs:enumeration id="_8226" value="slow lane"/>
+               <xs:enumeration id="_8227" value="service road"/>
+               <xs:enumeration id="_8228" value="cycle lane"/>
+               <xs:enumeration id="_8229" value="bridge"/>
+               <xs:enumeration id="_8230" value="overpass"/>
+               <xs:enumeration id="_8231" value="elevated lanes"/>
+               <xs:enumeration id="_8232" value="underpass"/>
+               <xs:enumeration id="_8233" value="tunnel"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="MobileSituation">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="2048"/>
+               <xs:maxInclusive value="2303"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_2049" value="abnormal load"/>
+               <xs:enumeration id="_2050" value="wide load"/>
+               <xs:enumeration id="_2051" value="long load"/>
+               <xs:enumeration id="_2052" value="slow vehicle"/>
+               <xs:enumeration id="_2053" value="farm equipment"/>
+               <xs:enumeration id="_2054" value="horse drawn vehicles"/>
+               <xs:enumeration id="_2055" value="overheight load"/>
+               <xs:enumeration id="_2056" value="overweight load"/>
+               <xs:enumeration id="_2057" value="tracked vehicle"/>
+               <xs:enumeration id="_2058" value="vehicle carrying hazardous materials"/>
+               <xs:enumeration id="_2059" value="slow moving maintenance vehicle"/>
+               <xs:enumeration id="_2060" value="convoy"/>
+               <xs:enumeration id="_2061" value="military convoy"/>
+               <xs:enumeration id="_2062" value="refugee convoy"/>
+               <xs:enumeration id="_2063" value="motorcade"/>
+               <xs:enumeration id="_2064" value="mobile situation repositioning"/>
+               <xs:enumeration id="_2065" value="winter maintenance vehicles"/>
+               <xs:enumeration id="_2066" value="snowplows"/>
+               <xs:enumeration id="_2172" value="slow moving maintenance vehicle warning cleared"/>
+               <xs:enumeration id="_2173" value="exceptional load warning cleared"/>
+               <xs:enumeration id="_2174" value="hazardous load warning cleared"/>
+               <xs:enumeration id="_2175" value="convoy cleared"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="Objects">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="11008"/>
+               <xs:maxInclusive value="11263"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_11009" value="unknown object"/>
+               <xs:enumeration id="_11010" value="tire"/>
+               <xs:enumeration id="_11011" value="rim"/>
+               <xs:enumeration id="_11012" value="retread"/>
+               <xs:enumeration id="_11013" value="trash"/>
+               <xs:enumeration id="_11014" value="cargo"/>
+               <xs:enumeration id="_11015" value="diesel"/>
+               <xs:enumeration id="_11016" value="gasoline"/>
+               <xs:enumeration id="_11017" value="anti freeze"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="Obstruction">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="1280"/>
+               <xs:maxInclusive value="1535"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_1281" value="obstruction on roadway"/>
+               <xs:enumeration id="_1282" value="object on roadway"/>
+               <xs:enumeration id="_1283" value="objects falling from moving vehicle"/>
+               <xs:enumeration id="_1284" value="debris on roadway"/>
+               <xs:enumeration id="_1285" value="storm damage"/>
+               <xs:enumeration id="_1286" value="people on roadway"/>
+               <xs:enumeration id="_1287" value="bicyclists on roadway"/>
+               <xs:enumeration id="_1288" value="sightseers obstructing access"/>
+               <xs:enumeration id="_1289" value="large numbers of visitors"/>
+               <xs:enumeration id="_1290" value="animal on roadway"/>
+               <xs:enumeration id="_1291" value="large animal on roadway"/>
+               <xs:enumeration id="_1292" value="herd of animals on roadway"/>
+               <xs:enumeration id="_1293" value="animal struck"/>
+               <xs:enumeration id="_1315" value="advertising signs"/>
+               <xs:enumeration id="_1294" value="fallen trees"/>
+               <xs:enumeration id="_1311" value="over turned trees"/>
+               <xs:enumeration id="_1312" value="tree limbs"/>
+               <xs:enumeration id="_1314" value="utility pole down"/>
+               <xs:enumeration id="_1295" value="downed power lines"/>
+               <xs:enumeration id="_1296" value="downed cables"/>
+               <xs:enumeration id="_1297" value="subsidence"/>
+               <xs:enumeration id="_1298" value="road surface collapse"/>
+               <xs:enumeration id="_1317" value="frost jacking"/>
+               <xs:enumeration id="_1316" value="frost heave"/>
+               <xs:enumeration id="_1299" value="pavement buckled"/>
+               <xs:enumeration id="_1300" value="pothole"/>
+               <xs:enumeration id="_1301" value="flooding"/>
+               <xs:enumeration id="_1302" value="broken water main"/>
+               <xs:enumeration id="_1303" value="collapsed sewer"/>
+               <xs:enumeration id="_1319" value="wash out"/>
+               <xs:enumeration id="_1318" value="washboard"/>
+               <xs:enumeration id="_1304" value="sewer overflow"/>
+               <xs:enumeration id="_1305" value="gas leak"/>
+               <xs:enumeration id="_1306" value="snowmelt"/>
+               <xs:enumeration id="_1307" value="mudslide"/>
+               <xs:enumeration id="_1308" value="avalanche"/>
+               <xs:enumeration id="_1309" value="rockfall"/>
+               <xs:enumeration id="_1310" value="landslide"/>
+               <xs:enumeration id="_1406" value="clearance work"/>
+               <xs:enumeration id="_1407" value="obstruction cleared"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="local:LocalObstruction"/>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="ParkingInformation">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="4096"/>
+               <xs:maxInclusive value="4351"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_4097" value="normal parking restrictions lifted"/>
+               <xs:enumeration id="_4098" value="parking meter restrictions lifted"/>
+               <xs:enumeration id="_4099" value="special parking restrictions in force"/>
+               <xs:enumeration id="_4100" value="full parking lot"/>
+               <xs:enumeration id="_4101" value="full parking garage"/>
+               <xs:enumeration id="_4102" value="all parking lots full"/>
+               <xs:enumeration id="_4103" value="no parking spaces available"/>
+               <xs:enumeration id="_4104" value="only a few spaces available"/>
+               <xs:enumeration id="_4105" value="spaces available"/>
+               <xs:enumeration id="_4106" value="no parking"/>
+               <xs:enumeration id="_4107" value="parking on one side of street only"/>
+               <xs:enumeration id="_4108" value="parking on both sides of street"/>
+               <xs:enumeration id="_4109" value="parallel parking only"/>
+               <xs:enumeration id="_4110" value="parking meters not available"/>
+               <xs:enumeration id="_4111" value="use of parking meters restricted"/>
+               <xs:enumeration id="_4112" value="event parking"/>
+               <xs:enumeration id="_4113" value="handicapped parking"/>
+               <xs:enumeration id="_4114" value="long term parking"/>
+               <xs:enumeration id="_4115" value="overnight parking"/>
+               <xs:enumeration id="_4116" value="short term parking"/>
+               <xs:enumeration id="_4117" value="parking by permit only"/>
+               <xs:enumeration id="_4222" value="special parking restrictions lifted"/>
+               <xs:enumeration id="_4223" value="no parking information available"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="PavementConditions">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="5888"/>
+               <xs:maxInclusive value="6143"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_5889" value="impassable"/>
+               <xs:enumeration id="_5890" value="almost impassable"/>
+               <xs:enumeration id="_5891" value="passable with care"/>
+               <xs:enumeration id="_5892" value="passable"/>
+               <xs:enumeration id="_5893" value="surface water hazard"/>
+               <xs:enumeration id="_5894" value="danger of hydroplaning"/>
+               <xs:enumeration id="_5895" value="wet pavement"/>
+               <xs:enumeration id="_5896" value="treated pavement"/>
+               <xs:enumeration id="_5897" value="slippery"/>
+               <xs:enumeration id="_5898" value="mud on roadway"/>
+               <xs:enumeration id="_5899" value="leaves on roadway"/>
+               <xs:enumeration id="_5900" value="loose sand on roadway"/>
+               <xs:enumeration id="_5901" value="loose gravel"/>
+               <xs:enumeration id="_5902" value="fuel on roadway"/>
+               <xs:enumeration id="_5903" value="oil on roadway"/>
+               <xs:enumeration id="_5904" value="road surface in poor condition"/>
+               <xs:enumeration id="_5905" value="melting tar"/>
+               <xs:enumeration id="_5906" value="ice"/>
+               <xs:enumeration id="_5907" value="icy patches"/>
+               <xs:enumeration id="_5908" value="black ice"/>
+               <xs:enumeration id="_5909" value="ice pellets on roadway"/>
+               <xs:enumeration id="_5910" value="ice build up"/>
+               <xs:enumeration id="_5911" value="freezing rain"/>
+               <xs:enumeration id="_5912" value="wet and icy roads"/>
+               <xs:enumeration id="_5913" value="melting snow"/>
+               <xs:enumeration id="_5914" value="slush"/>
+               <xs:enumeration id="_5915" value="frozen slush"/>
+               <xs:enumeration id="_5916" value="snow on roadway"/>
+               <xs:enumeration id="_5917" value="packed snow"/>
+               <xs:enumeration id="_5918" value="packed snow patches"/>
+               <xs:enumeration id="_5919" value="plowed snow"/>
+               <xs:enumeration id="_5920" value="wet snow"/>
+               <xs:enumeration id="_5921" value="fresh snow"/>
+               <xs:enumeration id="_5922" value="powder snow"/>
+               <xs:enumeration id="_5923" value="granular snow"/>
+               <xs:enumeration id="_5924" value="frozen snow"/>
+               <xs:enumeration id="_5925" value="crusted snow"/>
+               <xs:enumeration id="_5926" value="deep snow"/>
+               <xs:enumeration id="_5927" value="snow drifts"/>
+               <xs:enumeration id="_5928" value="drifting snow"/>
+               <xs:enumeration id="_5929" value="expected snow accumulation"/>
+               <xs:enumeration id="_5930" value="current snow accumulation"/>
+               <xs:enumeration id="_6011" value="dry pavement"/>
+               <xs:enumeration id="_6012" value="snow cleared"/>
+               <xs:enumeration id="_6013" value="pavement conditions improved"/>
+               <xs:enumeration id="_6014" value="skid hazard reduced"/>
+               <xs:enumeration id="_6015" value="pavement conditions cleared"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="Precipitation">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="4864"/>
+               <xs:maxInclusive value="5119"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_4865" value="severe weather"/>
+               <xs:enumeration id="_4866" value="blizzard"/>
+               <xs:enumeration id="_4867" value="heavy snow"/>
+               <xs:enumeration id="_4868" value="snow"/>
+               <xs:enumeration id="_4869" value="light snow"/>
+               <xs:enumeration id="_4870" value="snow showers"/>
+               <xs:enumeration id="_4871" value="winter storm"/>
+               <xs:enumeration id="_4872" value="ice glaze"/>
+               <xs:enumeration id="_4873" value="heavy frost"/>
+               <xs:enumeration id="_4874" value="frost"/>
+               <xs:enumeration id="_4875" value="ice storm"/>
+               <xs:enumeration id="_4876" value="sleet"/>
+               <xs:enumeration id="_4877" value="rain and snow mixed"/>
+               <xs:enumeration id="_4878" value="rain changing to snow"/>
+               <xs:enumeration id="_4879" value="damaging hail"/>
+               <xs:enumeration id="_4880" value="hail"/>
+               <xs:enumeration id="_4881" value="thunderstorms"/>
+               <xs:enumeration id="_4882" value="thundershowers"/>
+               <xs:enumeration id="_4883" value="extremely heavy downpour"/>
+               <xs:enumeration id="_4884" value="heavy rain"/>
+               <xs:enumeration id="_4885" value="rain"/>
+               <xs:enumeration id="_4886" value="light rain"/>
+               <xs:enumeration id="_4887" value="drizzle"/>
+               <xs:enumeration id="_4888" value="showers"/>
+               <xs:enumeration id="_4889" value="dew"/>
+               <xs:enumeration id="_4991" value="precipitation cleared"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="Qualifiers">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="7680"/>
+               <xs:maxInclusive value="7935"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_7681" value="above"/>
+               <xs:enumeration id="_7682" value="below"/>
+               <xs:enumeration id="_7683" value="in"/>
+               <xs:enumeration id="_7684" value="around"/>
+               <xs:enumeration id="_7685" value="after"/>
+               <xs:enumeration id="_7686" value="before"/>
+               <xs:enumeration id="_7687" value="at"/>
+               <xs:enumeration id="_7688" value="on"/>
+               <xs:enumeration id="_7689" value="near"/>
+               <xs:enumeration id="_7690" value="from the"/>
+               <xs:enumeration id="_7691" value="terminal"/>
+               <xs:enumeration id="_7692" value="falling slowly"/>
+               <xs:enumeration id="_7693" value="falling"/>
+               <xs:enumeration id="_7694" value="falling quickly"/>
+               <xs:enumeration id="_7695" value="rising slowly"/>
+               <xs:enumeration id="_7696" value="rising"/>
+               <xs:enumeration id="_7697" value="rising quickly"/>
+               <xs:enumeration id="_7698" value="steady"/>
+               <xs:enumeration id="_7699" value="likely"/>
+               <xs:enumeration id="_7700" value="changing to"/>
+               <xs:enumeration id="_7701" value="mostly"/>
+               <xs:enumeration id="_7702" value="partly"/>
+               <xs:enumeration id="_7703" value="minus"/>
+               <xs:enumeration id="_7704" value="weather ended"/>
+               <xs:enumeration id="_7705" value="expected"/>
+               <xs:enumeration id="_7706" value="low"/>
+               <xs:enumeration id="_7707" value="mid"/>
+               <xs:enumeration id="_7708" value="high"/>
+               <xs:enumeration id="_7709" value="upper"/>
+               <xs:enumeration id="_7710" value="unseasonably"/>
+               <xs:enumeration id="_7711" value="reported"/>
+               <xs:enumeration id="_7712" value="advice"/>
+               <xs:enumeration id="_7713" value="due to"/>
+               <xs:enumeration id="_7714" value="proceed to"/>
+               <xs:enumeration id="_7715" value="transferred to"/>
+               <xs:enumeration id="_7716" value="use"/>
+               <xs:enumeration id="_7717" value="affecting"/>
+               <xs:enumeration id="_7718" value="blocking"/>
+               <xs:enumeration id="_7719" value="connecting"/>
+               <xs:enumeration id="_7720" value="finished"/>
+               <xs:enumeration id="_7721" value="for"/>
+               <xs:enumeration id="_7722" value="or"/>
+               <xs:enumeration id="_7723" value="and"/>
+               <xs:enumeration id="_7724" value="later"/>
+               <xs:enumeration id="_7725" value="level"/>
+               <xs:enumeration id="_7726" value="shortly"/>
+               <xs:enumeration id="_7727" value="soon"/>
+               <xs:enumeration id="_7728" value="service"/>
+               <xs:enumeration id="_7733" value="graffiti"/>
+               <xs:enumeration id="_7729" value="damaged"/>
+               <xs:enumeration id="_7730" value="out of order"/>
+               <xs:enumeration id="_7732" value="on State right of way"/>
+               <xs:enumeration id="_7734" value="found property"/>
+               <xs:enumeration id="_7731" value="vandalism"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="ResponderGroupAffected">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="9728"/>
+               <xs:maxInclusive value="9983"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_9729" value="emergency vehicle units"/>
+               <xs:enumeration id="_9730" value="federal law enforcement units"/>
+               <xs:enumeration id="_9731" value="state police units"/>
+               <xs:enumeration id="_9732" value="county police units"/>
+               <xs:enumeration id="_9733" value="local police units"/>
+               <xs:enumeration id="_9734" value="ambulance units"/>
+               <xs:enumeration id="_9735" value="rescue units"/>
+               <xs:enumeration id="_9736" value="fire units"/>
+               <xs:enumeration id="_9737" value="HAZMAT units"/>
+               <xs:enumeration id="_9738" value="light tow unit"/>
+               <xs:enumeration id="_9739" value="heavy tow unit"/>
+               <xs:enumeration id="_9740" value="freeway service patrols"/>
+               <xs:enumeration id="_9741" value="transportation response units"/>
+               <xs:enumeration id="_9742" value="private contractor response units"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="local:LocalResponderGroupAffected"/>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="RestrictionClass">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="2560"/>
+               <xs:maxInclusive value="2815"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_2561" value="restrictions"/>
+               <xs:enumeration id="_2562" value="ramp restrictions"/>
+               <xs:enumeration id="_2563" value="truck restriction"/>
+               <xs:enumeration id="_2564" value="speed restriction"/>
+               <xs:enumeration id="_2565" value="noise restriction"/>
+               <xs:enumeration id="_2566" value="traffic regulations have been changed"/>
+               <xs:enumeration id="_2567" value="local access only"/>
+               <xs:enumeration id="_2568" value="no trailers"/>
+               <xs:enumeration id="_2569" value="no high profile vehicles"/>
+               <xs:enumeration id="_2570" value="hazardous materials truck restriction"/>
+               <xs:enumeration id="_2571" value="no through traffic"/>
+               <xs:enumeration id="_2572" value="no motor vehicles"/>
+               <xs:enumeration id="_2573" value="width limit"/>
+               <xs:enumeration id="_2574" value="height limit"/>
+               <xs:enumeration id="_2575" value="length limit"/>
+               <xs:enumeration id="_2576" value="axle load limit"/>
+               <xs:enumeration id="_2577" value="gross weight limit"/>
+               <xs:enumeration id="_2578" value="axle count limit"/>
+               <xs:enumeration id="_2579" value="carpool lane available"/>
+               <xs:enumeration id="_2580" value="carpool restrictions changed"/>
+               <xs:enumeration id="_2581" value="HOV 2 no single occupant vehicles"/>
+               <xs:enumeration id="_2582" value="HOV 3 no vehicles with less than three occupants"/>
+               <xs:enumeration id="_2583" value="bus lane available for all vehicles"/>
+               <xs:enumeration id="_2584" value="truck lane available for all vehicles"/>
+               <xs:enumeration id="_2585" value="permits call in basis"/>
+               <xs:enumeration id="_2586" value="permits temporarily closed"/>
+               <xs:enumeration id="_2587" value="permits closed"/>
+               <xs:enumeration id="_2675" value="permits open"/>
+               <xs:enumeration id="_2676" value="restrictions for high profile vehicles lifted"/>
+               <xs:enumeration id="_2677" value="width limit lifted"/>
+               <xs:enumeration id="_2678" value="height limit lifted"/>
+               <xs:enumeration id="_2679" value="length limit lifted"/>
+               <xs:enumeration id="_2680" value="axle load limit lifted"/>
+               <xs:enumeration id="_2681" value="weight limit lifted"/>
+               <xs:enumeration id="_2682" value="axle count limit lifted"/>
+               <xs:enumeration id="_2683" value="carpool restrictions lifted"/>
+               <xs:enumeration id="_2684" value="lane restrictions lifted"/>
+               <xs:enumeration id="_2685" value="ramp restrictions lifted"/>
+               <xs:enumeration id="_2686" value="motor vehicle restrictions lifted"/>
+               <xs:enumeration id="_2687" value="restrictions lifted"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="RoadsideAssets">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="10496"/>
+               <xs:maxInclusive value="10751"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_10496" value="none"/>
+               <xs:enumeration id="_10497" value="light pole"/>
+               <xs:enumeration id="_10498" value="utiltity pole"/>
+               <xs:enumeration id="_10499" value="gantry way"/>
+               <xs:enumeration id="_10500" value="sign support"/>
+               <xs:enumeration id="_10501" value="signal pole"/>
+               <xs:enumeration id="_10502" value="signage public"/>
+               <xs:enumeration id="_10503" value="signage private"/>
+               <xs:enumeration id="_10568" value="overhead sign"/>
+               <xs:enumeration id="_10569" value="ground sign"/>
+               <xs:enumeration id="_10504" value="cones"/>
+               <xs:enumeration id="_10505" value="cones post type"/>
+               <xs:enumeration id="_10506" value="cones glue post"/>
+               <xs:enumeration id="_10507" value="cones other"/>
+               <xs:enumeration id="_10508" value="barriers"/>
+               <xs:enumeration id="_10509" value="barrier Aframe"/>
+               <xs:enumeration id="_10510" value="barriers heavy duty"/>
+               <xs:enumeration id="_10511" value="barricade type III"/>
+               <xs:enumeration id="_10512" value="barricade small"/>
+               <xs:enumeration id="_10565" value="solid barrier"/>
+               <xs:enumeration id="_10566" value="moveable barrier"/>
+               <xs:enumeration id="_10513" value="barricade lights"/>
+               <xs:enumeration id="_10514" value="beacon"/>
+               <xs:enumeration id="_10515" value="t stand"/>
+               <xs:enumeration id="_10516" value="a stand"/>
+               <xs:enumeration id="_10517" value="drums"/>
+               <xs:enumeration id="_10567" value="sand barrel"/>
+               <xs:enumeration id="_10518" value="impact attenuator"/>
+               <xs:enumeration id="_10519" value="barricade tape"/>
+               <xs:enumeration id="_10520" value="safety fence"/>
+               <xs:enumeration id="_10521" value="temp pavement markings"/>
+               <xs:enumeration id="_10522" value="speed bumps"/>
+               <xs:enumeration id="_10523" value="temp curbs"/>
+               <xs:enumeration id="_10524" value="parking blocks"/>
+               <xs:enumeration id="_10525" value="signboard fixed"/>
+               <xs:enumeration id="_10526" value="signboard portable"/>
+               <xs:enumeration id="_10527" value="har"/>
+               <xs:enumeration id="_10528" value="har AM"/>
+               <xs:enumeration id="_10529" value="har FM"/>
+               <xs:enumeration id="_10530" value="har DSRC"/>
+               <xs:enumeration id="_10531" value="traffic light"/>
+               <xs:enumeration id="_10532" value="lane control signal"/>
+               <xs:enumeration id="_10533" value="traffic detector"/>
+               <xs:enumeration id="_10534" value="vehicle detector"/>
+               <xs:enumeration id="_10535" value="system alarm"/>
+               <xs:enumeration id="_10536" value="arrow board"/>
+               <xs:enumeration id="_10537" value="fixed VMS"/>
+               <xs:enumeration id="_10538" value="mobile VMS"/>
+               <xs:enumeration id="_10539" value="ramp control"/>
+               <xs:enumeration id="_10540" value="gate control"/>
+               <xs:enumeration id="_10541" value="temporary traffic light"/>
+               <xs:enumeration id="_10542" value="over height warning system"/>
+               <xs:enumeration id="_10543" value="over weight warning system"/>
+               <xs:enumeration id="_10544" value="emergency telephones"/>
+               <xs:enumeration id="_10545" value="railroad crossing equipment"/>
+               <xs:enumeration id="_10546" value="tunnel ventilation"/>
+               <xs:enumeration id="_10547" value="CCTV"/>
+               <xs:enumeration id="_10548" value="environmental sensor"/>
+               <xs:enumeration id="_10549" value="switch"/>
+               <xs:enumeration id="_10550" value="signal"/>
+               <xs:enumeration id="_10551" value="third rail"/>
+               <xs:enumeration id="_10552" value="overhead power"/>
+               <xs:enumeration id="_10553" value="concrete tie"/>
+               <xs:enumeration id="_10559" value="manhole cover"/>
+               <xs:enumeration id="_10554" value="wooden tie"/>
+               <xs:enumeration id="_10555" value="escalator"/>
+               <xs:enumeration id="_10560" value="culvert"/>
+               <xs:enumeration id="_10556" value="elevator"/>
+               <xs:enumeration id="_10561" value="snow poles"/>
+               <xs:enumeration id="_10562" value="guide poles"/>
+               <xs:enumeration id="_10557" value="track"/>
+               <xs:enumeration id="_10563" value="expansion joint"/>
+               <xs:enumeration id="_10558" value="drawbridge"/>
+               <xs:enumeration id="_10564" value="shifted plate"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="Roadwork">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="1024"/>
+               <xs:maxInclusive value="1279"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_1025" value="road construction"/>
+               <xs:enumeration id="_1026" value="major road construction"/>
+               <xs:enumeration id="_1027" value="long term road construction"/>
+               <xs:enumeration id="_1028" value="construction work"/>
+               <xs:enumeration id="_1029" value="paving operations"/>
+               <xs:enumeration id="_1030" value="work in the median"/>
+               <xs:enumeration id="_1031" value="road reconstruction"/>
+               <xs:enumeration id="_1032" value="opposing traffic"/>
+               <xs:enumeration id="_1033" value="narrow lanes"/>
+               <xs:enumeration id="_1034" value="construction traffic merging"/>
+               <xs:enumeration id="_1035" value="single line traffic alternating directions"/>
+               <xs:enumeration id="_1036" value="road maintenance operations"/>
+               <xs:enumeration id="_1037" value="road marking operations"/>
+               <xs:enumeration id="_1061" value="road widening"/>
+               <xs:enumeration id="_1052" value="cracks"/>
+               <xs:enumeration id="_1053" value="bumps"/>
+               <xs:enumeration id="_1059" value="drop off"/>
+               <xs:enumeration id="_1054" value="storm drain"/>
+               <xs:enumeration id="_1038" value="bridge maintenance operations"/>
+               <xs:enumeration id="_1039" value="bridge construction"/>
+               <xs:enumeration id="_1040" value="bridge demolition work"/>
+               <xs:enumeration id="_1060" value="seismic retrofit"/>
+               <xs:enumeration id="_1055" value="overgrown grass"/>
+               <xs:enumeration id="_1056" value="overgrown brushshrubs"/>
+               <xs:enumeration id="_1057" value="overgrown trees"/>
+               <xs:enumeration id="_1041" value="blasting"/>
+               <xs:enumeration id="_1042" value="avalanche control activities"/>
+               <xs:enumeration id="_1043" value="water main work"/>
+               <xs:enumeration id="_1044" value="gas main work"/>
+               <xs:enumeration id="_1045" value="work on underground cables"/>
+               <xs:enumeration id="_1046" value="work on underground services"/>
+               <xs:enumeration id="_1047" value="new road construction layout"/>
+               <xs:enumeration id="_1048" value="new road layout"/>
+               <xs:enumeration id="_1049" value="temporary lane markings"/>
+               <xs:enumeration id="_1050" value="temporary traffic lights"/>
+               <xs:enumeration id="_1051" value="emergency maintenance"/>
+               <xs:enumeration id="_1146" value="road maintenance cleared"/>
+               <xs:enumeration id="_1147" value="normal road layout restored"/>
+               <xs:enumeration id="_1148" value="road work clearance in progress"/>
+               <xs:enumeration id="_1149" value="road construction cleared"/>
+               <xs:enumeration id="_1150" value="normal traffic lanes restored"/>
+               <xs:enumeration id="_1151" value="road work cleared"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="SpecialEvents">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="3840"/>
+               <xs:maxInclusive value="4095"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_3841" value="major event"/>
+               <xs:enumeration id="_3842" value="airshow"/>
+               <xs:enumeration id="_3843" value="hot air ballooning"/>
+               <xs:enumeration id="_3844" value="concert"/>
+               <xs:enumeration id="_3845" value="state occasion"/>
+               <xs:enumeration id="_3846" value="vIP visit"/>
+               <xs:enumeration id="_3847" value="show"/>
+               <xs:enumeration id="_3848" value="festival"/>
+               <xs:enumeration id="_3849" value="exhibition"/>
+               <xs:enumeration id="_3850" value="performing arts"/>
+               <xs:enumeration id="_3851" value="outdoor market"/>
+               <xs:enumeration id="_3852" value="fair"/>
+               <xs:enumeration id="_3853" value="carnival"/>
+               <xs:enumeration id="_3854" value="fireworks display"/>
+               <xs:enumeration id="_3855" value="trade expo"/>
+               <xs:enumeration id="_3856" value="movie filming"/>
+               <xs:enumeration id="_3857" value="presidential visit"/>
+               <xs:enumeration id="_3858" value="parade"/>
+               <xs:enumeration id="_3859" value="procession"/>
+               <xs:enumeration id="_3860" value="funeral procession"/>
+               <xs:enumeration id="_3861" value="crowd"/>
+               <xs:enumeration id="_3862" value="holiday traffic crowds"/>
+               <xs:enumeration id="_3967" value="event ended"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="SportingEvents">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="3584"/>
+               <xs:maxInclusive value="3839"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_3585" value="sports event"/>
+               <xs:enumeration id="_3586" value="game"/>
+               <xs:enumeration id="_3587" value="tournament"/>
+               <xs:enumeration id="_3588" value="track and field event"/>
+               <xs:enumeration id="_3589" value="baseball game"/>
+               <xs:enumeration id="_3590" value="basketball game"/>
+               <xs:enumeration id="_3591" value="boxing match"/>
+               <xs:enumeration id="_3592" value="football game"/>
+               <xs:enumeration id="_3593" value="soccer game"/>
+               <xs:enumeration id="_3594" value="golf tournament"/>
+               <xs:enumeration id="_3595" value="hockey game"/>
+               <xs:enumeration id="_3596" value="tennis tournament"/>
+               <xs:enumeration id="_3597" value="wrestling match"/>
+               <xs:enumeration id="_3598" value="road race"/>
+               <xs:enumeration id="_3599" value="automobile race"/>
+               <xs:enumeration id="_3600" value="bicycle race"/>
+               <xs:enumeration id="_3601" value="race event"/>
+               <xs:enumeration id="_3602" value="marathon"/>
+               <xs:enumeration id="_3603" value="horse show"/>
+               <xs:enumeration id="_3604" value="rodeo"/>
+               <xs:enumeration id="_3605" value="water sports event"/>
+               <xs:enumeration id="_3606" value="winter sports event"/>
+               <xs:enumeration id="_3607" value="skating event"/>
+               <xs:enumeration id="_3608" value="dog sled race"/>
+               <xs:enumeration id="_3711" value="sporting event ended"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="SuggestionAdvice">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="6656"/>
+               <xs:maxInclusive value="6911"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_6657" value="why not ride share"/>
+               <xs:enumeration id="_6658" value="is this your no ride day"/>
+               <xs:enumeration id="_6659" value="why not use transit"/>
+               <xs:enumeration id="_6660" value="why not park and ride"/>
+               <xs:enumeration id="_6661" value="why not try paratransit"/>
+               <xs:enumeration id="_6662" value="why not travel by rail"/>
+               <xs:enumeration id="_6663" value="why not use the subway"/>
+               <xs:enumeration id="_6664" value="why not try rapid transit"/>
+               <xs:enumeration id="_6665" value="why not travel by bus"/>
+               <xs:enumeration id="_6666" value="your parking ticket covers the return ride"/>
+               <xs:enumeration id="_6667" value="avoid the rush hour"/>
+               <xs:enumeration id="_6668" value="do not allow unnecessary gaps"/>
+               <xs:enumeration id="_6669" value="follow the vehicle in front smoothly"/>
+               <xs:enumeration id="_6670" value="do not slow down unnecessarily"/>
+               <xs:enumeration id="_6671" value="watch for muggers"/>
+               <xs:enumeration id="_6672" value="watch for pickpockets"/>
+               <xs:enumeration id="_6673" value="watch for thieves"/>
+               <xs:enumeration id="_6674" value="sorry for any delay"/>
+               <xs:enumeration id="_6675" value="thank you for your understanding"/>
+               <xs:enumeration id="_6676" value="we appreciate your patience"/>
+               <xs:enumeration id="_6677" value="we are grateful for your cooperation"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="Temperature">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="5632"/>
+               <xs:maxInclusive value="5887"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_5633" value="maximum temperature"/>
+               <xs:enumeration id="_5634" value="temperature"/>
+               <xs:enumeration id="_5635" value="minimum temperature"/>
+               <xs:enumeration id="_5636" value="current temperature"/>
+               <xs:enumeration id="_5637" value="heat index"/>
+               <xs:enumeration id="_5638" value="extreme heat"/>
+               <xs:enumeration id="_5639" value="hot"/>
+               <xs:enumeration id="_5640" value="hotter"/>
+               <xs:enumeration id="_5641" value="heat"/>
+               <xs:enumeration id="_5642" value="warmer"/>
+               <xs:enumeration id="_5643" value="warm"/>
+               <xs:enumeration id="_5644" value="mild"/>
+               <xs:enumeration id="_5645" value="cool"/>
+               <xs:enumeration id="_5646" value="cooler"/>
+               <xs:enumeration id="_5647" value="cold"/>
+               <xs:enumeration id="_5648" value="colder"/>
+               <xs:enumeration id="_5649" value="very cold"/>
+               <xs:enumeration id="_5650" value="extreme cold"/>
+               <xs:enumeration id="_5651" value="wind chill"/>
+               <xs:enumeration id="_5652" value="dewpoint"/>
+               <xs:enumeration id="_5653" value="relative humidity"/>
+               <xs:enumeration id="_5758" value="temperatures close to the seasonal norm"/>
+               <xs:enumeration id="_5759" value="less extreme temperatures"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="TrafficConditions">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="256"/>
+               <xs:maxInclusive value="511"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_257" value="stopped traffic"/>
+               <xs:enumeration id="_258" value="stop and go traffic"/>
+               <xs:enumeration id="_259" value="slow traffic"/>
+               <xs:enumeration id="_260" value="heavy traffic"/>
+               <xs:enumeration id="_261" value="traffic building"/>
+               <xs:enumeration id="_262" value="long queues"/>
+               <xs:enumeration id="_263" value="traffic congestion"/>
+               <xs:enumeration id="_264" value="traffic lighter than normal"/>
+               <xs:enumeration id="_265" value="traffic heavier than normal"/>
+               <xs:enumeration id="_266" value="traffic much heavier than normal"/>
+               <xs:enumeration id="_267" value="current speed"/>
+               <xs:enumeration id="_268" value="speed limit"/>
+               <xs:enumeration id="_269" value="travel time"/>
+               <xs:enumeration id="_379" value="traffic flowing freely"/>
+               <xs:enumeration id="_380" value="traffic easing"/>
+               <xs:enumeration id="_381" value="traffic returned to normal"/>
+               <xs:enumeration id="_382" value="no problems to report"/>
+               <xs:enumeration id="_383" value="traffic congestion cleared"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="TransitMode">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="8960"/>
+               <xs:maxInclusive value="9215"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_8961" value="travel"/>
+               <xs:enumeration id="_8962" value="transit"/>
+               <xs:enumeration id="_8963" value="bus"/>
+               <xs:enumeration id="_8964" value="trolleybus"/>
+               <xs:enumeration id="_8965" value="rail"/>
+               <xs:enumeration id="_8966" value="commuter rail"/>
+               <xs:enumeration id="_8967" value="subway"/>
+               <xs:enumeration id="_8968" value="rapid transit"/>
+               <xs:enumeration id="_8969" value="light rail"/>
+               <xs:enumeration id="_8970" value="streetcar"/>
+               <xs:enumeration id="_8971" value="dial a ride"/>
+               <xs:enumeration id="_8972" value="park and ride"/>
+               <xs:enumeration id="_8973" value="shuttle"/>
+               <xs:enumeration id="_8974" value="free shuttle"/>
+               <xs:enumeration id="_8975" value="airport shuttle"/>
+               <xs:enumeration id="_8976" value="taxies"/>
+               <xs:enumeration id="_8977" value="ferry"/>
+               <xs:enumeration id="_8978" value="passenger ferry"/>
+               <xs:enumeration id="_8979" value="vehicle ferry"/>
+               <xs:enumeration id="_8980" value="aerial tramway"/>
+               <xs:enumeration id="_8981" value="automated guideway"/>
+               <xs:enumeration id="_8982" value="cable cars"/>
+               <xs:enumeration id="_8983" value="monorail"/>
+               <xs:enumeration id="_8984" value="air travel"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="TransitOperations">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="10752"/>
+               <xs:maxInclusive value="11007"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_10753" value="unknown transit problem"/>
+               <xs:enumeration id="_10754" value="sleeping customer"/>
+               <xs:enumeration id="_10755" value="assault on passenger"/>
+               <xs:enumeration id="_10756" value="assault on employee"/>
+               <xs:enumeration id="_10757" value="broken seat"/>
+               <xs:enumeration id="_10758" value="bus alarm"/>
+               <xs:enumeration id="_10759" value="crime or drug deal"/>
+               <xs:enumeration id="_10760" value="eating on board"/>
+               <xs:enumeration id="_10761" value="equipment problem with air conditioning"/>
+               <xs:enumeration id="_10762" value="equipment problem with air system"/>
+               <xs:enumeration id="_10763" value="equipment problem with brakes"/>
+               <xs:enumeration id="_10764" value="equipment problem with chassis or suspension"/>
+               <xs:enumeration id="_10765" value="equipment problem with cooling system"/>
+               <xs:enumeration id="_10766" value="equipment problem with doors"/>
+               <xs:enumeration id="_10767" value="equipment problem with electrical"/>
+               <xs:enumeration id="_10768" value="equipment problem with engine"/>
+               <xs:enumeration id="_10769" value="equipment problem with exterior or body"/>
+               <xs:enumeration id="_10770" value="equipment problem with fare collection"/>
+               <xs:enumeration id="_10771" value="equipment problem with fuel or exhaust"/>
+               <xs:enumeration id="_10772" value="equipment problem with horn"/>
+               <xs:enumeration id="_10773" value="equipment problem with interior"/>
+               <xs:enumeration id="_10774" value="equipment problem with liftkneeling"/>
+               <xs:enumeration id="_10775" value="equipment problem with lights"/>
+               <xs:enumeration id="_10776" value="equipment problem with lubrication"/>
+               <xs:enumeration id="_10777" value="equipment problem with radio or communication"/>
+               <xs:enumeration id="_10778" value="equipment problem with signs"/>
+               <xs:enumeration id="_10779" value="equipment problem with steering"/>
+               <xs:enumeration id="_10780" value="equipment problem with tires"/>
+               <xs:enumeration id="_10781" value="equipment problem with transmission"/>
+               <xs:enumeration id="_10782" value="equipment problem with unknown alarm"/>
+               <xs:enumeration id="_10783" value="equipment problem with wipers"/>
+               <xs:enumeration id="_10784" value="fare dispute expired pass"/>
+               <xs:enumeration id="_10785" value="fare dispute expired transfer"/>
+               <xs:enumeration id="_10786" value="fare dispute expired upgrade"/>
+               <xs:enumeration id="_10787" value="fare dispute other"/>
+               <xs:enumeration id="_10788" value="fare dispute refuses to pay"/>
+               <xs:enumeration id="_10789" value="lift passenger cycle completed"/>
+               <xs:enumeration id="_10790" value="lift passenger ready to alight"/>
+               <xs:enumeration id="_10791" value="lift passenger ready to board"/>
+               <xs:enumeration id="_10792" value="lost article"/>
+               <xs:enumeration id="_10793" value="objects thrown"/>
+               <xs:enumeration id="_10794" value="passenger accident alighting"/>
+               <xs:enumeration id="_10795" value="passenger accident boarding"/>
+               <xs:enumeration id="_10796" value="passenger accident fallen on board"/>
+               <xs:enumeration id="_10797" value="passenger load"/>
+               <xs:enumeration id="_10798" value="passenger accident other"/>
+               <xs:enumeration id="_10799" value="passenger sick or injured"/>
+               <xs:enumeration id="_10800" value="right of way"/>
+               <xs:enumeration id="_10801" value="theft"/>
+               <xs:enumeration id="_10802" value="theft of service"/>
+               <xs:enumeration id="_10803" value="waiting to get relief for schedule break"/>
+               <xs:enumeration id="_10804" value="waiting to get relief after run is finished"/>
+               <xs:enumeration id="_10805" value="waiting to provide relief"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="TravelerGroupAffected">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="9472"/>
+               <xs:maxInclusive value="9727"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_9473" value="through traffic"/>
+               <xs:enumeration id="_9474" value="holiday traffic"/>
+               <xs:enumeration id="_9475" value="residents"/>
+               <xs:enumeration id="_9476" value="visitors"/>
+               <xs:enumeration id="_9477" value="long distance traffic"/>
+               <xs:enumeration id="_9478" value="local traffic"/>
+               <xs:enumeration id="_9479" value="regional traffic"/>
+               <xs:enumeration id="_9480" value="arrivals"/>
+               <xs:enumeration id="_9481" value="departures"/>
+               <xs:enumeration id="_9482" value="airline travelers"/>
+               <xs:enumeration id="_9483" value="commuter airline travelers"/>
+               <xs:enumeration id="_9484" value="domestic airline travelers"/>
+               <xs:enumeration id="_9485" value="international airline travelers"/>
+               <xs:enumeration id="_9486" value="pedestrians"/>
+               <xs:enumeration id="_9487" value="bicyclists"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="Units">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="8704"/>
+               <xs:maxInclusive value="8959"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_8705" value="square feet"/>
+               <xs:enumeration id="_8706" value="square meters"/>
+               <xs:enumeration id="_8707" value="acres"/>
+               <xs:enumeration id="_8708" value="hectares"/>
+               <xs:enumeration id="_8709" value="inches"/>
+               <xs:enumeration id="_8710" value="feet"/>
+               <xs:enumeration id="_8711" value="mile"/>
+               <xs:enumeration id="_8712" value="miles"/>
+               <xs:enumeration id="_8713" value="nautical miles"/>
+               <xs:enumeration id="_8714" value="millimeters"/>
+               <xs:enumeration id="_8715" value="meters"/>
+               <xs:enumeration id="_8716" value="kilometer"/>
+               <xs:enumeration id="_8717" value="kilometers"/>
+               <xs:enumeration id="_8718" value="feet per second"/>
+               <xs:enumeration id="_8719" value="meters per second"/>
+               <xs:enumeration id="_8720" value="MPH"/>
+               <xs:enumeration id="_8721" value="KPH"/>
+               <xs:enumeration id="_8722" value="knots"/>
+               <xs:enumeration id="_8723" value="aM"/>
+               <xs:enumeration id="_8724" value="pM"/>
+               <xs:enumeration id="_8725" value="weekends"/>
+               <xs:enumeration id="_8726" value="holiday"/>
+               <xs:enumeration id="_8727" value="seconds"/>
+               <xs:enumeration id="_8728" value="minutes"/>
+               <xs:enumeration id="_8729" value="hours"/>
+               <xs:enumeration id="_8730" value="days"/>
+               <xs:enumeration id="_8731" value="weeks"/>
+               <xs:enumeration id="_8732" value="months"/>
+               <xs:enumeration id="_8733" value="degrees"/>
+               <xs:enumeration id="_8734" value="degrees Celsius"/>
+               <xs:enumeration id="_8735" value="degrees Fahrenheit"/>
+               <xs:enumeration id="_8736" value="grams"/>
+               <xs:enumeration id="_8737" value="kilograms"/>
+               <xs:enumeration id="_8738" value="ounces"/>
+               <xs:enumeration id="_8739" value="pounds"/>
+               <xs:enumeration id="_8740" value="tons"/>
+               <xs:enumeration id="_8741" value="fluid ounces"/>
+               <xs:enumeration id="_8742" value="gallons"/>
+               <xs:enumeration id="_8743" value="milliliters"/>
+               <xs:enumeration id="_8744" value="liters"/>
+               <xs:enumeration id="_8745" value="kilograms per lane mile"/>
+               <xs:enumeration id="_8746" value="tons per lane mile"/>
+               <xs:enumeration id="_8747" value="dollar"/>
+               <xs:enumeration id="_8748" value="percent"/>
+               <xs:enumeration id="_8749" value="time delimiter"/>
+               <xs:enumeration id="_8750" value="dollars"/>
+               <xs:enumeration id="_8751" value="flight number"/>
+               <xs:enumeration id="_8752" value="person people"/>
+               <xs:enumeration id="_8753" value="response plan"/>
+               <xs:enumeration id="_8754" value="placard type"/>
+               <xs:enumeration id="_8755" value="placard number"/>
+               <xs:enumeration id="_8756" value="FM"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="UnusualDriving">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="1792"/>
+               <xs:maxInclusive value="2047"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_1793" value="vehicle traveling wrong way"/>
+               <xs:enumeration id="_1794" value="reckless driver"/>
+               <xs:enumeration id="_1795" value="prohibited vehicle on roadway"/>
+               <xs:enumeration id="_1796" value="emergency vehicles on roadway"/>
+               <xs:enumeration id="_1797" value="high speed emergency vehicles"/>
+               <xs:enumeration id="_1798" value="high speed chase"/>
+               <xs:enumeration id="_1918" value="dangerous vehicle warning cleared"/>
+               <xs:enumeration id="_1919" value="emergency vehicle warning cleared"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="VehicleGroupAffected">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="9216"/>
+               <xs:maxInclusive value="9471"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_9217" value="all vehicles"/>
+               <xs:enumeration id="_9218" value="bicycles"/>
+               <xs:enumeration id="_9219" value="motorcycles"/>
+               <xs:enumeration id="_9220" value="cars"/>
+               <xs:enumeration id="_9221" value="light vehicles"/>
+               <xs:enumeration id="_9222" value="cars and light vehicles"/>
+               <xs:enumeration id="_9223" value="cars with trailers"/>
+               <xs:enumeration id="_9224" value="cars with recreational trailers"/>
+               <xs:enumeration id="_9225" value="vehicles with trailers"/>
+               <xs:enumeration id="_9226" value="heavy vehicles"/>
+               <xs:enumeration id="_9227" value="trucks"/>
+               <xs:enumeration id="_9228" value="buses"/>
+               <xs:enumeration id="_9229" value="articulated buses"/>
+               <xs:enumeration id="_9230" value="school buses"/>
+               <xs:enumeration id="_9231" value="vehicles with semi trailers"/>
+               <xs:enumeration id="_9232" value="vehicles with double trailers"/>
+               <xs:enumeration id="_9233" value="high profile vehicles"/>
+               <xs:enumeration id="_9234" value="wide vehicles"/>
+               <xs:enumeration id="_9235" value="long vehicles"/>
+               <xs:enumeration id="_9236" value="hazardous loads"/>
+               <xs:enumeration id="_9237" value="exceptional loads"/>
+               <xs:enumeration id="_9238" value="abnormal loads"/>
+               <xs:enumeration id="_9239" value="convoys"/>
+               <xs:enumeration id="_9240" value="maintenance vehicles"/>
+               <xs:enumeration id="_9241" value="delivery vehicles"/>
+               <xs:enumeration id="_9242" value="vehicles with even numbered license plates"/>
+               <xs:enumeration id="_9243" value="vehicles with odd numbered license plates"/>
+               <xs:enumeration id="_9244" value="vehicles with parking permits"/>
+               <xs:enumeration id="_9245" value="vehicles with catalytic converters"/>
+               <xs:enumeration id="_9246" value="vehicles without catalytic converters"/>
+               <xs:enumeration id="_9247" value="gas powered vehicles"/>
+               <xs:enumeration id="_9248" value="diesel powered vehicles"/>
+               <xs:enumeration id="_9249" value="lPG vehicles"/>
+               <xs:enumeration id="_9250" value="military convoys"/>
+               <xs:enumeration id="_9251" value="military vehicles"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="VisibilityAndAirQuality">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="5376"/>
+               <xs:maxInclusive value="5631"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_5377" value="dense fog"/>
+               <xs:enumeration id="_5378" value="fog"/>
+               <xs:enumeration id="_5379" value="patchy fog"/>
+               <xs:enumeration id="_5380" value="freezing fog"/>
+               <xs:enumeration id="_5405" value="ice fog"/>
+               <xs:enumeration id="_5381" value="mist"/>
+               <xs:enumeration id="_5382" value="haze"/>
+               <xs:enumeration id="_5383" value="visibility reduced"/>
+               <xs:enumeration id="_5404" value="visibility blocked"/>
+               <xs:enumeration id="_5384" value="white out"/>
+               <xs:enumeration id="_5385" value="blowing snow"/>
+               <xs:enumeration id="_5386" value="smoke hazard"/>
+               <xs:enumeration id="_5387" value="spray hazard"/>
+               <xs:enumeration id="_5388" value="low sun glare"/>
+               <xs:enumeration id="_5389" value="snow glare"/>
+               <xs:enumeration id="_5390" value="blowing dust"/>
+               <xs:enumeration id="_5391" value="blowing sand"/>
+               <xs:enumeration id="_5392" value="dust storms"/>
+               <xs:enumeration id="_5393" value="sandstorms"/>
+               <xs:enumeration id="_5394" value="air quality good"/>
+               <xs:enumeration id="_5395" value="air quality fair"/>
+               <xs:enumeration id="_5396" value="air quality poor"/>
+               <xs:enumeration id="_5397" value="air quality very poor"/>
+               <xs:enumeration id="_5398" value="severe exhaust pollution"/>
+               <xs:enumeration id="_5399" value="smog alert"/>
+               <xs:enumeration id="_5400" value="pollen count high"/>
+               <xs:enumeration id="_5401" value="pollen count medium"/>
+               <xs:enumeration id="_5402" value="pollen count low"/>
+               <xs:enumeration id="_5403" value="swarms of insects"/>
+               <xs:enumeration id="_5499" value="fog clearing"/>
+               <xs:enumeration id="_5500" value="visibility improved"/>
+               <xs:enumeration id="_5501" value="fog forecast withdrawn"/>
+               <xs:enumeration id="_5502" value="pollution alert ended"/>
+               <xs:enumeration id="_5503" value="air quality improved"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="WarningAdvice">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="6912"/>
+               <xs:maxInclusive value="7167"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_6913" value="risk"/>
+               <xs:enumeration id="_6914" value="watch"/>
+               <xs:enumeration id="_6915" value="warning"/>
+               <xs:enumeration id="_6916" value="alert"/>
+               <xs:enumeration id="_6917" value="danger"/>
+               <xs:enumeration id="_6918" value="danger of explosion"/>
+               <xs:enumeration id="_6919" value="danger of fire"/>
+               <xs:enumeration id="_6920" value="extra police patrols in operation"/>
+               <xs:enumeration id="_6921" value="look out for vehicles stopped under bridges"/>
+               <xs:enumeration id="_6922" value="increased risk of accident"/>
+               <xs:enumeration id="_6923" value="rescue and recovery work in progress at scene"/>
+               <xs:enumeration id="_6924" value="police at scene"/>
+               <xs:enumeration id="_6925" value="emergency vehicles at scene"/>
+               <xs:enumeration id="_6926" value="traffic being directed around accident area"/>
+               <xs:enumeration id="_6927" value="police directing traffic"/>
+               <xs:enumeration id="_6928" value="rescue workers directing traffic"/>
+               <xs:enumeration id="_6929" value="repairs in progress"/>
+               <xs:enumeration id="_6930" value="pilot car in operation"/>
+               <xs:enumeration id="_6931" value="look out for flagger"/>
+               <xs:enumeration id="_6932" value="police checks in operation"/>
+               <xs:enumeration id="_6937" value="truck check point"/>
+               <xs:enumeration id="_6935" value="lockdown"/>
+               <xs:enumeration id="_6936" value="security check point"/>
+               <xs:enumeration id="_6938" value="single occupancy vehicle check point"/>
+               <xs:enumeration id="_6933" value="mandatory speed limit in force"/>
+               <xs:enumeration id="_6934" value="speed limit in force for heavy vehicles"/>
+               <xs:enumeration id="_7034" value="warning canceled"/>
+               <xs:enumeration id="_7035" value="watch canceled"/>
+               <xs:enumeration id="_7036" value="alert canceled"/>
+               <xs:enumeration id="_7037" value="ended"/>
+               <xs:enumeration id="_7038" value="cleared"/>
+               <xs:enumeration id="_7039" value="canceled"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="WeatherConditions">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="4608"/>
+               <xs:maxInclusive value="4863"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_4609" value="overcast"/>
+               <xs:enumeration id="_4610" value="cloudy"/>
+               <xs:enumeration id="_4611" value="mostly cloudy"/>
+               <xs:enumeration id="_4612" value="partly cloudy"/>
+               <xs:enumeration id="_4613" value="partly sunny"/>
+               <xs:enumeration id="_4614" value="mostly sunny"/>
+               <xs:enumeration id="_4615" value="sunny"/>
+               <xs:enumeration id="_4616" value="fair skies"/>
+               <xs:enumeration id="_4617" value="clear skies"/>
+               <xs:enumeration id="_4618" value="mostly clear"/>
+               <xs:enumeration id="_4619" value="mostly dry"/>
+               <xs:enumeration id="_4620" value="dry"/>
+               <xs:enumeration id="_4621" value="UV index very high"/>
+               <xs:enumeration id="_4622" value="UV index high"/>
+               <xs:enumeration id="_4623" value="UV index moderate"/>
+               <xs:enumeration id="_4624" value="UV index low"/>
+               <xs:enumeration id="_4625" value="UV index very low"/>
+               <xs:enumeration id="_4626" value="barometric pressure"/>
+               <xs:enumeration id="_4627" value="ozone alert"/>
+               <xs:enumeration id="_4628" value="lighting unknown"/>
+               <xs:enumeration id="_4629" value="artificial exterior light"/>
+               <xs:enumeration id="_4630" value="artificial interior light"/>
+               <xs:enumeration id="_4631" value="darkness"/>
+               <xs:enumeration id="_4632" value="dusk"/>
+               <xs:enumeration id="_4633" value="dawn"/>
+               <xs:enumeration id="_4634" value="moonlight"/>
+               <xs:enumeration id="_4635" value="daylight"/>
+               <xs:enumeration id="_4735" value="weather forecast withdrawn"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="Winds">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="5120"/>
+               <xs:maxInclusive value="5375"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_5121" value="tornado"/>
+               <xs:enumeration id="_5122" value="hurricane"/>
+               <xs:enumeration id="_5123" value="hurricane force winds"/>
+               <xs:enumeration id="_5124" value="tropical storm"/>
+               <xs:enumeration id="_5125" value="gale force winds"/>
+               <xs:enumeration id="_5126" value="storm force winds"/>
+               <xs:enumeration id="_5127" value="strong winds"/>
+               <xs:enumeration id="_5128" value="moderate winds"/>
+               <xs:enumeration id="_5129" value="light winds"/>
+               <xs:enumeration id="_5130" value="calm"/>
+               <xs:enumeration id="_5131" value="gusty winds"/>
+               <xs:enumeration id="_5132" value="crosswinds"/>
+               <xs:enumeration id="_5133" value="windy"/>
+               <xs:enumeration id="_5246" value="strong winds have eased"/>
+               <xs:enumeration id="_5247" value="strong wind forecast withdrawn"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="WinterDrivingIndex">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="6400"/>
+               <xs:maxInclusive value="6655"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_6401" value="driving conditions good"/>
+               <xs:enumeration id="_6402" value="driving conditions fair"/>
+               <xs:enumeration id="_6403" value="difficult driving conditions"/>
+               <xs:enumeration id="_6404" value="very difficult driving conditions"/>
+               <xs:enumeration id="_6405" value="hazardous driving conditions"/>
+               <xs:enumeration id="_6406" value="extremely hazardous driving conditions"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="WinterDrivingRestrictions">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="6144"/>
+               <xs:maxInclusive value="6399"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration id="_6145" value="winter equipment recommended"/>
+               <xs:enumeration id="_6146" value="winter equipment required"/>
+               <xs:enumeration id="_6147" value="snow chains recommended"/>
+               <xs:enumeration id="_6148" value="snow chains required"/>
+               <xs:enumeration id="_6149" value="snow chains prohibited"/>
+               <xs:enumeration id="_6150" value="studded tires prohibited"/>
+               <xs:enumeration id="_6151" value="snow tires recommended"/>
+               <xs:enumeration id="_6152" value="snow tires required"/>
+               <xs:enumeration id="_6153" value="four wheel drive recommended"/>
+               <xs:enumeration id="_6154" value="four wheel drive required"/>
+               <xs:enumeration id="_6155" value="snow tires or chains recommended"/>
+               <xs:enumeration id="_6156" value="snow tires or chains required"/>
+               <xs:enumeration id="_6157" value="winter driving requirements lifted"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:pattern value="\[.+\].*"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:complexType name="ITIScodesAndText">
+      <xs:sequence maxOccurs="100" minOccurs="1">
+         <xs:choice>
+            <xs:element name="itis" type="ITIScodes"/>
+            <xs:element name="text" type="ITIStext"/>
+         </xs:choice>
+      </xs:sequence>
+   </xs:complexType>
+
+</xs:schema>

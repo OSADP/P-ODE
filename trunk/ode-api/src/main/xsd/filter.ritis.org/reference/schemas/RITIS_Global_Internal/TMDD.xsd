@@ -1,0 +1,687 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://www.ritis.org/schema/tmdd-0-0-0" version="1" xmlns="http://www.ritis.org/schema/tmdd-0-0-0" xmlns:atis="http://www.ritis.org/schema/atis-3-0-76" xmlns:itis="http://www.ritis.org/schema/itis-3-0-1" xmlns:local="http://www.ritis.org/schema/local-0-0-0" xmlns:lrms="http://www.ritis.org/schema/lrms-2-0-0" xmlns:ntcip="http://www.ritis.org/schema/ntcip" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:im="http://www.ritis.org/schema/im-0-0-0" jaxb:version="2.0">
+
+   <xs:import namespace="http://www.ritis.org/schema/lrms-2-0-0" schemaLocation="LRMS.xsd"/>
+   <xs:import namespace="http://www.ritis.org/schema/ntcip" schemaLocation="NTCIP.xsd"/>
+   <xs:import namespace="http://www.ritis.org/schema/itis-3-0-1" schemaLocation="ITIS.xsd"/>
+   <xs:import namespace="http://www.ritis.org/schema/atis-3-0-76" schemaLocation="ATIS.xsd"/>
+   <xs:import namespace="http://www.ritis.org/schema/local-0-0-0" schemaLocation="local.xsd"/>
+   <xs:import namespace="http://www.ritis.org/schema/im-0-0-0" schemaLocation="IM.xsd"/>
+
+    <!-- THE FOLLOWING LINE IS COMMENTED TO RESOLVE JAX-B BINDINGS COMPILE ERROR-->
+   <!--<xs:annotation>-->
+      <!--<xs:appinfo>-->
+         <!--<jaxb:schemaBindings>-->
+            <!--<jaxb:package name="edu.umd.cattlab.schema.atis.tmdd"/>-->
+         <!--</jaxb:schemaBindings>-->
+      <!--</xs:appinfo>-->
+   <!--</xs:annotation>-->
+
+   <!--
+      RITIS\CATT TMDD Message Set Schema
+      
+      More Information Available at:
+      www.ritis.org
+      www.cattlab.umd.edu
+      
+      Questions\Comments to:
+      Jason Ellison
+      jjellso@umd.edu
+   -->
+
+   <xs:annotation>
+      <xs:documentation> TMDD data elements used by ATIS standard. </xs:documentation>
+   </xs:annotation>
+
+   <xs:simpleType name="Link-median-type">
+      <xs:annotation>
+         <xs:appinfo> curbed (1) concrete barrier (2) concrete barrier with visibility screen (3) guard rail (4) open grass (5) open sand (6) painted median no access (7) separate roadways (8) unprotected (9) </xs:appinfo>
+      </xs:annotation>
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="1"/>
+               <xs:maxInclusive value="9"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration value="curbed"/>
+               <xs:enumeration value="concrete barrier"/>
+               <xs:enumeration value="concrete barrier with visibility screen"/>
+               <xs:enumeration value="guard rail"/>
+               <xs:enumeration value="open grass"/>
+               <xs:enumeration value="open sand"/>
+               <xs:enumeration value="painted median no access"/>
+               <xs:enumeration value="separate roadways"/>
+               <xs:enumeration value="unprotected"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="Link-ownership">
+      <xs:annotation>
+         <xs:documentation> Name of the link owner. </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:minLength value="1"/>
+         <xs:maxLength value="256"/>
+      </xs:restriction>
+   </xs:simpleType>
+
+   <xs:simpleType name="Organization-resource-identifier">
+      <xs:annotation>
+         <xs:documentation> Any set of alphanumeric characters up to 32 </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:minLength value="1"/>
+         <xs:maxLength value="32"/>
+      </xs:restriction>
+   </xs:simpleType>
+
+   <xs:simpleType name="Event-incident-severity">
+      <xs:annotation>
+         <xs:documentation>Description of severity of an incident.</xs:documentation>
+         <xs:appinfo> none (1) minor (2) major (3) natural disaster (4) </xs:appinfo>
+      </xs:annotation>
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="1"/>
+               <xs:maxInclusive value="4"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration value="none"/>
+               <xs:enumeration value="minor"/>
+               <xs:enumeration value="major"/>
+               <xs:enumeration value="natural disaster"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="Event-incident-vehicles-involved-count">
+      <xs:annotation>
+         <xs:documentation> The total number of vehicles involved in an incident. </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:unsignedByte"/>
+   </xs:simpleType>
+
+   <xs:simpleType name="Message-number">
+      <xs:annotation>
+         <xs:documentation> A number defined and unique within the session limit of the dialogs between a given data consumer and a data provider. This value is simply used to connect related dialogs to each other, such as: &quot;this is message 10 in reply to your message 8 of before&quot; etc. Every message can have one and only one such value associated with it. </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:unsignedShort">
+         <xs:maxInclusive value="65000"/>
+      </xs:restriction>
+   </xs:simpleType>
+
+   <xs:element name="detectorInventory-RITIS" type="DetectorInventory-RITIS"/>
+
+   <xs:complexType name="DetectorInventory-RITIS">
+      <xs:sequence>
+		 <xs:element name="organization-id" type="Organization-identifier"/>
+         <xs:element minOccurs="0" name="network-id" type="Network-identifier"/>
+         <xs:element minOccurs="0" name="station-id" type="Detector-station-identifier"/>
+		 
+		 <!-- Optional Element containing CATT Lab non-standard elements -->
+		 <xs:element minOccurs="0" name="timeStamp" type="local:timestamp"/>
+		 
+         <xs:element name="detector-list">
+            <xs:complexType>
+               <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                  <xs:element name="detector" type="DetectorDetails-RITIS"/>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
+
+   <xs:element name="detectorData-RITIS" type="DetectorData-RITIS"/>
+   <xs:complexType name="DetectorData-RITIS">
+      <xs:sequence>
+         <xs:element name="organization-id" type="Organization-identifier"/>
+         <xs:element minOccurs="0" name="network-id" type="Network-identifier"/>
+		 
+		 <!-- Optional Element containing CATT Lab non-standard elements -->
+		 <xs:element minOccurs="0" name="timeStamp" type="local:timestamp"/>
+		 
+         <xs:element name="collection-period">
+            <xs:complexType>
+               <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                  <xs:element name="collection-period-item" type="DataCollectionPeriod-RITIS"/>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
+
+   <xs:simpleType name="Organization-identifier">
+      <xs:annotation>
+         <xs:documentation> Definition: A unique identifier for an organization within a region. Remarks: V2.0 Changed Descriptive Name from &amp;amp;quot;ORGANIZATION.CONTACT_OrganizationIdentifier_identifier&amp;amp;quot;. V1.4 - Description Name corrected to match ASN.1 name. V1.5 - Added FADD_ID attribute; revised Class Name, Classification Scheme Name/Version, Data Concept Identifier/Version to reflect harmonization with ITS Data Registry. Any set of alphanumeric characters up to 32 </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:minLength value="1"/>
+         <xs:maxLength value="32"/>
+      </xs:restriction>
+   </xs:simpleType>
+
+   <xs:simpleType name="Network-identifier">
+      <xs:annotation>
+         <xs:documentation> Definition: Unique identifier for a network. Remarks: V1.3 - New data element. V1.4 - Changed Descriptive Name from NETWORK_IdNumber_number to NETWORK_Identifier_identifier. Removed ANSI X3.4 from Value Domain. V1.7 - Added FADD_ID attribute; revised Class Name, Classification Scheme Name/Version, Data Concept Identifier/Version to reflect harmonization with ITS Data Registry. Any set of alphanumeric characters up to 32 </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:minLength value="1"/>
+         <xs:maxLength value="32"/>
+      </xs:restriction>
+   </xs:simpleType>
+
+   <xs:simpleType name="Detector-station-identifier">
+      <xs:annotation>
+         <xs:documentation> Definition: Unique identifier for a detector station. Remarks: V1.3 - Revised ASN.1 Data Type, Valid Value Rule and Internal Layout Max/Min Size. V1.7 - Added FADD_ID attribute; revised Class Name, Classification Scheme Name/Version, Data Concept Identifier/Version to reflect harmonization with ITS Data Registry. Any set of alphanumeric characters up to 32 </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:minLength value="1"/>
+         <xs:maxLength value="32"/>
+      </xs:restriction>
+   </xs:simpleType>
+
+   <xs:complexType name="DataCollectionPeriod-RITIS">
+      <xs:sequence>
+         <xs:element name="detection-time-stamp" type="DateTimeZone"/>
+         <xs:element minOccurs="0" name="start-time" type="DateTimeZone"/>
+         <xs:element minOccurs="0" name="end-time" type="DateTimeZone"/>
+         <xs:element minOccurs="0" name="measurement-duration" type="Link-measurement-duration"/>
+         <xs:element minOccurs="0" name="station-id" type="Detector-station-identifier"/>
+         <xs:element name="detector-reports">
+            <xs:complexType>
+               <xs:sequence maxOccurs="unbounded">
+                  <xs:element name="detector-report" type="DetectorReport-RITIS"/>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
+
+   <xs:complexType name="DetectorReport-RITIS">
+      <xs:sequence>
+         <xs:element name="detector-id" type="Detector-identifier"/>
+         <xs:element minOccurs="0" name="detector-name" type="Detector-name"/>
+         <xs:element name="detector-status" type="Detector-status"/>
+         <xs:element name="lane-data">
+            <xs:complexType>
+               <xs:sequence maxOccurs="255">
+                  <xs:element name="lane-data-item" type="LaneData-RITIS"/>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
+
+   <xs:simpleType name="Detector-identifier">
+      <xs:annotation>
+         <xs:documentation> Definition: Unique identification number of an individual detector within a network. Remarks: V1.3 - Revised Definition, ASN.1 Data Type, Valid Value Rule and Internal Layout Max/Min Size. V1.7 - Added FADD_ID attribute; revised Class Name, Classification Scheme Name/Version, Data Concept Identifier/Version to reflect harmonization with ITS Data Registry. Any set of alphanumeric characters up to 32 </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:minLength value="1"/>
+         <xs:maxLength value="32"/>
+      </xs:restriction>
+   </xs:simpleType>
+
+   <xs:simpleType name="Detector-name">
+      <xs:annotation>
+         <xs:documentation> Definition: The name of a detector in ASCII for user identification. Remarks: V2.0 - New Data Element Any set of ASCII characters up to 128 </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:minLength value="1"/>
+         <xs:maxLength value="128"/>
+      </xs:restriction>
+   </xs:simpleType>
+
+   <xs:simpleType name="Detector-status">
+      <xs:annotation>
+         <xs:appinfo> failed (0) operational (1) off (2) unknown (3) </xs:appinfo>
+         <xs:documentation> Definition: A code which indicates whether a detector is failed or operating Remarks: V2.1 - Added &amp;amp;quot;unknown&amp;amp;quot; to valid value list. V1.7 - Added FADD_ID attribute; revised Class Name, Classification Scheme Name/Version, Data Concept Identifier/Version to reflect harmonization with ITS Data Registry. </xs:documentation>
+      </xs:annotation>
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="0"/>
+               <xs:maxInclusive value="3"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration value="failed"/>
+               <xs:enumeration value="operational"/>
+               <xs:enumeration value="off"/>
+               <xs:enumeration value="unknown"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="Link-measurement-duration">
+      <xs:annotation>
+         <xs:documentation> Definition: Duration of the data collection process from link detectors. Remarks: V1.4 - New Data Element. V1.7 - Added FADD_ID attribute; revised Class Name, Classification Scheme Name/Version, Data Concept Identifier/Version to reflect harmonization with ITS Data Registry. seconds </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:unsignedInt">
+         <xs:minInclusive value="1"/>
+         <xs:maxInclusive value="86400"/>
+      </xs:restriction>
+   </xs:simpleType>
+
+   <xs:complexType name="LaneData-RITIS">
+
+      <xs:sequence>
+         <xs:element minOccurs="0" name="detector-lane-number" type="Detector-lane-number"/>
+         <xs:element minOccurs="0" name="lane-vehicle-count" type="Detector-vehicle-count-RITIS"/>
+         <xs:element minOccurs="0" name="occupancy" type="Detector-occupancy-RITIS"/>
+         <xs:element minOccurs="0" name="lane-vehicle-speed" type="Detector-vehicle-speed"/>
+         <!-- If the following appears it supercedes the detector_status from the report. -->
+         <!-- Added to TMDD -->
+         <xs:element minOccurs="0" name="lane-status" type="Detector-status"/>
+         <!-- TODO: Determine if this is needed -->
+      </xs:sequence>
+   </xs:complexType>
+
+   <xs:simpleType name="Detector-lane-number">
+      <xs:annotation>
+         <xs:documentation> Definition: The number which indicates the lane a particular detector is monitoring Remarks: V1.1 - Changed maximum number of lanes from 9 to 50. V1.4 - Changed Representation Class Term from number to code. Revised Data Type, Value Domain, and Valid Value Rule. V1.7 - Added FADD_ID attribute; revised Class Name, Classification Scheme Name/Version, Data Concept Identifier/Version to reflect harmonization with ITS Data Registry. Select one bit per lane. Lanes are numbered from the median out beginning with 1. </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="binary">
+         <xs:minLength value="1"/>
+         <xs:maxLength value="255"/>
+      </xs:restriction>
+   </xs:simpleType>
+
+   <xs:simpleType name="Detector-vehicle-count-RITIS">
+      <xs:annotation>
+         <xs:documentation>The number of vehicles detected by a detector during a specific time period. Enlarged from TMDD Detector-vehicle-count to allow raw error data through.</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:unsignedInt"> </xs:restriction>
+   </xs:simpleType>
+
+   <xs:simpleType name="Detector-occupancy-RITIS">
+      <xs:annotation>
+         <xs:documentation> Definition: The current average pecent occupancy of the vehicles on a detector. This is percent of time within a given time period, that a point on the roadway is occupied by traffic. Enlarged from TMDD Detector-occupancy-RITIS to allow through >100% occupancy values. </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:unsignedInt"> </xs:restriction>
+   </xs:simpleType>
+
+
+   <!-- TODO: is this kmh? -->
+   <xs:simpleType name="Detector-vehicle-speed">
+      <xs:annotation>
+         <xs:documentation> Definition: The average vehicle speed over a detector during accumulation period. Remarks: V2.0 New Data Element kilometers per hour </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:unsignedByte"/>
+   </xs:simpleType>
+
+   <xs:complexType name="DetectorDetails-RITIS">
+      <xs:sequence>
+         <xs:element name="detector-id" type="Detector-identifier"/>
+         <xs:element minOccurs="0" name="detector-name" type="Detector-name"/>
+         <xs:element minOccurs="0" name="detector-location" type="lrms:GeoLocation"/>
+         <xs:element minOccurs="0" name="route-designator" type="Link-route-designator"/>
+         <xs:element minOccurs="0" name="linear-reference" type="Link-location-linear-reference"/>
+         <xs:element minOccurs="0" name="linear-reference-version" type="Link-location-linear-reference-version"/>
+         <xs:element minOccurs="0" name="link-direction" type="Link-direction"/>
+         <xs:element minOccurs="0" name="detector-type" type="Detector-type"/>
+         <xs:element minOccurs="0" name="detection-lane">
+            <xs:complexType>
+               <xs:sequence maxOccurs="255">
+                  <xs:element name="detection-lane-item" type="DetectionLane"/>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+         <xs:element minOccurs="0" name="detection-zone">
+            <xs:complexType>
+               <xs:sequence maxOccurs="255">
+                  <xs:element name="detection-zone-item" type="DetectionZone-RITIS"/>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+         <xs:element minOccurs="0" name="last-update-time" type="DateTimeZone"/>
+      </xs:sequence>
+   </xs:complexType>
+
+   <xs:complexType name="DetectionZone-RITIS">
+      <xs:sequence>
+         <!-- Descriptive name of the zone -->
+         <xs:element minOccurs="0" name="zone-name" type="xs:string"/>
+         <!-- Unique per detector zone identity -->
+         <xs:element name="zone-number" type="xs:int"/>
+         <!-- Number of lanes in the zone -->
+         <xs:element minOccurs="0" name="num-lanes" type="xs:unsignedByte"/>
+         <!-- Type of lanes that the zone is monitoring -->
+         <xs:element minOccurs="0" name="zone-type" type="local:LaneTypeCodes"/>
+         <!-- geolocation information for the zone -->
+         <xs:element minOccurs="0" name="zone-location" type="lrms:GeoLocation"/>
+         <!-- zone direction if known -->
+         <xs:element minOccurs="0" name="zone-direction" type="itis:GenericLocations"/>
+
+		 <!-- Zone's reference speed -->
+		 <xs:element minOccurs="0" name="local-reference-speed" type="local:reference-speed"/>
+		 
+      </xs:sequence>
+   </xs:complexType>
+
+   <xs:complexType name="ZoneReport-RITIS">
+      <xs:sequence>
+         <xs:element name="detector-id" type="Detector-identifier"/>
+         <xs:element minOccurs="0" name="detector-name" type="Detector-name"/>
+         <xs:element name="zone-data">
+            <xs:complexType>
+               <xs:sequence maxOccurs="64">
+                  <xs:element name="zone-data-item" type="ZoneData-RITIS"/>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
+
+   <xs:complexType name="ZoneData-RITIS">
+      <xs:sequence>
+         <xs:element name="zone-number" type="xs:int"/>
+         <xs:element minOccurs="0" name="zone-vehicle-count" type="Detector-vehicle-count-RITIS"/>
+         <xs:element minOccurs="0" name="occupancy" type="Detector-occupancy-RITIS"/>
+         <xs:element minOccurs="0" name="zone-vehicle-speed" type="Detector-vehicle-speed"/>
+         <!-- If the following appears it supercedes the detector_status from the report. -->
+         <xs:element minOccurs="0" name="zone-status" type="Detector-status"/>
+      </xs:sequence>
+   </xs:complexType>
+
+   <xs:complexType name="ZoneDataCollectionPeriod-RITIS">
+      <xs:sequence>
+         <xs:element name="detection-time-stamp" type="DateTimeZone"/>
+         <xs:element minOccurs="0" name="start-time" type="DateTimeZone"/>
+         <xs:element minOccurs="0" name="end-time" type="DateTimeZone"/>
+         <xs:element minOccurs="0" name="measurement-duration" type="Link-measurement-duration"/>
+         <xs:element minOccurs="0" name="station-id" type="Detector-station-identifier"/>
+         <xs:element name="zone-reports">
+            <xs:complexType>
+               <xs:sequence maxOccurs="unbounded">
+                  <xs:element name="zone-report" type="ZoneReport-RITIS"/>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
+
+   <xs:element name="detectorZoneData-RITIS" type="ZoneDetectorData-RITIS"/>
+   <xs:complexType name="ZoneDetectorData-RITIS">
+      <xs:sequence>
+         <xs:element name="organization-id" type="Organization-identifier"/>
+         <xs:element minOccurs="0" name="network-id" type="Network-identifier"/>
+		 
+		 <!-- Optional Element containing CATT Lab non-standard elements -->
+		 <xs:element minOccurs="0" name="timeStamp" type="local:timestamp"/>
+		 
+         <xs:element name="collection-period">
+            <xs:complexType>
+               <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                  <xs:element name="collection-period-item" type="ZoneDataCollectionPeriod-RITIS"/>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
+
+
+   <xs:simpleType name="Link-route-designator">
+      <xs:annotation>
+         <xs:documentation> Definition: County, State, or Federal route numbers with any associated alphabetic designators. Remarks: V2.0 Changed Descriptive Name from &amp;amp;quot;LINK_RoadDesignator_number&amp;amp;quot;.. V1.2 - Changed Representation Class Term to number. V1.3 - Changed Descriptive Name from LINK_RoadNumber_number to LINK_RoadDesignator_number. Removed ANSI X3.4 from Value Domain. V1.7 - Added FADD_ID attribute; revised Class Name, Classification Scheme Name/Version, Data Concept Identifier/Version to reflect harmonization with ITS Data Registry. Any set of alphanumeric characters up to 64 </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:minLength value="1"/>
+         <xs:maxLength value="64"/>
+      </xs:restriction>
+   </xs:simpleType>
+
+   <xs:simpleType name="Link-location-linear-reference">
+      <xs:annotation>
+         <xs:documentation> Definition: A distance marker reference to a location on a roadway. Remarks: V1.5 - New data element proposed by ERM (Event Report Message). V1.7 - Added FADD_ID attribute; revised Class Name, Classification Scheme Name/Version, Data Concept Identifier/Version to reflect harmonization with ITS Data Registry. </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:float">
+         <xs:minInclusive value="0"/>
+         <xs:maxInclusive value="2000000"/>
+      </xs:restriction>
+   </xs:simpleType>
+
+   <xs:simpleType name="Link-location-linear-reference-version">
+      <xs:annotation>
+         <xs:documentation> Definition: Identifies the version of the distance referencing system (e.g. milemarker system) being used by the state or county. Remarks: V1.5 - New data element proposed by ERM (Event Report Message). V1.6 - Revised Descriptive Name to add &amp;amp;quot;Location&amp;amp;quot;. V1.7 - Added FADD_ID attribute; revised Class Name, Classification Scheme Name/Version, Data Concept Identifier/Version to reflect harmonization with ITS Data Registry. </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:unsignedByte"/>
+   </xs:simpleType>
+
+   <xs:simpleType name="Link-direction">
+      <xs:annotation>
+         <xs:appinfo> any other (0) n (1) ne (2) e (3) se (4) s (5) sw (6) w (7) nw (8) not directional (9) positive direction (10) negative direction (11) both directions (12) </xs:appinfo>
+         <xs:documentation> Definition: The direction(s) of travel referenced on a link. Remarks: The numbers are the numbers used in the FHWA Highway Manual. V1.3 - Changed Data Type from Octetstring to Enumerated. Removed ANSI X3.4 from Value Domain. V1.5 - Revised Definition and Valid Value Rule. V1.6 - Revised Valid Value Rule. V1.7 - Added FADD_ID attribute; revised Class Name, Classification Scheme Name/Version, Data Concept Identifier/Version to reflect harmonization with ITS Data Registry. </xs:documentation>
+      </xs:annotation>
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="0"/>
+               <xs:maxInclusive value="12"/>
+            </xs:restriction>
+         </xs:simpleType>
+
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration value="any other"/>
+               <xs:enumeration value="n"/>
+               <xs:enumeration value="ne"/>
+               <xs:enumeration value="e"/>
+               <xs:enumeration value="se"/>
+               <xs:enumeration value="s"/>
+               <xs:enumeration value="sw"/>
+               <xs:enumeration value="w"/>
+               <xs:enumeration value="nw"/>
+               <xs:enumeration value="not directional"/>
+               <xs:enumeration value="positive direction"/>
+               <xs:enumeration value="negative direction"/>
+               <xs:enumeration value="both directions"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:simpleType name="Detector-type">
+      <xs:annotation>
+         <xs:appinfo> inductive loop (1) magnetic (2) magnetometers (3) pressure cells (4) microwave radar (5) ultrasonic (6) video Image (7) laser (8) infrared (9) road tube (10) </xs:appinfo>
+         <xs:documentation> Definition: Code naming the type of a vehicular detector providing traffic data. Remarks: V1.1 - Revised Permissible Data Element Values. V1.2 - Revised Valid Value List and Internal Layout Max/Min Size. V1.4 - Revised Definition and Valid Value List. V1.7 - Added FADD_ID attribute; revised Class Name, Classification Scheme Name/Version, Data Concept Identifier/Version to reflect harmonization with ITS Data Registry. </xs:documentation>
+      </xs:annotation>
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="1"/>
+               <xs:maxInclusive value="10"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration value="inductive loop"/>
+               <xs:enumeration value="magnetic"/>
+               <xs:enumeration value="magnetometers"/>
+               <xs:enumeration value="pressure cells"/>
+               <xs:enumeration value="microwave radar"/>
+               <xs:enumeration value="ultrasonic"/>
+               <xs:enumeration value="video Image"/>
+               <xs:enumeration value="laser"/>
+               <xs:enumeration value="infrared"/>
+               <xs:enumeration value="road tube"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:complexType name="DetectionLane">
+      <xs:sequence>
+         <xs:element minOccurs="0" name="approach-name" type="Detector-intersection-approach-name"/>
+         <xs:element minOccurs="0" name="lane-number" type="Detector-lane-number"/>
+      </xs:sequence>
+   </xs:complexType>
+
+   <xs:simpleType name="Detector-intersection-approach-name">
+      <xs:annotation>
+         <xs:documentation> Definition: String name or description of the intersection approach being monitored by the detector (e.g., NB Left Turn). Remarks: V1.7 - Added FADD_ID attribute; revised Class Name, Classification Scheme Name/Version, Data Concept Identifier/Version to reflect harmonization with ITS Data Registry. Any set of ASCII characters up to 128 </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:minLength value="1"/>
+         <xs:maxLength value="128"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="binary">
+      <xs:restriction base="xs:string">
+         <xs:pattern value="[01]*"/>
+      </xs:restriction>
+   </xs:simpleType>
+
+
+   <xs:element name="dMSInventory-RITIS" type="DMSInventoryList-RITIS"/>
+   <xs:complexType name="DMSInventoryList-RITIS">
+      <xs:annotation>
+         <xs:documentation>Allows more then one DMS to be returned in an Inventory message.</xs:documentation>
+      </xs:annotation>
+	  <xs:sequence>
+		 <!-- Optional Element containing CATT Lab non-standard elements -->
+		 <xs:element minOccurs="0" name="timeStamp" type="local:timestamp"/>
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="dMSInventory" type="DMSInventory"/>
+      </xs:sequence>
+   </xs:complexType>
+
+   <xs:simpleType name="Device-name">
+      <xs:annotation>
+         <xs:documentation> Definition: Descriptvie name of a device (e.g. DMS). Remarks: V2.0 - New Data Element Any set of ASCII characters up to 32 </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:minLength value="1"/>
+         <!-- Modified to allow longer DMS names -->
+         <xs:maxLength value="256"/>
+      </xs:restriction>
+   </xs:simpleType>
+
+   <xs:simpleType name="Dms-sign-type">
+      <xs:annotation>
+         <xs:appinfo> variable message sign VMS (1) changeable message sign CMS (2) blank out sign BOS (3) portable VMS (4) other (5) </xs:appinfo>
+         <xs:documentation> Definition: The sign type of a DMS device. Remarks: V2.0 - New Data Element </xs:documentation>
+      </xs:annotation>
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="1"/>
+               <xs:maxInclusive value="5"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration value="variable message sign VMS"/>
+               <xs:enumeration value="changeable message sign CMS"/>
+               <xs:enumeration value="blank out sign BOS"/>
+               <xs:enumeration value="portable VMS"/>
+               <xs:enumeration value="other"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:complexType name="DateTimeZone">
+      <xs:simpleContent>
+         <xs:extension base="atis:DateTimePair"/>
+      </xs:simpleContent>
+   </xs:complexType>
+
+   <xs:complexType name="DMSInventory">
+      <xs:sequence>
+         <xs:element name="organization-information" type="OrganizationInformation"/>
+         <xs:element name="device-id" type="Device-identifier"/>
+         <xs:element minOccurs="0" name="device-name" type="Device-name"/>
+         <xs:element name="dms-sign-type" type="Dms-sign-type"/>
+         <xs:element minOccurs="0" name="last-update-time" type="DateTimeZone"/>
+         <xs:element minOccurs="0" name="link-direction" type="Link-direction"/>
+         <xs:element name="dms-beacon-type" type="ntcip:DmsBeaconType"/>
+         <xs:element name="device-location" type="lrms:GeoLocation"/>
+         <xs:element minOccurs="0" name="route-designator" type="Link-route-designator"/>
+         <xs:element minOccurs="0" name="linear-reference" type="Link-location-linear-reference"/>
+         <xs:element minOccurs="0" name="linear-reference-version" type="Link-location-linear-reference-version"/>
+         <xs:element minOccurs="0" name="signTechnology" type="ntcip:DmsSignTechnology"/>
+         <xs:element minOccurs="0" name="signHeightPixels" type="ntcip:VmsSignHeightPixels"/>
+         <xs:element minOccurs="0" name="signWidthPixels" type="ntcip:VmsSignWidthPixels"/>
+      </xs:sequence>
+   </xs:complexType>
+
+   <xs:element name="dMSDeviceStatus-RITIS" type="DMSDeviceStatusList-RITIS"/>
+   <xs:complexType name="DMSDeviceStatusList-RITIS">
+      <xs:annotation>
+         <xs:documentation>Allows more then one DMS status message to be sent in a single message.</xs:documentation>
+      </xs:annotation>
+	  <xs:sequence>
+		 <!-- Optional Element containing CATT Lab non-standard elements -->
+		 <xs:element minOccurs="0" name="timeStamp" type="local:timestamp"/>
+	  
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="dMSDeviceStatus" type="DMSDeviceStatus-RITIS"/>
+      </xs:sequence>
+   </xs:complexType>
+
+   <xs:complexType name="OrganizationInformation">
+      <xs:sequence>
+         <xs:element name="organization-id" type="Organization-identifier"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:simpleType name="Device-operational-status">
+      <xs:annotation>
+         <xs:appinfo> on (1) off (2) in service (3) out of service (4) unavailable (5) unknown (6) </xs:appinfo>
+         <xs:documentation> Definition: Operational status of a device (e.g., on, off, etc.). Remarks: V2.0 - New Data Element </xs:documentation>
+      </xs:annotation>
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="1"/>
+               <xs:maxInclusive value="6"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration value="on"/>
+               <xs:enumeration value="off"/>
+               <xs:enumeration value="in service"/>
+               <xs:enumeration value="out of service"/>
+               <xs:enumeration value="unavailable"/>
+               <xs:enumeration value="unknown"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:complexType name="DMSDeviceStatus-RITIS">
+      <xs:sequence>
+         <xs:element name="organization-information" type="OrganizationInformation"/>
+         <xs:element name="device-id" type="Device-identifier"/>
+         <xs:element name="dms-device-status" type="Device-operational-status"/>
+         <!-- Message in MULTI Markup -->
+         <xs:element name="dms-current-message" type="xs:string"/>
+		 <xs:element name="message-beacon" type="ntcip:DmsMessageBeacon"  minOccurs="0"/>
+         <xs:element minOccurs="0" name="message-source-mode" type="ntcip:DmsMsgSourceMode"/>
+         <xs:element name="associated-event-id" type="im:ReferenceID" minOccurs="0"/>
+         <xs:element minOccurs="0" name="last-comm-time" type="DateTimeZone"/>
+      </xs:sequence>
+   </xs:complexType>
+
+   <xs:simpleType name="Device-identifier">
+      <xs:annotation>
+         <xs:documentation> Definition: A unique alphanumeric device identifier. Remarks: V2.0 Changed Descriptive Name from &amp;amp;quot;DEVICE_Device_identifier&amp;amp;quot;. V1.3 - Added FADD_ID attribute; revised Class Name, Classification Scheme Name/Version, Data Concept Identifier/Version to reflect harmonization with ITS Data Registry. V2.0 - Changed Descriptive Name for DEVICE_Device_identifer to DEVICE_Identifier_identifier Any set of alphanumeric characters up to 32 </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:minLength value="1"/>
+         <!-- Modified to allow for longer device identifiers -->
+         <xs:maxLength value="256"/>
+      </xs:restriction>
+   </xs:simpleType>
+
+</xs:schema>

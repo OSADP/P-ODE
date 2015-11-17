@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified"
+    targetNamespace="http://www.ritis.org/schema/atis-3-0-76" version="1"
+    xmlns="http://www.ritis.org/schema/atis-3-0-76" xmlns:im="http://www.ritis.org/schema/im-0-0-0"
+    xmlns:itis="http://www.ritis.org/schema/itis-3-0-1"
+    xmlns:local="http://www.ritis.org/schema/local-0-0-0"
+    xmlns:lrms="http://www.ritis.org/schema/lrms-2-0-0"
+    xmlns:tmdd="http://www.ritis.org/schema/tmdd-0-0-0" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0">
+
+    <xs:import namespace="http://www.ritis.org/schema/tmdd-0-0-0" schemaLocation="TMDD.xsd"/>
+    <xs:import namespace="http://www.ritis.org/schema/im-0-0-0" schemaLocation="IM.xsd"/>
+    <xs:import namespace="http://www.ritis.org/schema/itis-3-0-1" schemaLocation="ITIS.xsd"/>
+    <xs:import namespace="http://www.ritis.org/schema/lrms-2-0-0" schemaLocation="LRMS.xsd"/>
+    <xs:import namespace="http://www.ritis.org/schema/local-0-0-0" schemaLocation="local.xsd"/>
+
+    <!-- THE FOLLOWING LINE IS COMMENTED TO RESOLVE JAX-B BINDINGS COMPILE ERROR-->
+    <!--<xs:annotation>-->
+        <!--<xs:appinfo>-->
+            <!--<jaxb:globalBindings choiceContentProperty="true" typesafeEnumMaxMembers="0">-->
+				<!--<jaxb:serializable uid="1731197833477343564"/>-->
+			<!--</jaxb:globalBindings>-->
+            <!--<jaxb:schemaBindings>-->
+                <!--<jaxb:package name="edu.umd.cattlab.schema.atis"/>-->
+            <!--</jaxb:schemaBindings>-->
+        <!--</xs:appinfo>-->
+    <!--</xs:annotation>-->
+
+    <!--
+    RITIS\CATT ATIS Message Set Schema
+    
+    More Information Available at:
+        www.ritis.org
+        www.cattlab.umd.edu
+    
+    Questions\Comments to:
+        Jason Ellison
+        jjellso@umd.edu
+    -->
+
+    <xs:annotation>
+        <xs:documentation> ATIS Incident Schema </xs:documentation>
+    </xs:annotation>
+
+    <xs:simpleType name="LaneCount">
+        <xs:annotation>
+            <xs:documentation> Use zero when an unknown value </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:unsignedByte">
+            <xs:maxInclusive value="63"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="AdvisoryInformation">
+        <xs:annotation>
+            <xs:documentation>Typically a oneway wrapper message that allows a data provider to push
+                message to a preexisting subscription.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="messageHeader" type="MessageHeader"/>
+            <xs:element maxOccurs="100" minOccurs="0" name="responseGroup" type="ResponseGroup"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="advisoryInformation" type="AdvisoryInformation"/>
+
+    <xs:complexType name="ContactSetting">
+        <xs:annotation>
+            <xs:documentation>Used to identify the source of a message.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element minOccurs="0" name="agencyIdentifier"
+                type="tmdd:Organization-resource-identifier"/>
+            <xs:element minOccurs="0" name="agencyName" type="tmdd:Link-ownership"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="DateTimePair">
+        <xs:annotation>
+            <xs:documentation>Native XML dateTime object used to describe date, time, and
+            timezone.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:dateTime"/>
+    </xs:simpleType>
+
+    <xs:complexType name="EventInformation">
+        <xs:annotation>
+            <xs:documentation>Similar to IncidentInformation but for use with planned events such as
+                road closures. In the event of a planned event the start and clear time should not
+                be set until the actual event takes place.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element minOccurs="0" name="head" type="Head"/>
+            <!-- location for which this applies -->
+            <xs:element name="location" type="lrms:LocationReference"/>
+            <!-- forecast or predicted period -->
+            <xs:element minOccurs="0" name="isForecast">
+                <xs:simpleType>
+                    <xs:restriction base="xs:boolean"/>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element minOccurs="0" name="coverageTime" type="ComplexTime"/>
+            <xs:element minOccurs="0" name="forecastExpires" type="DateTimePair"/>
+            <!-- a catagory and an item from that catagory
+            all ITS stds use the same types here -->
+            <xs:element name="typeEvent" type="itis:ITISEventType"/>
+            <xs:element minOccurs="0" name="severity" type="tmdd:Event-incident-severity"/>
+            <!-- status of the event (from ITIS) -->
+            <xs:element minOccurs="0" name="status" type="itis:IncidentResponseStatus"/>
+            <!-- current relevent information in text and codes -->
+            <xs:element minOccurs="0" name="cause" type="itis:ITIScodesAndText"/>
+            <xs:element minOccurs="0" name="description" type="itis:ITIScodesAndText"/>
+            <xs:element minOccurs="0" name="advice" type="itis:ITIScodesAndText"/>
+            <xs:element maxOccurs="16" minOccurs="0" name="affectedLanes" type="im:LaneDescription"/>
+            <!-- the number of vehicles -->
+            <xs:element minOccurs="0" name="vehiclesInvolvedCount"
+                type="tmdd:Event-incident-vehicles-involved-count"/>
+            <!-- the types of vehicles and a count of each -->
+            <xs:element maxOccurs="16" minOccurs="0" name="types" type="VehiclesInvolved"/>
+            <xs:element maxOccurs="5" minOccurs="0" name="injuries" type="im:InjuryCounts"/>
+            <!-- point in time this event started -->
+            <xs:element minOccurs="0" name="startTime" type="DateTimePair"/>
+            <!-- an estimated clear time -->
+            <xs:element minOccurs="0" name="clearTime" type="DateTimePair"/>
+            <!-- a set of repeating times for events
+            which re-occur over a periods of days -->
+            <xs:element minOccurs="0" name="repeatTimes" type="ComplexTime"/>
+            <!-- Link to a website containing further information and possibly camera feeds. -->
+            <xs:element minOccurs="0" name="furtherData" type="URL-Link"/>
+            <xs:element minOccurs="0" name="localEventInformation" type="local:EventInformation"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ComplexTime">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="start" type="DateTimePair"/>
+            <!-- the time when the entire item begins -->
+            <xs:element minOccurs="0" name="end" type="DateTimePair"/>
+            <!-- the time when the entire item is over -->
+            <xs:element minOccurs="0" name="weekly">
+                <xs:complexType>
+                    <xs:sequence maxOccurs="8" minOccurs="1">
+                        <xs:element name="weekly-item">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="day" type="Day-of-week"/>
+                                    <xs:element name="times" type="TimePair"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" name="occurrences">
+                <xs:complexType>
+                    <xs:sequence maxOccurs="32" minOccurs="1">
+                        <xs:element name="occurrence">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <!--                           <xs:element name="date" type="Date"/>-->
+                                    <!-- TODO: This is a departure from the schema original code above. -->
+                                    <xs:element name="date" type="xs:date"/>
+                                    <xs:element minOccurs="0" name="times" type="TimePair"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" name="furtherData" type="URL-Link"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="Date">
+        <xs:annotation>
+            <xs:documentation> format as: YYYYMMDD where YYYY the year, in common era units MM the
+                month, range 01 to 12 DD the day, range 01 to 31 use zero for MM and DD when not
+                applicable </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:length value="8"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="Time">
+        <xs:annotation>
+            <xs:documentation> Format: HHMMSSssss Valid times using 24 hour notation. HH=00 through
+                23; MM=00 through 59; SS=00 through 59; 00 if NA ssss=0000 through 9999. Use SS= 60
+                for leap seconds HH represents hours, MM minutes, SS seconds, and ssss decimal
+                seconds to whatever number of significant digits is required (up to four)
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="6"/>
+            <xs:maxLength value="10"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="TimePair">
+        <xs:sequence>
+            <!--         <xs:element name="start" type="xs:dateTime"/>
+         <xs:element name="end" type="xs:dateTime"/>-->
+            <!-- TODO: Thjs is a departure from the standard original code above -->
+            <xs:element name="start" type="xs:time"/>
+            <xs:element name="end" type="xs:time"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="Day-of-week-item">
+        <xs:annotation>
+            <xs:appinfo> holiday (0) sunday (1) monday (2) tuesday (3) wednesday (4) thursday (5)
+                friday (6) saturday (7) </xs:appinfo>
+        </xs:annotation>
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:int">
+                    <xs:minInclusive value="0"/>
+                    <xs:maxInclusive value="7"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="holiday"/>
+                    <xs:enumeration value="sunday"/>
+                    <xs:enumeration value="monday"/>
+                    <xs:enumeration value="tuesday"/>
+                    <xs:enumeration value="wednesday"/>
+                    <xs:enumeration value="thursday"/>
+                    <xs:enumeration value="friday"/>
+                    <xs:enumeration value="saturday"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+
+    <xs:simpleType name="Day-of-week">
+        <xs:list itemType="Day-of-week-item"/>
+    </xs:simpleType>
+
+    <xs:simpleType name="LanguageCode">
+        <xs:annotation>
+            <xs:appinfo> Note that only a subset of the possible codes have been translated eng
+                (220) -- English fre (271) -- French , gmh (330) -- German , ita (450) -- Italian
+                jpn (455) -- Japanese spa (937) -- Spanish vie (1071) -- Vietnamese -- List based on
+                ISO 639-2 codes of 2002/10/14. </xs:appinfo>
+        </xs:annotation>
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:unsignedInt">
+                    <xs:minInclusive value="0"/>
+                    <xs:maxInclusive value="1296"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="eng"/>
+                    <xs:enumeration value="fre"/>
+                    <xs:enumeration value="ger"/>
+                    <xs:enumeration value="ita"/>
+                    <xs:enumeration value="jpn"/>
+                    <xs:enumeration value="spa"/>
+                    <xs:enumeration value="vie"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+
+    <xs:simpleType name="CharSet">
+        <xs:annotation>
+            <xs:appinfo> asciiOnly (0) latin1 (1) latin2 (2) utf8 (127) </xs:appinfo>
+            <xs:documentation> DEFAULT 0 values to 127 reserved for std use values 128 to 255
+                reserved for local use </xs:documentation>
+        </xs:annotation>
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:unsignedInt">
+                    <xs:minInclusive value="0"/>
+                    <xs:maxInclusive value="127"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="asciiOnly"/>
+                    <xs:enumeration value="latin1"/>
+                    <xs:enumeration value="latin2"/>
+                    <xs:enumeration value="utf8"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+
+    <xs:complexType name="Head">
+        <xs:sequence>
+            <!-- Unique ID for the message. -->
+            <xs:element minOccurs="0" name="id" type="im:ReferenceID"/>
+            <!-- references to related messages -->
+            <xs:element maxOccurs="64" minOccurs="0" name="reference" type="im:ReferenceID"/>
+            <!-- List of associated events from which this event was derived/spit/merged. -->
+            <xs:element minOccurs="0" name="pedigree" type="im:PedigreeList"/>
+            <!-- Language used in text.  Default is English. -->
+            <xs:element minOccurs="0" name="language" type="LanguageCode"/>
+            <!-- Characterset to be used.  Default is Latin-1 if not specified.  RITIS will use utf-8 -->
+            <xs:element minOccurs="0" name="charSet" type="CharSet"/>
+            <!-- the agency or center issuing this information,  the name format
+            shall follow the format devised in NTCIP 1601 for centers
+            presumed unknown if not specified -->
+            <xs:element minOccurs="0" name="issuingAgency"
+                type="tmdd:Organization-resource-identifier"/>
+            <!-- the moment the date set was lasted updated
+            presumed to unknown if not specified -->
+            <xs:element minOccurs="0" name="updateTime" type="DateTimePair"/>
+            <!-- the moment the date set is presumed to be outdated
+            presumed to unknown if not specified -->
+            <xs:element minOccurs="0" name="expiryTime" type="DateTimePair"/>
+            <!-- Action to take on message expiryTime -->
+            <xs:element minOccurs="0" name="onExpiry" type="ExpireAction"/>
+            <!-- a gross rating of the Confidence of the message information -->
+            <xs:element minOccurs="0" name="confidence" type="Message-Confidence"/>
+            <!-- a gross rating of the urgency of the message  (0=least,  5=most) -->
+            <xs:element minOccurs="0" name="urgency" type="im:Urgency"/>
+            
+            <!-- Optional Element containing CATT Lab non-standard elements -->
+            <xs:element name="localHead" type="local:Head" minOccurs="0"/>
+            
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="Message-Confidence">
+        <xs:annotation>
+            <xs:documentation>Confidence in the message from 0-100 with 100 being the highest
+                confidence.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:unsignedByte">
+            <xs:maxInclusive value="100"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="Urgency">
+        <xs:annotation>
+            <xs:documentation>
+                <Definition> The reporting person's or center's assessment of urgency, 0 as least
+                    urgent.</Definition>
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:unsignedByte">
+            <xs:maxInclusive value="5"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="ExpireAction-item">
+        <xs:annotation>
+            <xs:appinfo> renew (0) -- presumes new updated well be available -- after the expire
+                time , and data user -- should obtains it to freshen his data. discard (1) -- once
+                the expire time has been reached -- do not depend on the prior data for -- any use
+                destroy (2) -- once the expire time has been reached -- all copies of this message
+                should be -- deleted and no further record kept keep (3) -- once the expire time has
+                been reached -- the data may still be used (with some -- presumed decrease in value
+                and quality) noSend (4) -- the data may not be re-sent to others -- regardless of
+                the expire time noSendOn (5) -- the data may not be re-sent to others -- after the
+                expire time has been reached </xs:appinfo>
+        </xs:annotation>
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:int">
+                    <xs:minInclusive value="0"/>
+                    <xs:maxInclusive value="5"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="renew"/>
+                    <xs:enumeration value="discard"/>
+                    <xs:enumeration value="destroy"/>
+                    <xs:enumeration value="keep"/>
+                    <xs:enumeration value="noSend"/>
+                    <xs:enumeration value="noSendOn"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+
+    <xs:simpleType name="ExpireAction">
+        <xs:list itemType="ExpireAction-item"/>
+    </xs:simpleType>
+
+    <xs:complexType name="IncidentInformation">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="head" type="Head"/>
+            <!-- location for which this applies -->
+            <xs:element name="location" type="lrms:LocationReference"/>
+            <xs:element minOccurs="0" name="isForecast">
+                <xs:simpleType>
+                    <xs:restriction base="xs:boolean"/>
+                </xs:simpleType>
+            </xs:element>
+            <!-- forecast or predicted period -->
+            <xs:element minOccurs="0" name="coverageTime" type="ComplexTime"/>
+            <xs:element minOccurs="0" name="forecastExpires" type="DateTimePair"/>
+            <!-- a catagory and an item from that catagory
+            all ITS stds use the same types here -->
+            <xs:element name="typeEvent" type="itis:ITISEventType"/>
+            <xs:element minOccurs="0" name="severity" type="tmdd:Event-incident-severity"/>
+            <xs:element minOccurs="0" name="status" type="itis:IncidentResponseStatus"/>
+            <!-- status of the event (from ITIS) -->
+            <xs:element minOccurs="0" name="cause" type="itis:ITIScodesAndText"/>
+            <xs:element minOccurs="0" name="description" type="itis:ITIScodesAndText"/>
+            <xs:element minOccurs="0" name="advice" type="itis:ITIScodesAndText"/>
+            <!-- current relevent information in text and codes -->
+            <xs:element maxOccurs="16" minOccurs="0" name="affectedLanes" type="im:LaneDescription"/>
+            <!-- the number of vehicles -->
+            <xs:element minOccurs="0" name="vehiclesInvolvedCount"
+                type="tmdd:Event-incident-vehicles-involved-count"/>
+            <xs:element maxOccurs="16" minOccurs="0" name="types" type="VehiclesInvolved"/>
+            <xs:element maxOccurs="5" minOccurs="0" name="injuries" type="im:InjuryCounts"/>
+            <!-- point in time this event started -->
+            <xs:element minOccurs="0" name="startTime" type="DateTimePair"/>
+            <!-- an estimated clear time -->
+            <xs:element minOccurs="0" name="clearTime" type="DateTimePair"/>
+            <xs:element minOccurs="0" name="furtherData" type="URL-Link"/>
+            <xs:element minOccurs="0" name="localIncidentInformation"
+                type="local:IncidentInformation"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="MessageHeader">
+        <xs:sequence>
+            <xs:element name="sender" type="ContactSetting"/>
+            <!-- the id of this message -->
+            <xs:element name="messageID" type="tmdd:Message-number"/>
+            <!-- the id of the message to which this is a reply -->
+            <xs:element minOccurs="0" name="responseTo" type="tmdd:Message-number"/>
+            <!-- the time at which this message was issued and sent -->
+            <xs:element name="timeStamp" type="DateTimePair"/>
+            <!-- Enumeration of adopted standards.  Default is most current version if not present.  -->
+            <xs:element minOccurs="0" name="revision" type="MSG-Revision"/>
+            <!-- the seq cnt of messages,  used in some systems when following
+            the C2C rules to detect a dropped or lost message -->
+            <xs:element name="msgCount">
+                <xs:simpleType>
+                    <xs:restriction base="xs:unsignedShort"/>
+                </xs:simpleType>
+            </xs:element>
+            <!-- Required Extension to the schema allowing for message information such as incident. -->
+            <xs:element name="localMessageHeader" type="local:MessageHeader" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="MSG-Revision">
+        <xs:annotation>
+            <xs:documentation> The SAE J2354 standard of 1999 shall be value 0 The SAE J2354
+                standard of 2003 shall be value 1 The SAE J2354 standard of 2006 shall be value 3
+                And all furture rlease shall follow the 3-part Release form of: Major-Minior-Release
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:unsignedByte"/>
+    </xs:simpleType>
+    <xs:complexType name="ResponseGroup">
+        <xs:sequence>
+            <!-- Decide if this is redundant -->
+            <xs:element minOccurs="0" name="head" type="Head"/>
+            <xs:element minOccurs="0" name="coverageArea" type="lrms:LocationReference"/>
+            <xs:element maxOccurs="100" minOccurs="0" name="incident" type="IncidentInformation"/>
+            <xs:element maxOccurs="100" minOccurs="0" name="event" type="EventInformation"/>
+            <xs:element minOccurs="0" name="furtherData" type="URL-Link"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="VehiclesInvolved">
+        <xs:annotation>
+            <xs:documentation> Type and number of vehicles involved in an event/incident.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="kind" type="itis:VehicleGroupAffected"/>
+            <xs:element name="count">
+                <xs:simpleType>
+                    <xs:restriction base="xs:unsignedByte">
+                        <xs:minInclusive value="1"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="Direction">
+        <xs:annotation>
+            <xs:appinfo> one Direction (0) both Directions (1) </xs:appinfo>
+        </xs:annotation>
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:unsignedInt">
+                    <xs:minInclusive value="0"/>
+                    <xs:maxInclusive value="1"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="one Direction"/>
+                    <xs:enumeration value="both Directions"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+
+    <xs:simpleType name="URL-Link">
+        <xs:annotation>
+            <xs:documentation>URL providing additional/further information.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:anyURI">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="255"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.fastlanesw.com/bfw" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.fastlanesw.com/bfw" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+	<xs:import/>
+	<xs:simpleType name="Route-direction">
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:unsignedInt">
+					<xs:minInclusive value="0"/>
+					<xs:maxInclusive value="12"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="any other"/>
+					<xs:enumeration value="n"/>
+					<xs:enumeration value="ne"/>
+					<xs:enumeration value="e"/>
+					<xs:enumeration value="se"/>
+					<xs:enumeration value="s"/>
+					<xs:enumeration value="sw"/>
+					<xs:enumeration value="w"/>
+					<xs:enumeration value="nw"/>
+					<xs:enumeration value="not directional"/>
+					<xs:enumeration value="positive direction"/>
+					<xs:enumeration value="negative direction"/>
+					<xs:enumeration value="both directions"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="canada-bound"/>
+					<xs:enumeration value="mexico-bound"/>
+					<xs:enumeration value="us-bound"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link delay types-->
+	<!-- .-->
+	<xs:element name="Link-delay">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="current" type="link-delay-current" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							<mapping active="true" database="bwt" table="link_travel_time" column="current_wait_seconds" existing="true"/>
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="predicted" type="link-delay-predicted" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							<mapping active="true" database="bwt" table="n/a" column="n/a" existing="true" derived="true" comment="historical link travel time (historical_link_travel_time.avg_travel_time_secs) for this day of week (historical_link_travel_time.day_of_week), start time (historical_link_travel_time.start_time) and end time (historical_link_travel_time.end_time) minus link freeflow travel time (link.freeflow_travel_time_seconds)"/>
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- .-->
+	<!-- Route delay types-->
+	<!-- .-->
+	<xs:element name="Route-delay">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="current" type="link-delay-current" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							<mapping active="true" database="bwt" table="link_travel_time" column="current_wait_seconds" existing="true"/>
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="predicted" type="link-delay-predicted" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							<mapping active="true" database="bwt" table="n/a" column="n/a" existing="true" derived="true" comment="historical link travel time (historical_link_travel_time.avg_travel_time_secs) for this day of week (historical_link_travel_time.day_of_week), start time (historical_link_travel_time.start_time) and end time (historical_link_travel_time.end_time) minus link freeflow travel time (link.freeflow_travel_time_seconds)"/>
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- .-->
+	<!-- Vehicle type-->
+	<!-- .-->
+	<xs:element name="Vehicle">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="type" type="link-vehicle-type" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							<mapping active="true" database="bwt" table="link" column="vehicle_type_id" existing="true"/>
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- .-->
+	<!-- Link-delay-current_quantity -->
+	<!-- .-->
+	<xs:simpleType name="link-delay-current">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>qty</valueDomainTerm>
+				<units>seconds</units>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedInt">
+			<xs:maxInclusive value="605000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-delay-predicted_quantity -->
+	<!-- .-->
+	<xs:simpleType name="link-delay-predicted">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>qty</valueDomainTerm>
+				<units>seconds</units>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedInt">
+			<xs:maxInclusive value="605000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-vehicle-type_code -->
+	<!-- .-->
+	<xs:simpleType name="link-vehicle-type">
+		<xs:annotation>
+			<xs:documentation>
+				<mapping active="true" database="bwt" table="link" column="vehicle_type_id" existing="true"/>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>cd</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:unsignedInt">
+					<xs:minInclusive value="1"/>
+					<xs:maxInclusive value="9"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="General">
+						<xs:annotation>
+							<xs:documentation>General traffic, mixed vehicle types</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="CarNexus">
+						<xs:annotation>
+							<xs:documentation>Nexus cars</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="CarNonNexus">
+						<xs:annotation>
+							<xs:documentation>Cars known not to be Nexus</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="CarGeneric">
+						<xs:annotation>
+							<xs:documentation>Cars, may be Nexus or not</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="TruckFast">
+						<xs:annotation>
+							<xs:documentation>FAST trucks</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="TruckNonFast">
+						<xs:annotation>
+							<xs:documentation>Trucks, known not to be FAST</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="TruckGeneric">
+						<xs:annotation>
+							<xs:documentation>Trucks, may be Generic or not</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="insert-extension-values-here"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="RouteStatusExt">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="externalIdentifiers" minOccurs="0"/>
+				<xs:element name="route-direction" type="Route-direction"/>
+				<xs:element ref="Vehicle"/>
+				<xs:element ref="Route-delay"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="externalIdentifiers">
+		<xs:complexType>
+			<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="externalIdentifier"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="externalIdentifier">
+		<xs:complexType>
+			<xs:attribute name="type">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+						<xs:maxLength value="64"/>
+						<xs:whiteSpace value="preserve"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="value">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+						<xs:maxLength value="256"/>
+						<xs:whiteSpace value="preserve"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="LinkStatusExt">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="externalIdentifiers" minOccurs="0"/>
+				<xs:element ref="Vehicle"/>
+				<xs:element ref="Link-delay"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="NodeInventoryExt">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="externalIdentifiers" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="LinkInventoryExt">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="externalIdentifiers" minOccurs="0"/>
+				<xs:element ref="Vehicle"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="RouteInventoryExt">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="externalIdentifiers" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

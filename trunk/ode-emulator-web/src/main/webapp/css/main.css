@@ -1,0 +1,162 @@
+/* ==========================================================================
+   author: 		  Robert Roth
+   description: Contains custom styles outside of Bootstrap
+   ========================================================================== */
+@font-face {
+  font-family: 'NeouThin';
+  src: url('../fonts/NeouThin.eot?') format('eot'), url('../fonts/NeouThin.otf?') format('opentype'), url('../fonts/NeouThin.woff?') format('woff'), url('../fonts/NeouThin.ttf?') format('truetype');
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  height: 100%;
+}
+.browsehappy {
+  color: #fff;
+  text-align: center;
+}
+body {
+  background-color: #2D3740;
+  background-image: linear-gradient(rgba(69, 147, 193, 0.3), transparent);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+.main.container {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.05));
+  padding-bottom: 15px;
+}
+.top-header {
+  margin-bottom: 40px;
+  text-align: center;
+  color: #BDC3C7;
+  font-family: NeouThin;
+  font-weight: 400;
+}
+.eastbound-panel,
+.westbound-panel {
+  padding-top: 40px;
+  padding-bottom: 15px;
+  height: 100%;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
+}
+.eastbound-panel .form-group.clearfix,
+.westbound-panel .form-group.clearfix {
+  margin-bottom: 0;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+.eastbound-panel .col-md-4,
+.westbound-panel .col-md-4 {
+  padding: 11px;
+  background-color: rgba(69, 147, 193, 0.3);
+  box-shadow: inset 0 1px 0 rgba(69, 147, 193, 0.25), 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+.eastbound-panel .col-md-4.inner-header:hover,
+.westbound-panel .col-md-4.inner-header:hover {
+  background-color: rgba(69, 147, 193, 0.3);
+  box-shadow: inset 0 1px 0 rgba(69, 147, 193, 0.25), 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+.eastbound-panel .col-md-4.crimson,
+.westbound-panel .col-md-4.crimson {
+  background: rgba(242, 104, 104, 0.3);
+  box-shadow: inset 0 1px 0 rgba(242, 104, 104, 0.25), 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+.eastbound-panel .col-md-4.golden,
+.westbound-panel .col-md-4.golden {
+  background: rgba(247, 202, 73, 0.3);
+  box-shadow: inset 0 1px 0 rgba(247, 202, 73, 0.25), 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+.eastbound-panel .col-md-4.sage,
+.westbound-panel .col-md-4.sage {
+  background: rgba(9, 156, 164, 0.3);
+  box-shadow: inset 0 1px 0 rgba(9, 156, 164, 0.25), 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+.eastbound-panel .col-md-8,
+.westbound-panel .col-md-8 {
+  padding: 0;
+  border-left: 1px solid rgba(69, 147, 193, 0.3);
+  border-right: 1px solid rgba(69, 147, 193, 0.3);
+  background-image: linear-gradient(90deg, rgba(69, 147, 193, 0.2), transparent, transparent, transparent);
+}
+.eastbound-panel .col-md-8.inner-div,
+.westbound-panel .col-md-8.inner-div {
+  padding: 0;
+  border-right: 0;
+}
+.eastbound-panel .col-md-8.inner-div:hover,
+.westbound-panel .col-md-8.inner-div:hover {
+  background-color: transparent;
+  box-shadow: none;
+}
+.eastbound-panel .col-md-8.crimson,
+.westbound-panel .col-md-8.crimson {
+  border-color: rgba(242, 104, 104, 0.3);
+  background-image: linear-gradient(90deg, rgba(242, 104, 104, 0.2), transparent, transparent, transparent);
+}
+.eastbound-panel .col-md-8.golden,
+.westbound-panel .col-md-8.golden {
+  border-color: rgba(247, 202, 73, 0.3);
+  background-image: linear-gradient(90deg, rgba(247, 202, 73, 0.2), transparent, transparent, transparent);
+}
+.eastbound-panel .col-md-8.sage,
+.westbound-panel .col-md-8.sage {
+  border-color: rgba(9, 156, 164, 0.3);
+  background-image: linear-gradient(90deg, rgba(9, 156, 164, 0.2), transparent, transparent, transparent);
+}
+.eastbound-panel .col-md-8 div,
+.westbound-panel .col-md-8 div {
+  color: #ccc;
+  padding: 15px 15px;
+  border-collapse: collapse;
+  transition: .3s;
+}
+.eastbound-panel .col-md-8 div:hover,
+.westbound-panel .col-md-8 div:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 3px 2px rgba(0, 0, 0, 0.1);
+}
+.eastbound-panel .col-md-8 div.even,
+.westbound-panel .col-md-8 div.even {
+  background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+}
+.eastbound-panel .col-md-8 div strong,
+.westbound-panel .col-md-8 div strong {
+  color: #BDC3C7;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
+}
+.eastbound-panel .col-md-8 div span,
+.westbound-panel .col-md-8 div span {
+  float: right;
+  color: #949da4 !important;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+.eastbound-panel h5,
+.westbound-panel h5 {
+  padding: 5px 8px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  font-size: 1.2em;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
+}
+.top-bar {
+  width: 100%;
+}
+.top-bar .color-bar {
+  float: left;
+  margin: 0;
+  padding: 0;
+  height: 5px;
+  background: #386581;
+  width: 25%;
+}
+.top-bar .color-bar.red {
+  background: #745a64;
+}
+.top-bar .color-bar.yellow {
+  background: #767355;
+}
+.top-bar .color-bar.green {
+  background: #2e646e;
+}

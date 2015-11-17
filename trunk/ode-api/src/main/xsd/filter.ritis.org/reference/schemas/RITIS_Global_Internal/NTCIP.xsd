@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified"
+   targetNamespace="http://www.ritis.org/schema/ntcip" version="1"
+   xmlns="http://www.ritis.org/schema/ntcip" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+   xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0">
+
+   <!--
+      RITIS\CATT NTCIP Message Set Schema
+      
+      More Information Available at:
+      www.ritis.org
+      www.cattlab.umd.edu
+      
+      Questions\Comments to:
+      Jason Ellison
+      jjellso@umd.edu
+   -->
+
+   <xs:annotation>
+      <xs:appinfo>
+         <jaxb:schemaBindings>
+            <jaxb:package name="edu.umd.cattlab.schema.atis.ntcip"/>
+         </jaxb:schemaBindings>
+      </xs:appinfo>
+   </xs:annotation>
+
+   <xs:simpleType name="DmsMsgSourceMode">
+      <xs:annotation>
+         <xs:appinfo> other (1) local (2) central (8) time based scheduler (9) power recovery (10)
+            reset (11) comm loss (12) power loss (13) end duration (14) event (15) critical
+            temperature (16) </xs:appinfo>
+         <xs:documentation> Definition: Indicates the source that initiated the currently displayed
+            message. Remarks: V2.0 - External data element taken taken from: NTCIP 1203 - Object
+            Definitions for Dynamic Message Signs (DMS)", v02.20 b, December 19, 2002
+         </xs:documentation>
+      </xs:annotation>
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="1"/>
+               <xs:maxInclusive value="16"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration value="other"/>
+               <xs:enumeration value="local"/>
+               <xs:enumeration value="central"/>
+               <xs:enumeration value="time based scheduler"/>
+               <xs:enumeration value="power recovery"/>
+               <xs:enumeration value="reset"/>
+               <xs:enumeration value="comm loss"/>
+               <xs:enumeration value="power loss"/>
+               <xs:enumeration value="end duration"/>
+               <xs:enumeration value="event"/>
+               <xs:enumeration value="critical temperature"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+   
+   <xs:simpleType name="DmsMessageBeacon" >
+      <xs:annotation>
+         <xs:appinfo>
+            beacons are disabled (0)
+            beacons are enabled (1)
+         </xs:appinfo>
+         <xs:documentation>       
+            Definition: Indicates if connected beacon(s) are to be activated when the associated message is displayed.
+            Remarks: V2.0 - External data element taken from: NTCIP 1203 - Object Definitions for Dynamic Message Signs (DMS)&amp;amp;quot;, v02.20  b, December 19, 2002
+         </xs:documentation>
+      </xs:annotation>
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="0"/>
+               <xs:maxInclusive value="1"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration value="beacons are disabled"/>
+               <xs:enumeration value="beacons are enabled"/>
+            </xs:restriction>
+         </xs:simpleType >
+      </xs:union>
+   </xs:simpleType>
+
+   <xs:complexType name="DmsMessageMultiString">
+      <xs:simpleContent>
+         <xs:annotation>
+            <xs:documentation> Definition: Contains the message written in MULTI-language. The value
+               of the MULTI string is not allowed to have any null character. Remarks: V2.0 -
+               External data element taken taken from: NTCIP 1203 - Object Definitions for Dynamic
+               Message Signs (DMS), v02.20 b, December 19, 2002 Any set of ASCII characters up to
+               256 </xs:documentation>
+         </xs:annotation>
+         <xs:extension base="DmsMessageMultiString-string">
+            <xs:attribute name="EncodingType" use="required">
+               <xs:simpleType>
+                  <xs:restriction base="xs:NMTOKEN">
+                     <xs:enumeration value="base64Binary"/>
+                  </xs:restriction>
+               </xs:simpleType>
+            </xs:attribute>
+         </xs:extension>
+      </xs:simpleContent>
+   </xs:complexType>
+   <xs:simpleType name="DmsMessageMultiString-string">
+      <xs:restriction base="xs:base64Binary">
+         <xs:minLength value="2"/>
+         <xs:maxLength value="342"/>
+      </xs:restriction>
+   </xs:simpleType>
+
+   <xs:simpleType name="DmsBeaconType">
+      <xs:annotation>
+         <xs:appinfo> other (1) none (2) oneBeacon (3) twoBeaconSyncFlash (4) twoBeaconsOppFlash (5)
+            fourBeaconSyncFlash (6) fourBeaconAltRowFlash (7) fourBeaconAltColumnFlash (8)
+            fourBeaconAltDiagonalFlash (9) fourBeaconNoSyncFlash (10) oneBeaconStrobe (11)
+            twoBeaconStrobe (12) fourBeaconStrobe (13) </xs:appinfo>
+         <xs:documentation> Definition: Indicates the configuration of the type, numbers and
+            flashing patterns of beacons on a sign.&amp;quot; Remarks: V2.1 - External data
+            element taken from: NTCIP 1203 - Object Definitions for Dynamic Message Signs
+            (DMS)&amp;amp;quot;, v02.20 b, December 19, 2002 </xs:documentation>
+      </xs:annotation>
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt">
+               <xs:minInclusive value="1"/>
+               <xs:maxInclusive value="13"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration value="other"/>
+               <xs:enumeration value="none"/>
+               <xs:enumeration value="oneBeacon"/>
+               <xs:enumeration value="twoBeaconSyncFlash"/>
+               <xs:enumeration value="twoBeaconsOppFlash"/>
+               <xs:enumeration value="fourBeaconSyncFlash"/>
+               <xs:enumeration value="fourBeaconAltRowFlash"/>
+               <xs:enumeration value="fourBeaconAltColumnFlash"/>
+               <xs:enumeration value="fourBeaconAltDiagonalFlash"/>
+               <xs:enumeration value="fourBeaconNoSyncFlash"/>
+               <xs:enumeration value="oneBeaconStrobe"/>
+               <xs:enumeration value="twoBeaconStrobe"/>
+               <xs:enumeration value="fourBeaconStrobe"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+   <xs:simpleType name="DmsSignTechnology-item">
+      <xs:annotation>
+         <xs:appinfo> other (0) led (1) flip disk (2) fiber optics (3) shuttered (4) bulb (5) drum
+            (6) </xs:appinfo>
+         <xs:documentation> Definition: Indicates the utilized technology in a bitmap format
+            (Hybrids will have to set the bits for all technologies that the sign utilizes). If a
+            bit is set to one (1), then the associated feature exists.; if the bit is set to zero
+            (0), then the associated feature does not exist. Remarks: V2.0 - External data element
+            taken taken from: NTCIP 1203 - Object Definitions for Dynamic Message Signs
+            (DMS)&amp;amp;quot;, v02.20 b, December 19, 2002 </xs:documentation>
+      </xs:annotation>
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:int">
+               <xs:minInclusive value="0"/>
+               <xs:maxInclusive value="6"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration value="other"/>
+               <xs:enumeration value="led"/>
+               <xs:enumeration value="flip disk"/>
+               <xs:enumeration value="fiber optics"/>
+               <xs:enumeration value="shuttered"/>
+               <xs:enumeration value="bulb"/>
+               <xs:enumeration value="drum"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+   <xs:simpleType name="DmsSignTechnology">
+      <xs:list itemType="DmsSignTechnology-item"/>
+   </xs:simpleType>
+   <xs:simpleType name="VmsSignHeightPixels">
+      <xs:annotation>
+         <xs:documentation> Definition: Indicates the number of rows of pixels for the entire sign.
+            Remarks: V2.0 - External data element taken from: NTCIP 1203 - Object Definitions for
+            Dynamic Message Signs (DMS)", v02.20 b, December 19, 2002 </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:unsignedShort"/>
+   </xs:simpleType>
+
+   <xs:simpleType name="VmsSignWidthPixels">
+      <xs:annotation>
+         <xs:documentation> Definition: Indicates the number of columns of pixels for the entire
+            sign. Remarks: V2.0 - External data element taken from: NTCIP 1203 - Object Definitions
+            for Dynamic Message Signs (DMS)", v02.20 b, December 19, 2002 </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:unsignedShort"/>
+   </xs:simpleType>
+
+</xs:schema>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leidos.ode.RegistrationMapper">
+
+    <resultMap id="RegInfoMapper" type="ODERegistrationRequest">
+        <id property="registrationId" column="ID"/>
+        <result property="messageType" column="MSG_TYPE"/>
+        <result property="region" column="REGION"/>
+        <result property="registrationType" column="REG_TYPE"/>
+        <result property="agentId" column="AGENT_ID"/>
+        <result property="startDate" column="START_DATE"/>
+        <result property="endDate" column="END_DATE"/>
+        <result property="subscriptionReceiveAddress" column="SUB_RECEIVE_ADDR"/>
+        <result property="subscriptionReceivePort" column="SUB_RECEIVE_PORT"/>
+    </resultMap>
+
+
+    <resultMap id="QueueInfoMapper" type="QueueInfo">
+        <id property="id" column="ID"/>
+        <result property="messageType" column="MSG_TYPE"/>
+        <result property="region" column="REGION"/>
+        <result property="queueName" column="QUEUE_NAME"/>
+        <result property="queueConnectionFactory" column="QUEUE_CONN_FACT"/>
+        <result property="targetAddress" column="TARGET_ADDRESS"/>
+        <result property="targetPort" column="TARGET_PORT"/>
+        <result property="wsHost" column="WS_HOST"/>
+        <result property="wsURL" column="WS_URL"/>
+    </resultMap>
+
+
+    <resultMap id="RegistrationRowMapper" type="RegistrationRow">
+        <id property="id" column="ID"/>
+        <result property="dialogId" column="DIALOG_ID"/>
+        <result property="sequenceId" column="SEQUENCE_ID"/>
+        <result property="groupId" column="GROUP_ID"/>
+        <result property="requestId" column="REQUEST_ID"/>
+        <result property="subAddress" column="SUB_ADDRESS"/>
+        <result property="subPort" column="SUB_PORT"/>
+        <result property="regType" column="REG_TYPE"/>
+        <result property="startDate" column="START_DATE"/>
+        <result property="endDate" column="END_DATE"/>
+    </resultMap>
+
+    
+
+
+    <select id="selectAllRegistrations" resultMap="RegInfoMapper">
+		select ID, AGENT_ID, REG_TYPE, REGION, MSG_TYPE, START_DATE, END_DATE, SUB_RECEIVE_ADDR, SUB_RECEIVE_PORT
+		from ODE_REGISTRATION
+	</select>
+
+    <select id="selectRegistrationForMessage" parameterType="String" resultMap="RegInfoMapper">
+		select ID, AGENT_ID, REG_TYPE, REGION, MSG_TYPE, START_DATE, END_DATE, SUB_RECEIVE_ADDR, SUB_RECEIVE_PORT
+		from ODE_REGISTRATION
+		where MSG_TYPE = #{id}
+	</select>
+
+    <select id="selectRegistrationForID" parameterType="int" resultMap="RegInfoMapper">
+		select ID, AGENT_ID, REG_TYPE, REGION, MSG_TYPE, START_DATE, END_DATE, SUB_RECEIVE_ADDR, SUB_RECEIVE_PORT
+		from ODE_REGISTRATION
+		where ID = #{id}
+	</select>
+
+
+    <select id="selectQueueForRegistration" parameterType="ODERegistrationRequest" resultMap="QueueInfoMapper">
+        select ID, MSG_TYPE, REGION, QUEUE_NAME, QUEUE_CONN_FACT, TARGET_ADDRESS, TARGET_PORT,WS_HOST,WS_URL
+        from MSG_QUEUE
+        where MSG_TYPE = #{messageType}
+        and REGION = #{region}
+    </select>
+    
+    <select id="selectQueueForMessageType" parameterType="String" resultMap="QueueInfoMapper">
+        select ID, MSG_TYPE, REGION, QUEUE_NAME, QUEUE_CONN_FACT, TARGET_ADDRESS, TARGET_PORT,WS_HOST,WS_URL
+        from MSG_QUEUE
+        where MSG_TYPE = #{id}
+        
+    </select>    
+
+    <select id="selectRegistrationForRequestId" parameterType="String" resultMap="RegistrationRowMapper">
+        select ID, DIALOG_ID, SEQUENCE_ID, GROUP_ID, REQUEST_ID, SUB_ADDRESS, SUB_PORT, REG_TYPE, START_DATE, END_DATE
+        from REGISTRATION
+        where REQUEST_ID = #{id}
+    </select>    
+
+    <insert id="insertRegistration" parameterType="ODERegistrationRequest">
+        <selectKey resultType="int" keyProperty="registrationId" order="AFTER">
+            SELECT LAST_INSERT_ID();
+        </selectKey>
+        insert into ODE_REGISTRATION (AGENT_ID, REG_TYPE, REGION, MSG_TYPE, START_DATE, END_DATE, SUB_RECEIVE_ADDR,
+        SUB_RECEIVE_PORT)
+        values
+        (#{agentId},#{registrationType},#{region},#{messageType},#{startDate},#{endDate},#{subscriptionReceiveAddress},#{subscriptionReceivePort}
+        )
+    </insert>
+
+
+    <insert id="insertServiceRequest" parameterType="RegistrationRow">
+        INSERT INTO REGISTRATION 
+            (DIALOG_ID, SEQUENCE_ID, GROUP_ID, REQUEST_ID, SUB_ADDRESS, SUB_PORT, REG_TYPE, START_DATE, END_DATE) 
+        VALUES 
+        (#{dialogId}, #{sequenceId},#{groupId},#{requestId},#{subAddress},#{subPort},#{regType},#{startDate},#{endDate})
+
+    </insert>
+    
+    <update id="updateRegistration" parameterType="RegistrationRow">
+        update REGISTRATION 
+        set SUB_ID = #{subId}, MESSAGE_TYPES = #{dataTypes}
+        where 
+         REQUEST_ID = #{requestId}
+    </update>
+
+</mapper>

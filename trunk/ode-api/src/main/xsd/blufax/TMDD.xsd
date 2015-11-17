@@ -1,0 +1,3223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- TMDD V3.0 Proposed Recommended Standard -->
+<!--  -->
+<xs:schema xmlns="http://www.tmdd.org/3/messages" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:bfw="http://www.fastlanesw.com/bfw" xmlns:c2c="http://www.ntcip.org/c2c-message-administration" xmlns:lrms="http://www.LRMS-Adopted-02-00-00" targetNamespace="http://www.tmdd.org/3/messages" elementFormDefault="unqualified" attributeFormDefault="unqualified" version="DRAFT">
+	<xs:import namespace="http://www.fastlanesw.com/bfw" schemaLocation="TMDD-BWT.xsd"/>
+	<xs:import namespace="http://www.ntcip.org/c2c-message-administration" schemaLocation="C2C.xsd"/>
+	<xs:import namespace="http://www.LRMS-Adopted-02-00-00" schemaLocation="LRMS-Adopted-02-00-00.xsd"/>
+	<!--  -->
+	<xs:annotation>
+		<xs:documentation>
+			Adapted from TMDD V3.0 v9.0 Balloted Standard
+			Last Updated: November 18, 2008 - Manny Insignares, ConSysTec
+        </xs:documentation>
+	</xs:annotation>
+	<!-- -->
+	<!-- Object Classes -->
+	<!-- -->
+	<xs:annotation>
+		<xs:documentation>
+			<objectClass>
+				<name>ArchivedData</name>
+			</objectClass>
+			<objectClass>
+				<name>CCTV</name>
+			</objectClass>
+			<objectClass>
+				<name>ConnectionManagement</name>
+			</objectClass>
+			<objectClass>
+				<name>Detector</name>
+			</objectClass>
+			<objectClass>
+				<name>Device</name>
+			</objectClass>
+			<objectClass>
+				<name>DMS</name>
+			</objectClass>
+			<objectClass>
+				<name>ESS</name>
+			</objectClass>
+			<objectClass>
+				<name>Event</name>
+			</objectClass>
+			<objectClass>
+				<name>ExternalCenter</name>
+			</objectClass>
+			<objectClass>
+				<name>Gate</name>
+			</objectClass>
+			<objectClass>
+				<name>Global</name>
+			</objectClass>
+			<objectClass>
+				<name>HAR</name>
+			</objectClass>
+			<objectClass>
+				<name>IntersectionSignal</name>
+			</objectClass>
+			<objectClass>
+				<name>LCS</name>
+			</objectClass>
+			<objectClass>
+				<name>Link</name>
+			</objectClass>
+			<objectClass>
+				<name>Node</name>
+			</objectClass>
+			<objectClass>
+				<name>Organization</name>
+			</objectClass>
+			<objectClass>
+				<name>OwnerCenter</name>
+			</objectClass>
+			<objectClass>
+				<name>RampMeter</name>
+			</objectClass>
+			<objectClass>
+				<name>Route</name>
+			</objectClass>
+			<objectClass>
+				<name>Section</name>
+			</objectClass>
+			<objectClass>
+				<name>TransportationNetwork</name>
+			</objectClass>
+			<objectClass>
+				<name>VideoSwitch</name>
+			</objectClass>
+		</xs:documentation>
+	</xs:annotation>
+	<!-- -->
+	<!-- Value Domain Terms -->
+	<!-- -->
+	<xs:annotation>
+		<xs:documentation>
+			<valueDomainTerm>
+				<term>amount</term>
+				<abbreviation>amt</abbreviation>
+			</valueDomainTerm>
+			<valueDomainTerm>
+				<term>code</term>
+				<abbreviation>cd</abbreviation>
+			</valueDomainTerm>
+			<valueDomainTerm>
+				<term>date</term>
+				<abbreviation>dt</abbreviation>
+			</valueDomainTerm>
+			<valueDomainTerm>
+				<term>identifier</term>
+				<abbreviation>id</abbreviation>
+			</valueDomainTerm>
+			<valueDomainTerm>
+				<term>image</term>
+				<abbreviation>img</abbreviation>
+			</valueDomainTerm>
+			<valueDomainTerm>
+				<term>location</term>
+				<abbreviation>lctn</abbreviation>
+			</valueDomainTerm>
+			<valueDomainTerm>
+				<term>number</term>
+				<abbreviation>nbr</abbreviation>
+			</valueDomainTerm>
+			<valueDomainTerm>
+				<term>percent</term>
+				<abbreviation>pct</abbreviation>
+			</valueDomainTerm>
+			<valueDomainTerm>
+				<term>quantity</term>
+				<abbreviation>qty</abbreviation>
+			</valueDomainTerm>
+			<valueDomainTerm>
+				<term>rt</term>
+				<abbreviation>rate</abbreviation>
+			</valueDomainTerm>
+			<valueDomainTerm>
+				<term>sound</term>
+				<abbreviation>snd</abbreviation>
+			</valueDomainTerm>
+			<valueDomainTerm>
+				<term>text</term>
+				<abbreviation>txt</abbreviation>
+			</valueDomainTerm>
+			<valueDomainTerm>
+				<term>UTC</term>
+				<abbreviation>utc</abbreviation>
+			</valueDomainTerm>
+			<valueDomainTerm>
+				<term>GPS</term>
+				<abbreviation>gps</abbreviation>
+			</valueDomainTerm>
+		</xs:documentation>
+	</xs:annotation>
+	<!--  -->
+	<!-- ************************************************ -->
+	<!-- CONNECTION MANAGEMENT Messages-->
+	<!-- ************************************************ -->
+	<!--  -->
+	<!-- ErrorReport Message -->
+	<!--  -->
+	<xs:element name="errorReportMsg" type="ErrorReport">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>ConnectionManagement</objectClass>
+				<requirement>REQ1079</requirement>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<!--  -->
+	<!-- ****************** -->
+	<!-- LINK Messages -->
+	<!-- ****************** -->
+	<!-- .-->
+	<!-- LinkInventory Message -->
+	<!-- .-->
+	<xs:element name="linkInventoryMsg">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<requirement>REQ1087</requirement>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence maxOccurs="unbounded">
+				<xs:element name="link-inventory-item" type="LinkInventory"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- .-->
+	<!-- LinkStatus Message -->
+	<!-- .-->
+	<xs:element name="linkStatusMsg">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<requirement>REQ1090</requirement>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence maxOccurs="unbounded">
+				<xs:element name="link-status-item" type="LinkStatus"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!--  -->
+	<!-- ******************* -->
+	<!-- Node Messages -->
+	<!-- ******************* -->
+	<!--  -->
+	<!-- NodeInventory Message -->
+	<!--  -->
+	<xs:element name="nodeInventoryMsg">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Node</objectClass>
+				<requirement>REQ1084</requirement>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence maxOccurs="unbounded">
+				<xs:element name="node-inventory-item" type="NodeInventory"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!--  -->
+	<!-- ******************************** -->
+	<!-- ORGANIZATION Messages -->
+	<!-- ******************************** -->
+	<!--  -->
+	<!-- OrganizationInformationMsg Message-->
+	<!--  -->
+	<xs:complexType name="OrganizationInformation">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Organization</objectClass>
+				<requirement>REQ69</requirement>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="organization-id" type="Organization-resource-identifier">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="organization" column="id" existing="true"/>
+						<requirement>REQ69</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="organization-name" type="Organization-resource-name" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="organization" column="name" existing="true"/>
+						<requirement>REQ70</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="organization-location" type="Organization-location-fips" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ71</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="organization-function" type="Organization-function" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ72</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="organization-contact-details" type="ContactDetails" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ73</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="center-contact-list" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ74</requirement>
+					</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence maxOccurs="unbounded">
+						<xs:element name="center-contact-details" type="OrganizationCenterInformation"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="last-update-time" type="DateTimeZone" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ77</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--  -->
+	<!-- ********************** -->
+	<!-- ROUTE Messages  -->
+	<!-- ********************** -->
+	<!-- .-->
+	<!-- RouteInventory Message -->
+	<!-- .-->
+	<xs:element name="routeInventoryMsg">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Route</objectClass>
+				<requirement>REQ1091</requirement>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence maxOccurs="unbounded">
+				<xs:element name="route-inventory-item" type="RouteInventory"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- .-->
+	<!-- RouteStatus Message -->
+	<!-- .-->
+	<xs:element name="routeStatusMsg">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Route</objectClass>
+				<requirement>REQ1083</requirement>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence maxOccurs="unbounded">
+				<xs:element name="route-status-item" type="RouteStatus"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!--  -->
+	<!-- **************************************************** -->
+	<!-- CONNECTION MANAGEMENT Data Frames -->
+	<!-- **************************************************** -->
+	<!--  -->
+	<!-- ErrorReport Data Frame -->
+	<!--  -->
+	<xs:complexType name="ErrorReport">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>ConnectionManagement</objectClass>
+				<requirement>REQ1079</requirement>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="restrictions" type="Restrictions" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ1212</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="organization-information" type="OrganizationInformation">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ208</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="organization-requesting" type="OrganizationInformation">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ208</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="error-code" type="Error-report-code">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ208</requirement>
+						<requirement>REQ209</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="error-text" type="c2c:InformationalText">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ208</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--  -->
+	<!-- ****************************************************** -->
+	<!-- GLOBAL Data Frames -->
+	<!-- ****************************************************** -->
+	<!--  -->
+	<!-- DateTimeZone Data Frame-->
+	<!--  -->
+	<xs:complexType name="DateTimeZone">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Global</objectClass>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="date" type="Date"/>
+			<xs:element name="time" type="Time"/>
+			<xs:element name="offset" type="Time-offset-utc" minOccurs="0"/>
+			<xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ********************* -->
+	<!-- LINK Data Frames -->
+	<!-- ********************* -->
+	<!-- .-->
+	<!-- LinkInventory Data Frame -->
+	<!-- .-->
+	<xs:complexType name="LinkInventory">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<requirement>REQ1087</requirement>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="restrictions" type="Restrictions" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ1212</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="organization-information" type="OrganizationInformation">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ231</requirement>
+						<requirement>REQ245</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="link-list">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ231</requirement>
+					</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence maxOccurs="unbounded">
+						<xs:element name="link" type="LinkInventoryList"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- .-->
+	<!-- LinkInventoryList Data Frame-->
+	<!-- .-->
+	<xs:complexType name="LinkInventoryList">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<requirement>REQ231</requirement>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="network-id" type="Transportation-network-identifier">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="link" column="site_id" existing="true"/>
+						<requirement>REQ231</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="network-name" type="Transportation-network-name" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="site" column="name" existing="true"/>
+						<requirement>REQ1088</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="link-id" type="Transportation-network-identifier">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="link" column="id" existing="true"/>
+						<requirement>REQ231</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="link-name" type="Transportation-network-name" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="link" column="name" existing="true"/>
+						<requirement>REQ232</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="alternate-link-name" type="Transportation-network-name" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ244</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="link-route-designator" type="Link-route-designator" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ233</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="secondary-link-route-designator" type="Link-route-designator" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ1321</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="link-type" type="Link-type">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="link" column="link_type" existing="false"/>
+						<requirement>REQ231</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="link-begin-node-id" type="Transportation-network-identifier">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="blufax_unit" column="id" existing="true" derived="true" comment="select the id of the first source unit in the list"/>
+						<requirement>REQ231</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="link-begin-node-location" type="lrms:GeoLocation">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="blufax_unit" column="location" existing="true" derived="true" comment="determine the lat/lon from the location"/>
+						<requirement>REQ231</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="link-end-node-id" type="Transportation-network-identifier">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="blufax_unit" column="id" existing="true" derived="true" comment="select the id of the first destination unit in the list"/>
+						<requirement>REQ231</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="link-end-node-location" type="lrms:GeoLocation">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="blufax_unit" column="location" existing="true" derived="true" comment="determine the lat/lon from the location"/>
+						<requirement>REQ231</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="linear-reference" type="Link-location-linear-reference" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ234</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="linear-reference-version" type="Link-location-linear-reference-version" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ234</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="link-length" type="Link-length" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="link" column="lenth_miles" existing="true" derived="true" comment="convert miles to meters"/>
+						<requirement>REQ235</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="link-capacity" type="Link-capacity" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ236</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="link-speed-limit" type="Link-speed-limit" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ237</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="link-speed-limit-truck" type="Link-speed-limit" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ238</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="link-speed-limit-units" type="Link-speed-limit-units" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ1332</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="link-jurisdiction" type="Organization-resource-name" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ239</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="link-owner" type="Organization-resource-name" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ240</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="left-shoulder-width" type="Link-shoulder-width" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ241</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="right-shoulder-width" type="Link-shoulder-width" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ242</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="lane-separator" type="Link-median-type" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ243</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="last-update-time" type="DateTimeZone" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ246</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- .-->
+	<!-- LinkStatus Data Frame -->
+	<!-- .-->
+	<xs:complexType name="LinkStatus">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<requirement>REQ1090</requirement>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="restrictions" type="Restrictions" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ1212</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="organization-information" type="OrganizationInformation">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ271</requirement>
+						<requirement>REQ138</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="link-list">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ271</requirement>
+					</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence maxOccurs="unbounded">
+						<xs:element name="link" type="LinkStatusList"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- .-->
+	<!-- LinkStatusList Data Frame-->
+	<!-- .-->
+	<xs:complexType name="LinkStatusList">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<requirement>REQ1090</requirement>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="network-id" type="Transportation-network-identifier">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="link" column="site_id" existing="true"/>
+						<requirement>REQ271</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="link-id" type="Transportation-network-identifier">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="link" column="id" existing="true"/>
+						<requirement>REQ271</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="link-name" type="Transportation-network-name" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="link" column="name" existing="true"/>
+						<requirement>REQ272</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="link-status" type="Link-status">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="n/a" table="n/a" column="n/a" existing="false" derived="false" comment="default to no determination"/>
+						<requirement>REQ271</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="link-direction" type="Link-direction" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="link" column="direction" existing="false" comment="only values will be us-bound and canada-bound"/>
+						<requirement>REQ273</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="lanes-number-open" type="Link-lanes-count" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ274</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="priority-type" type="Link-priority-type" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ275</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="restriction-axle-count" type="Link-restriction-axle-count" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ276</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="restriction-height" type="Link-restriction-height" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ277</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="restriction-length" type="Link-restriction-length" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ278</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="restriction-weight" type="Link-restriction-weight-vehicle" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ280</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="restriction-width" type="Link-restriction-width" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ279</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="restriction-weight-axle" type="Link-restriction-weight-axle" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ281</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="restriction-units" type="Link-restriction-units" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ1333</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="surface-condition" type="Link-surface-condition" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ282</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="saturation-flag" type="Link-oversaturated-flag" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ283</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="oversaturated-threshold" type="Link-oversaturated-threshold" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ284</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="level-of-service" type="Link-level-of-service" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ285</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="lane-numbers" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ118</requirement>
+					</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence maxOccurs="unbounded">
+						<xs:element name="lanes" type="Link-lane-number"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="link-data-stored" type="Link-data-stored" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ119</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="detection-method" type="Event-detection-method" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="n/a" table="n/a" column="n/a" existing="false" derived="false" comment="default to vehicle probe measurement"/>
+						<requirement>REQ120</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="link-traffic-data-algorithm" type="Link-data-type" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="link_travel_time" column="calculation_type_code" existing="true" derived="true" comment="need to convert to match enum"/>
+						<requirement>REQ122</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="stops" type="Link-stops" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ1256</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="delay" type="Link-delay" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="link_travel_time" column="actual_wait_seconds" existing="false" derived="true" comment="calculated from freeflow speed and current mean travel time"/>
+						<requirement>REQ123</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="alternate-route-delay" type="Link-alternate-route-delay" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ124</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="headway" type="Link-headway" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ125</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="travel-time" type="Link-travel-time" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="link_travel_time" column="mean_travel_time_seconds" existing="true"/>
+						<requirement>REQ127</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="capacity-existing" type="Link-capacity-existing" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ126</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="travel-time-increase" type="Link-travel-time-increase" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="link_travel_time" column="mean_travel_time_seconds" existing="true" derived="true" comment="calculated based on current and previous travel time"/>
+						<requirement>REQ128</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="speed-average" type="Link-speed-average" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="link_travel_time" column="speed_mph" existing="true" derived="true" comment="convert to kph"/>
+						<requirement>REQ130</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="speed-vehicle-estimated" type="Event-speed-vehicle-estimated" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ131</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="speed-limit" type="Link-speed-limit" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ135</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="advisory-speed-limit" type="Link-speed-limit" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ134</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="truck-speed-limit" type="Link-speed-limit" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ136</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="speed-limit-units" type="Link-speed-limit-units" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ1334</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="density" type="Link-density" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ132</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="occupancy" type="Link-occupancy" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ133</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="volume" type="Link-volume" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ129</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="event-description-time" type="Event-description-time" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ137</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="last-update-time" type="DateTimeZone" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="link_travel_time" column="calculation_timestamp" existing="true" derived="true" comment="convert to date/time/offset"/>
+						<requirement>REQ139</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--  -->
+	<!-- ********************* -->
+	<!-- Node Data Frames-->
+	<!-- ********************* -->
+	<!--  -->
+	<!-- NodeInventory Data Frame -->
+	<!--  -->
+	<xs:complexType name="NodeInventory">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Node</objectClass>
+				<requirement>REQ1084</requirement>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="restrictions" type="Restrictions" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ1212</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="organization-information" type="OrganizationInformation">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ220</requirement>
+						<requirement>REQ229</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="node-list">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ220</requirement>
+					</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence maxOccurs="unbounded">
+						<xs:element name="node" type="NodeInventoryList"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--  -->
+	<!-- NodeInventoryList Data Frame-->
+	<!--  -->
+	<xs:complexType name="NodeInventoryList">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Node</objectClass>
+				<requirement>REQ220</requirement>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="network-id" type="Transportation-network-identifier">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="blufax_unit" column="site_id" existing="false"/>
+						<requirement>REQ220</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="network-name" type="Transportation-network-name" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="site" column="name" existing="true"/>
+						<requirement>REQ1175</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="node-id" type="Transportation-network-identifier">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="blufax_unit" column="id" existing="true"/>
+						<requirement>REQ220</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="node-name" type="Transportation-network-name" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="blufax_unit" column="name" existing="true"/>
+						<requirement>REQ221</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="node-description" type="Transportation-network-name" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ222</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="node-route-designator" type="Link-route-designator" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ223</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="node-direction" type="Link-direction" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ225</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="linear-reference" type="Link-location-linear-reference" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ224</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="linear-reference-version" type="Link-location-linear-reference-version" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ224</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="node-type" type="Node-type" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="n/a" table="n/a" column="n/a" existing="false" derived="false" comment="default to detector location"/>
+						<requirement>REQ227</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="node-location" type="lrms:GeoLocation">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="blufax_unit" column="location" existing="true" derived="true" comment="need to get the latitude and longitude from the geometry"/>
+						<requirement>REQ220</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="node-links-number" type="Node-links-number" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ228</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="last-update-time" type="DateTimeZone" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ230</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--  -->
+	<!-- *********************************** -->
+	<!-- ORGANIZATION Data Frames -->
+	<!-- *********************************** -->
+	<!--  -->
+	<!-- ContactDetails Data Frame-->
+	<!--  -->
+	<xs:complexType name="ContactDetails">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Organization</objectClass>
+				<requirement>REQ73</requirement>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="contact-id" type="Organization-resource-identifier">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ73</requirement>
+						<requirement>REQ76</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="person-name" type="Organization-resource-name" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ78</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="person-title" type="Organization-resource-name" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ79</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="phone-number" type="Organization-resource-identifier" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ80</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="phone-alternate" type="Organization-resource-identifier" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ81</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="mobile-phone-number" type="Organization-resource-identifier" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ82</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="mobile-phone-id" type="Organization-resource-identifier" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ83</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="fax-number" type="Organization-resource-identifier" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ84</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="pager-number" type="Organization-resource-identifier" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ86</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="pager-id" type="Organization-resource-identifier" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ85</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="email-address" type="Organization-resource-name" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ87</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="radio-unit" type="Organization-resource-identifier" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ88</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="address-line1" type="Contact-mailing-address-entry" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ89</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="address-line2" type="Contact-mailing-address-entry" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ90</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="city" type="Contact-mailing-address-entry" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ91</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="state" type="Contact-mailing-address-state" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ92</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="zip-code" type="Contact-mailing-address-entry" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ93</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="country" type="Contact-mailing-address-entry" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ94</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- -->
+	<!-- Organization Center Information Data Frame -->
+	<!-- -->
+	<xs:complexType name="OrganizationCenterInformation">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Organization</objectClass>
+				<requirement>REQ74</requirement>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="center-id" type="Organization-resource-identifier">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ193</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="center-name" type="Organization-resource-name" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ75</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="center-location" type="lrms:GeoLocation" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ1173</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="center-description" type="Organization-function" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ1172</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="center-type" type="Center-type" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ1068</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="center-contact-details" type="ContactDetails" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ76</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--  -->
+	<!--Restrictions Data Frame-->
+	<!--  -->
+	<xs:complexType name="Restrictions">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Organization</objectClass>
+				<requirement>REQ1212</requirement>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="organization-information-forwarding-restrictions" type="Organization-information-forwarding-restrictions">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ1081</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ************************ -->
+	<!-- ROUTE Data Frames -->
+	<!-- ************************ -->
+	<!-- .-->
+	<!-- RouteInventory Data Frame -->
+	<!-- .-->
+	<xs:complexType name="RouteInventory">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Route</objectClass>
+				<requirement>REQ1091</requirement>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="restrictions" type="Restrictions" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ1212</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="organization-information" type="OrganizationInformation">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ247</requirement>
+						<requirement>REQ258</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="route-list">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ247</requirement>
+					</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence maxOccurs="unbounded">
+						<xs:element name="route" type="RouteInventoryList"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- .-->
+	<!-- RouteInventoryList Data Frame-->
+	<!-- .-->
+	<xs:complexType name="RouteInventoryList">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Route</objectClass>
+				<requirement>REQ247</requirement>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="network-id" type="Transportation-network-identifier">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="route" column="site_id" existing="true"/>
+						<requirement>REQ247</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="network-name" type="Transportation-network-name" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="site" column="name" existing="true"/>
+						<requirement>REQ1179</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="route-id" type="Transportation-network-identifier">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="route" column="id" existing="true"/>
+						<requirement>REQ247</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="route-link-id-list">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="route_link" column="link_id" existing="true"/>
+						<requirement>REQ247</requirement>
+					</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence maxOccurs="unbounded">
+						<xs:element name="link" type="Transportation-network-identifier"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="route-type" type="Route-type">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="route" column="route_type_id" existing="false"/>
+						<requirement>REQ247</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="route-name" type="Transportation-network-name" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="route" column="name" existing="true"/>
+						<requirement>REQ248</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="alternate-route-name-list" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ252</requirement>
+					</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence maxOccurs="unbounded">
+						<xs:element name="route-name" type="Transportation-network-name"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="route-length" type="Link-length" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="link" column="lenth_miles" existing="true" derived="true" comment="sum the length of all links to get route length and convert miles to meters"/>
+						<requirement>REQ255</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="route-node-id-list" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="blufax_unit" column="id" existing="true" derived="true" comment="create a list of units for each link in the route"/>
+						<requirement>REQ256</requirement>
+					</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence maxOccurs="unbounded">
+						<xs:element name="node-id" type="Transportation-network-identifier"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="route-url" type="Url-reference" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ257</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="last-update-time" type="DateTimeZone" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ259</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- .-->
+	<!-- RouteStatus Data Frame -->
+	<!-- .-->
+	<xs:complexType name="RouteStatus">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Route</objectClass>
+				<requirement>REQ1083</requirement>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="restrictions" type="Restrictions" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ1212</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="organization-information" type="OrganizationInformation">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ291</requirement>
+						<requirement>REQ158</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="route-list">
+				<xs:annotation>
+					<xs:documentation>
+						<requirement>REQ291</requirement>
+					</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence maxOccurs="unbounded">
+						<xs:element name="route" type="RouteStatusList"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- .-->
+	<!-- RouteStatusList -->
+	<!-- .-->
+	<xs:complexType name="RouteStatusList">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Route</objectClass>
+				<requirement>REQ1083</requirement>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="network-id" type="Transportation-network-identifier">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="route" column="site_id" existing="true"/>
+						<requirement>REQ291</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="route-id" type="Transportation-network-identifier">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="route" column="id" existing="true"/>
+						<requirement>REQ291</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="route-status" type="Link-status">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="n/a" table="n/a" column="n/a" existing="false" derived="false" comment="default to no determination"/>
+						<requirement>REQ291</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="route-name" type="Transportation-network-name" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="route" column="name" existing="true"/>
+						<requirement>REQ292</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="detour-route-in-effect-flag" type="Binary-flag" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ293</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="surface-condition" type="Link-surface-condition" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ294</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="route-capacity" type="Link-capacity" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ296</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="level-of-service" type="Link-level-of-service" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ297</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="saturation-flag" type="Link-oversaturated-flag" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ295</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<!-- RouteData -->
+			<xs:element name="route-data-stored-type" type="Link-data-stored" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ144</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="route-traffic-data-algorithm" type="Link-data-type" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="link_travel_time" column="calculation_type_code" existing="true" derived="true" comment="get from link and convert to match enum"/>
+						<requirement>REQ145</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="delay" type="Link-delay" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="route_travel_time" column="actual_wait_seconds" existing="true" derived="false"/>
+						<requirement>REQ146</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="alternate-route-delay" type="Link-alternate-route-delay" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ147</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="headway" type="Link-headway" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ148</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="travel-time" type="Link-travel-time" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="route_travel_time" column="mean_travel_time_seconds" existing="true"/>
+						<requirement>REQ150</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="travel-time-increase" type="Link-travel-time-increase" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="route_travel_time" column="mean_travel_time_seconds" existing="true"/>
+						<requirement>REQ151</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="volume" type="Link-volume" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ152</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="speed-average" type="Link-speed-average" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="route_travel_time" column="speed_mph" existing="true" derived="true" comment="convert to kph"/>
+						<requirement>REQ153</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="density" type="Link-density" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ154</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="occupancy" type="Link-occupancy" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ155</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="current-speed-advisory" type="Link-speed-limit" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ156</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="event-description-time" type="Event-description-time" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="false" comment="not used in BWT"/>
+						<requirement>REQ157</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="last-update-time" type="DateTimeZone" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<mapping active="true" database="bwt" table="route_travel_time" column="calculation_timestamp" existing="true" derived="true" comment="convert to date/time/offset"/>
+						<requirement>REQ159</requirement>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--  -->
+	<!-- ****************************************************** -->
+	<!-- CONNECTION MANAGEMENT Data Elements -->
+	<!-- ****************************************************** -->
+	<!--  -->
+	<!-- Error-report-code -->
+	<!--  -->
+	<xs:simpleType name="Error-report-code">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>ConnectionManagement</objectClass>
+				<valueDomainTerm>cd</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:unsignedInt">
+					<xs:minInclusive value="1"/>
+					<xs:maxInclusive value="6"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="unknown processing error"/>
+					<xs:enumeration value="center does not support this type message"/>
+					<xs:enumeration value="missing information prevents processing message"/>
+					<xs:enumeration value="message is not well formed or cannot be parsed"/>
+					<xs:enumeration value="out of range values"/>
+					<xs:enumeration value="permission not granted for request"/>
+					<xs:enumeration value="authentication not recognized"/>
+					<!-- not well formed for XML and cannot be parsed for ASN -->
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="insert-extension-values-here"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<!-- ************************** -->
+	<!-- EVENT Data Elements -->
+	<!-- *************************** -->
+	<!--  -->
+	<!-- Event-detection-method_code -->
+	<!--  -->
+	<xs:simpleType name="Event-detection-method">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Event</objectClass>
+				<valueDomainTerm>cd</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:unsignedInt">
+					<xs:minInclusive value="1"/>
+					<xs:maxInclusive value="25"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="transit agency"/>
+					<xs:enumeration value="traffic agency"/>
+					<xs:enumeration value="commercial traffic service"/>
+					<xs:enumeration value="unknown motorist observer"/>
+					<xs:enumeration value="commercial fleet operator"/>
+					<xs:enumeration value="dot"/>
+					<xs:enumeration value="automobile club patrol"/>
+					<xs:enumeration value="spotter aircraft"/>
+					<xs:enumeration value="breakdown service private"/>
+					<xs:enumeration value="camera observation"/>
+					<xs:enumeration value="emergency service patrol non police"/>
+					<xs:enumeration value="inductive loop monitoring station"/>
+					<xs:enumeration value="microwave monitoring station"/>
+					<xs:enumeration value="mobile platform measurement"/>
+					<xs:enumeration value="mobile telephone caller previously unknown"/>
+					<xs:enumeration value="police patrol"/>
+					<xs:enumeration value="public and private utilities"/>
+					<xs:enumeration value="road condition model"/>
+					<xs:enumeration value="registered motorist observer"/>
+					<xs:enumeration value="roadside telephone caller"/>
+					<xs:enumeration value="snowplow report"/>
+					<xs:enumeration value="traffic monitoring station"/>
+					<xs:enumeration value="video processing monitoring station"/>
+					<xs:enumeration value="vehicle probe measurement"/>
+					<xs:enumeration value="weather model"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="insert-extension-values-here"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<!--  -->
+	<!-- Event-description-time_quantity -->
+	<!--  -->
+	<xs:simpleType name="Event-description-time">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Event</objectClass>
+				<valueDomainTerm>qty</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:int">
+			<xs:minInclusive value="-1234567"/>
+			<xs:maxInclusive value="1234567"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<!-- Event-speed-vehicle-estimated_rate -->
+	<!--  -->
+	<xs:simpleType name="Event-speed-vehicle-estimated">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Event</objectClass>
+				<valueDomainTerm>rt</valueDomainTerm>
+				<units>kilometers per hour</units>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedShort">
+			<xs:maxInclusive value="300"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<!-- **************************** -->
+	<!-- GLOBAL Data Elements -->
+	<!-- **************************** -->
+	<!-- -->
+	<!-- Binary-flag_code -->
+	<!-- -->
+	<xs:simpleType name="Binary-flag">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Global</objectClass>
+				<valueDomainTerm>cd</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:unsignedInt">
+					<xs:minInclusive value="1"/>
+					<xs:maxInclusive value="2"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="yes"/>
+					<xs:enumeration value="no"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="insert-extension-values-here"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<!--  -->
+	<!-- Date -->
+	<!--  -->
+	<xs:simpleType name="Date">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Global</objectClass>
+				<valueDomainTerm>txt</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:length value="8"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<!-- Time -->
+	<!--  -->
+	<xs:simpleType name="Time">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Global</objectClass>
+				<valueDomainTerm>txt</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="6"/>
+			<xs:maxLength value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<!-- Time-offset-utc -->
+	<!--  -->
+	<xs:simpleType name="Time-offset-utc">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Global</objectClass>
+				<valueDomainTerm>txt</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:length value="5"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- -->
+	<!-- Url-reference_text -->
+	<!-- -->
+	<xs:simpleType name="Url-reference">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Global</objectClass>
+				<valueDomainTerm>txt</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="128"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<!-- ************************ -->
+	<!-- LINK Data Elements -->
+	<!-- ************************ -->
+	<!-- .-->
+	<!-- Link-alternate-route-delay_quantitiy -->
+	<!-- .-->
+	<xs:simpleType name="Link-alternate-route-delay">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>qty</valueDomainTerm>
+				<units>seconds</units>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:int">
+			<xs:minInclusive value="-1234567"/>
+			<xs:maxInclusive value="-1234567"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-capacity_rate -->
+	<!-- .-->
+	<xs:simpleType name="Link-capacity">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>rt</valueDomainTerm>
+				<units>vehicles per hour</units>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedInt">
+			<xs:maxInclusive value="300000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-capacity-existing_percent -->
+	<!-- .-->
+	<xs:simpleType name="Link-capacity-existing">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>pct</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedByte">
+			<xs:maxInclusive value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-data-stored_code -->
+	<!-- .-->
+	<xs:simpleType name="Link-data-stored">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>cd</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:int">
+					<xs:minInclusive value="1"/>
+					<xs:maxInclusive value="7"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="current link volume"/>
+					<xs:enumeration value="current occupancy"/>
+					<xs:enumeration value="current average speed"/>
+					<xs:enumeration value="current delay time"/>
+					<xs:enumeration value="current travel time"/>
+					<xs:enumeration value="roadway status"/>
+					<xs:enumeration value="daily peak volume and hour of peak volume"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="insert-extension-values-here"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-data-type_code -->
+	<!-- .-->
+	<xs:simpleType name="Link-data-type">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>cd</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:unsignedInt">
+					<xs:minInclusive value="1"/>
+					<xs:maxInclusive value="7"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="actual"/>
+					<xs:enumeration value="reconstructed"/>
+					<xs:enumeration value="historical"/>
+					<xs:enumeration value="predicted"/>
+					<xs:enumeration value="smoothed"/>
+					<xs:enumeration value="averaged"/>
+					<xs:enumeration value="estimated"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="insert-extension-values-here"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-delay_quantity -->
+	<!-- .-->
+	<xs:simpleType name="Link-delay">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>qty</valueDomainTerm>
+				<units>seconds</units>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedInt">
+			<xs:maxInclusive value="605000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-density_rate -->
+	<!-- .-->
+	<xs:simpleType name="Link-density">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>rt</valueDomainTerm>
+				<units>vehicles per kilometer</units>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedShort">
+			<xs:maxInclusive value="2000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-direction_code -->
+	<!-- .-->
+	<xs:simpleType name="Link-direction">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>cd</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:unsignedInt">
+					<xs:minInclusive value="0"/>
+					<xs:maxInclusive value="12"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="any other"/>
+					<xs:enumeration value="n"/>
+					<xs:enumeration value="ne"/>
+					<xs:enumeration value="e"/>
+					<xs:enumeration value="se"/>
+					<xs:enumeration value="s"/>
+					<xs:enumeration value="sw"/>
+					<xs:enumeration value="w"/>
+					<xs:enumeration value="nw"/>
+					<xs:enumeration value="not directional"/>
+					<xs:enumeration value="positive direction"/>
+					<xs:enumeration value="negative direction"/>
+					<xs:enumeration value="both directions"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="canada-bound"/>
+					<xs:enumeration value="mexico-bound"/>
+					<xs:enumeration value="us-bound"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-headway_quantity -->
+	<!-- .-->
+	<xs:simpleType name="Link-headway">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>qty</valueDomainTerm>
+				<units>seconds</units>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:int">
+			<xs:minInclusive value="-1234567"/>
+			<xs:maxInclusive value="-1234567"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-lane-number_number -->
+	<!-- .-->
+	<xs:simpleType name="Link-lane-number">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>nbr</valueDomainTerm>
+				<units>lane</units>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedByte">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-lanes-count_quantity -->
+	<!-- .-->
+	<xs:simpleType name="Link-lanes-count">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>qty</valueDomainTerm>
+				<units>lanes</units>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedByte">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-length_quantity -->
+	<!-- .-->
+	<xs:simpleType name="Link-length">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>qty</valueDomainTerm>
+				<units>meters</units>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedInt">
+			<xs:maxInclusive value="160000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-level-of-service_code -->
+	<!-- .-->
+	<xs:simpleType name="Link-level-of-service">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>cd</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:unsignedInt">
+					<xs:minInclusive value="1"/>
+					<xs:maxInclusive value="6"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="free flow conditions"/>
+					<xs:enumeration value="stable flow with noticeable decline in free flow conditions"/>
+					<xs:enumeration value="stable flow with significant increase in driver discomfort"/>
+					<xs:enumeration value="high density but stable flow"/>
+					<xs:enumeration value="conditions near capacity level"/>
+					<xs:enumeration value="forced flow"/>
+					<!-- LOS A -->
+					<!-- LOS B -->
+					<!-- LOS C -->
+					<!-- LOS D -->
+					<!-- LOS E -->
+					<!-- LOS F -->
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="insert-extension-values-here"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-location-linear-reference_number -->
+	<!-- .-->
+	<xs:simpleType name="Link-location-linear-reference">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>nbr</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-location-linear-reference-version_identifier -->
+	<!-- .-->
+	<xs:simpleType name="Link-location-linear-reference-version">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>id</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedByte"/>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-median-type_code -->
+	<!-- .-->
+	<xs:simpleType name="Link-median-type">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>cd</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:unsignedInt">
+					<xs:minInclusive value="1"/>
+					<xs:maxInclusive value="9"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="curbed"/>
+					<xs:enumeration value="concrete barrier"/>
+					<xs:enumeration value="concrete barrier with visibility screen"/>
+					<xs:enumeration value="guard rail"/>
+					<xs:enumeration value="open grass"/>
+					<xs:enumeration value="open sand"/>
+					<xs:enumeration value="painted median no access"/>
+					<xs:enumeration value="separated roadways"/>
+					<xs:enumeration value="unprotected"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="insert-extension-values-here"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-occupancy_percent -->
+	<!-- .-->
+	<xs:simpleType name="Link-occupancy">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>pct</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedByte">
+			<xs:maxInclusive value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-oversaturated-flag_code -->
+	<!-- .-->
+	<xs:simpleType name="Link-oversaturated-flag">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>cd</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:unsignedInt">
+					<xs:minInclusive value="0"/>
+					<xs:maxInclusive value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="oversaturated"/>
+					<xs:enumeration value="not oversaturated"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="insert-extension-values-here"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-oversaturated-threshold_percent -->
+	<!-- .-->
+	<xs:simpleType name="Link-oversaturated-threshold">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>pct</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedByte">
+			<xs:maxInclusive value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-priority-type_code -->
+	<!-- .-->
+	<xs:simpleType name="Link-priority-type">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>cd</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:int">
+					<xs:minInclusive value="1"/>
+					<xs:maxInclusive value="7"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="special events"/>
+					<xs:enumeration value="snow ice clearance"/>
+					<xs:enumeration value="weather evacuation"/>
+					<xs:enumeration value="defense movements"/>
+					<xs:enumeration value="hazmat"/>
+					<xs:enumeration value="agricultural access"/>
+					<xs:enumeration value="none"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="insert-extension-values-here"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-restriction-axle-count_quantity -->
+	<!-- .-->
+	<xs:simpleType name="Link-restriction-axle-count">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>qty</valueDomainTerm>
+				<units>axles</units>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedByte">
+			<xs:maxInclusive value="20"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-restriction-height_quantity -->
+	<!-- .-->
+	<xs:simpleType name="Link-restriction-height">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>qty</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedShort">
+			<xs:maxInclusive value="2000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-restriction-length_quantity -->
+	<!-- .-->
+	<xs:simpleType name="Link-restriction-length">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>qty</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedShort">
+			<xs:maxInclusive value="6000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-restriction-units_code -->
+	<!-- .-->
+	<xs:simpleType name="Link-restriction-units">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>cd</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:unsignedInt">
+					<xs:minInclusive value="1"/>
+					<xs:maxInclusive value="2"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="centimeters"/>
+					<xs:enumeration value="inches"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="insert-extension-values-here"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-restriction-weight-axle_quantity -->
+	<!-- .-->
+	<xs:simpleType name="Link-restriction-weight-axle">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>qty</valueDomainTerm>
+				<units>kilograms</units>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedShort">
+			<xs:maxInclusive value="20000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-restriction-weight-vehicle_quantity -->
+	<!-- .-->
+	<xs:simpleType name="Link-restriction-weight-vehicle">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>qty</valueDomainTerm>
+				<units>kilograms</units>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedInt">
+			<xs:maxInclusive value="131072"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-restriction-width_quantity -->
+	<!-- .-->
+	<xs:simpleType name="Link-restriction-width">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>qty</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedShort">
+			<xs:maxInclusive value="2000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-route-designator_identifier -->
+	<!-- .-->
+	<xs:simpleType name="Link-route-designator">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>id</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="64"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-shoulder-width_quantity -->
+	<!-- .-->
+	<xs:simpleType name="Link-shoulder-width">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>qty</valueDomainTerm>
+				<units>centimeters</units>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedShort">
+			<xs:maxInclusive value="999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-speed-average_rate -->
+	<!-- .-->
+	<xs:simpleType name="Link-speed-average">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>rt</valueDomainTerm>
+				<units>kilometers per hours</units>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedByte"/>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-speed-limit_rate -->
+	<!-- .-->
+	<xs:simpleType name="Link-speed-limit">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>rt</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedByte"/>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-speed-limit-units_code -->
+	<!-- .-->
+	<xs:simpleType name="Link-speed-limit-units">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>cd</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:unsignedInt">
+					<xs:minInclusive value="1"/>
+					<xs:maxInclusive value="2"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="kilometers per hour"/>
+					<xs:enumeration value="miles per hour"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="insert-extension-values-here"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-status_code -->
+	<!-- .-->
+	<xs:simpleType name="Link-status">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>cd</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:unsignedInt">
+					<xs:minInclusive value="1"/>
+					<xs:maxInclusive value="4"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="no determination"/>
+					<xs:enumeration value="open"/>
+					<xs:enumeration value="restricted"/>
+					<xs:enumeration value="closed"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="insert-extension-values-here"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-stops_rate -->
+	<!-- .-->
+	<xs:simpleType name="Link-stops">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>rt</valueDomainTerm>
+				<units>vehicles per hour</units>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedInt">
+			<xs:maxInclusive value="100000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-surface-condition_code -->
+	<!-- .-->
+	<xs:simpleType name="Link-surface-condition">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>cd</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:int">
+					<xs:minInclusive value="1"/>
+					<xs:maxInclusive value="13"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="dry"/>
+					<xs:enumeration value="wet"/>
+					<xs:enumeration value="snow or slush"/>
+					<xs:enumeration value="ice"/>
+					<xs:enumeration value="oil"/>
+					<xs:enumeration value="debris"/>
+					<xs:enumeration value="rocks"/>
+					<xs:enumeration value="salted"/>
+					<xs:enumeration value="broken pavement"/>
+					<xs:enumeration value="power lines down"/>
+					<xs:enumeration value="material spill"/>
+					<xs:enumeration value="chemical spill"/>
+					<xs:enumeration value="none"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="insert-extension-values-here"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-travel-time_quantity -->
+	<!-- .-->
+	<xs:simpleType name="Link-travel-time">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>qty</valueDomainTerm>
+				<units>seconds</units>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedShort"/>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-travel-time-increase_percent -->
+	<!-- .-->
+	<xs:simpleType name="Link-travel-time-increase">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>pct</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedByte">
+			<xs:maxInclusive value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-type_code -->
+	<!-- .-->
+	<xs:simpleType name="Link-type">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>cd</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:int">
+					<xs:minInclusive value="1"/>
+					<xs:maxInclusive value="20"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="freeway"/>
+					<xs:enumeration value="arterial"/>
+					<xs:enumeration value="collector"/>
+					<xs:enumeration value="local"/>
+					<xs:enumeration value="service road"/>
+					<xs:enumeration value="tunnel"/>
+					<xs:enumeration value="detour"/>
+					<xs:enumeration value="dedicated link"/>
+					<xs:enumeration value="military road"/>
+					<xs:enumeration value="railroad link"/>
+					<xs:enumeration value="air link"/>
+					<xs:enumeration value="ferry"/>
+					<xs:enumeration value="on-ramp"/>
+					<xs:enumeration value="off-ramp"/>
+					<xs:enumeration value="dedicated-hov-link"/>
+					<xs:enumeration value="toll-road"/>
+					<xs:enumeration value="unknown"/>
+					<xs:enumeration value="other"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="insert-extension-values-here"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<!-- .-->
+	<!-- Link-volume_rate -->
+	<!-- .-->
+	<xs:simpleType name="Link-volume">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Link</objectClass>
+				<valueDomainTerm>rt</valueDomainTerm>
+				<units>vehicles per hour</units>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedInt">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="100000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<!-- ************************ -->
+	<!-- NODE Data Elements -->
+	<!-- ************************ -->
+	<!--  -->
+	<!-- Node-links-number_quantity -->
+	<!--  -->
+	<xs:simpleType name="Node-links-number">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Node</objectClass>
+				<valueDomainTerm>qty</valueDomainTerm>
+				<units>links</units>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedShort">
+			<xs:maxInclusive value="999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<!-- Node-type_code -->
+	<!--  -->
+	<xs:simpleType name="Node-type">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Node</objectClass>
+				<valueDomainTerm>cd</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:int">
+					<xs:minInclusive value="1"/>
+					<xs:maxInclusive value="11"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="freeway interchange"/>
+					<xs:enumeration value="arterial with secondary cross street"/>
+					<xs:enumeration value="arterial with crossing arterial"/>
+					<xs:enumeration value="frontage road with arterial"/>
+					<xs:enumeration value="railroad crossing"/>
+					<xs:enumeration value="transit crossing"/>
+					<xs:enumeration value="bus route node"/>
+					<xs:enumeration value="train route node"/>
+					<xs:enumeration value="wharf ferry node"/>
+					<xs:enumeration value="transfer point"/>
+					<xs:enumeration value="pedestrian crossing"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="detector location"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<!--  -->
+	<!-- ************************************* -->
+	<!-- ORGANIZATION Data Elements -->
+	<!-- ************************************* -->
+	<!--  -->
+	<!-- Center-type_code -->
+	<!--  -->
+	<xs:simpleType name="Center-type">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Organization</objectClass>
+				<valueDomainTerm>cd</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:unsignedInt">
+					<xs:minInclusive value="1"/>
+					<xs:maxInclusive value="2"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="fixed"/>
+					<xs:enumeration value="mobile"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="insert-extension-values-here"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<!--  -->
+	<!-- Contact-mailing-address-entry_text -->
+	<!--  -->
+	<xs:simpleType name="Contact-mailing-address-entry">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Organization</objectClass>
+				<valueDomainTerm>txt</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="32"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<!-- Contact-mailing-address-state_text -->
+	<!--  -->
+	<xs:simpleType name="Contact-mailing-address-state">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Organization</objectClass>
+				<valueDomainTerm>txt</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<!-- Organization-function_text -->
+	<!--  -->
+	<xs:simpleType name="Organization-function">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Organization</objectClass>
+				<valueDomainTerm>txt</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="128"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<!-- Organization-information-forwarding-restrictions_code -->
+	<!--  -->
+	<xs:simpleType name="Organization-information-forwarding-restrictions">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Organization</objectClass>
+				<valueDomainTerm>cd</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:unsignedInt">
+					<xs:minInclusive value="1"/>
+					<xs:maxInclusive value="4"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="unrestricted"/>
+					<xs:enumeration value="recipient organization only"/>
+					<xs:enumeration value="law enforcement only"/>
+					<xs:enumeration value="not to public"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="insert-extension-values-here"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<!--  -->
+	<!-- Organization-location-fips_text -->
+	<!--  -->
+	<xs:simpleType name="Organization-location-fips">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Organization</objectClass>
+				<valueDomainTerm>txt</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:length value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<!-- Organization-resource-identifier_identifier -->
+	<!--  -->
+	<xs:simpleType name="Organization-resource-identifier">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Organization</objectClass>
+				<valueDomainTerm>id</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="32"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<!-- Organization-resource-name_text -->
+	<!--  -->
+	<xs:simpleType name="Organization-resource-name">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Organization</objectClass>
+				<valueDomainTerm>txt</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="128"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<!-- *************************** -->
+	<!-- ROUTE Data Elements -->
+	<!-- *************************** -->
+	<!-- .-->
+	<!-- Route-type_code -->
+	<!-- .-->
+	<xs:simpleType name="Route-type">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>Route</objectClass>
+				<valueDomainTerm>cd</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:unsignedInt">
+					<xs:minInclusive value="1"/>
+					<xs:maxInclusive value="14"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="travel"/>
+					<xs:enumeration value="transit"/>
+					<xs:enumeration value="detour"/>
+					<xs:enumeration value="alternate"/>
+					<xs:enumeration value="evacuation"/>
+					<xs:enumeration value="snow"/>
+					<xs:enumeration value="emergency vehicles"/>
+					<xs:enumeration value="managed lanes"/>
+					<xs:enumeration value="flood"/>
+					<xs:enumeration value="scenic"/>
+					<xs:enumeration value="hazmat"/>
+					<xs:enumeration value="truck"/>
+					<xs:enumeration value="bicycle"/>
+					<xs:enumeration value="walking"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="insert-extension-values-here"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<!--  -->
+	<!-- ********************************************** -->
+	<!-- Transportation Network Data Elements  -->
+	<!-- ********************************************** -->
+	<!--  -->
+	<!-- Transportation-network-identifier_identifier -->
+	<!--  -->
+	<xs:simpleType name="Transportation-network-identifier">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>TransportationNetwork</objectClass>
+				<valueDomainTerm>id</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="32"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<!-- Transportation-network-name_text -->
+	<!--  -->
+	<xs:simpleType name="Transportation-network-name">
+		<xs:annotation>
+			<xs:documentation>
+				<objectClass>RoadwayNetwork</objectClass>
+				<valueDomainTerm>txt</valueDomainTerm>
+				<units/>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="256"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

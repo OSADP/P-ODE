@@ -1,0 +1,1673 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns="http://cattlab.umd.edu/schema/ritisFilter/other"
+	xmlns:ai="http://jaxb.dev.java.net/plugin/if_insertion"
+	xmlns:gml="http://www.opengis.net/gml/3.2"
+	xmlns:gtfs="http://cattlab.umd.edu/schema/ritisFilter/gtfs"
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+	xmlns:rf="http://cattlab.umd.edu/schema/ritisFilter" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	jaxb:version="2.0" targetNamespace="http://cattlab.umd.edu/schema/ritisFilter/other"
+	version="1.1.1">
+
+	<xs:import namespace="http://cattlab.umd.edu/schema/ritisFilter"
+		schemaLocation="ritisFilterEventOutput.xsd"/>
+	<xs:import namespace="http://cattlab.umd.edu/schema/ritisFilter/gtfs"
+		schemaLocation="rf-gtfs.xsd"/>
+
+	<xs:annotation>
+		<xs:appinfo>
+			<jaxb:schemaBindings>
+				<jaxb:package name="edu.umd.cattlab.schema.ritisFilter.other"/>
+			</jaxb:schemaBindings>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<xs:element name="tmcResponse" type="tmcResponse"/>
+	<xs:element name="dmsDevices" type="dmsDevices"/>
+	<xs:element name="detectorDevices" type="detectorDevices"/>
+	<xs:element name="deviceData" type="device-data"/>
+	<xs:element name="clarusData" type="clarus-data"/>
+	<xs:element name="evacuationSupportData" type="evacuationSupportData"/>
+	<xs:element name="vwsData" type="vwsData"/>
+	<xs:element name="eventLaneCountResponse" type="eventLaneCountResponse"/>
+
+
+	<xs:element name="vehicleData" type="vehicle-data"/>
+	<xs:complexType name="vehicle-location">
+		<xs:complexContent>
+			<xs:extension base="rf:pointLocationType">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="locationDetails">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element minOccurs="0" name="heading" type="xs:decimal"/>
+								<xs:element minOccurs="0" name="bearing" type="xs:decimal"/>
+								<xs:element minOccurs="0" name="odometer"
+									type="rf:nonNegativeDecimal"/>
+								<xs:element minOccurs="0" name="speed" type="rf:nonNegativeDecimal"
+								/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+
+		</xs:complexContent>
+
+	</xs:complexType>
+	<xs:complexType name="vehicle-data">
+		<xs:sequence>
+			<xs:element name="header" type="rf:header"/>
+			<xs:element name="vehicles">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="vehicle"
+							type="vehicle"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="vehicle">
+		<xs:sequence>
+			<xs:element name="head">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="id" type="xs:normalizedString"/>
+						<xs:element minOccurs="0" name="identifier" type="xs:normalizedString"/>
+						<xs:element name="name" type="xs:string" minOccurs="0"/>
+						<xs:element minOccurs="0" name="group" type="xs:normalizedString"/>
+						<xs:element name="reportingAgency" type="xs:normalizedString"/>
+						<xs:element name="reportingSystem" type="xs:normalizedString"/>
+						<xs:element minOccurs="0" name="opCenter" type="xs:normalizedString"/>
+						<xs:element name="type">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="standardType" type="vehicleType"/>
+									<xs:element minOccurs="0" name="agencyType"
+										type="xs:normalizedString"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="dates">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="updated" type="xs:dateTime"/>
+									<xs:choice minOccurs="0">
+										<xs:element minOccurs="0" name="online" type="xs:dateTime"/>
+										<xs:element minOccurs="0" name="offline" type="xs:dateTime"
+										/>
+									</xs:choice>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element minOccurs="0" name="url" type="xs:anyURI"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element minOccurs="0" name="details" type="rf:vehicle"/>
+			<xs:element name="location" type="vehicle-location"/>
+			<xs:element minOccurs="0" name="passengers">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="onBoard" type="xs:nonNegativeInteger">
+							<xs:annotation>
+								<xs:documentation>The number of passengers on board based on the more recent stop.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element minOccurs="0" name="boarded" type="xs:nonNegativeInteger">
+							<xs:annotation>
+								<xs:documentation>The number of passengers who boarded at the more recent stop.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element minOccurs="0" name="alighted" type="xs:nonNegativeInteger">
+							<xs:annotation>
+								<xs:documentation>The number of passengers who alighted at the more recent stop.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="negativeOneOrGreater">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="-1"/>
+
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="directionType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="north"/>
+			<xs:enumeration value="south"/>
+			<xs:enumeration value="east"/>
+			<xs:enumeration value="west"/>
+			<xs:enumeration value="northeast"/>
+			<xs:enumeration value="northwest"/>
+			<xs:enumeration value="southeast"/>
+			<xs:enumeration value="southwest"/>
+			<xs:enumeration value="reversible"/>
+			<xs:enumeration value="inner loop"/>
+			<xs:enumeration value="outer loop"/>
+			<xs:enumeration value="both"/>
+			<xs:enumeration value="unknown"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="vehicleType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="unknown"/>
+			<xs:enumeration value="other"/>
+			<xs:enumeration value="bus"/>
+			<xs:enumeration value="subway train"/>
+			<xs:enumeration value="train"/>
+			<xs:enumeration value="taxi"/>
+			<xs:enumeration value="ferry"/>
+			<xs:enumeration value="cable car"/>
+			<xs:enumeration value="suspended cable car"/>
+			<xs:enumeration value="airplane"/>
+			<xs:enumeration value="helicopter"/>
+			<xs:enumeration value="emergency medical"/>
+			<xs:enumeration value="fire and rescue"/>
+			<xs:enumeration value="law enforcement"/>
+			<xs:enumeration value="dot"/>
+			<xs:enumeration value="tow truck"/>
+			<xs:enumeration value="pickup truck"/>
+			<xs:enumeration value="dump truck"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="associatedEvents">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" minOccurs="1" name="event" type="rf:association">
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="tmcResponse">
+		<xs:sequence>
+			<xs:element name="header" type="rf:header"/>
+			<xs:element name="tmcs">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="tmc" type="tmc"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="tmc">
+		<xs:sequence>
+			<xs:element name="head">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="id" type="xs:string"/>
+						<xs:element minOccurs="0" name="type" type="xs:string"/>
+						<xs:element minOccurs="0" name="version" type="xs:integer"/>
+						<xs:element name="roadOrder" type="xs:integer"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element minOccurs="0" name="location" type="rf:location"/>
+			<xs:element minOccurs="0" name="length" type="rf:valueUnitType"/>
+			<xs:element minOccurs="0" name="measurements">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="measurement">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="timestamp" type="xs:dateTime"/>
+									<xs:element name="speed" type="xs:nonNegativeInteger"/>
+									<xs:element name="averageSpeed" type="xs:nonNegativeInteger"/>
+									<xs:element name="referenceSpeed" type="xs:nonNegativeInteger"/>
+									<xs:element name="confidenceScore" type="xs:nonNegativeInteger"/>
+									<xs:element name="travelTime" type="rf:valueUnitType"/>
+									<xs:element name="freeFlowTravelTime" type="rf:valueUnitType"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<xs:complexType name="dmsDevices">
+		<xs:sequence>
+			<xs:element name="header" type="rf:header"/>
+			<xs:element name="devices">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="dmsDevice"
+							type="dmsDevice"> </xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="dmsDevice">
+		<xs:sequence>
+			<xs:element name="head">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="id" type="xs:string"/>
+						<xs:element minOccurs="0" name="name" type="xs:string"/>
+						<xs:element name="reportingAgency" type="xs:normalizedString"/>
+						<xs:element name="reportingSystem" type="xs:normalizedString"/>
+						<xs:element name="type" type="dmsType"/>
+						<xs:element minOccurs="0" name="lastCommTime" type="xs:dateTime"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="status" type="dmsStatus"/>
+			<xs:element name="linkDirection" type="xs:nonNegativeInteger"/>
+			<xs:element name="location" type="rf:location"/>
+			<xs:element maxOccurs="1" minOccurs="0" name="messages" type="messages"/>
+			<xs:element maxOccurs="1" minOccurs="0" name="associatedEvents" type="associatedEvents"
+			/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="messages">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" name="dmsMessage" type="dmsMessage"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="dmsMessage">
+
+		<xs:sequence>
+			<xs:element name="start-time" type="xs:dateTime"/>
+			<xs:element minOccurs="0" name="end-time" type="xs:dateTime"/>
+			<xs:element name="message" type="xs:string"/>
+			<xs:element name="beacons" type="xs:int"/>
+			<xs:element minOccurs="0" name="event-id" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="dmsType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="unknown"/>
+			<xs:enumeration value="non-specified non-portable sign"/>
+			<xs:enumeration value="black out sign"/>
+			<xs:enumeration value="changeable message sign"/>
+			<xs:enumeration value="variable message sign with character matrix setup"/>
+			<xs:enumeration value="variable message sign with line matrix setup"/>
+			<xs:enumeration value="variable message sign with full matrix setup"/>
+			<xs:enumeration value="non-specified portable sign"/>
+			<xs:enumeration value="portable black out sign"/>
+			<xs:enumeration value="portable changeable message sign"/>
+			<xs:enumeration value="portable variable message sign with character matrix setup"/>
+			<xs:enumeration value="portable variable message sign with line matrix setup"/>
+			<xs:enumeration value="portable variable message sign with full matrix setup"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="beaconType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="on"/>
+			<xs:enumeration value="off"/>
+			<xs:enumeration value="unknown"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<xs:simpleType name="dmsStatus">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="on"/>
+			<xs:enumeration value="off"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="detectorDevices">
+		<xs:sequence>
+			<xs:element name="header" type="rf:header"/>
+			<xs:element name="devices">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="detectorDevice"
+							type="detectorDevice"> </xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="detectorDevice">
+		<xs:sequence>
+			<xs:element name="head">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="id" type="xs:string"/>
+						<xs:element name="name" type="xs:string"/>
+						<xs:element name="reportingAgency" type="xs:normalizedString"/>
+						<xs:element name="rtmc" type="xs:normalizedString"/>
+						<xs:element name="region" type="xs:normalizedString"/>
+						<xs:element name="type" type="detectorType"/>
+						<xs:element minOccurs="0" name="network" type="xs:normalizedString"/>
+						<xs:element minOccurs="0" name="pollingInterval" type="xs:positiveInteger"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="location" type="rf:location"/>
+			<xs:element minOccurs="0" name="zones" type="zones"/>
+			<xs:element maxOccurs="1" minOccurs="0" name="lanes" type="lanes"/>
+			<xs:element name="offsetAngle" type="xs:double"/>
+			<xs:element minOccurs="0" name="links">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" name="link" type="link"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="link">
+		<xs:sequence>
+			<xs:element name="id" type="xs:normalizedString"/>
+			<xs:element name="linkIdentifier" type="xs:normalizedString"/>
+			<xs:element name="type" type="linkTypeRestriction"/>
+			<xs:element name="length" type="rf:valueUnitType"/>
+			<xs:element name="location" type="rf:location"/>
+			<xs:element name="linkData">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" name="linkDataItem">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="direction" type="rf:directionType"/>
+									<xs:element name="detectionMethod"
+										type="detectionMethodRestriction"/>
+									<xs:element name="dataType" type="dataTypeRestriction"/>
+									<xs:element name="status" type="linkStatusRestriction"/>
+									<xs:element minOccurs="0" name="delay" type="xs:int"/>
+									<xs:element name="travelTime" type="xs:int"/>
+									<xs:element name="travelTimeIncrease" type="xs:int"/>
+									<xs:element name="averageSpeed" type="xs:int"/>
+									<xs:element minOccurs="0" name="currentDelay" type="xs:int"/>
+									<xs:element minOccurs="0" name="predictedDelay" type="xs:int"/>
+								</xs:sequence>
+								<xs:attribute name="timestamp"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="zones">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" minOccurs="1" name="zone" type="zone"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="zone">
+		<xs:sequence>
+			<xs:element name="zoneNumber" type="xs:nonNegativeInteger"/>
+			<xs:element minOccurs="0" name="detectorIdentifier" type="xs:string"/>
+			<xs:element minOccurs="0" name="numLanes" type="negativeOneOrGreater"/>
+			<xs:element minOccurs="0" name="referenceSpeed" type="xs:nonNegativeInteger"/>
+			<xs:element name="zoneLocation" type="rf:location"/>
+
+			<xs:element name="zoneData">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" minOccurs="1" name="zoneDataItem"
+							type="zoneDataItem"> </xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element minOccurs="0" name="type" type="xs:normalizedString"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="zoneDataItem">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="measurementStart" type="xs:dateTime"/>
+			<xs:element minOccurs="0" name="measurementEnd" type="xs:dateTime"/>
+			<xs:element minOccurs="0" name="measurementDuration" type="xs:positiveInteger"/>
+			<xs:element minOccurs="0" name="effectiveDate" type="xs:dateTime"/>
+			<xs:element minOccurs="0" name="expirationDate" type="xs:dateTime"/>
+			<xs:element name="vehicleCount" type="xs:nonNegativeInteger"/>
+			<xs:element name="speed" type="xs:nonNegativeInteger"/>
+			<xs:element name="occupancy" type="negativeOneOrGreater"/>
+			<xs:element name="quality" type="xs:nonNegativeInteger"/>
+			<xs:element name="status" type="zoneStatus"/>
+			<xs:element name="bearing" type="xs:nonNegativeInteger"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="detectorType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="unknown"/>
+			<xs:enumeration value="other"/>
+			<xs:enumeration value="rtms"/>
+			<xs:enumeration value="acoustic"/>
+			<xs:enumeration value="single loop"/>
+			<xs:enumeration value="trap"/>
+			<xs:enumeration value="170e"/>
+			<xs:enumeration value="det"/>
+			<xs:enumeration value="det t"/>
+			<xs:enumeration value="piezo"/>
+			<xs:enumeration value="piezo p"/>
+			<xs:enumeration value="magnetometer (sensys)"/>
+			<xs:enumeration value="microwave"/>
+			<xs:enumeration value="atr"/>
+			<xs:enumeration value="radar"/>
+			<xs:enumeration value="lpr"/>
+			<xs:enumeration value="avi"/>
+			<xs:enumeration value="obe"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="zoneStatus">
+		<xs:annotation>
+			<xs:documentation>valid - data is valid and usable; invalid -
+				data is invalid and unusable; incomplete - data is incomplete and
+				partially usable; unknown - status is unknown; idle - detector's
+				last measurement was far in the past</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="valid"/>
+			<xs:enumeration value="invalid"/>
+			<xs:enumeration value="incomplete"/>
+			<xs:enumeration value="unknown"/>
+			<xs:enumeration value="idle"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="weatherType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="clear"/>
+			<xs:enumeration value="cloudy"/>
+			<xs:enumeration value="sunny"/>
+			<xs:enumeration value="snow"/>
+			<xs:enumeration value="rain"/>
+			<xs:enumeration value="icy"/>
+			<xs:enumeration value="fog"/>
+			<xs:enumeration value="sleet"/>
+			<xs:enumeration value="hail"/>
+			<xs:enumeration value="other"/>
+			<xs:enumeration value="heat wave"/>
+			<xs:enumeration value="unknown"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="hazmatLevelType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="minor"/>
+			<xs:enumeration value="major"/>
+			<xs:enumeration value="unknown"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="crossLocationType">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="0" name="startRoad" type="xs:string"/>
+			<xs:element maxOccurs="1" minOccurs="0" name="startMileMarker" type="xs:double"/>
+			<xs:element maxOccurs="1" minOccurs="0" name="startLatitude" type="xs:double"/>
+			<xs:element maxOccurs="1" minOccurs="0" name="startLongitude" type="xs:double"/>
+			<xs:element maxOccurs="1" minOccurs="0" name="startExit" type="xs:nonNegativeInteger"/>
+			<xs:element maxOccurs="1" minOccurs="0" name="endRoad" type="xs:string"/>
+			<xs:element maxOccurs="1" minOccurs="0" name="endMileMarker" type="xs:double"/>
+			<xs:element maxOccurs="1" minOccurs="0" name="endLatitude" type="xs:double"/>
+
+			<xs:element maxOccurs="1" minOccurs="0" name="endLongitude" type="xs:double"/>
+			<xs:element maxOccurs="1" minOccurs="0" name="endExit" type="xs:nonNegativeInteger"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="laneData">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" minOccurs="1" name="lanes" type="lanes"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="lanes">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" minOccurs="1" name="lane" type="zoneDataItem">
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="direction" type="directionType"/>
+		<xs:attribute name="detectorIdentifier" type="xs:string"/>
+	</xs:complexType>
+
+	<xs:complexType name="clarus-data">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="1" name="header" type="rf:header"/>
+			<xs:element maxOccurs="1" minOccurs="1" name="sites">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="site" type="site"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="site">
+		<xs:sequence>
+			<xs:element name="head">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="id" type="xs:string"/>
+						<xs:element name="name" type="xs:string"/>
+						<xs:element name="state-site-id" type="xs:string"/>
+						<xs:element minOccurs="0" name="state-system-id" type="xs:string"/>
+						<xs:element minOccurs="0" name="climate-id" type="xs:int"/>
+						<xs:element name="contributor-id" type="xs:int"/>
+						<xs:element name="contributor" type="xs:string"/>
+						<xs:element name="reportingAgency" type="xs:normalizedString"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="localtion" type="rf:location"/>
+			<xs:element minOccurs="0" name="access-directions" type="xs:string"/>
+			<xs:element minOccurs="0" name="representativeness" type="xs:string"/>
+			<xs:element minOccurs="0" name="obstructions" type="xs:string"/>
+			<xs:element minOccurs="0" name="landscape" type="xs:string"/>
+			<xs:element minOccurs="0" name="access-controlled" type="xs:int"/>
+			<xs:element minOccurs="0" name="terrain-slope" type="xs:double"/>
+			<xs:element minOccurs="0" name="terrain-slope-direction" type="xs:string"/>
+			<xs:element minOccurs="0" name="wind-roughness-class" type="xs:string"/>
+			<xs:element minOccurs="0" name="soil-type" type="xs:int"/>
+			<xs:element maxOccurs="1" minOccurs="0" name="stations">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="station"
+							type="station"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="detectionMethodRestriction">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="transit agency"/>
+			<xs:enumeration value="traffic agency"/>
+			<xs:enumeration value="commercial traffic service"/>
+			<xs:enumeration value="unknown motorist observer"/>
+			<xs:enumeration value="commercial fleet operator"/>
+			<xs:enumeration value="dot"/>
+			<xs:enumeration value="automobile club patrol"/>
+			<xs:enumeration value="spotter aircraft"/>
+			<xs:enumeration value="breakdown service private"/>
+			<xs:enumeration value="camera observation"/>
+			<xs:enumeration value="emergency service patrol non police"/>
+			<xs:enumeration value="inductive loop monitoring station"/>
+			<xs:enumeration value="microwave monitoring station"/>
+			<xs:enumeration value="mobile platform measurement"/>
+			<xs:enumeration value="mobile telephone caller previously unknown"/>
+			<xs:enumeration value="police patrol"/>
+			<xs:enumeration value="public and private utilities"/>
+			<xs:enumeration value="road condition model"/>
+			<xs:enumeration value="registered motorist observer"/>
+			<xs:enumeration value="roadside telephone caller"/>
+			<xs:enumeration value="snowplow report"/>
+			<xs:enumeration value="traffic monitoring station"/>
+			<xs:enumeration value="video processing monitoring station"/>
+			<xs:enumeration value="vehicle probe measurement"/>
+			<xs:enumeration value="weather model"/>
+			<xs:enumeration value="unknown"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="dataTypeRestriction">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="actual"/>
+			<xs:enumeration value="reconstructed"/>
+			<xs:enumeration value="historical"/>
+			<xs:enumeration value="predicted"/>
+			<xs:enumeration value="smoothed"/>
+			<xs:enumeration value="averaged"/>
+			<xs:enumeration value="estimated"/>
+			<xs:enumeration value="unknown"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="linkStatusRestriction">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="no determination"/>
+			<xs:enumeration value="open"/>
+			<xs:enumeration value="restricted"/>
+			<xs:enumeration value="closed"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="linkTypeRestriction">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="freeway"/>
+			<xs:enumeration value="arterial"/>
+			<xs:enumeration value="collector"/>
+			<xs:enumeration value="local"/>
+			<xs:enumeration value="service road"/>
+			<xs:enumeration value="tunnel"/>
+			<xs:enumeration value="detour"/>
+			<xs:enumeration value="dedicated link"/>
+			<xs:enumeration value="military road"/>
+			<xs:enumeration value="railroad link"/>
+			<xs:enumeration value="air link"/>
+			<xs:enumeration value="ferry"/>
+			<xs:enumeration value="on-ramp"/>
+			<xs:enumeration value="off-ramp"/>
+			<xs:enumeration value="dedicated-hov-link"/>
+			<xs:enumeration value="toll-road"/>
+			<xs:enumeration value="unknown"/>
+			<xs:enumeration value="other"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<xs:complexType name="station">
+		<xs:sequence>
+			<xs:element name="station-id" type="xs:int"/>
+			<xs:element name="station-code" type="xs:string"/>
+			<xs:element name="location" type="rf:location"> </xs:element>
+			<xs:element minOccurs="0" name="station-category" type="xs:string"/>
+			<xs:element minOccurs="0" name="description" type="xs:string"/>
+			<xs:element minOccurs="0" name="station-type" type="xs:int"/>
+			<xs:element minOccurs="0" name="geo-datum" type="xs:string"/>
+			<xs:element minOccurs="0" name="power-type" type="xs:string"/>
+			<xs:element minOccurs="0" name="door-open" type="xs:int"/>
+			<xs:element minOccurs="0" name="battery-status" type="xs:int"/>
+			<xs:element minOccurs="0" name="line-volts" type="xs:int"/>
+			<xs:element minOccurs="0" name="maint-contact-id" type="xs:int"/>
+			<xs:element minOccurs="0" name="maint-area" type="xs:string"/>
+			<xs:element minOccurs="0" name="maint-prev-freq" type="xs:string"/>
+			<xs:element minOccurs="0" name="maint-calib-freq" type="xs:string"/>
+			<xs:element minOccurs="0" name="maint-status" type="xs:int"/>
+			<xs:element minOccurs="0" name="maint-install-date" type="xs:dateTime"/>
+			<xs:element minOccurs="0" name="rpu-num-cards" type="xs:int"/>
+			<xs:element minOccurs="0" name="rpu-comm-type" type="xs:int"/>
+			<xs:element minOccurs="0" name="rpu-phone" type="xs:string"/>
+			<xs:element minOccurs="0" name="rpu-ip" type="xs:string"/>
+			<xs:element minOccurs="0" name="rpu-mfr" type="xs:string"/>
+			<xs:element minOccurs="0" name="obs-coll-freq" type="xs:int"/>
+			<xs:element minOccurs="0" name="obs-coll-offset" type="xs:int"/>
+			<xs:element minOccurs="0" name="obs-trans-freq" type="xs:int"/>
+			<xs:element minOccurs="0" name="obs-trans-offset" type="xs:int"/>
+			<xs:element minOccurs="0" name="obs-trans-format" type="xs:string"/>
+			<xs:element minOccurs="0" name="rpu-utc-offset" type="xs:int"/>
+			<xs:element minOccurs="0" name="rpu-dst" type="xs:int"/>
+			<xs:element minOccurs="0" name="most-recent-observation" type="xs:dateTime"/>
+			<xs:element maxOccurs="1" minOccurs="0" name="sensors">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="sensor" type="sensor">
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="alerts-data">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="1" name="header" type="rf:header"/>
+			<xs:element maxOccurs="1" minOccurs="1" name="alerts">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="alert" type="alert"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="alert">
+		<xs:sequence>
+			<xs:element name="head">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="id" type="xs:normalizedString"/>
+						<xs:element name="identifier" type="xs:normalizedString"/>
+						<xs:element name="sender" type="xs:normalizedString"/>
+						<xs:element minOccurs="0" name="source" type="xs:normalizedString"/>
+						<xs:element name="headline" type="xs:normalizedString"/>
+						<xs:element name="messageType" type="xs:normalizedString"/>
+						<xs:element name="timestamps">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="sent" type="xs:dateTime"/>
+									<xs:element name="effective" type="xs:dateTime"/>
+									<xs:element name="onset" type="xs:dateTime"/>
+									<xs:element name="expired" type="xs:dateTime"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="locations">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" name="location" type="rf:location"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="information">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="category">
+							<xs:simpleType>
+								<xs:restriction base="xs:normalizedString">
+									<xs:enumeration value="Geo"/>
+									<xs:enumeration value="Met"/>
+									<xs:enumeration value="Safety"/>
+									<xs:enumeration value="Security"/>
+									<xs:enumeration value="Rescue"/>
+									<xs:enumeration value="Fire"/>
+									<xs:enumeration value="Health"/>
+									<xs:enumeration value="Env"/>
+									<xs:enumeration value="Transport"/>
+									<xs:enumeration value="Infra"/>
+									<xs:enumeration value="Cbrne"/>
+									<xs:enumeration value="Other"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="status">
+							<xs:simpleType>
+								<xs:restriction base="xs:normalizedString">
+									<xs:enumeration value="Actual"/>
+									<xs:enumeration value="Exercise"/>
+									<xs:enumeration value="System"/>
+									<xs:enumeration value="Test"/>
+									<xs:enumeration value="Draft"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="type">
+							<xs:simpleType>
+								<xs:restriction base="xs:normalizedString">
+									<xs:enumeration value="Flash Flood Warning"/>
+									<xs:enumeration value="Flood Advisory"/>
+									<xs:enumeration value="Flash Flood Watch"/>
+									<xs:enumeration value="Tornado Watch"/>
+									<xs:enumeration value="Dense Fog Advisory"/>
+									<xs:enumeration value="Hydrologic Advisory"/>
+									<xs:enumeration value="High Surf Advisory"/>
+									<xs:enumeration value="Severe Thunderstorm Watch"/>
+									<xs:enumeration value="Severe Thunderstorm Warning"/>
+									<xs:enumeration value="Severe Weather Statement"/>
+									<xs:enumeration value="Rip Current Statement"/>
+									<xs:enumeration value="Flood Warning"/>
+									<xs:enumeration value="Special Weather Statement"/>
+									<xs:enumeration value="Air Quality Alert"/>
+									<xs:enumeration value="Hydrologic Outlook"/>
+									<xs:enumeration value="Lake Wind Advisory"/>
+									<xs:enumeration value="Wind Advisory"/>
+									<xs:enumeration value="Red Flag Warning"/>
+									<xs:enumeration value="High Wind Warning"/>
+									<xs:enumeration value="Heat Advisory"/>
+									<xs:enumeration value="Tornado Warning"/>
+									<xs:enumeration value="Dust Storm Warning"/>
+									<xs:enumeration value="Excessive Heat Watch"/>
+									<xs:enumeration value="Excessive Heat Warning"/>
+									<xs:enumeration value="Fire Weather Watch"/>
+									<xs:enumeration value="Dense Smoke Advisory"/>
+									<xs:enumeration value="Lakeshore Flood Warning"/>
+									<xs:enumeration value="Coastal Flood Warning"/>
+									<xs:enumeration value="Flood Watch"/>
+									<xs:enumeration value="Coastal Flood Statement"/>
+									<xs:enumeration value="Coastal Flood Advisory"/>
+									<xs:enumeration value="911 Telephone Outage"/>
+									<xs:enumeration value="Unknown"/>
+									<xs:enumeration value="Child Abduction Emergency"/>
+									<xs:enumeration value="Civil Emergency Message"/>
+									<xs:enumeration value="Blank"/>
+									<xs:enumeration value="Lakeshore Flood Statement"/>
+									<xs:enumeration value="Tropical Storm Warning"/>
+									<xs:enumeration value="Hurricane Statement"/>
+									<xs:enumeration value="Tropical Storm Watch"/>
+									<xs:enumeration value="Extreme Fire Danger"/>
+									<xs:enumeration value="Frost Advisory"/>
+									<xs:enumeration value="Evacuation Immediate"/>
+									<xs:enumeration value="High Surf Warning"/>
+									<xs:enumeration value="Hurricane Watch"/>
+									<xs:enumeration value="Hurricane Warning"/>
+									<xs:enumeration value="High Wind Watch"/>
+									<xs:enumeration value="Winter Weather Advisory"/>
+									<xs:enumeration value="Fire Warning"/>
+									<xs:enumeration value="Freeze Watch"/>
+									<xs:enumeration value="Freeze Warning"/>
+									<xs:enumeration value="Coastal Flood Watch"/>
+									<xs:enumeration value="Tsunami Warning"/>
+									<xs:enumeration value="Test"/>
+									<xs:enumeration value="Law Enforcement Warning"/>
+									<xs:enumeration value="Lakeshore Flood Advisory"/>
+									<xs:enumeration value="Winter Storm Watch"/>
+									<xs:enumeration value="Winter Storm Warning"/>
+									<xs:enumeration value="Blowing Dust Advisory"/>
+									<xs:enumeration value="Hard Freeze Warning"/>
+									<xs:enumeration value="Flash Flood Statement"/>
+									<xs:enumeration value="Hard Freeze Watch"/>
+									<xs:enumeration value="Flood Statement"/>
+									<xs:enumeration value="Blizzard Watch"/>
+									<xs:enumeration value="Blizzard Warning"/>
+									<xs:enumeration value="Freezing Rain Advisory"/>
+									<xs:enumeration value="Lake Effect Snow Advisory"/>
+									<xs:enumeration value="Wind Chill Advisory"/>
+									<xs:enumeration value="Lake Effect Snow Watch"/>
+									<xs:enumeration value="Lake Effect Snow Warning"/>
+									<xs:enumeration value="Avalanche Watch"/>
+									<xs:enumeration value="Avalanche Warning"/>
+									<xs:enumeration value="Freezing Fog Advisory"/>
+									<xs:enumeration value="Air Stagnation Advisory"/>
+									<xs:enumeration value="Wind Chill Warning"/>
+									<xs:enumeration value="Lakeshore Flood Watch"/>
+									<xs:enumeration value="Wind Chill Watch"/>
+									<xs:enumeration value="Local Area Emergency"/>
+									<xs:enumeration value="Ice Storm Warning"/>
+									<xs:enumeration value="Beach Hazards Statement"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="severity">
+							<xs:simpleType>
+								<xs:restriction base="xs:normalizedString">
+									<xs:enumeration value="Extreme"/>
+									<xs:enumeration value="Severe"/>
+									<xs:enumeration value="Moderate"/>
+									<xs:enumeration value="Minor"/>
+									<xs:enumeration value="Unknown"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="certainty">
+							<xs:simpleType>
+								<xs:restriction base="xs:normalizedString">
+									<xs:enumeration value="Observed"/>
+									<xs:enumeration value="Likely"/>
+									<xs:enumeration value="Possible"/>
+									<xs:enumeration value="Unlikely"/>
+									<xs:enumeration value="Unknown"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="urgency">
+							<xs:simpleType>
+								<xs:restriction base="xs:normalizedString">
+									<xs:enumeration value="Immediate"/>
+									<xs:enumeration value="Expected"/>
+									<xs:enumeration value="Future"/>
+									<xs:enumeration value="Past"/>
+									<xs:enumeration value="Unknown"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="scope">
+							<xs:simpleType>
+								<xs:restriction base="xs:normalizedString">
+									<xs:enumeration value="Public"/>
+									<xs:enumeration value="Restricted"/>
+									<xs:enumeration value="Private"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element minOccurs="0" name="notes">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="description" type="xs:normalizedString"/>
+						<xs:element name="instruction" type="xs:normalizedString"/>
+						<xs:element name="note" type="xs:normalizedString"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element minOccurs="0" name="contact" type="rf:contactType"/>
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<xs:complexType name="device-data">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="1" name="header" type="rf:header"/>
+			<xs:element maxOccurs="1" minOccurs="1" name="devices">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="device" type="device"
+						/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="sensor">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="sensor-id" type="xs:int"/>
+			<xs:element minOccurs="0" name="sensor-index" type="xs:int"/>
+			<xs:element name="observation-type">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="essMobileObservationPavement"/>
+						<xs:enumeration value="essPaveTreatProductType"/>
+						<xs:enumeration value="essPaveTreatProductForm"/>
+						<xs:enumeration value="essPercentProductMix"/>
+						<xs:enumeration value="essPaveTreatmentAmount"/>
+						<xs:enumeration value="essCO"/>
+						<xs:enumeration value="essCO2"/>
+						<xs:enumeration value="essNO"/>
+						<xs:enumeration value="essNO2"/>
+						<xs:enumeration value="essSO2"/>
+						<xs:enumeration value="essO3"/>
+						<xs:enumeration value="icePercent"/>
+						<xs:enumeration value="precip10min"/>
+						<xs:enumeration value="precipIntensity"/>
+						<xs:enumeration value="precipType"/>
+						<xs:enumeration value="essInstantaneousSolarRadiation"/>
+						<xs:enumeration value="essSurfaceWaterDepth"/>
+						<xs:enumeration value="essSurfaceStatus2"/>
+						<xs:enumeration value="essLatitude"/>
+						<xs:enumeration value="essLongitude"/>
+						<xs:enumeration value="essVehicleBearing"/>
+						<xs:enumeration value="essVehicleOdometer"/>
+						<xs:enumeration value="essReferenceHeight"/>
+						<xs:enumeration value="essAtmosphericPressure"/>
+						<xs:enumeration value="windSensorAvgSpeed"/>
+						<xs:enumeration value="windSensorAvgDirection"/>
+						<xs:enumeration value="windSensorSpotSpeed"/>
+						<xs:enumeration value="windSensorSpotDirection"/>
+						<xs:enumeration value="windSensorGustSpeed"/>
+						<xs:enumeration value="windSensorGustDirection"/>
+						<xs:enumeration value="windSensorSituation"/>
+						<xs:enumeration value="essAirTemperature"/>
+						<xs:enumeration value="essWetBulbTemp"/>
+						<xs:enumeration value="essDewpointTemp"/>
+						<xs:enumeration value="essMaxTemp"/>
+						<xs:enumeration value="essMinTemp"/>
+						<xs:enumeration value="essRelativeHumidity"/>
+						<xs:enumeration value="essAdjacentSnowDepth"/>
+						<xs:enumeration value="essRoadwaySnowDepth"/>
+						<xs:enumeration value="essRoadwaySnowpackDepth"/>
+						<xs:enumeration value="essPrecipYesNo"/>
+						<xs:enumeration value="essPrecipRate"/>
+						<xs:enumeration value="essSnowfallAccumRate"/>
+						<xs:enumeration value="essPrecipSituation"/>
+						<xs:enumeration value="essPrecipitationStartTime"/>
+						<xs:enumeration value="essPrecipitationEndTime"/>
+						<xs:enumeration value="essPrecipitationOneHour"/>
+						<xs:enumeration value="essPrecipitationThreeHours"/>
+						<xs:enumeration value="essPrecipitationSixHours"/>
+						<xs:enumeration value="essPrecipitationTwelveHours"/>
+						<xs:enumeration value="essPrecipitation24Hours"/>
+						<xs:enumeration value="essCloudSituation"/>
+						<xs:enumeration value="essTotalRadiation"/>
+						<xs:enumeration value="essTotalRadiationPeriod"/>
+						<xs:enumeration value="essVisibilitySituation"/>
+						<xs:enumeration value="essSurfaceStatus"/>
+						<xs:enumeration value="essSurfaceTemperature"/>
+						<xs:enumeration value="essPavementTemperature"/>
+						<xs:enumeration value="essSurfaceSalinity"/>
+						<xs:enumeration value="essSurfaceFreezePoint"/>
+						<xs:enumeration value="essSurfaceBlackIceSignal"/>
+						<xs:enumeration value="essPavementSensorError"/>
+						<xs:enumeration value="essSurfaceIceOrWaterDepth"/>
+						<xs:enumeration value="essSurfaceConductivityV2"/>
+						<xs:enumeration value="pavementSensorTemperatureDepth"/>
+						<xs:enumeration value="essSubSurfaceTemperature"/>
+						<xs:enumeration value="essSubSurfaceMoisture"/>
+						<xs:enumeration value="essSubSurfaceSensorError"/>
+						<xs:enumeration value="essMobileFriction"/>
+						<xs:enumeration value="essMobileObservationGroundState"/>
+						<xs:enumeration value="essVehicleSpeed"/>
+						<xs:enumeration value="essTotalSun"/>
+						<xs:enumeration value="essPaveTreatmentWidth"/>
+						<xs:enumeration value="essIceThickness"/>
+						<xs:enumeration value="waterLevelSensorReading"/>
+						<xs:enumeration value="essVisibility"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" name="dist-group" type="xs:int"/>
+			<xs:element minOccurs="0" name="ns-offset" type="xs:double"/>
+			<xs:element minOccurs="0" name="ew-offset" type="xs:double"/>
+			<xs:element minOccurs="0" name="elevation-offset" type="xs:double"/>
+			<xs:element minOccurs="0" name="surface-offset" type="xs:double"/>
+			<xs:element minOccurs="0" name="install-timestamp" type="xs:dateTime"/>
+			<xs:element minOccurs="0" name="calibration-timestamp" type="xs:dateTime"/>
+			<xs:element minOccurs="0" name="maintenance-timestamp" type="xs:dateTime"/>
+			<xs:element minOccurs="0" name="maintenance-begin" type="xs:dateTime"/>
+			<xs:element minOccurs="0" name="maintenance-end" type="xs:dateTime"/>
+			<xs:element minOccurs="0" name="serial" type="xs:string"/>
+			<xs:element minOccurs="0" name="embedded-material" type="xs:string"/>
+			<xs:element minOccurs="0" name="sensor-location" type="xs:string"/>
+			<xs:element maxOccurs="1" minOccurs="0" name="observations">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="observation"
+							type="observationType"> </xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<xs:complexType name="device">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="1" name="device-type" type="xs:string"/>
+			<xs:element maxOccurs="1" minOccurs="1" name="device-id" type="xs:string"/>
+			<xs:element maxOccurs="1" minOccurs="0" name="device-status" type="deviceStatus"/>
+			<xs:choice>
+				<xs:element maxOccurs="1" minOccurs="0" name="cctv-info" type="cctvInfo"/>
+				<xs:element maxOccurs="1" minOccurs="0" name="radiofeed-info" type="radioInfo"/>
+				<xs:element maxOccurs="1" minOccurs="0" name="shazam-info" type="shazamInfo"/>
+				<xs:element maxOccurs="1" minOccurs="0" name="har-info" type="harInfo"/>
+			</xs:choice>
+			<xs:element maxOccurs="1" minOccurs="0" name="location" type="rf:location"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:simpleType name="deviceStatus">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="on"/>
+			<xs:enumeration value="off"/>
+			<xs:enumeration value="in service"/>
+			<xs:enumeration value="out of service"/>
+			<xs:enumeration value="unavailable"/>
+			<xs:enumeration value="unknown"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<xs:complexType name="observationType">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="observation-id" type="xs:int"/>
+			<xs:element name="timestamp" type="xs:dateTime"/>
+			<xs:element minOccurs="0" name="metric-value" type="xs:string"/>
+			<xs:element minOccurs="0" name="english-value" type="xs:string"/>
+			<xs:element maxOccurs="1" minOccurs="0" name="conf-value" type="xs:double"/>
+			<xs:element name="status">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="1" minOccurs="0" name="complete" type="testStatus"/>
+						<xs:element maxOccurs="1" minOccurs="0" name="manual" type="testStatus"/>
+						<xs:element maxOccurs="1" minOccurs="0" name="sensor-range"
+							type="testStatus"/>
+						<xs:element maxOccurs="1" minOccurs="0" name="climate-range"
+							type="testStatus"/>
+						<xs:element maxOccurs="1" minOccurs="0" name="step" type="testStatus"/>
+						<xs:element maxOccurs="1" minOccurs="0" name="like-instrument"
+							type="testStatus"/>
+						<xs:element maxOccurs="1" minOccurs="0" name="persistence" type="testStatus"/>
+						<xs:element maxOccurs="1" minOccurs="0" name="barnes-spatial"
+							type="testStatus"/>
+						<xs:element maxOccurs="1" minOccurs="0" name="dew-point" type="testStatus"/>
+						<xs:element maxOccurs="1" minOccurs="0" name="seal-level-pressure"
+							type="testStatus"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="testStatus">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="passed"/>
+			<xs:enumeration value="failed"/>
+			<xs:enumeration value="not run"/>
+			<xs:enumeration value="not configured"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="cctvInfo">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="0" name="lastUpdate" type="xs:dateTime"> </xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="imageType" type="xs:string"> </xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="displayIntranet" type="xs:boolean"> </xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="displayPublic" type="xs:boolean"> </xs:element>
+
+			<xs:element minOccurs="0" name="feedID" type="xs:normalizedString"/>
+			<xs:element minOccurs="0" name="url" type="xs:anyURI"/>
+			<xs:element minOccurs="0" name="imageName" type="xs:string"/>
+			<xs:element minOccurs="0" maxOccurs="unbounded" name="imageUrl" type="xs:anyURI"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="radioInfo">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="0" name="url" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="harInfo">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="0" name="lastUpdate" type="xs:dateTime"> </xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="deviceDescription" type="xs:string"> </xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="originatingSystem" type="xs:string"> </xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="harDeviceId" type="xs:string"> </xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="deviceBeacon" type="xs:int"> </xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="harFrequencyAm" type="xs:int"> </xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="harCallSign" type="xs:string"> </xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="fccSign" type="xs:string"> </xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="radioChannel" type="xs:string"> </xs:element>
+
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="shazamInfo">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="0" name="lastUpdate" type="xs:dateTime"> </xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="deviceDescription" type="xs:string"> </xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="originatingSystem" type="xs:string"> </xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="shazamDeviceId" type="xs:string"> </xs:element>
+
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="BottleneckData" type="bottleneck-data"/>
+
+	<xs:complexType name="bottleneck-data">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="1" name="header" type="rf:header"> </xs:element>
+			<xs:element maxOccurs="1" minOccurs="1" name="bottlenecks">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="bottleneck"
+							type="bottleneck"> </xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="bottleneck">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="1" name="bottleneck-id" type="xs:string"> </xs:element>
+			<xs:element maxOccurs="1" minOccurs="1" name="start-time" type="xs:dateTime"> </xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="miles" type="xs:double"> </xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="duration" type="xs:string"/>
+			<xs:element maxOccurs="1" minOccurs="0" name="delay-time" type="xs:string"/>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="location" type="rf:location">
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="LatitudeType">
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="-180"/>
+			<xs:maxExclusive value="180"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="LongitudeType">
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="-90"/>
+			<xs:maxExclusive value="90"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="evacuationSupportData">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="1" name="header" type="rf:header"/>
+			<xs:element maxOccurs="1" minOccurs="1" name="evacObjects">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" minOccurs="0" ref="evacObj"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="evacObj"/>
+	<xs:element name="stagingArea" type="stagingAreasType" substitutionGroup="evacObj"/>
+	<xs:element name="comfortStation" type="comfortStationsType" substitutionGroup="evacObj"/>
+	<xs:element name="fuelStation" type="fuelStationsType" substitutionGroup="evacObj"/>
+	<xs:element name="hospital" type="hospitalType" substitutionGroup="evacObj"/>
+	<xs:element name="tcp" type="tcpType" substitutionGroup="evacObj"/>
+	<xs:element name="shelter" type="shelterType" substitutionGroup="evacObj"/>
+
+	<xs:complexType name="evacAbstractType" abstract="true">
+		<xs:sequence>
+			<xs:element name="head">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="id" type="xs:normalizedString"/>
+						<xs:element minOccurs="0" name="name" type="xs:normalizedString"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="location" type="rf:location"/>
+			<xs:element name="scenarios">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="scenario" type="scenario" maxOccurs="unbounded"
+							minOccurs="0"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="stagingAreasType">
+		<xs:complexContent>
+			<xs:extension base="evacAbstractType">
+				<xs:sequence>
+					<xs:element name="details">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element minOccurs="0" name="evac_route"
+									type="xs:normalizedString"/>
+								<xs:element minOccurs="0" name="evac_dir" type="xs:normalizedString"/>
+								<xs:element minOccurs="0" name="address" type="xs:normalizedString"/>
+								<xs:element minOccurs="0" name="cross_rd1"
+									type="xs:normalizedString"/>
+								<xs:element minOccurs="0" name="cross_rd2"
+									type="xs:normalizedString"/>
+								<xs:element minOccurs="0" name="function" type="xs:normalizedString"/>
+								<xs:element minOccurs="0" name="surface" type="xs:normalizedString"/>
+								<xs:element name="num_spaces" type="xs:nonNegativeInteger"
+									minOccurs="0"/>
+								<xs:element minOccurs="0" name="lot_size" type="xs:normalizedString"/>
+								<xs:element minOccurs="0" name="access_road"
+									type="xs:normalizedString"/>
+								<xs:element name="truck_bus_accessible" type="xs:boolean"
+									minOccurs="0">
+									<xs:annotation>
+										<xs:documentation/>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+
+	</xs:complexType>
+
+	<xs:complexType name="comfortStationsType">
+		<xs:complexContent>
+			<xs:extension base="evacAbstractType">
+				<xs:sequence>
+					<xs:element name="details">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element minOccurs="0" name="identifier"
+									type="xs:normalizedString"/>
+								<xs:element minOccurs="0" name="phone" type="rf:phoneNumberType"/>
+								<xs:element minOccurs="0" name="evac_route"
+									type="xs:normalizedString"/>
+								<xs:element minOccurs="0" name="num_facilities"
+									type="xs:nonNegativeInteger">
+									<xs:annotation>
+										<xs:documentation/>
+									</xs:annotation>
+								</xs:element>
+								<xs:element minOccurs="0" name="num_food_stores"
+									type="xs:nonNegativeInteger">
+									<xs:annotation>
+										<xs:documentation/>
+									</xs:annotation>
+								</xs:element>
+								<xs:element minOccurs="0" name="num_gas_stations"
+									type="xs:nonNegativeInteger">
+									<xs:annotation>
+										<xs:documentation/>
+									</xs:annotation>
+								</xs:element>
+								<xs:element minOccurs="0" name="num_hotels"
+									type="xs:nonNegativeInteger">
+									<xs:annotation>
+										<xs:documentation/>
+									</xs:annotation>
+								</xs:element>
+								<xs:element minOccurs="0" name="num_shopping_centers"
+									type="xs:nonNegativeInteger">
+									<xs:annotation>
+										<xs:documentation/>
+									</xs:annotation>
+								</xs:element>
+								<xs:element minOccurs="0" name="num_grocery_stores"
+									type="xs:nonNegativeInteger">
+									<xs:annotation>
+										<xs:documentation/>
+									</xs:annotation>
+								</xs:element>
+								<xs:element minOccurs="0" name="num_rooms_available"
+									type="xs:nonNegativeInteger">
+									<xs:annotation>
+										<xs:documentation/>
+									</xs:annotation>
+								</xs:element>
+								<xs:element minOccurs="0" name="num_parking_spaces"
+									type="xs:nonNegativeInteger">
+									<xs:annotation>
+										<xs:documentation/>
+									</xs:annotation>
+								</xs:element>
+								<xs:element minOccurs="0" name="are_pets_allowed" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation/>
+									</xs:annotation>
+								</xs:element>
+								<xs:element minOccurs="0" name="is_ada_compliant" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation/>
+									</xs:annotation>
+								</xs:element>
+								<xs:element minOccurs="0" name="has_laundry_room" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation/>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- 	"fuelStationsType" -->
+
+	<xs:complexType name="fuelStationsType">
+		<xs:complexContent>
+			<xs:extension base="evacAbstractType">
+				<xs:sequence>
+					<xs:element name="details">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element minOccurs="0" name="function" type="xs:normalizedString"/>
+								<xs:element minOccurs="0" name="phone" type="rf:phoneNumberType"/>
+								<xs:element minOccurs="0" name="has_gas" type="xs:boolean"/>
+								<xs:element minOccurs="0" name="has_diesel" type="xs:boolean"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="hospitalType">
+		<xs:complexContent>
+			<xs:extension base="evacAbstractType">
+				<xs:sequence>
+					<xs:element minOccurs="1" name="details">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element minOccurs="0" name="region" type="xs:normalizedString"/>
+								<xs:element minOccurs="0" name="district" type="xs:normalizedString"/>
+								<xs:element minOccurs="0" name="phone" type="rf:phoneNumberType"/>
+								<xs:element minOccurs="0" name="website" type="xs:anyURI"/>
+								<xs:element minOccurs="0" name="service_type"
+									type="xs:normalizedString"/>
+								<xs:element minOccurs="0" name="organization_type"
+									type="xs:normalizedString"/>
+								<xs:element minOccurs="0" name="parent_organization"
+									type="xs:normalizedString"/>
+								<xs:element minOccurs="0" name="num_beds"
+									type="xs:nonNegativeInteger"/>
+								<xs:element minOccurs="0" name="num_bassinets"
+									type="xs:nonNegativeInteger"/>
+								<xs:element minOccurs="0" name="has_long_term_care"
+									type="xs:boolean"/>
+								<xs:element minOccurs="0" name="has_emergency_department"
+									type="xs:boolean"/>
+								<xs:element minOccurs="0" name="has_trauma_and_ambulatory_care"
+									type="xs:boolean"/>
+								<xs:element minOccurs="0" name="has_burn_center" type="xs:boolean"/>
+								<xs:element minOccurs="0" name="has_helipad" type="xs:boolean"/>
+								<xs:element minOccurs="0" name="has_chemotherapy" type="xs:boolean"/>
+								<xs:element minOccurs="0" name="has_cancer_registry"
+									type="xs:boolean"/>
+								<xs:element minOccurs="0" name="has_ct_scan" type="xs:boolean"/>
+								<xs:element minOccurs="0" name="has_x_ray" type="xs:boolean"/>
+								<xs:element minOccurs="0" name="has_mri" type="xs:boolean"/>
+								<xs:element minOccurs="0" name="has_ultrasound" type="xs:boolean"/>
+								<xs:element minOccurs="0" name="has_radiation_oncology"
+									type="xs:boolean"/>
+								<xs:element minOccurs="0" name="has_radiology_and_diagnostic"
+									type="xs:boolean"/>
+								<xs:element minOccurs="0" name="has_therapy_radioisotope"
+									type="xs:boolean"/>
+								<xs:element minOccurs="0" name="has_pet_scan" type="xs:boolean"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+
+	<xs:complexType name="tcpType">
+		<xs:complexContent>
+			<xs:extension base="evacAbstractType">
+				<xs:sequence>
+					<xs:element name="details"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="shelterType">
+		<xs:complexContent>
+			<xs:extension base="evacAbstractType">
+				<xs:sequence>
+
+					<xs:element name="details">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element minOccurs="0" name="sq_ft_max"
+									type="xs:nonNegativeInteger"/>
+								<xs:element name="has_generator" type="xs:boolean" minOccurs="0"/>
+								<xs:element name="are_pets_allowed" type="xs:boolean" minOccurs="0"/>
+								<xs:element name="has_kitchen" type="xs:boolean" minOccurs="0"/>
+								<xs:element name="is_ada_compliant" type="xs:boolean" minOccurs="0"/>
+
+								<xs:element minOccurs="0" name="hurricane_category"
+									type="xs:normalizedString"/>
+
+								<xs:element minOccurs="0" name="evac_capacity"
+									type="xs:nonNegativeInteger"/>
+								<xs:element minOccurs="0" name="long_term_capacity"
+									type="xs:nonNegativeInteger"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="scenario">
+		<xs:sequence>
+			<xs:element name="name" type="xs:normalizedString"/>
+			<xs:element name="code" type="xs:nonNegativeInteger"/>
+			<xs:element name="state" type="xs:normalizedString"/>
+			<xs:element minOccurs="0" name="filename" type="xs:normalizedString"/>
+			<xs:element name="description" type="xs:normalizedString"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="alertsData" type="alerts-data"/>
+
+	<xs:complexType name="vwsData">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="1" name="header" type="rf:header"> </xs:element>
+			<xs:choice>
+				<xs:element name="vwsStations" type="vwsStationsType"/>
+				<xs:element name="vwsVehicles" type="vwsVehiclesType"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+
+
+
+	<xs:complexType name="vwsStationsType">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="vwsStation">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="head">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="id" type="xs:normalizedString"/>
+									<xs:element name="stationDescription" type="xs:normalizedString"/>
+									<xs:element name="displayDescription" type="xs:normalizedString"
+									/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+
+						<xs:element name="location" type="rf:location"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<xs:complexType name="vwsVehiclesType">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="vwsVehicle">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="head">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="id" type="xs:normalizedString"/>
+									<xs:element name="tstamp" type="xs:dateTime"/>
+									<xs:element name="lane" type="xs:integer"/>
+									<xs:element name="vehicleClass" type="xs:string"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+
+						<xs:element name="station" type="xs:normalizedString"/>
+						<xs:element minOccurs="0" name="image" type="xs:normalizedString"/>
+
+						<xs:element name="speedData">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="speed" type="rf:valueUnitType"/>
+									<xs:element name="stopped" type="xs:boolean"/>
+									<xs:element name="overSpeed" type="xs:boolean"/>
+									<xs:element name="speedChange" type="xs:boolean"/>
+									<xs:element name="wrongDirection" type="xs:boolean"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+
+						<xs:element name="grossWeightData">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="grossWeight" type="rf:valueUnitType"/>
+									<xs:element name="overWeightGross" type="xs:boolean"/>
+									<!-- Not sure if this column is for the speed or gross weight scale -->
+									<xs:element name="offScale" type="xs:boolean"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+
+						<xs:element name="numAxles" type="xs:integer"/>
+						<xs:element name="violation" type="xs:boolean"/>
+						<xs:element name="overHeight" type="xs:boolean"/>
+						<xs:element name="tooClose" type="xs:boolean"/>
+						<xs:element name="overLength" type="xs:boolean"/>
+						<xs:element name="random" type="xs:boolean"/>
+
+						<xs:element maxOccurs="unbounded" name="axle">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="item" type="xs:integer"/>
+									<xs:element name="weight" type="rf:valueUnitType"/>
+									<xs:element name="overWeightAxle" type="xs:boolean"/>
+									<xs:element name="overWeightTandems" type="xs:boolean"/>
+									<xs:element name="overWeightBridge" type="xs:boolean"/>
+									<xs:element name="unbalanced" type="xs:boolean"/>
+									<xs:element name="spacing" type="rf:valueUnitType"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- columns -->
+	<!-- "incident_id","ritis_event_type","ritis_event_description","opentms_event_type","opentms_event_subtype","location_description",
+	"road_name","milemarker","direction_description","latitude","longitude","event_open_tstamp","event_closed_tstamp","start_tstamp",
+	"end_tstamp","duration","num_total_lanes","num_total_lanes_closed","num_normal_lanes","num_shoulder_lanes","num_median_lanes",
+	"num_exit_ramps","num_entrance_ramps","num_local_lanes","num_hov_lanes","num_express_lanes","num_reversible_lanes","num_merge_lanes",
+	"num_escape_ramps" -->
+
+	<xs:complexType name="eventLaneCountResponse">
+		<xs:sequence>
+			<xs:element name="header" type="rf:header"/>
+			<xs:element name="eventLaneCountTypes" type="eventLaneCountTypes"/>
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<xs:complexType name="eventLaneCountTypes">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="eventLaneCountType"
+				type="eventLaneCountType"/>
+		</xs:sequence>
+	</xs:complexType>
+
+
+
+	<xs:complexType name="eventLaneCountType">
+		<xs:sequence>
+			<xs:element name="head">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="id" type="xs:normalizedString"/>
+						<xs:element minOccurs="0" name="description" type="xs:normalizedString"/>
+						<xs:element minOccurs="0" name="reportingSystem" type="xs:normalizedString"/>
+						<xs:element minOccurs="0" name="agencyEventType" type="rf:agencyEventType"/>
+						<xs:element name="eventType" type="rf:eventType"/>
+						<xs:element name="eventOpened" type="xs:dateTime"/>
+						<xs:element minOccurs="0" name="eventClosed" type="xs:dateTime"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="location" type="rf:location"/>
+			<xs:element name="maxTotalLanes" type="xs:nonNegativeInteger"/>
+			<xs:element name="maxClosedLanes" type="xs:nonNegativeInteger"/>
+			<xs:element name="laneCounts">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" name="laneCount">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="start" type="xs:dateTime"/>
+									<xs:element minOccurs="0" name="end" type="xs:dateTime"/>
+									<xs:element minOccurs="0" name="duration"
+										type="xs:nonNegativeInteger"/>
+									<xs:element name="totalLanes" type="xs:nonNegativeInteger"/>
+									<xs:element name="totalLanesClosed" type="xs:nonNegativeInteger"/>
+									<xs:element name="normalLanes" type="xs:nonNegativeInteger"/>
+									<xs:element name="shoulderLanes" type="xs:nonNegativeInteger"/>
+									<xs:element name="medianLanes" type="xs:nonNegativeInteger"/>
+									<xs:element name="exitRamps" type="xs:nonNegativeInteger"/>
+									<xs:element name="entranceRamps" type="xs:nonNegativeInteger"/>
+									<xs:element name="localLanes" type="xs:nonNegativeInteger"/>
+									<xs:element name="hovLanes" type="xs:nonNegativeInteger"/>
+									<xs:element name="expressLanes" type="xs:nonNegativeInteger"/>
+									<xs:element name="reversibleLanes" type="xs:nonNegativeInteger"/>
+									<xs:element name="mergeLanes" type="xs:nonNegativeInteger"/>
+									<xs:element name="escapeRamps" type="xs:nonNegativeInteger"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

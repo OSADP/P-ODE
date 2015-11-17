@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    jaxb:version="2.0" version="1.0.0">
+    
+    <xs:import namespace="http://cattlab.umd.edu/schema/ritisFilter"
+        schemaLocation="ritisFilterEventOutput.xsd"/>
+    <xs:import namespace="http://cattlab.umd.edu/schema/ritisFilter/gtfs"
+        schemaLocation="rf-gtfs.xsd"/>
+    <xs:import namespace="http://www.opengis.net/gml/3.2"
+        schemaLocation="../gml_rf/gml/3.2.1/gml_rf.xsd"/>
+    <xs:import namespace="http://cattlab.umd.edu/schema/ritisFilter/other"
+        schemaLocation="ritisFilterOutput.xsd"/>
+    <xs:import namespace="http://cattlab.umd.edu/schema/ritisFilter/geocode"
+        schemaLocation="ritisFilterGeoCodeOutput.xsd"/>
+    <xs:import namespace="http://filter.ritis.org/input" schemaLocation="ritisFilterInput.xsd"/>
+    
+    <xs:annotation>
+        <xs:appinfo>
+            <jaxb:globalBindings
+                fixedAttributeAsConstantProperty="true"
+                typesafeEnumBase="xs:string"
+                typesafeEnumMemberName="generateName" 
+                generateIsSetMethod="true">
+                <jaxb:serializable uid="56347348765454329" />
+            </jaxb:globalBindings>
+        </xs:appinfo>
+    </xs:annotation>
+    
+</xs:schema>

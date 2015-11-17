@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.saic.dms.BSMMapper">
+
+	<resultMap id="RDEArchiveInfoMapper" type="RDEArchiveInfo">
+		<id property="id" column="ID"/>
+		<result property="msgType" column="MSG_TYPE"/>
+		<result property="region" column="REGION"/>
+		<result property="metadataLoc" column="METADATA_LOC"/>
+		<result property="archiveDate" column="ARCHIVE_DATE"/>
+	</resultMap>
+
+	<select id="selectAllArchiveEntries"  resultMap="RDEArchiveInfoMapper">
+		select ID, ARCHIVE_DATE, MSG_TYPE, REGION, METADATA_LOC
+		from RDE_ARCHIVE_ENTRY
+	</select>	
+	
+
+	<insert id="insertArchiveInfo" parameterType="RDEArchiveInfo">
+		<selectKey resultType="int" keyProperty="id" order="AFTER">
+			SELECT LAST_INSERT_ID();
+		</selectKey>
+		insert into RDE_ARCHIVE_ENTRY (ARCHIVE_DATE, MSG_TYPE, REGION, METADATA_LOC) 
+		values (#{archiveDate},#{msgType},#{region},#{metadataLoc})
+	
+	</insert>
+
+ 
+ 
+ 
+</mapper>
