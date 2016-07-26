@@ -1,0 +1,259 @@
+
+
+// Dark Theme
+// Usage: Import this LESS file in main.less
+
+body {
+	background-color: #2D3740;
+	background-image: linear-gradient(@blue, transparent);
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+}
+
+.blur {
+	filter: blur(2px);
+	clear: both;
+}
+
+.modal-mask {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.1);
+	z-index: 1;
+
+	&.open {
+		display: block;
+	}
+
+	.modal-custom {
+		display: block;
+		width: 400px;
+		// height: 320px;
+		margin: auto;
+		margin-top: 15%;
+		padding: 10px 20px;
+		background-color: rgba(255, 255, 255, .9);
+		box-shadow: 0px 0px 10px rgba(0, 0, 0, 1);
+		box-sizing: border-box;
+		animation: slideDown 1s ease-out;
+
+		ul {
+			margin: 0;
+			padding: 0;
+		}
+		li {
+			padding: 10px 0;
+		}
+	}
+}
+
+@keyframes glow {
+	0% { box-shadow: 0 0 5px white; }
+	50% { box-shadow: 0 0 20px white; }
+	100% { box-shadow: 0 0 5px white; }
+}
+
+@keyframes slideDown {
+	from {
+		margin-top: 18%;
+	}
+	to {
+		margin-top: 15%;
+	}
+}
+
+.darken {
+	background-color: rgba(255, 255, 255, 0.1) !important;
+	box-shadow: none !important;
+	filter: brightness(50%);
+}
+
+.main.container {
+	background-image: linear-gradient( rgba(255, 255, 255, .02), rgba(255, 255, 255, .05) );
+	padding-bottom: 15px;
+}
+
+.top-header {
+	margin-bottom: 40px;
+	text-align: center;
+	color: #BDC3C7;
+	font-family: NeouThin;
+	font-weight: 400;
+}
+
+.entity-panel {
+	
+}
+
+.btn-icon {
+	color: rgba(255, 255, 255, .5);
+	cursor: pointer;
+
+	&:hover {
+		color: rgba(255, 255, 255, .8);
+	}
+
+	&.btn-refresh {
+		font-size: 18px;
+		vertical-align: middle;
+	}
+}
+
+.eastbound-panel, .westbound-panel {
+  	margin: 0 auto;
+  	float: none;
+
+	padding-top: 40px;
+	padding-bottom: 15px;
+	height: 100%;
+	text-shadow: 0 0 1px rgba(0, 0, 0, .2);
+
+	.form-group.clearfix {
+		margin-bottom: 0;
+		background-color: rgba( 255, 255, 255, .05);
+	}
+
+	.col-md-4 {
+		padding: 11px;
+		background-color: @blue;
+		box-shadow: inset 0 1px 0 fadeout(@blue, 5%), 0 1px 1px rgba(0, 0, 0, .1);
+
+		&.inner-header:hover {
+			background-color: @blue;
+			box-shadow: inset 0 1px 0 fadeout(@blue, 5%), 0 1px 1px rgba(0, 0, 0, .1);
+		}
+
+		&.crimson {
+			background: @red;
+			box-shadow: inset 0 1px 0 fadeout(@red, 5%), 0 1px 1px rgba(0, 0, 0, .1);
+
+			& + div {
+				border-right-color: @red;
+			}
+		}
+
+		&.golden {
+			background: @yellow;
+			box-shadow: inset 0 1px 0 fadeout(@yellow, 5%), 0 1px 1px rgba(0, 0, 0, .1);
+
+			& + div {
+				border-right-color: @yellow;
+			}
+		}
+
+		&.sage {
+			background: @green;
+			box-shadow: inset 0 1px 0 fadeout(@green, 5%), 0 1px 1px rgba(0, 0, 0, .1);
+
+			& + div {
+				border-right-color: @green;
+			}
+		}
+	}
+
+	.col-md-8 {
+
+		padding: 0;
+		border-left: 1px solid @blue;
+		border-right: 1px solid @blue;
+		.Gradientify(rgba(69, 147, 193, .2), @degrees);
+
+		&.inner-div {
+			padding: 0;
+			border-right: 0;
+
+			&:hover {
+				background-color: transparent;
+				box-shadow: none;
+			}
+
+		}
+
+		&.crimson {
+			border-color: @red;
+			.Gradientify(rgba(242, 104, 104, .2), @degrees);
+		}
+
+		&.golden {
+			border-color: @yellow;
+			.Gradientify(rgba(247, 202, 73, .2), @degrees);
+		}
+
+		&.sage {
+			border-color: @green;
+			.Gradientify(rgba(9, 156, 164, .2), @degrees);
+		}
+
+		div {
+			color: #ccc;
+			padding: 15px 15px;
+			border-collapse: collapse;
+			transition: .3s;
+
+			&:hover {
+				background-color: rgba(255, 255, 255, .1);
+				box-shadow: 0 3px 2px rgba(0, 0, 0, .1);
+			}
+
+			&.even {
+				background-image: linear-gradient( 45deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .02) );
+			}
+
+			strong {
+				color: #BDC3C7;
+				text-shadow: 0 0 1px rgba(0, 0, 0, .2);
+			}
+
+			span {
+				float: right;
+				color: darken(#BDC3C7, 15%) !important;
+				text-shadow: 0 -1px 0 rgba(0, 0, 0, .1);
+			}
+
+		}//-- div
+
+	}//-- .col-md-8
+
+	h5 {
+		padding: 5px 8px;
+		margin: 0;
+		color: rgba(255, 255, 255, .5);
+		text-align: center;
+		font-size: 1.2em;
+		text-shadow: 0 0 1px rgba(0, 0, 0, .2);
+	}
+
+}
+
+.eastbound-panel {
+	//background-image: linear-gradient( rgba(255, 255, 255, .05), rgba(255, 255, 255, .02) );
+}
+
+.top-bar {
+	width: 100%;
+
+	.color-bar {
+		float: left;
+		margin:0;
+		padding:0;
+		height: 5px;
+		background: rgb(56, 101, 129);
+		width: 25%;
+
+		&.red {
+			background: rgb(116, 90, 100);
+		}
+
+		&.yellow {
+			background:rgb(118, 115, 85);
+		}
+
+		&.green {
+			background: rgb(46, 100, 110);
+		}
+	}
+}

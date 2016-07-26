@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/data/mongo
+        http://www.springframework.org/schema/data/mongo/spring-mongo.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+
+    <context:component-scan base-package="com.leidos.ode.emulator"/>
+    <mvc:annotation-driven/>
+    <context:annotation-config/>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Common Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <bean id="propertyPlaceholderConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:META-INF/EmulatorContext.properties</value>
+                 <value>classpath:mongo.properties</value>
+            </list>
+        </property>
+        <!-- This means don't blow up if a property is not set -->
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <!--
+        This means that any system properties set on the command line will take precedence over those set locally or in a properties file.
+        -->
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+    </bean>
+
+    <bean id="dateFormat" class="java.text.SimpleDateFormat" scope="prototype">
+        <constructor-arg value="MM-dd-yyyy"/>
+    </bean>
+
+    <mongo:mongo id="mongo" host="${leidos.ode.mongo.host}" port="${leidos.ode.mongo.port}"/>
+
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg type="com.mongodb.Mongo" ref="mongo"/>
+        <constructor-arg type="java.lang.String" value="${leidos.ode.mongo.repository.odelogs}"/>
+    </bean>
+
+    <bean id="odeLogger" class="com.leidos.ode.logging.ODELogger" scope="prototype">
+        <property name="mongoTemplate" ref="mongoTemplate"/>
+    </bean>
+
+    <bean id="subscribeODEAgent" class="com.leidos.ode.agent.BasicODEAgent"/>
+
+    <bean id="passthroughSanitizer" class="com.leidos.ode.agent.sanitizer.PassthroughSanitizer" scope="prototype"/>
+
+    <bean id="basicSubRegistration" class="com.leidos.ode.agent.registration.ODESubscribeRegistration" scope="prototype">
+        <property name="registrationBaseUrl" value="${leidos.ode.reg.baseurl}"/>
+        <property name="registrationEndpoint" value="${leidos.ode.reg.sub.endpoint}"/>
+        <property name="unregisterEndpoint" value="${leidos.ode.reg.un.endpoint}"/>
+        <property name="serviceRequestEndpoint" value="${leidos.ode.reg.sub.endpoint.serviceRequest}"/>
+    </bean>
+
+
+    <bean id="passthroughFormatter" class="com.leidos.ode.agent.formatter.PassthroughFormatter">
+        
+    </bean>
+
+    <bean id="odeMessageParser" class="com.leidos.ode.agent.parser.impl.ODEJ2735DataParser" scope="prototype"/>
+
+    <bean id="basicReplaySubRegistrationRequest" class="com.leidos.ode.registration.request.ODERegistrationRequest">
+        <property name="region" value="${leidos.ode.emulator.weather.region}"/>
+        <property name="registrationType" value="${leidos.ode.emulator.weather.sub.registrationType}"/>
+        <property name="subscriptionType" value="${leidos.ode.emulator.sub.subtype.replay}"/>
+        <property name="replayStartDate" value="${leidos.ode.emulator.sub.subtype.replay.start}"/>
+        <property name="replayEndDate" value="${leidos.ode.emulator.sub.subtype.replay.end}"/>
+        <property name="replayNorthWestCornerLat" value="${leidos.ode.emulator.sub.subtype.replay.nwcorner.lat}"/>
+        <property name="replayNorthWestCornerLon" value="${leidos.ode.emulator.sub.subtype.replay.nwcorner.lon}"/>
+        <property name="replaySouthEastCornerLat" value="${leidos.ode.emulator.sub.subtype.replay.secorner.lat}"/>
+        <property name="replaySouthEastCornerLon" value="${leidos.ode.emulator.sub.subtype.replay.secorner.lon}"/>
+    </bean>
+    
+    
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Weather Beans ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    
+    
+    <bean id="weatherDataTarget" class="com.leidos.ode.emulator.agent.EmulatorDataTarget">
+        <property name="messageType" value="${leidos.ode.emulator.weather.datatarget.messageType}"/>
+    </bean>
+
+
+    <bean id="weatherSubRegistrationRequest" parent="basicReplaySubRegistrationRequest" >
+        <property name="messageType" value="${leidos.ode.emulator.weather.messageType}"/>
+        <property name="agentId" value="${leidos.ode.emulator.weather.sub.agentId}"/>
+        <property name="dataTypes" value="${leidos.ode.emulator.weather.datatypes}"/>
+        <property name="subscriptionReceiveAddress" value="${leidos.ode.emulator.weather.hostAddress}"/>
+        <property name="subscriptionReceivePort" value="${leidos.ode.emulator.weather.hostPort}"/>
+        <property name="subscriptionProtocol" value="${leidos.ode.emulator.sub.protocol.udp}"/>
+        
+        <property name="startDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.emulator.weather.sub.startDate}"/>
+            </bean>
+        </property>
+        <property name="endDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.emulator.weather.sub.endDate}"/>
+            </bean>
+        </property>
+    </bean>
+    
+ 
+    <bean id="weatherSubAgent" class="com.leidos.ode.agent.BasicODEAgent">
+        <property name="registration" ref="basicSubRegistration"/>
+        <property name="parser" ref="odeMessageParser"/>
+        <property name="sanitizer" ref="passthroughSanitizer"/>
+        <property name="dataTarget" ref="weatherDataTarget"/>
+        <property name="registrationRequest" ref="weatherSubRegistrationRequest"/>
+        <property name="formatter" ref="passthroughFormatter"/>
+        <property name="odeLogger" ref="odeLogger"/>
+    </bean>
+
+            
+    <bean id="weatherDataSource" class="com.leidos.ode.collector.datasource.push.UDPPushDataSource">
+        <property name="hostProtocol" value="${leidos.ode.emulator.weather.hostProtocol}"/>
+        <property name="hostAddress" value="${leidos.ode.emulator.weather.hostAddress}"/>
+        <property name="hostPort" value="${leidos.ode.emulator.weather.hostPort}"/>
+    </bean>
+    
+    <bean id="weatherCollector" class="com.leidos.ode.collector.ODECollector">
+        <property name="agent" ref="weatherSubAgent"/>
+        <property name="dataSource" ref="weatherDataSource"/>
+    </bean>
+    
+    
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SPEED Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    
+    <bean id="speedDataTarget" class="com.leidos.ode.emulator.agent.EmulatorDataTarget">
+        <property name="messageType" value="${leidos.ode.emulator.speed.datatarget.messageType}"/>
+    </bean>
+
+
+    <bean id="speedSubRegistrationRequest"  parent="basicReplaySubRegistrationRequest">
+        <property name="messageType" value="${leidos.ode.emulator.speed.messageType}"/>
+        <property name="agentId" value="${leidos.ode.emulator.speed.sub.agentId}"/>
+        <property name="dataTypes" value="${leidos.ode.emulator.speed.datatypes}"/>
+        <property name="subscriptionReceiveAddress" value="${leidos.ode.emulator.speed.hostAddress}"/>
+        <property name="subscriptionReceivePort" value="${leidos.ode.emulator.speed.hostPort}"/>
+        <property name="subscriptionProtocol" value="${leidos.ode.emulator.sub.protocol.udp}"/>
+        <property name="startDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.emulator.speed.sub.startDate}"/>
+            </bean>
+        </property>
+        <property name="endDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.emulator.speed.sub.endDate}"/>
+            </bean>
+        </property>
+    </bean>
+    
+
+    <bean id="speedSubAgent" class="com.leidos.ode.agent.BasicODEAgent">
+        <property name="registration" ref="basicSubRegistration"/>
+        <property name="parser" ref="odeMessageParser"/>
+        <property name="sanitizer" ref="passthroughSanitizer"/>
+        <property name="dataTarget" ref="speedDataTarget"/>
+        <property name="registrationRequest" ref="speedSubRegistrationRequest"/>
+        <property name="formatter" ref="passthroughFormatter"/>
+        <property name="odeLogger" ref="odeLogger"/>
+    </bean>
+
+            
+    <bean id="speedDataSource" class="com.leidos.ode.collector.datasource.push.UDPPushDataSource">
+        <property name="hostProtocol" value="${leidos.ode.emulator.speed.hostProtocol}"/>
+        <property name="hostAddress" value="${leidos.ode.emulator.speed.hostAddress}"/>
+        <property name="hostPort" value="${leidos.ode.emulator.speed.hostPort}"/>
+    </bean>
+    
+    <bean id="speedCollector" class="com.leidos.ode.collector.ODECollector">
+        <property name="agent" ref="speedSubAgent"/>
+        <property name="dataSource" ref="speedDataSource"/>
+    </bean>
+    
+    
+        
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ VOLUME Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    
+    <bean id="volumeDataTarget" class="com.leidos.ode.emulator.agent.EmulatorDataTarget">
+        <property name="messageType" value="${leidos.ode.emulator.volume.datatarget.messageType}"/>
+    </bean>
+
+
+    <bean id="volumeSubRegistrationRequest"  parent="basicReplaySubRegistrationRequest">
+        <property name="messageType" value="${leidos.ode.emulator.volume.messageType}"/>
+        <property name="agentId" value="${leidos.ode.emulator.volume.sub.agentId}"/>
+        <property name="dataTypes" value="${leidos.ode.emulator.volume.datatypes}"/>
+        <property name="subscriptionReceiveAddress" value="${leidos.ode.emulator.volume.hostAddress}"/>
+        <property name="subscriptionReceivePort" value="${leidos.ode.emulator.volume.hostPort}"/>
+        <property name="subscriptionProtocol" value="${leidos.ode.emulator.sub.protocol.udp}"/>
+        <property name="startDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.emulator.volume.sub.startDate}"/>
+            </bean>
+        </property>
+        <property name="endDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.emulator.volume.sub.endDate}"/>
+            </bean>
+        </property>
+    </bean>
+    
+    <bean id="volumeSubAgent" class="com.leidos.ode.agent.BasicODEAgent">
+        <property name="registration" ref="basicSubRegistration"/>
+        <property name="parser" ref="odeMessageParser"/>
+        <property name="sanitizer" ref="passthroughSanitizer"/>
+        <property name="dataTarget" ref="volumeDataTarget"/>
+        <property name="registrationRequest" ref="volumeSubRegistrationRequest"/>
+        <property name="formatter" ref="passthroughFormatter"/>
+        <property name="odeLogger" ref="odeLogger"/>
+    </bean>
+
+            
+    <bean id="volumeDataSource" class="com.leidos.ode.collector.datasource.push.UDPPushDataSource">
+        <property name="hostProtocol" value="${leidos.ode.emulator.volume.hostProtocol}"/>
+        <property name="hostAddress" value="${leidos.ode.emulator.volume.hostAddress}"/>
+        <property name="hostPort" value="${leidos.ode.emulator.volume.hostPort}"/>
+    </bean>
+    
+    <bean id="volumeCollector" class="com.leidos.ode.collector.ODECollector">
+        <property name="agent" ref="volumeSubAgent"/>
+        <property name="dataSource" ref="volumeDataSource"/>
+    </bean>
+    
+
+                
+                                
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ OCCUPANCY Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    
+    <bean id="occupancyDataTarget" class="com.leidos.ode.emulator.agent.EmulatorDataTarget">
+        <property name="messageType" value="${leidos.ode.emulator.occupancy.datatarget.messageType}"/>
+    </bean>
+
+
+    <bean id="occupancySubRegistrationRequest"  parent="basicReplaySubRegistrationRequest">
+        <property name="messageType" value="${leidos.ode.emulator.occupancy.messageType}"/>
+        <property name="agentId" value="${leidos.ode.emulator.occupancy.sub.agentId}"/>
+        <property name="dataTypes" value="${leidos.ode.emulator.occupancy.datatypes}"/>
+        <property name="subscriptionReceiveAddress" value="${leidos.ode.emulator.occupancy.hostAddress}"/>
+        <property name="subscriptionReceivePort" value="${leidos.ode.emulator.occupancy.hostPort}"/>
+        <property name="subscriptionProtocol" value="${leidos.ode.emulator.sub.protocol.udp}"/>
+        <property name="startDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.emulator.occupancy.sub.startDate}"/>
+            </bean>
+        </property>
+        <property name="endDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.emulator.occupancy.sub.endDate}"/>
+            </bean>
+        </property>
+    </bean>
+    
+
+    <bean id="occupancySubAgent" class="com.leidos.ode.agent.BasicODEAgent">
+        <property name="registration" ref="basicSubRegistration"/>
+        <property name="parser" ref="odeMessageParser"/>
+        <property name="sanitizer" ref="passthroughSanitizer"/>
+        <property name="dataTarget" ref="occupancyDataTarget"/>
+        <property name="registrationRequest" ref="occupancySubRegistrationRequest"/>
+        <property name="formatter" ref="passthroughFormatter"/>
+        <property name="odeLogger" ref="odeLogger"/>
+    </bean>
+
+            
+    <bean id="occupancyDataSource" class="com.leidos.ode.collector.datasource.push.UDPPushDataSource">
+        <property name="hostProtocol" value="${leidos.ode.emulator.occupancy.hostProtocol}"/>
+        <property name="hostAddress" value="${leidos.ode.emulator.occupancy.hostAddress}"/>
+        <property name="hostPort" value="${leidos.ode.emulator.occupancy.hostPort}"/>
+    </bean>
+    
+    <bean id="occupancyCollector" class="com.leidos.ode.collector.ODECollector">
+        <property name="agent" ref="occupancySubAgent"/>
+        <property name="dataSource" ref="occupancyDataSource"/>
+    </bean>
+    
+                                                                
+                                                                                                                                
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TRAVEL TIME Beans~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+                                                                                                                                                                                                                                                                
+
+    
+    <bean id="travelDataTarget" class="com.leidos.ode.emulator.agent.EmulatorDataTarget">
+        <property name="messageType" value="${leidos.ode.emulator.travel.datatarget.messageType}"/>
+    </bean>
+
+
+    <bean id="travelSubRegistrationRequest"  parent="basicReplaySubRegistrationRequest">
+        <property name="messageType" value="${leidos.ode.emulator.travel.messageType}"/>
+        <property name="agentId" value="${leidos.ode.emulator.travel.sub.agentId}"/>
+        <property name="dataTypes" value="${leidos.ode.emulator.travel.datatypes}"/>
+        <property name="subscriptionReceiveAddress" value="${leidos.ode.emulator.travel.hostAddress}"/>
+        <property name="subscriptionReceivePort" value="${leidos.ode.emulator.travel.hostPort}"/>
+        <property name="subscriptionProtocol" value="${leidos.ode.emulator.sub.protocol.udp}"/>
+        <property name="startDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.emulator.travel.sub.startDate}"/>
+            </bean>
+        </property>
+        <property name="endDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="${leidos.ode.emulator.travel.sub.endDate}"/>
+            </bean>
+        </property>
+    </bean>
+    
+
+    <bean id="travelSubAgent" class="com.leidos.ode.agent.BasicODEAgent">
+        <property name="registration" ref="basicSubRegistration"/>
+        <property name="parser" ref="odeMessageParser"/>
+        <property name="sanitizer" ref="passthroughSanitizer"/>
+        <property name="dataTarget" ref="travelDataTarget"/>
+        <property name="registrationRequest" ref="travelSubRegistrationRequest"/>
+        <property name="formatter" ref="passthroughFormatter"/>
+        <property name="odeLogger" ref="odeLogger"/>
+    </bean>
+
+            
+    <bean id="travelDataSource" class="com.leidos.ode.collector.datasource.push.UDPPushDataSource">
+        <property name="hostProtocol" value="${leidos.ode.emulator.travel.hostProtocol}"/>
+        <property name="hostAddress" value="${leidos.ode.emulator.travel.hostAddress}"/>
+        <property name="hostPort" value="${leidos.ode.emulator.travel.hostPort}"/>
+    </bean>
+    
+    <bean id="travelCollector" class="com.leidos.ode.collector.ODECollector">
+        <property name="agent" ref="travelSubAgent"/>
+        <property name="dataSource" ref="travelDataSource"/>
+    </bean>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Incident Data Beans ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <bean id="incidentSubRegistrationRequest" parent="basicReplaySubRegistrationRequest">
+        <property name="messageType" value="INCIDENT"/>
+        <property name="agentId" value="emui1"/>
+        <property name="dataTypes" value="10000000"/>
+        <property name="subscriptionReceiveAddress" value="[REDACTED]"/>
+        <property name="subscriptionReceivePort" value="14004"/>
+        <property name="subscriptionProtocol" value="UDP"/>
+
+        <property name="startDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="09-19-2014"/>
+            </bean>
+        </property>
+        <property name="endDate">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="09-19-2016"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="incidentDataTarget" class="com.leidos.ode.emulator.agent.EmulatorDataTarget">
+        <property name="messageType" value="INCIDENT"/>
+    </bean>
+
+    <bean id="incidentSubAgent" class="com.leidos.ode.agent.BasicODEAgent">
+        <property name="registration" ref="basicSubRegistration"/>
+        <property name="parser" ref="odeMessageParser"/>
+        <property name="sanitizer" ref="passthroughSanitizer"/>
+        <property name="dataTarget" ref="incidentDataTarget"/>
+        <property name="registrationRequest" ref="incidentSubRegistrationRequest"/>
+        <property name="formatter" ref="passthroughFormatter"/>
+        <property name="odeLogger" ref="odeLogger"/>
+    </bean>
+
+    <bean id="incidentDataSource" class="com.leidos.ode.collector.datasource.push.UDPPushDataSource">
+        <property name="hostProtocol" value="UDP"/>
+        <property name="hostAddress" value="[REDACTED]"/>
+        <property name="hostPort" value="14004"/>
+    </bean>
+
+    <bean id="incidentCollector" class="com.leidos.ode.collector.ODECollector">
+        <property name="agent" ref="incidentSubAgent"/>
+        <property name="dataSource" ref="incidentDataSource"/>
+    </bean>
+</beans>
+
+
+
+
+
+    

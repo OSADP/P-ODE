@@ -1,6 +1,37 @@
-# P-ODE Release Notes
+Identifier
+==========
+Prototype Operational Data Environment (P-ODE), version 2.0.0
 
-## v1.0.0
- - Initial release of P-ODE
- - Documentation is available in README.txt and user guide.
 
+What's New
+==========
+New collector for speed, heading, location from VDOT BSM sensors
+New collector for speed from VSDs submitted to Situation Data Clearninghouse
+New collector for VDOT incident data
+New collector for RITIS incident data
+Enhanced application emulator
+
+
+System Requirements (if anything here has changed)
+==================================================
+No changes
+
+
+Change Details
+==============
+Change requests not tracked
+
+
+Known Issues
+============
+Installation on other than the development system has been problematic.
+
+
+Installation Guide
+==================
+Described in the User Guide
+
+
+FAQ
+===
+There is a FAQ file included in the OSADP repository top level directory.

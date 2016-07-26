@@ -1,0 +1,122 @@
+{
+    "calculatedTravelTime": "0.0691156462585034",
+
+    "speedLastUpdate": null,
+    "speedValue": [
+        {
+            "source": "ritis",
+            "dataType": "Speed",
+            "dataValue": "52.017895490336436"
+        }, {
+            "source": "blufax",
+            "dataType": "Speed",
+            "dataValue": "99.99105225483179"
+        }, {
+            "source": "vdot",
+            "dataType": "Speed",
+            "dataValue": "67.01861130994989"
+        }, {
+            "source": "rtms",
+            "dataType": "Speed",
+            "dataValue": "500.01861130994989"
+        }
+    ],
+
+    "volumeLastUpdate": null,
+    "volumeValue": [
+        {
+            "source": "ritis",
+            "dataType": "Volume",
+            "dataValue": "174"
+        },
+        {
+            "source": "vdot",
+            "dataType": "Volume",
+            "dataValue": "null"
+        }
+    ],
+
+    "occupancyLastUpdate": null,
+    "occupancyValue": [
+        {
+            "source": "ritis",
+            "dataType": "Occupancy",
+            "dataValue": "166.343"
+        },
+        {
+            "source": "blufax",
+            "dataType": "Occupancy",
+            "dataValue": "90.33"
+        }
+    ],
+
+    "travelTimeLastUpdate": null,
+    "travelTime": [
+        {
+            "source": "blufax",
+            "dataType": "travelTime",
+            "dataValue": "2.389501"
+        }
+    ],
+
+    "weatherLastUpdate": null,
+    "currentWeather": [
+        {
+            "source": "wxde",
+            "dataType": "Temperature",
+            "dataValue": "90"
+        },
+        {
+            "source": "wxde",
+            "dataType": "PrecipRate",
+            "dataValue": "0"
+        }
+    ],
+
+    "currentIncidents": [
+        {
+            "source": "vdot",
+            "dataType": "Incident",
+            "dataValue": {
+                "type": "congestion_Delay",
+                "value": "Heavy Congestion on GW Parkway",
+                "latitude": 38.9558929,
+                "longitude": -77.1404495,
+                "direction": "east"
+            }
+        },
+        {
+            "source": "vdot",
+            "dataType": "Incident",
+            "dataValue": {
+                "type": "congestion_Delay",
+                "value": "Heavy Congestion on GW Parkway",
+                "latitude": 38.9558929,
+                "longitude": -77.1404495,
+                "direction": "east"
+            }
+        },
+        {
+            "source": "ritis",
+            "dataType": "Incident",
+            "dataValue": {
+                "type": "roadWork",
+                "value": "Lane Construction on 27",
+                "latitude": 38.9558929,
+                "longitude": -77.1404495,
+                "direction": "west"
+            }
+        }
+    ],
+    "basicSafetyMessages": [
+        {
+            "source": "vdot",
+            "dataType": "Speed",
+            "dataValue": "67.01861130994989"
+        }, {
+            "source": "sdc",
+            "dataType": "Speed",
+            "dataValue": "500.01861130994989"
+        }
+    ]
+}

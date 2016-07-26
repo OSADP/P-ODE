@@ -1,0 +1,21 @@
+{
+  "name": "webapp",
+  "homepage": "https://github.com/fhwa-saxton/PodeServer",
+  "authors": [
+    "Rob Roth <rothattack@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.5.6",
+    "jquery": "1.11.1"
+  }
+}

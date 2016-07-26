@@ -1,0 +1,303 @@
+Only in compiled-asn1: AdvisoryBroadcast.java
+Only in compiled-asn1: AdvisoryBroadcastType.java
+Only in compiled-asn1: AdvisoryDetails.java
+Only in compiled-asn1: AdvisorySituationBundle.java
+Only in compiled-asn1: AdvisorySituationData.java
+Only in compiled-asn1: AdvisorySituationDataDistribution.java
+Only in compiled-asn1: Area.java
+Only in compiled-asn1: BroadcastInstructions.java
+Only in compiled-asn1: Capacity.java
+Only in compiled-asn1: DataAcceptance.java
+Only in compiled-asn1: DataConfirmation.java
+Only in compiled-asn1: DataReceipt.java
+Only in compiled-asn1: DataRequest.java
+Only in compiled-asn1: DataSubscriptionRequest.java
+Only in compiled-asn1: DelayType.java
+diff -b compiled-asn1/Distance.java src/main/java/com/leidos/ode/data/Distance.java
+24c24
+<             @ASN1SizeConstraint ( max = 2L )
+---
+> //            @ASN1SizeConstraint ( max = 2L )
+Only in compiled-asn1: DistributionType.java
+Only in compiled-asn1: DsrcInstructions.java
+Only in compiled-asn1: ElectricVeh.java
+Only in compiled-asn1: Emissions.java
+Only in compiled-asn1: Environmental.java
+Only in compiled-asn1: FuelConsumption.java
+Only in compiled-asn1: FuelEconomy.java
+Only in compiled-asn1: FundamentalSituationalStatus.java
+Only in compiled-asn1: IncidentEvent.java
+Only in compiled-asn1: IncidentLane.java
+Only in compiled-asn1: IncidentLocation.java
+Only in compiled-asn1: IncidentType.java
+Only in compiled-asn1: IntersectionBundle.java
+Only in compiled-asn1: IntersectionRecord.java
+Only in compiled-asn1: IntersectionSituationData.java
+Only in compiled-asn1: IntersectionSituationDataAcceptance.java
+Only in compiled-asn1: IntersectionSituationDataBundle.java
+Only in compiled-asn1: IsdType.java
+Only in compiled-asn1: LaneStatus.java
+Only in compiled-asn1: ObjectDiscoveryData.java
+Only in compiled-asn1: ObjectDiscoveryDataRequest.java
+Only in compiled-asn1: ObjectRegistrationData.java
+diff -b compiled-asn1/PodeDataElementList.java src/main/java/com/leidos/ode/data/PodeDataElementList.java
+22c22
+<         @ASN1Element ( name = "speed", isOptional =  true , hasTag =  true, tag = 0 , hasDefaultValue =  false  )
+---
+>         @ASN1Element ( name = "speed", isOptional =  false , hasTag =  true, tag = 0 , hasDefaultValue =  false  )
+27,33c27,33
+<     @ASN1ValueRangeConstraint ( 
+< 		
+< 		min = 1L, 
+< 		
+< 		max = 100L 
+< 		
+< 	   )
+---
+> //    @ASN1ValueRangeConstraint ( 
+> //		
+> //		min = 1L, 
+> //		
+> //		max = 100L 
+> //		
+> //	   )
+40,46c40,46
+<     @ASN1ValueRangeConstraint ( 
+< 		
+< 		min = 1L, 
+< 		
+< 		max = 2500L 
+< 		
+< 	   )
+---
+> //    @ASN1ValueRangeConstraint ( 
+> //		
+> //		min = 1L, 
+> //		
+> //		max = 25L 
+> //		
+> //	   )
+63,66d62
+<         
+<         public boolean isSpeedPresent () {
+<             return this.speed != null;
+<         }
+diff -b compiled-asn1/PodeDataRecord.java src/main/java/com/leidos/ode/data/PodeDataRecord.java
+73,77d72
+<         @ASN1Element ( name = "incident", isOptional =  false , hasTag =  true, tag = 3 , hasDefaultValue =  false  )
+<     
+< 	private PodeIncidentData incident = null;
+<                 
+<   
+99,100d93
+<                     setIncident(null);
+<                             
+126,127d118
+<                     setIncident(null);
+<                             
+152,180d142
+<                 
+<                     setIncident(null);
+<                             
+<         }
+< 
+<         
+<   
+<         
+<         public PodeIncidentData getIncident () {
+<             return this.incident;
+<         }
+< 
+<         public boolean isIncidentSelected () {
+<             return this.incident != null;
+<         }
+< 
+<         private void setIncident (PodeIncidentData value) {
+<             this.incident = value;
+<         }
+< 
+<         
+<         public void selectIncident (PodeIncidentData value) {
+<             this.incident = value;
+<             
+<                     setWeather(null);
+<                 
+<                     setDetector(null);
+<                 
+<                     setSpatMap(null);
+diff -b compiled-asn1/PodeDataTypes.java src/main/java/com/leidos/ode/data/PodeDataTypes.java
+22c22
+<             @ASN1BitString( name = "PodeDataTypes" )
+---
+>             @ASN1OctetString( name = "PodeDataTypes" )
+24c24,26
+<             private BitString value = null;
+---
+>             @ASN1SizeConstraint ( max = 1L )
+>         
+>             private byte[] value = null;
+29c31
+<             public PodeDataTypes(BitString value) {
+---
+>             public PodeDataTypes(byte[] value) {
+33c35,39
+<             public void setValue(BitString value) {
+---
+>             public PodeDataTypes(BitString value) {
+>                 setValue(value);
+>             }
+>             
+>             public void setValue(byte[] value) {
+37c43,47
+<             public BitString getValue() {
+---
+>             public void setValue(BitString btStr) {
+>                 this.value = btStr.getValue();
+>             }
+>             
+>             public byte[] getValue() {
+47a58
+> 
+diff -b compiled-asn1/PodeDetectorData.java src/main/java/com/leidos/ode/data/PodeDetectorData.java
+61,69d60
+< @ASN1SequenceOf( name = "laneData", isSetOf = false ) 
+< 
+<     @ASN1ValueRangeConstraint ( 
+< 		
+< 		min = 1L, 
+< 		
+< 		max = 10L 
+< 		
+< 	   )
+73c64
+< 	private java.util.Collection<PodeLaneData>  laneData = null;
+---
+> 	private PodeLaneData laneData = null;
+169c160
+<         public java.util.Collection<PodeLaneData>  getLaneData () {
+---
+>         public PodeLaneData getLaneData () {
+175c166
+<         public void setLaneData (java.util.Collection<PodeLaneData>  value) {
+---
+>         public void setLaneData (PodeLaneData value) {
+Only in compiled-asn1: PodeIncidentData.java
+diff -b compiled-asn1/PodeLaneType.java src/main/java/com/leidos/ode/data/PodeLaneType.java
+35,50d34
+<             @ASN1EnumItem ( name = "left_shoulder", hasTag = true , tag = 5 )
+<             left_shoulder , 
+<             @ASN1EnumItem ( name = "left", hasTag = true , tag = 6 )
+<             left , 
+<             @ASN1EnumItem ( name = "left_center", hasTag = true , tag = 7 )
+<             left_center , 
+<             @ASN1EnumItem ( name = "center", hasTag = true , tag = 8 )
+<             center , 
+<             @ASN1EnumItem ( name = "right_center", hasTag = true , tag = 9 )
+<             right_center , 
+<             @ASN1EnumItem ( name = "right", hasTag = true , tag = 10 )
+<             right , 
+<             @ASN1EnumItem ( name = "right_shoulder", hasTag = true , tag = 11 )
+<             right_shoulder , 
+<             @ASN1EnumItem ( name = "other", hasTag = true , tag = 12 )
+<             other , 
+diff -b compiled-asn1/PodeLogDataResponse.java src/main/java/com/leidos/ode/data/PodeLogDataResponse.java
+44,53c44
+<   
+< @ASN1SequenceOf( name = "logRecords", isSetOf = false ) 
+< 
+<     @ASN1ValueRangeConstraint ( 
+< 		
+< 		min = 1L, 
+< 		
+< 		max = 1000L 
+< 		
+< 	   )
+---
+>   @ASN1Any( name = "" )
+57c48
+< 	private java.util.Collection<PodeLogMessage>  logRecords = null;
+---
+> 	private PodeLogMessage logRecords = null;
+109c100
+<         public java.util.Collection<PodeLogMessage>  getLogRecords () {
+---
+>         public PodeLogMessage getLogRecords () {
+115c106
+<         public void setLogRecords (java.util.Collection<PodeLogMessage>  value) {
+---
+>         public void setLogRecords (PodeLogMessage value) {
+diff -b compiled-asn1/PodeWeatherinfo.java src/main/java/com/leidos/ode/data/PodeWeatherinfo.java
+23c23
+<             @ASN1SizeConstraint ( max = 4L )
+---
+> //            @ASN1SizeConstraint ( max = 4L )
+31c31
+<             @ASN1SizeConstraint ( max = 4L )
+---
+> //            @ASN1SizeConstraint ( max = 4L )
+39c39
+<             @ASN1SizeConstraint ( max = 4L )
+---
+> //            @ASN1SizeConstraint ( max = 4L )
+60c60
+<             @ASN1SizeConstraint ( max = 4L )
+---
+> //            @ASN1SizeConstraint ( max = 4L )
+68c68
+<             @ASN1SizeConstraint ( max = 4L )
+---
+> //            @ASN1SizeConstraint ( max = 4L )
+81c81
+<             @ASN1SizeConstraint ( max = 4L )
+---
+> //            @ASN1SizeConstraint ( max = 4L )
+109c109
+<         @ASN1Element ( name = "weatherSensorData", isOptional =  false , hasTag =  true, tag = 11 , hasDefaultValue =  false  )
+---
+>         @ASN1Element ( name = "weatherSenorData", isOptional =  false , hasTag =  true, tag = 11 , hasDefaultValue =  false  )
+111c111
+< 	private PodeWeatherData weatherSensorData = null;
+---
+> 	private PodeWeatherData weatherSenorData = null;
+247,248c247,248
+<         public PodeWeatherData getWeatherSensorData () {
+<             return this.weatherSensorData;
+---
+>         public PodeWeatherData getWeatherSenorData () {
+>             return this.weatherSenorData;
+253,254c253,254
+<         public void setWeatherSensorData (PodeWeatherData value) {
+<             this.weatherSensorData = value;
+---
+>         public void setWeatherSenorData (PodeWeatherData value) {
+>             this.weatherSenorData = value;
+Only in compiled-asn1: Psid.java
+Only in compiled-asn1: Range.java
+Only in compiled-asn1: RoadType.java
+Only in compiled-asn1: SEMI.java
+Only in compiled-asn1: SemiDialogID.java
+diff -b compiled-asn1/SemiSequenceID.java src/main/java/com/leidos/ode/data/SemiSequenceID.java
+44,46c44
+<             subscriptionCancel , 
+<             @ASN1EnumItem ( name = "podeArchiveDataRequest", hasTag = true , tag = 11 )
+<             podeArchiveDataRequest
+---
+>             subscriptionCancel
+Only in compiled-asn1: ServiceID.java
+Only in compiled-asn1: ServiceRecord.java
+diff -b compiled-asn1/Sha256Hash.java src/main/java/com/leidos/ode/data/Sha256Hash.java
+24c24
+<             @ASN1SizeConstraint ( max = 64L )
+---
+> //            @ASN1SizeConstraint ( max = 256L )
+Only in compiled-asn1: SpatRecord.java
+Only in compiled-asn1: StateOfCharge.java
+Only in compiled-asn1: TimeToLive.java
+Only in compiled-asn1: TxChannel.java
+Only in compiled-asn1: TxMode.java
+Only in compiled-asn1: VehicleSituationStatus.java
+Only in compiled-asn1: VehSitDataMessage.java
+Only in compiled-asn1: VehSitRecord.java
+Only in compiled-asn1: VsmEventFlag.java
+Only in compiled-asn1: VsmType.java
+Only in compiled-asn1: Weather.java
