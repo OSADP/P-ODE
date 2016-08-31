@@ -1,10 +1,11 @@
 Identifier
 ==========
-Prototype Operational Data Environment (P-ODE), version 2.0.1
+Prototype Operational Data Environment (P-ODE), version 2.0.2
 
 
 What's New
 ==========
+Caution from VDOT about data feed formatting change (see README for details).
 Included updated User Guide in the repository structure.
 Included third party JAR files needed for Maven references during build process.
 Fixed software to convert SDC message timestamps from ms to sec.
