@@ -202,8 +202,8 @@ public class BlufaxRouteMessageFormatter extends ODEMessageFormatter{
     
     private PodeDataElementList createVolumeMessage(RouteStatusList lsl) {
         PodeDataElementList laneDataList = createSpeedMessage(lsl);
-        if(lsl.getVolume() > 25){
-            laneDataList.setVolume(25);
+        if(lsl.getVolume() > 2500){
+            laneDataList.setVolume(2500);
         }else if(lsl.getVolume() < 1){
             laneDataList.setVolume(1);
         }else {

@@ -15,6 +15,7 @@ import javax.xml.bind.DatatypeConverter;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -24,6 +25,7 @@ public class SDCParser extends ODEDataParser {
     private final String TAG = getClass().getSimpleName();
     private final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(TAG);
     private static final String START_INDICATOR = "8002";
+    private static final int GMT_OFFSET_HRS = 4;
 
     private static double DE_SPEED_SCALING_CONSTANT = 0.02;
     private static int DE_SPEED_UNAVAILABLE_FLAG = 8191;
@@ -159,17 +161,46 @@ public class SDCParser extends ODEDataParser {
                     if (rawDMonth != null) {
                         dDateTime.setMonth(new DMonth((int) rawDMonth[0]));
                     }
-                    if (rawDDay != null) {
-                        dDateTime.setDay(new DDay((int) rawDDay[0]));
-                    }
+                    int dayOffset = 0;
                     if (rawDHour != null) {
-                        dDateTime.setHour(new DHour(UnpackUtils.unpack16BigEndian(rawDHour)));
+                        if (rawDHour.length == 2) {
+                            int hour = UnpackUtils.unpack16BigEndian(rawDHour);
+
+                            // Account for GMT/Eastern Time offset
+                            hour -= GMT_OFFSET_HRS;
+                            if (hour < 0) {
+                                hour += 24;
+                                dayOffset = -1;
+                            }
+                            if (hour >= 24) {
+                                hour -= 24;
+                                dayOffset = 1;
+                            }
+
+                            dDateTime.setHour(new DHour(hour));
+                        } else {
+                            dDateTime.setHour(new DHour((int) rawDHour[0]));
+                        }
                     }
+                    if (rawDDay != null) {
+                        dDateTime.setDay(new DDay(((int) rawDDay[0]) + dayOffset));
+                    }
+
                     if (rawDMinute != null) {
                         dDateTime.setMinute(new DMinute((int) rawDMinute[0]));
                     }
                     if (rawDSecond != null) {
-                        dDateTime.setSecond(new DSecond(UnpackUtils.unpackU16BigEndian(rawDSecond)));
+
+                        // NOTE: Converted to seconds to preserve consistency with other uses of the DSecond object
+                        // Should be in ms, but everywhere else uses it as seconds
+
+                        if (rawDSecond.length == 3) {
+                            dDateTime.setSecond(new DSecond(UnpackUtils.unpackU16BigEndian(Arrays.copyOfRange(rawDSecond, 1, 3))/1000));
+                        } else if (rawDSecond.length == 2) {
+                            dDateTime.setSecond(new DSecond(UnpackUtils.unpackU16BigEndian(rawDSecond)/1000));
+                        } else {
+                            dDateTime.setSecond(new DSecond((int) rawDSecond[0]/ 1000));
+                        }
                     }
                     out.setTime(dDateTime);
 

@@ -1,7 +1,7 @@
 ﻿Open Source Overview
 ============================
 Prototype Operational Data Environment (P-ODE)
-Version 2.0
+Version 2.0.1
 
 Description:
 The P-ODE software is written in Java and is divided so that it can run on up to two Ubuntu servers if necessary, depending on system load. The collector server runs several collector processes, each of which connects to a specific data source (e.g. sensor hardware or external web service). The P-ODE core takes in data from all of the collectors and redistributes it to the various subscribers for real time dissemination. The core also pushes all of the data to the RDE system for permanent archival.  Finally, the core has the capability to service subscriptions for historical data replay by retrieving archived data from the RDE and serving it up to the subscriber.

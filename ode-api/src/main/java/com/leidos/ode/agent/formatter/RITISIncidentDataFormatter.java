@@ -7,53 +7,24 @@ package com.leidos.ode.agent.formatter;
 
 import com.leidos.ode.agent.data.ODEAgentMessage;
 import com.leidos.ode.agent.data.ritis.RITISIncidentData;
-import com.leidos.ode.data.Area;
-import com.leidos.ode.data.DDateTime;
-import com.leidos.ode.data.DDay;
-import com.leidos.ode.data.DHour;
-import com.leidos.ode.data.DMinute;
-import com.leidos.ode.data.DMonth;
-import com.leidos.ode.data.DSecond;
-import com.leidos.ode.data.DYear;
-import com.leidos.ode.data.IncidentEvent;
-import com.leidos.ode.data.IncidentLane;
-import com.leidos.ode.data.IncidentLocation;
-import com.leidos.ode.data.IncidentType;
-import com.leidos.ode.data.LaneStatus;
-import com.leidos.ode.data.Latitude;
-import com.leidos.ode.data.Longitude;
-import com.leidos.ode.data.PodeDataDistribution;
-import com.leidos.ode.data.PodeDataRecord;
-import com.leidos.ode.data.PodeDialogID;
-import com.leidos.ode.data.PodeIncidentData;
-import com.leidos.ode.data.PodeLaneDirection;
-import com.leidos.ode.data.PodeLaneType;
-import com.leidos.ode.data.PodeSource;
-import com.leidos.ode.data.Position3D;
-import com.leidos.ode.data.RoadType;
-import com.leidos.ode.data.SemiSequenceID;
-import com.leidos.ode.data.ServiceRequest;
-import com.leidos.ode.data.Sha256Hash;
+import com.leidos.ode.data.*;
 import com.leidos.ode.util.ODEMessageType;
-
 import edu.umd.cattlab.schema.atis.im.LaneDescription;
 import edu.umd.cattlab.schema.atis.lrms.PointLocation;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.apache.log4j.Logger;
+import org.ritis.schema.atis_3_0_76.EventInformation;
+import org.ritis.schema.atis_3_0_76.IncidentInformation;
+import org.ritis.schema.atis_3_0_76.ResponseGroup;
 
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.bind.JAXBElement;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
-
-import org.apache.log4j.Logger;
-import org.ritis.schema.atis_3_0_76.EventInformation;
-import org.ritis.schema.atis_3_0_76.IncidentInformation;
-import org.ritis.schema.atis_3_0_76.ResponseGroup;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -275,12 +246,17 @@ public class RITISIncidentDataFormatter extends ODEMessageFormatter{
                     //will combine the LaneTypes of the center lanes as "middle lanes",
                     //meaning the list of LaneTypes only have 3 items.
                     laneAffected = new IncidentLane();
-                    if (j == 0) {
+
+                    if (laneInfo.getTypes().getType().size() == 1) {
                         laneAffected.setLaneType(checkLaneType(laneInfo.getTypes().getType().get(0)));
-                    } else if (j == lanesInfoList.size() - 1){
-                        laneAffected.setLaneType(checkLaneType(laneInfo.getTypes().getType().get(lanTypeCnt - 1)));
                     } else {
-                        laneAffected.setLaneType(checkLaneType(laneInfo.getTypes().getType().get(1)));
+                        if (j == 0) {
+                            laneAffected.setLaneType(checkLaneType(laneInfo.getTypes().getType().get(0)));
+                        } else if (j == lanesInfoList.size() - 1) {
+                            laneAffected.setLaneType(checkLaneType(laneInfo.getTypes().getType().get(lanTypeCnt - 1)));
+                        } else {
+                            laneAffected.setLaneType(checkLaneType(laneInfo.getTypes().getType().get(1)));
+                        }
                     }
                     laneAffected.setDirection(checkDirection(laneInfo.getLocation()));
                     laneAffected.setStatus(checkLaneStatus(laneInfo.getCondition()));

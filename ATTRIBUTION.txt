@@ -1,11 +1,11 @@
-Key contributors to the development of the Prototype Operational Data Environment were:
+Key contributors to the development of the P-ODE software
+development include:
+Kyle Rush, Robert Roth and Fang Zhou of Leidos;
+Jim Cassady, formerly of Leidos.
 
-Jim Cassady, Kyle Rush, Devin Lam, George Zheng, Robert Roth, Fang Zhou of Leidos
-Saman Moshafi and Shruthi Belagodu from Indrasoft
+The developers also wish to acknowledge several contributors to this study:
 
-The developers also wish to acknowledge contributors to this study:
+Leidos task leads:  John Stark, Frank Perry
 
-Government task lead:  Dale Thompson, Gene McHale (FHWA TFHRC)
-COR:  Randy VanGorder (FHWA TFHRC)
-Oversight: Richard Glassco, Alexa Lowman of Noblis
+FHWA task managers:  Dale Thompson, Gene McHale
 

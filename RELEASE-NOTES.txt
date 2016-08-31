@@ -1,15 +1,18 @@
 Identifier
 ==========
-Prototype Operational Data Environment (P-ODE), version 2.0.0
+Prototype Operational Data Environment (P-ODE), version 2.0.1
 
 
 What's New
 ==========
-New collector for speed, heading, location from VDOT BSM sensors
-New collector for speed from VSDs submitted to Situation Data Clearninghouse
-New collector for VDOT incident data
-New collector for RITIS incident data
-Enhanced application emulator
+Included updated User Guide in the repository structure.
+Included third party JAR files needed for Maven references during build process.
+Fixed software to convert SDC message timestamps from ms to sec.
+Added reconnect logic to SDC collector.
+Reinforced exception handling.
+Added reconnect behavior to RDE uploader.
+Added real-time delay to initial message during replay mode.
+
 
 
 System Requirements (if anything here has changed)

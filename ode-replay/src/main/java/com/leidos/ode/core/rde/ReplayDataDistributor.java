@@ -56,14 +56,10 @@ import java.util.logging.Logger;
 public abstract class ReplayDataDistributor extends TextWebSocketHandler implements Runnable {
     // Constants
     private static final int PACKET_TX_DELAY = 100;
-//    private static final String RDE_QUERY_RESULT_DESTINATION = "/query/result/";
-//    private static final String RDE_QUERY_DESTINATION = "/app/api/";
-//    private static final String RDE_QUERY_RESULT_DESTINATION = "/query/result/P-ODE";
     private static final String RDE_QUERY_RESULT_DESTINATION = "/query/result/P-ODE";
     private static final String RDE_QUERY_DESTINATION = "/app/api/P-ODE";
-    private static final String RDE_API_BASE_URL = "ws://rde.indrasoft.net/rdeapi/api";
-//    private static final String RDE_API_BASE_URL = "ws://rde.indrasoft.net/api";
-    
+    private static final String RDE_API_BASE_URL = "ws://its-rde.net/rdeapi/api";
+
 
     // PODE Subscription Data
     protected PodeSubscriptionRequest subRequest;

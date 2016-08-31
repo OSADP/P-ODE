@@ -168,8 +168,8 @@ public class VDOTSpeedMessageFormatter extends ODEMessageFormatter{
     private PodeDataElementList createOccupancyDataElementList(VDOTSpeedData.VDOTSpeedDataElement element, PodeSource source){
         PodeDataElementList laneDataList = createSpeedDataElementList(element, source);
         int value = element.getOccupancy();
-        if(element.getOccupancy() > 100){
-            value = 100;
+        if(element.getOccupancy() > 2500){
+            value = 2500;
         }else if (element.getOccupancy() < 1){
             value = 1;
         }
@@ -182,8 +182,8 @@ public class VDOTSpeedMessageFormatter extends ODEMessageFormatter{
     
     private PodeDataElementList createVolumeDataElementList(VDOTSpeedData.VDOTSpeedDataElement element, PodeSource source){
         PodeDataElementList laneDataList = createSpeedDataElementList(element, source);
-        if(element.getVolume() > 25){
-            laneDataList.setVolume(25);
+        if(element.getVolume() > 2500){
+            laneDataList.setVolume(2500);
         }else{
             laneDataList.setVolume(element.getVolume());
         }

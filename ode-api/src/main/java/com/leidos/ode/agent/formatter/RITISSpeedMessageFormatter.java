@@ -185,8 +185,8 @@ public class RITISSpeedMessageFormatter extends ODEMessageFormatter{
         PodeDataElementList laneDataList = createSpeedDataElementList(zoneData);
         
         int value = zoneData.getZoneVehicleCount().intValue();
-        if(value > 25){
-            value = 25;
+        if(value > 2500){
+            value = 2500;
         }else if (value < 1){
             value = 1;
         }

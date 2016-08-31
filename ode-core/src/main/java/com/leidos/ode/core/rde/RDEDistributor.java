@@ -128,7 +128,7 @@ public class RDEDistributor extends DataDistributor {
                 generator.writeStringField("latitude", pos.getLat().getValue()+"");
                 generator.writeStringField("longitude", pos.getLon().getValue()+"");
                 if(pos.getElevation() != null){
-                    generator.writeStringField("elevation", pos.getElevation().toString());
+                    generator.writeStringField("elevation", decodeElevation(pos.getElevation().getValue()));
                 }
             }else{
                 logger.debug("No position information available.");
@@ -152,6 +152,29 @@ public class RDEDistributor extends DataDistributor {
         }
 
         return json;
+    }
+
+    private String decodeElevation(byte[] elevation) {
+        if (elevation.length != 2) {
+            // Octet string size of less than two indicates message corruption
+            return "unknown";
+        }
+
+        // Decode elevation byte array into decimeters
+        int elev = (elevation[1] << 8) | elevation[0];
+
+        if (elev == 0xF000) {
+            // 0xF000 encodes unknown
+            return "unknown";
+        }
+
+        if (elev <= 0xEFFF) {
+            // Elevations 0 to 6143.9m are encoded as 0x0000 to 0xEFFF
+            return "" + (elev / 10.0);
+        } else {
+            // Elevations -409.5m to -0.1m are encoded as 0xF001 to 0xFFFF
+            return "" + ((elev - 65536) / 10.0);
+        }
     }
     
     private String getHexForByteArray(byte[] bytes){

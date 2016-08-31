@@ -169,8 +169,8 @@ public class RTMSMessageFormatter extends ODEMessageFormatter{
             double d = Double.parseDouble(element.getOccupancy());
             
             int value = (int)d;
-            if(value > 25){
-                value = 25;
+            if(value > 2500){
+                value = 2500;
             }else if (value < 1){
                 value = 1;
             }
@@ -185,8 +185,8 @@ public class RTMSMessageFormatter extends ODEMessageFormatter{
     
     private PodeDataElementList createVolumeDataElementList(RTMSData.RTMSDataElement element, PodeSource source){
         PodeDataElementList laneDataList = createSpeedDataElementList(element, source);
-        if(element.getVolume() > 25){
-            laneDataList.setVolume(25);
+        if(element.getVolume() > 2500){
+            laneDataList.setVolume(2500);
         }else{
             laneDataList.setVolume(element.getVolume());
         }

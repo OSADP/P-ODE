@@ -14,11 +14,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.dot.rdelive</groupId>
+            <groupId>org.rde.rdelive</groupId>
             <artifactId>rdeapiclient-jar-with-dependencies</artifactId>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/rdeapiclient-3.1.45-SNAPSHOT-jar-with-dependencies.jar</systemPath>
-            <version>3.1.45</version>
+            <version>3.1.45-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

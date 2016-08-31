@@ -5,25 +5,10 @@
  */
 package com.leidos.ode.core.distribute;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.leidos.ode.data.DFullTime;
-import com.leidos.ode.data.GeoRegion;
-import com.leidos.ode.data.PodeReplayData;
-import com.leidos.ode.data.Position3D;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.net.URI;
-import java.nio.ByteBuffer;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import org.dot.rdeapi.client.websocket.sockjs.ClientWebSocketHandler;
 import org.dot.rdeapi.client.websocket.sockjs.RDESockJsClient;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.messaging.Message;
-import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompEncoder;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
@@ -35,27 +20,22 @@ import org.springframework.web.socket.WebSocketHttpHeaders;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.sockjs.client.SockJsClient;
 
+import java.net.URI;
+import java.nio.ByteBuffer;
+
 /**
  *
  * @author cassadyja
  */
 public class RDETester {
-    // java -Djavax.net.ssl.trustStoreType=PKCS12 -Djavax.net.ssl.trustStore="C:/Jim/ode/rde.indrasoft.net.p12" -Djavax.net.ssl.trustStorePassword=rde_2015 -cp ode-core-1.0-SNAPSHOT.jar;../lib/rdeapiclient-3.1.32-SNAPSHOT-jar-with-dependencies.jar com.leidos.ode.core.distribute.RDETester
-
-
-
-    //-Djavax.net.ssl.trustStoreType=PKCS12 -Djavax.net.ssl.trustStore="C:\Jim\ode\rde.indrasoft.net.p12"
-        // Logging
     private static final String TAG = RDETester.class.getSimpleName();
     protected static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(TAG);
     
     private static ClientWebSocketHandler clientWebSocketHandler = null;
     private static final int PACKET_TX_DELAY = 100;
-//    private static final String RDE_QUERY_RESULT_DESTINATION = "/query/result/";
-//    private static final String RDE_QUERY_DESTINATION = "/app/api/";
     private static final String RDE_QUERY_RESULT_DESTINATION = "/query/result/P-ODE";
     private static final String RDE_QUERY_DESTINATION = "/query/result/P-ODE";
-    private static final String RDE_API_BASE_URL = "wss://rde.indrasoft.net/api";    
+    private static final String RDE_API_BASE_URL = "ws://its-rde.net/rdeapi/api";
     
     
     private static String subscriptionId = "ABC123";

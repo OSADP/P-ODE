@@ -1,6 +1,5 @@
-package com.leidos.ode.core.rde.controllers;
+package com.leidos.ode.core.rde;
 
-import com.leidos.ode.core.rde.RDEDistributor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
