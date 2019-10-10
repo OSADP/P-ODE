@@ -41,13 +41,3 @@ Processing power:  Intel Core I3 @ 1.6 GHz or equivalent
 Connectivity:  ethernet
 Operating systems supported:  Ubuntu 14.04
 
-
-Documentation
--------------
-A User Guide is included in the OSADP directory tree.
-
-
-Web sites
----------
-The software is distributed through the USDOT's JPO Open Source Application Development Portal (OSADP)
-http://itsforge.net/ 
